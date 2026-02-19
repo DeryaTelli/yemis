@@ -60,4 +60,7 @@ class AppColors {
 
   // 10. Yemo yapay zekasının yazdığı mesaj kutusunun arka planı (Orange)
   static const Color yemoMessageBackground = Color(0xFFEF9F27);
+
+  // 11. Outlined button border color
+  static const Color primaryBorderColor = Color(0xFFD79C1D);
 }
