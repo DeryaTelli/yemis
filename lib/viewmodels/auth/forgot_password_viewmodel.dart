@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import '../../models/auth/auth_request_models.dart';
+import '../../services/auth/i_auth_service.dart';
+import '../../utils/locale_keys.dart';
+
+class ForgotPasswordViewModel extends ChangeNotifier {
+  final IAuthService _authService;
+
+  ForgotPasswordViewModel(this._authService);
+
+  // --- Controllers ---
+  final TextEditingController emailController = TextEditingController();
+
+  // --- State ---
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  bool _emailSent = false;
+  bool get emailSent => _emailSent;
+
+  /// Locale key döner — View .tr() ile çevirir
+  String? _errorKey;
+  String? get errorKey => _errorKey;
+
+  // --- Actions ---
+
+  void clearError() {
+    _errorKey = null;
+    notifyListeners();
+  }
+
+  /// Şifre sıfırlama e-postası gönderir. Başarılıysa [onSuccess] çağrılır.
+  Future<void> sendResetEmail({
+    required GlobalKey<FormState> formKey,
+    required void Function(String email) onSuccess,
+  }) async {
+    if (!formKey.currentState!.validate()) return;
+
+    _isLoading = true;
+    _errorKey = null;
+    notifyListeners();
+
+    try {
+      await _authService.forgotPassword(
+        ForgotPasswordRequest(email: emailController.text.trim()),
+      );
+      _emailSent = true;
+      onSuccess(emailController.text.trim());
+    } catch (_) {
+      _errorKey = LocaleKeys.auth_errors_emailSendFailed;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
+}

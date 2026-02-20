@@ -4,8 +4,11 @@ class AppColors {
   // Private constructor to prevent instantiation
   AppColors._();
 
-  // 1. Uygulamanın genel rengi (Orange)
+  // 1. Uygulamanın genel rengi / İşletme & Yemek AppBar rengi (Orange)
   static const Color primaryColor = Color(0xFFFE8800);
+
+  // Gönüllülük AppBar rengi (Green)
+  static const Color volunteerColor = Color(0xFF22B05A);
 
   // 2. Silik textbox yazısı (Grey)
   static const Color hintTextColor = Color(0xFF838383);

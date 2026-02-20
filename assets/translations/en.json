@@ -1,0 +1,55 @@
+{
+    "auth": {
+        "login": {
+            "title": "Log In",
+            "rememberMe": "Remember me",
+            "forgotPassword": "Forgot password?",
+            "noAccount": "Don't have an account?",
+            "register": "Sign Up",
+            "button": "Log In"
+        },
+        "register": {
+            "title": "Sign Up",
+            "kvkk": "Please approve KVKK",
+            "hasAccount": "Already have an account?",
+            "login": "Log In",
+            "button": "Sign Up"
+        },
+        "forgotPassword": {
+            "title": "Forgot Password",
+            "description": "Enter the email address associated with your account and we'll send you a code to reset your password.",
+            "button": "Send"
+        },
+        "verification": {
+            "title": "Verification Code",
+            "description": "Enter the verification code sent to your email to complete account verification",
+            "codeSent": "A verification code has been sent to your email.",
+            "resend": "Resend",
+            "button": "Verify"
+        },
+        "fields": {
+            "email": "Email",
+            "password": "Password",
+            "name": "Name"
+        },
+        "validation": {
+            "emailEmpty": "Email address cannot be empty.",
+            "emailInvalid": "Please enter a valid email address.",
+            "passwordEmpty": "Password cannot be empty.",
+            "passwordMinLength": "Password must be at least 6 characters.",
+            "nameEmpty": "Name cannot be empty.",
+            "kvkkRequired": "Please approve the KVKK terms.",
+            "codeIncomplete": "Please enter the complete 4-digit code."
+        },
+        "errors": {
+            "invalidCredentials": "Invalid email or password.",
+            "emailAlreadyRegistered": "This email address is already registered.",
+            "general": "An error occurred. Please try again.",
+            "emailSendFailed": "Failed to send email. Please try again.",
+            "codeSendFailed": "Failed to send code. Please try again.",
+            "codeInvalid": "Invalid verification code. Please try again.",
+            "registerSuccess": "Registration successful. Please verify your email.",
+            "loginSuccess": "Login successful."
+        }
+    }
+}

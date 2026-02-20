@@ -32,7 +32,7 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine styles based on isOutlined
+   
     final decoration = isOutlined
         ? BoxDecoration(
             color: Colors.white,
@@ -40,7 +40,7 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
           )
         : BoxDecoration(
-            color: backgroundColor, // Uses solid color if provided
+            color: backgroundColor, 
             gradient: backgroundColor == null ? (gradient ?? AppColors.primaryButtonGradient) : null, // Default to gradient if no solid color
             borderRadius: BorderRadius.circular(borderRadius),
             boxShadow: [
@@ -53,16 +53,15 @@ class CustomButton extends StatelessWidget {
           );
 
     final defaultTextStyle = isOutlined
-        ? CustomTextStyles.bold16DarkGreyCompact // Fallback for outlined
-        : CustomTextStyles.bold17White; // Standard for filled
-
+        ? CustomTextStyles.bold16DarkGreyCompact 
+        : CustomTextStyles.bold17White; 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: isLoading ? null : onPressed,
         borderRadius: BorderRadius.circular(borderRadius),
         child: Ink(
-          width: width, // Allow null for auto-width
+          width: width, 
           height: height,
           decoration: decoration,
           child: Center(

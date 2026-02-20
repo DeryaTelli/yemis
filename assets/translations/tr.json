@@ -1,0 +1,55 @@
+{
+  "auth": {
+    "login": {
+      "title": "Giriş Yap",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Hesabın yok mu?",
+      "register": "Kayıt Ol",
+      "button": "Giriş Yap"
+    },
+    "register": {
+      "title": "Kayıt Ol",
+      "kvkk": "KVKK onaylayınız",
+      "hasAccount": "Hesabın var mı?",
+      "login": "Giriş Yap",
+      "button": "Kayıt Ol"
+    },
+    "forgotPassword": {
+      "title": "Şifremi Unuttum",
+      "description": "Hesabınıza kayıtlı e-posta adresini girin, şifrenizi yenileyebilmeniz için size bir kod gönderelim.",
+      "button": "Gönder"
+    },
+    "verification": {
+      "title": "Doğrulama Kodu",
+      "description": "E-postanıza gönderilen doğrulama kodunu girerek hesap doğrulama işlemini tamamlayın",
+      "codeSent": "E-postanıza bir doğrulama kodu gönderildi.",
+      "resend": "Tekrar gönder",
+      "button": "Onayla"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Şifre",
+      "name": "İsim"
+    },
+    "validation": {
+      "emailEmpty": "E-posta adresi boş olamaz.",
+      "emailInvalid": "Geçerli bir e-posta adresi girin.",
+      "passwordEmpty": "Şifre boş olamaz.",
+      "passwordMinLength": "Şifre en az 6 karakter olmalıdır.",
+      "nameEmpty": "İsim boş olamaz.",
+      "kvkkRequired": "Lütfen KVKK metnini onaylayın.",
+      "codeIncomplete": "Lütfen 4 haneli kodu eksiksiz girin."
+    },
+    "errors": {
+      "invalidCredentials": "E-posta veya şifre hatalı.",
+      "emailAlreadyRegistered": "Bu e-posta adresi zaten kayıtlı.",
+      "general": "Bir hata oluştu. Lütfen tekrar deneyin.",
+      "emailSendFailed": "E-posta gönderilemedi. Lütfen tekrar deneyin.",
+      "codeSendFailed": "Kod gönderilemedi. Lütfen tekrar deneyin.",
+      "codeInvalid": "Doğrulama kodu hatalı. Lütfen tekrar deneyin.",
+      "registerSuccess": "Kayıt başarılı. Lütfen e-postanızı doğrulayın.",
+      "loginSuccess": "Giriş başarılı."
+    }
+  }
+}

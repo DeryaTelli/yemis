@@ -1,49 +1,88 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
+import 'text_styles_custom.dart';
+
+/// Uygulama bölümlerini temsil eder.
+enum AppSection {
+  /// İşletme ve yemek bölümleri (turuncu tema)
+  food,
+
+  /// Gönüllülük bölümü (yeşil tema)
+  volunteer,
+}
 
 class AppTheme {
-  // Private constructor to prevent instantiation
+
   AppTheme._();
 
-  static ThemeData get lightTheme {
+  // ---------------------------------------------------------------------------
+  // İşletme & Yemek — Turuncu Tema (#FE8800)
+  // ---------------------------------------------------------------------------
+  static ThemeData get lightTheme => _buildTheme(
+        primaryColor: AppColors.primaryColor,
+      );
+
+  // ---------------------------------------------------------------------------
+  // Gönüllülük — Yeşil Tema (#22B05A)
+  // ---------------------------------------------------------------------------
+  static ThemeData get volunteerTheme => _buildTheme(
+        primaryColor: AppColors.volunteerColor,
+      );
+
+  // ---------------------------------------------------------------------------
+  // Bölüme göre tema seç
+  // ---------------------------------------------------------------------------
+  static ThemeData themeFor(AppSection section) {
+    switch (section) {
+      case AppSection.volunteer:
+        return volunteerTheme;
+      case AppSection.food:
+        return lightTheme;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Ortak tema fabrikası
+  // ---------------------------------------------------------------------------
+  static ThemeData _buildTheme({required Color primaryColor}) {
     return ThemeData(
       useMaterial3: true,
-      
-      // Define the color scheme based heavily on the primary orange color
+
+      // Renk şeması
       colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primaryColor,
-        primary: AppColors.primaryColor,
-        // You can customize secondary, tertiary, etc. if needed
+        seedColor: primaryColor,
+        primary: primaryColor,
       ),
 
-      // AppBar Theme
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: Colors.white, // Text color on valid
+      // AppBar teması
+      appBarTheme: AppBarTheme(
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
         centerTitle: true,
+        titleTextStyle: CustomTextStyles.orelegaOne32White,
       ),
 
-      // Text Theme - Apply Google Fonts globally
+      // Metin teması
       textTheme: GoogleFonts.nunitoTextTheme().apply(
         bodyColor: AppColors.primaryTextColor,
         displayColor: AppColors.primaryTextColor,
       ),
 
-      // Input Decoration Theme (for TextFields)
+      // TextField teması
       inputDecorationTheme: const InputDecorationTheme(
         hintStyle: TextStyle(color: AppColors.hintTextColor),
-        // Add more default styling like borders if desired
       ),
 
-      // Button Theme (ElevatedButton)
+      // Buton teması
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor, // Default background
-          foregroundColor: Colors.white, // Default text color
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
           disabledBackgroundColor: Colors.grey[300],
-          disabledForegroundColor: AppColors.unselectedButtonTextColor, // "5. Seçilmemiş buton yazısı"
-          textStyle: GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold), // Default button text style
+          disabledForegroundColor: AppColors.unselectedButtonTextColor,
+          textStyle:
+              GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
