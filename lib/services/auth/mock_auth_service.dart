@@ -36,6 +36,7 @@ class MockAuthService implements IAuthService {
         id: 'usr_001',
         name: 'Test Kullanıcı',
         email: request.email,
+        userType: UserType.business, // mock default
       ),
     );
   }
@@ -62,6 +63,7 @@ class MockAuthService implements IAuthService {
         id: 'usr_${DateTime.now().millisecondsSinceEpoch}',
         name: request.name,
         email: request.email,
+        userType: request.userType,
       ),
     );
   }

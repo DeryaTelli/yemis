@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../services/auth/i_auth_service.dart';
+import '../../services/auth/user_session.dart';
 import '../../utils/locale_keys.dart';
+import '../../utils/routes/app_routes.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final IAuthService _authService;
+  final UserSession _userSession;
 
-  LoginViewModel(this._authService);
+  /// SharedPreferences anahtarı — LocationViewModel ile ortak
+  static const String locationOnboardingKey = 'location_onboarding_done';
+
+  LoginViewModel(this._authService, this._userSession);
 
   // --- Controllers ---
   final TextEditingController emailController = TextEditingController();
@@ -63,7 +70,8 @@ class LoginViewModel extends ChangeNotifier {
         ),
       );
 
-      if (response.success) {
+      if (response.success && response.user != null) {
+        _userSession.setUser(response.user!);
         onSuccess();
       } else {
         _errorKey = response.errorKey ?? LocaleKeys.auth_errors_general;
@@ -74,6 +82,15 @@ class LoginViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Login başarısından sonra hangi sayfaya gidileceğini döner.
+  /// - `location_onboarding_done = true` → Home
+  /// - aksi halde → Location (ilk kez)
+  Future<String> afterLoginRoute() async {
+    final prefs = await SharedPreferences.getInstance();
+    final done = prefs.getBool(locationOnboardingKey) ?? false;
+    return done ? AppRoutes.home : AppRoutes.location;
   }
 
   @override

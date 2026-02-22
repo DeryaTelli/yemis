@@ -52,4 +52,18 @@ abstract class LocaleKeys {
   static const auth_errors_codeInvalid = 'auth.errors.codeInvalid';
   static const auth_errors_registerSuccess = 'auth.errors.registerSuccess';
   static const auth_errors_loginSuccess = 'auth.errors.loginSuccess';
+
+  // location
+  static const location_title = 'location.title';
+  static const location_shareTitle = 'location.shareTitle';
+  static const location_shareDescription = 'location.shareDescription';
+  static const location_buttonShare = 'location.buttonShare';
+  static const location_buttonPick = 'location.buttonPick';
+  static const location_permissionDenied = 'location.permissionDenied';
+  static const location_fetchError = 'location.fetchError';
+
+  // mapPicker
+  static const mapPicker_searchHint = 'mapPicker.searchHint';
+  static const mapPicker_confirmButton = 'mapPicker.confirmButton';
+  static const mapPicker_locating = 'mapPicker.locating';
 }

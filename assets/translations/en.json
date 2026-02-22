@@ -51,5 +51,19 @@
             "registerSuccess": "Registration successful. Please verify your email.",
             "loginSuccess": "Login successful."
         }
+    },
+    "location": {
+        "title": "Location",
+        "shareTitle": "Share Your Location",
+        "shareDescription": "By sharing your location, we can show you the nearest places, services and recommendations faster.",
+        "buttonShare": "Share",
+        "buttonPick": "Pick Location",
+        "permissionDenied": "Location permission is required. Please enable it in app settings.",
+        "fetchError": "Could not get location, please try again."
+    },
+    "mapPicker": {
+        "searchHint": "Search Location",
+        "confirmButton": "Select Location",
+        "locating": "Finding your location..."
     }
 }

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/auth/mock_auth_service.dart';
+import 'services/auth/user_session.dart';
 import 'utils/routes/app_routes.dart';
 import 'utils/theme/app_theme.dart';
 import 'viewmodels/auth/forgot_password_viewmodel.dart';
@@ -12,7 +13,12 @@ import 'views/auth/forgot_password_view.dart';
 import 'views/auth/login_view.dart';
 import 'views/auth/register_view.dart';
 import 'views/auth/verification_view.dart';
+import 'views/business/business_home_view.dart';
+import 'views/food/food_home_view.dart';
 import 'views/home_view.dart';
+import 'views/location_view.dart';
+import 'views/map_picker_view.dart';
+import 'views/volunteer/volunteer_home_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,10 +41,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Servis instance'ı — ileride ApiAuthService ile değiştir
     final authService = MockAuthService();
+    final userSession = UserSession();
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => LoginViewModel(authService)),
+        ChangeNotifierProvider.value(value: userSession),
+        ChangeNotifierProvider(
+            create: (_) => LoginViewModel(authService, userSession)),
         ChangeNotifierProvider(create: (_) => RegisterViewModel(authService)),
         ChangeNotifierProvider(
             create: (_) => ForgotPasswordViewModel(authService)),
@@ -80,9 +89,34 @@ class MyApp extends StatelessWidget {
                 ),
                 settings: settings,
               );
+            case AppRoutes.location:
+              return MaterialPageRoute(
+                builder: (_) => const LocationView(),
+                settings: settings,
+              );
+            case AppRoutes.mapPicker:
+              return MaterialPageRoute(
+                builder: (_) => const MapPickerView(),
+                settings: settings,
+              );
             case AppRoutes.home:
               return MaterialPageRoute(
                 builder: (_) => const HomeView(),
+                settings: settings,
+              );
+            case AppRoutes.foodHome:
+              return MaterialPageRoute(
+                builder: (_) => const FoodHomeView(),
+                settings: settings,
+              );
+            case AppRoutes.volunteerHome:
+              return MaterialPageRoute(
+                builder: (_) => const VolunteerHomeView(),
+                settings: settings,
+              );
+            case AppRoutes.businessHome:
+              return MaterialPageRoute(
+                builder: (_) => const BusinessHomeView(),
                 settings: settings,
               );
             default:

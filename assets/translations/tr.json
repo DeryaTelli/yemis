@@ -51,5 +51,19 @@
       "registerSuccess": "Kayıt başarılı. Lütfen e-postanızı doğrulayın.",
       "loginSuccess": "Giriş başarılı."
     }
+  },
+  "location": {
+    "title": "Lokasyon",
+    "shareTitle": "Konumunu Paylaş",
+    "shareDescription": "Konumunu paylaşarak sana en yakın noktaları, hizmetleri ve önerileri daha hızlı sunabiliriz.",
+    "buttonShare": "Paylaş",
+    "buttonPick": "Konum Seç",
+    "permissionDenied": "Konum izni gereklidir. Lütfen uygulama ayarlarından konum iznini etkinleştirin.",
+    "fetchError": "Konum alınamadı, lütfen tekrar deneyin."
+  },
+  "mapPicker": {
+    "searchHint": "Lokasyon Ara",
+    "confirmButton": "Konumu Seç",
+    "locating": "Konumunuz bulunuyor..."
   }
 }

@@ -1,62 +1,88 @@
 import 'package:flutter/material.dart';
-import '../utils/constants/app_colors.dart';
-import '../utils/theme/text_styles_custom.dart';
+import 'package:provider/provider.dart';
+import '../services/auth/user_session.dart';
+import '../viewmodels/home_viewmodel.dart';
+import '../widgets/home/ad_banner_section.dart';
+import '../widgets/home/home_card.dart';
 
+/// Home ekranı — giriş tipine göre (Food / Business) farklı kartlar gösterir.
+///
+/// [HomeViewModel] oluşturulur ve ağacın altına sağlanır.
+/// Tüm UI mantığı widget'lara, iş mantığı ViewModel'e delege edilir.
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userType = context.read<UserSession>().userType;
+
+    return ChangeNotifierProvider(
+      create: (_) => HomeViewModel(userType: userType),
+      child: const _HomeBody(),
+    );
+  }
+}
+
+/// Scaffold + layout — HomeViewModel'i dinler.
+class _HomeBody extends StatefulWidget {
+  const _HomeBody();
+
+  @override
+  State<_HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<_HomeBody> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<HomeViewModel>().startAutoScroll();
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<HomeViewModel>().stopAutoScroll();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<HomeViewModel>();
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home View"),
-      ),
-      body: Center(
+      backgroundColor: Colors.white,
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "1. SemiBold 16 Grey",
-              style: CustomTextStyles.semiBold16Grey,
+            // ── Banner Slider ─────────────────────────────
+            const AdBannerSection(),
+
+            const SizedBox(height: 60),
+
+            // ── Navigasyon Kartları ───────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: vm.cards.asMap().entries.map((entry) {
+                  final i = entry.key;
+                  final card = entry.value;
+
+                  return Padding(
+                    padding: EdgeInsets.only(top: i == 0 ? 0 : 16),
+                    child: SizedBox(
+                      height: 140,
+                      child: HomeCard(
+                        item: card,
+                        onTap: () => Navigator.pushNamed(context, card.route),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              "2. Regular 14 Black",
-              style: CustomTextStyles.regular14Black,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "3. Regular 14 Grey",
-              style: CustomTextStyles.regular14Grey,
-            ),
+
             const SizedBox(height: 20),
-            // Example of using the gradient button concept (custom widget would be better)
-            Container(
-              decoration: const BoxDecoration(
-                gradient: AppColors.primaryButtonGradient,
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  foregroundColor: Colors.white,
-                  // 4. Bold 17 White for button
-                  textStyle: CustomTextStyles.bold17White,
-                ),
-                child: const Text("4. Gradient Button"),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(12),
-              color: AppColors.yemoMessageBackground.withOpacity(0.2),
-              child: Text(
-                "5. This is a longer text example to show the line height of 24px (~1.71). It should be readable and have good spacing.",
-                style: CustomTextStyles.regular14GreyHeight,
-              ),
-            ),
           ],
         ),
       ),

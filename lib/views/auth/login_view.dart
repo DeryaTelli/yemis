@@ -124,8 +124,11 @@ class _LoginViewState extends State<LoginView> {
                       isLoading: vm.isLoading,
                       onPressed: () => vm.login(
                         formKey: _formKey,
-                        onSuccess: () => Navigator.pushReplacementNamed(
-                            context, AppRoutes.home),
+                        onSuccess: () async {
+                          final route = await vm.afterLoginRoute();
+                          if (!context.mounted) return;
+                          Navigator.pushReplacementNamed(context, route);
+                        },
                       ),
                     ),
                     const SizedBox(height: 24),

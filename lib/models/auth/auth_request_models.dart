@@ -1,3 +1,5 @@
+import 'package:yemis/models/auth/user_model.dart';
+
 /// Login isteği
 class LoginRequest {
   final String email;
@@ -23,18 +25,24 @@ class RegisterRequest {
   final String email;
   final String password;
 
+  /// Kullanıcı tipi: [UserType.food] veya [UserType.business]
+  final UserType userType;
+
   const RegisterRequest({
     required this.name,
     required this.email,
     required this.password,
+    this.userType = UserType.food,
   });
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'email': email,
         'password': password,
+        'userType': userType.name,
       };
 }
+
 
 /// Şifre sıfırlama isteği
 class ForgotPasswordRequest {
