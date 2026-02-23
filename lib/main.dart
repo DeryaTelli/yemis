@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/auth/mock_auth_service.dart';
 import 'services/auth/user_session.dart';
+import 'models/food/food_listing.dart';
 import 'utils/routes/app_routes.dart';
 import 'utils/theme/app_theme.dart';
 import 'viewmodels/auth/forgot_password_viewmodel.dart';
@@ -14,6 +15,7 @@ import 'views/auth/login_view.dart';
 import 'views/auth/register_view.dart';
 import 'views/auth/verification_view.dart';
 import 'views/business/business_home_view.dart';
+import 'views/food/food_detail_view.dart';
 import 'views/food/food_home_view.dart';
 import 'views/home_view.dart';
 import 'views/location_view.dart';
@@ -107,6 +109,12 @@ class MyApp extends StatelessWidget {
             case AppRoutes.foodHome:
               return MaterialPageRoute(
                 builder: (_) => const FoodHomeView(),
+                settings: settings,
+              );
+            case AppRoutes.foodDetail:
+              final listing = settings.arguments as FoodListing;
+              return MaterialPageRoute(
+                builder: (_) => FoodDetailView(listing: listing),
                 settings: settings,
               );
             case AppRoutes.volunteerHome:

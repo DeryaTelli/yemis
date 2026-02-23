@@ -11,9 +11,7 @@ class MockAuthService implements IAuthService {
   static const _testPassword = '123456';
   static const _fakeToken = 'mock-jwt-token-abc123';
 
-  final Map<String, String> _registeredUsers = {
-    _testEmail: _testPassword,
-  };
+  final Map<String, String> _registeredUsers = {_testEmail: _testPassword};
 
   @override
   Future<AuthResponse> login(LoginRequest request) async {
@@ -36,7 +34,7 @@ class MockAuthService implements IAuthService {
         id: 'usr_001',
         name: 'Test Kullanıcı',
         email: request.email,
-        userType: UserType.business, // mock default
+        userType: UserType.food, // mock default
       ),
     );
   }

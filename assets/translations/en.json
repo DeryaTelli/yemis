@@ -65,5 +65,22 @@
         "searchHint": "Search Location",
         "confirmButton": "Select Location",
         "locating": "Finding your location..."
+    },
+    "foodDetail": {
+        "tabOrder": "Order",
+        "tabReview": "Review",
+        "goToLocation": "Go to Location",
+        "moreDetail": "More Details",
+        "ingredients": "Ingredients & Allergens",
+        "reserveButton": "Reserve",
+        "shareLabel": "Share"
+    },
+    "home": {
+        "nearbyPlaces": "Places Near You",
+        "seeAll": "See All",
+        "surpriseBox": "Surprise Box",
+        "buyNow": "Buy Now",
+        "todayPopular": "Today's Popular",
+        "locationLoading": "Loading location…"
     }
 }

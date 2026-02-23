@@ -11,4 +11,5 @@ class AppRoutes {
   static const String foodHome = '/food-home';
   static const String volunteerHome = '/volunteer-home';
   static const String businessHome = '/business-home';
+  static const String foodDetail = '/food-detail';
 }

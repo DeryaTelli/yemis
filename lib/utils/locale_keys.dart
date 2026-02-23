@@ -66,4 +66,22 @@ abstract class LocaleKeys {
   static const mapPicker_searchHint = 'mapPicker.searchHint';
   static const mapPicker_confirmButton = 'mapPicker.confirmButton';
   static const mapPicker_locating = 'mapPicker.locating';
+
+  // foodDetail
+  static const foodDetail_tabOrder = 'foodDetail.tabOrder';
+  static const foodDetail_tabReview = 'foodDetail.tabReview';
+  static const foodDetail_goToLocation = 'foodDetail.goToLocation';
+  static const foodDetail_moreDetail = 'foodDetail.moreDetail';
+  static const foodDetail_ingredients = 'foodDetail.ingredients';
+  static const foodDetail_reserveButton = 'foodDetail.reserveButton';
+  static const foodDetail_shareLabel = 'foodDetail.shareLabel';
+
+  // home
+  static const home_nearbyPlaces = 'home.nearbyPlaces';
+  static const home_seeAll = 'home.seeAll';
+  static const home_surpriseBox = 'home.surpriseBox';
+  static const home_buyNow = 'home.buyNow';
+  static const home_todayPopular = 'home.todayPopular';
+  static const home_locationLoading = 'home.locationLoading';
 }
+

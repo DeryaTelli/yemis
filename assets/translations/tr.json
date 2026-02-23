@@ -65,5 +65,22 @@
     "searchHint": "Lokasyon Ara",
     "confirmButton": "Konumu Seç",
     "locating": "Konumunuz bulunuyor..."
+  },
+  "foodDetail": {
+    "tabOrder": "Sipariş",
+    "tabReview": "Yorum",
+    "goToLocation": "Lokasyona Git",
+    "moreDetail": "Daha Fazla Detay",
+    "ingredients": "İçerikler & Alerjenler",
+    "reserveButton": "Rezerve Et",
+    "shareLabel": "Paylaş"
+  },
+  "home": {
+    "nearbyPlaces": "Sana Yakın Yerler",
+    "seeAll": "Tümü",
+    "surpriseBox": "Sürpriz Kutu",
+    "buyNow": "Şimdi Al",
+    "todayPopular": "Bugün Popüler Olanlar",
+    "locationLoading": "Konum yükleniyor…"
   }
 }
