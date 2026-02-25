@@ -1,0 +1,75 @@
+Analyzing yemis...                                              
+
+   info - The constant name 'auth_login_title' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:6:16 - constant_identifier_names
+   info - The constant name 'auth_login_rememberMe' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:7:16 - constant_identifier_names
+   info - The constant name 'auth_login_forgotPassword' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:8:16 - constant_identifier_names
+   info - The constant name 'auth_login_noAccount' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:9:16 - constant_identifier_names
+   info - The constant name 'auth_login_register' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:10:16 - constant_identifier_names
+   info - The constant name 'auth_login_button' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:11:16 - constant_identifier_names
+   info - The constant name 'auth_register_title' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:14:16 - constant_identifier_names
+   info - The constant name 'auth_register_kvkk' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:15:16 - constant_identifier_names
+   info - The constant name 'auth_register_hasAccount' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:16:16 - constant_identifier_names
+   info - The constant name 'auth_register_login' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:17:16 - constant_identifier_names
+   info - The constant name 'auth_register_button' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:18:16 - constant_identifier_names
+   info - The constant name 'auth_forgotPassword_title' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:21:16 - constant_identifier_names
+   info - The constant name 'auth_forgotPassword_description' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:22:16 - constant_identifier_names
+   info - The constant name 'auth_forgotPassword_button' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:23:16 - constant_identifier_names
+   info - The constant name 'auth_verification_title' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:26:16 - constant_identifier_names
+   info - The constant name 'auth_verification_description' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:27:16 - constant_identifier_names
+   info - The constant name 'auth_verification_codeSent' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:28:16 - constant_identifier_names
+   info - The constant name 'auth_verification_resend' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:29:16 - constant_identifier_names
+   info - The constant name 'auth_verification_button' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:30:16 - constant_identifier_names
+   info - The constant name 'auth_fields_email' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:33:16 - constant_identifier_names
+   info - The constant name 'auth_fields_password' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:34:16 - constant_identifier_names
+   info - The constant name 'auth_fields_name' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:35:16 - constant_identifier_names
+   info - The constant name 'auth_validation_emailEmpty' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:38:16 - constant_identifier_names
+   info - The constant name 'auth_validation_emailInvalid' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:39:16 - constant_identifier_names
+   info - The constant name 'auth_validation_passwordEmpty' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:40:16 - constant_identifier_names
+   info - The constant name 'auth_validation_passwordMinLength' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:41:16 - constant_identifier_names
+   info - The constant name 'auth_validation_nameEmpty' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:42:16 - constant_identifier_names
+   info - The constant name 'auth_validation_kvkkRequired' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:43:16 - constant_identifier_names
+   info - The constant name 'auth_validation_codeIncomplete' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:44:16 - constant_identifier_names
+   info - The constant name 'auth_errors_invalidCredentials' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:47:16 - constant_identifier_names
+   info - The constant name 'auth_errors_emailAlreadyRegistered' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:48:16 - constant_identifier_names
+   info - The constant name 'auth_errors_general' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:49:16 - constant_identifier_names
+   info - The constant name 'auth_errors_emailSendFailed' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:50:16 - constant_identifier_names
+   info - The constant name 'auth_errors_codeSendFailed' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:51:16 - constant_identifier_names
+   info - The constant name 'auth_errors_codeInvalid' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:52:16 - constant_identifier_names
+   info - The constant name 'auth_errors_registerSuccess' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:53:16 - constant_identifier_names
+   info - The constant name 'auth_errors_loginSuccess' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:54:16 - constant_identifier_names
+   info - The constant name 'location_title' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:57:16 - constant_identifier_names
+   info - The constant name 'location_shareTitle' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:58:16 - constant_identifier_names
+   info - The constant name 'location_shareDescription' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:59:16 - constant_identifier_names
+   info - The constant name 'location_buttonShare' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:60:16 - constant_identifier_names
+   info - The constant name 'location_buttonPick' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:61:16 - constant_identifier_names
+   info - The constant name 'location_permissionDenied' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:62:16 - constant_identifier_names
+   info - The constant name 'location_fetchError' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:63:16 - constant_identifier_names
+   info - The constant name 'mapPicker_searchHint' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:66:16 - constant_identifier_names
+   info - The constant name 'mapPicker_confirmButton' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:67:16 - constant_identifier_names
+   info - The constant name 'mapPicker_locating' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:68:16 - constant_identifier_names
+   info - The constant name 'foodDetail_tabOrder' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:71:16 - constant_identifier_names
+   info - The constant name 'foodDetail_tabReview' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:72:16 - constant_identifier_names
+   info - The constant name 'foodDetail_goToLocation' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:73:16 - constant_identifier_names
+   info - The constant name 'foodDetail_moreDetail' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:74:16 - constant_identifier_names
+   info - The constant name 'foodDetail_ingredients' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:75:16 - constant_identifier_names
+   info - The constant name 'foodDetail_reserveButton' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:76:16 - constant_identifier_names
+   info - The constant name 'foodDetail_shareLabel' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:77:16 - constant_identifier_names
+   info - The constant name 'home_nearbyPlaces' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:80:16 - constant_identifier_names
+   info - The constant name 'home_seeAll' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:81:16 - constant_identifier_names
+   info - The constant name 'home_surpriseBox' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:82:16 - constant_identifier_names
+   info - The constant name 'home_buyNow' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:83:16 - constant_identifier_names
+   info - The constant name 'home_todayPopular' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:84:16 - constant_identifier_names
+   info - The constant name 'home_locationLoading' isn't a lowerCamelCase identifier - lib\utils\locale_keys.dart:85:16 - constant_identifier_names
+   info - The import of 'package:flutter/services.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\views\auth\verification_view.dart:3:8 - unnecessary_import
+warning - Unused import: '../../utils/constants/app_colors.dart' - lib\views\auth\verification_view.dart:5:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\common\custom_button.dart:48:47 - deprecated_member_use
+   info - The import of 'package:flutter/services.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\widgets\common\custom_text_field.dart:2:8 - unnecessary_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\widgets\common\custom_text_field.dart:59:39 - deprecated_member_use
+   info - 'RawKeyboardListener' is deprecated and shouldn't be used. Use KeyboardListener instead. This feature was deprecated after v3.18.0-2.0.pre - lib\widgets\common\otp_box.dart:30:14 - deprecated_member_use
+   info - 'RawKeyDownEvent' is deprecated and shouldn't be used. Use KeyDownEvent instead. This feature was deprecated after v3.18.0-2.0.pre - lib\widgets\common\otp_box.dart:33:24 - deprecated_member_use
+warning - Unused import: 'package:map_launcher/map_launcher.dart' - lib\widgets\food\food_detail_location_section.dart:4:8 - unused_import
+   info - Unnecessary use of multiple underscores - lib\widgets\food\food_listing_card.dart:52:41 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\widgets\food\food_listing_card.dart:52:45 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\widgets\food\food_listing_section.dart:69:35 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\widgets\food\food_review_item.dart:100:39 - unnecessary_underscores
+
