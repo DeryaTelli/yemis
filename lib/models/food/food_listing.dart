@@ -18,6 +18,8 @@ class FoodListing {
     this.allergens,
     this.latitude,
     this.longitude,
+    this.deliveryStartTime,
+    this.deliveryEndTime,
   });
 
   final String id;
@@ -38,6 +40,8 @@ class FoodListing {
   final String? allergens;
   final double? latitude;
   final double? longitude;
+  final DateTime? deliveryStartTime;
+  final DateTime? deliveryEndTime;
 
   FoodListing copyWith({
     bool? isFavorite,
@@ -46,6 +50,8 @@ class FoodListing {
     String? allergens,
     double? latitude,
     double? longitude,
+    DateTime? deliveryStartTime,
+    DateTime? deliveryEndTime,
   }) {
     return FoodListing(
       id: id,
@@ -64,6 +70,8 @@ class FoodListing {
       allergens: allergens ?? this.allergens,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      deliveryStartTime: deliveryStartTime ?? this.deliveryStartTime,
+      deliveryEndTime: deliveryEndTime ?? this.deliveryEndTime,
     );
   }
 }

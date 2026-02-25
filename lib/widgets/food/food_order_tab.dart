@@ -5,6 +5,8 @@ import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../viewmodels/food/food_detail_viewmodel.dart';
+import '../../views/location/navigation_view.dart';
+import 'order_location_map.dart';
 
 /// Food Detay → Sipariş sekmesi içeriği.
 class FoodOrderTab extends StatelessWidget {
@@ -44,12 +46,22 @@ class FoodOrderTab extends StatelessWidget {
             ),
           const SizedBox(height: 16),
 
-          // ── Harita Thumbnail ──────────────────────────
-          _MapThumbnail(),
+          // ── Harita ──────────────────────────────────
+          if (vm.businessLatLng != null)
+            OrderLocationMap(
+              businessLocation: vm.businessLatLng!,
+              userLocation: vm.userLatLng,
+              height: 180,
+            )
+          else
+            const SizedBox(
+              height: 180,
+              child: Center(child: Text("Konum bilgisi yok")),
+            ),
           const SizedBox(height: 12),
 
           // ── Lokasyona Git Butonu ───────────────────────
-          _GoToLocationButton(),
+          _GoToLocationButton(listing: listing),
           const SizedBox(height: 20),
 
           // ── Daha Fazla Detay (Expandable) ─────────────
@@ -61,89 +73,28 @@ class FoodOrderTab extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────
-// Harita Placeholder
-// ─────────────────────────────────────────────────────
-class _MapThumbnail extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        height: 150,
-        width: double.infinity,
-        color: const Color(0xFFE8E8E8),
-        child: Stack(
-          children: [
-            // Harita arka planı (placeholder renk grid)
-            CustomPaint(
-              size: const Size(double.infinity, 150),
-              painter: _MapGridPainter(),
-            ),
-            // Merkez pin
-            const Center(
-              child: Icon(
-                Icons.location_pin,
-                color: Colors.red,
-                size: 36,
-              ),
-            ),
-            // Apple Maps watermark benzeri logo
-            Positioned(
-              bottom: 6,
-              left: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.85),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Text(
-                  '⊙ Maps',
-                  style: TextStyle(fontSize: 10, color: Colors.black54),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Basit bir harita grid çizgisi — gerçek harita yokken placeholder olarak kullanılır.
-class _MapGridPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final bgPaint = Paint()..color = const Color(0xFFD4E6A5);
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
-
-    final roadPaint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 6;
-
-    // Yatay yollar
-    for (double y = 20; y < size.height; y += 40) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), roadPaint);
-    }
-    // Dikey yollar
-    for (double x = 30; x < size.width; x += 60) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), roadPaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-// ─────────────────────────────────────────────────────
 // Lokasyona Git Butonu
 // ─────────────────────────────────────────────────────
 class _GoToLocationButton extends StatelessWidget {
+  const _GoToLocationButton({required this.listing});
+
+  final FoodListing listing;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO: Harita uygulamasını aç (url_launcher)
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NavigationView(
+              latitude: listing.latitude ?? 41.0082,
+              longitude: listing.longitude ?? 28.9784,
+              businessName: listing.shopName,
+              address: listing.location,
+            ),
+          ),
+        );
       },
       child: Container(
         width: double.infinity,

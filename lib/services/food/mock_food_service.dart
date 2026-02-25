@@ -33,7 +33,7 @@ class MockFoodService implements IFoodService {
 
   // ─── Mock Listings ────────────────────────────────────────────────────
 
-  static const List<FoodListing> _mockListings = [
+  static final List<FoodListing> _mockListings = [
     // ── Sürpriz Kutu ─────────────────────────────────────
     FoodListing(
       id: 'sb_1',
@@ -57,6 +57,8 @@ class MockFoodService implements IFoodService {
       allergens: 'Gluten, Süt, Yumurta',
       latitude: 41.2048,
       longitude: 32.6218,
+      deliveryStartTime: DateTime.now().subtract(const Duration(hours: 1)),
+      deliveryEndTime: DateTime.now().add(const Duration(hours: 3)),
     ),
     FoodListing(
       id: 'sb_2',
@@ -76,6 +78,8 @@ class MockFoodService implements IFoodService {
       allergens: 'Gluten, Susam',
       latitude: 41.2060,
       longitude: 32.6235,
+      deliveryStartTime: DateTime.now().add(const Duration(days: 2, hours: 2)),
+      deliveryEndTime: DateTime.now().add(const Duration(days: 2, hours: 5)),
     ),
     FoodListing(
       id: 'sb_3',
@@ -113,6 +117,8 @@ class MockFoodService implements IFoodService {
       allergens: 'Gluten, Süt, Yumurta',
       latitude: 41.2048,
       longitude: 32.6218,
+      deliveryStartTime: DateTime.now().subtract(const Duration(hours: 1)),
+      deliveryEndTime: DateTime.now().add(const Duration(hours: 3)),
     ),
     FoodListing(
       id: 'bn_2',
@@ -166,6 +172,8 @@ class MockFoodService implements IFoodService {
       allergens: 'Gluten, Süt, Yumurta',
       latitude: 41.2048,
       longitude: 32.6218,
+      deliveryStartTime: DateTime.now().subtract(const Duration(hours: 1)),
+      deliveryEndTime: DateTime.now().add(const Duration(hours: 3)),
     ),
     FoodListing(
       id: 'tp_2',

@@ -9,6 +9,8 @@ import '../../widgets/food/food_filter_chips.dart';
 import '../../widgets/food/food_listing_section.dart';
 import '../../widgets/food/food_map_section.dart';
 import '../../widgets/food/food_search_bar.dart';
+import '../../models/app_module_type.dart';
+import '../../widgets/common/app_bottom_nav_bar.dart';
 
 /// Yemek ana sayfası — tam MVVM ile uygulanmıştır.
 class FoodHomeView extends StatelessWidget {
@@ -182,6 +184,11 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
                 ],
               ),
             ),
+      bottomNavigationBar: AppBottomNavBar(
+        selectedIndex: vm.selectedIndex,
+        onItemSelected: vm.onTabSelected,
+        moduleType: AppModuleType.food,
+      ),
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../viewmodels/food/food_detail_viewmodel.dart';
+import '../../views/location/navigation_view.dart';
 
 class FoodDetailHeader extends StatelessWidget {
   const FoodDetailHeader({super.key, required this.listing});
@@ -9,6 +12,8 @@ class FoodDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<FoodDetailViewModel>();
+
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
@@ -30,14 +35,14 @@ class FoodDetailHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
 
-                // Saat aralığı
+                // Saat aralığı (Dinamik: Bugün Al vb.)
                 Row(
                   children: [
                     const Icon(Icons.access_time_rounded,
                         color: AppColors.primaryColor, size: 14),
                     const SizedBox(width: 4),
                     Text(
-                      listing.timeRange,
+                      vm.deliveryText,
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.hintTextColor,
@@ -47,7 +52,7 @@ class FoodDetailHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
 
-                // Mesafe + Mağaza
+                // Mesafe + Mağaza (Dinamik mesafe)
                 Row(
                   children: [
                     const Icon(Icons.location_on_outlined,
@@ -55,7 +60,7 @@ class FoodDetailHeader extends StatelessWidget {
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
-                        listing.location,
+                        "${vm.distanceText} | ${listing.shopName}",
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.hintTextColor,
