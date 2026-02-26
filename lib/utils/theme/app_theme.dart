@@ -13,22 +13,19 @@ enum AppSection {
 }
 
 class AppTheme {
-
   AppTheme._();
 
   // ---------------------------------------------------------------------------
   // İşletme & Yemek — Turuncu Tema (#FE8800)
   // ---------------------------------------------------------------------------
-  static ThemeData get lightTheme => _buildTheme(
-        primaryColor: AppColors.primaryColor,
-      );
+  static ThemeData get lightTheme =>
+      _buildTheme(primaryColor: AppColors.primaryColor);
 
   // ---------------------------------------------------------------------------
   // Gönüllülük — Yeşil Tema (#22B05A)
   // ---------------------------------------------------------------------------
-  static ThemeData get volunteerTheme => _buildTheme(
-        primaryColor: AppColors.volunteerColor,
-      );
+  static ThemeData get volunteerTheme =>
+      _buildTheme(primaryColor: AppColors.volunteerColor);
 
   // ---------------------------------------------------------------------------
   // Bölüme göre tema seç
@@ -81,8 +78,10 @@ class AppTheme {
           foregroundColor: Colors.white,
           disabledBackgroundColor: Colors.grey[300],
           disabledForegroundColor: AppColors.unselectedButtonTextColor,
-          textStyle:
-              GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold),
+          textStyle: GoogleFonts.nunito(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

@@ -31,7 +31,7 @@ class NavBarItem extends StatelessWidget {
             Iconify(
               icon,
               color: isSelected ? selectedColor : unselectedColor,
-              size: 24,
+              size: 28,
             ),
           ],
         ),

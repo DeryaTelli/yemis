@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class VolunteerHomeViewModel extends ChangeNotifier {
-  int _selectedIndex = 0;
+class FoodFavoritesViewModel extends ChangeNotifier {
+  int _selectedIndex = 3;
   int get selectedIndex => _selectedIndex;
 
 
@@ -10,7 +10,5 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     if (_selectedIndex == index) return;
     _selectedIndex = index;
     notifyListeners();
-    
-    debugPrint("Volunteer Tab Selected: $index");
   }
 }

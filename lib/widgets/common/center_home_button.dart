@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/constants/app_icons.dart';
 
 class CenterHomeButton extends StatelessWidget {
   const CenterHomeButton({
@@ -40,7 +40,7 @@ class CenterHomeButton extends StatelessWidget {
         ),
         child: Center(
           child: Iconify(
-            MaterialSymbols.menu_rounded,
+            AppIcons.menu,
             color: const Color(0xFF4F4F4F),
             size: 28,
           ),

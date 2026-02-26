@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../models/app_module_type.dart';
+import '../models/auth/user_model.dart';
 import '../services/auth/user_session.dart';
 import '../viewmodels/home_viewmodel.dart';
+import '../widgets/common/app_bottom_nav_bar.dart';
 import '../widgets/home/ad_banner_section.dart';
 import '../widgets/home/home_card.dart';
 
@@ -42,7 +45,6 @@ class _HomeBodyState extends State<_HomeBody> {
 
   @override
   void dispose() {
-    context.read<HomeViewModel>().stopAutoScroll();
     super.dispose();
   }
 

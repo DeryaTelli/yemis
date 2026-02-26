@@ -1,17 +1,17 @@
 class AppIcons {
   // Food Icons
-  static const String home = 'proicons:home';
-  static const String search = 'iconamoon:search';
-  static const String favorite = 'material-symbols-light:favorite-outline-rounded';
-  static const String profile = 'iconamoon:profile';
+  static const String home = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5" d="M15.29 20.663h3.017a2.194 2.194 0 0 0 2.193-2.194v-6.454a3.3 3.3 0 0 0-1.13-2.48l-5.93-5.166a2.194 2.194 0 0 0-2.88 0L4.63 9.534a3.3 3.3 0 0 0-1.13 2.481v6.454c0 1.212.982 2.194 2.194 2.194h3.29m6.306 0v-6.581c0-.908-.736-1.645-1.645-1.645H10.63c-.909 0-1.645.737-1.645 1.645v6.581m6.306 0H8.984"/></svg>';
+  static const String search = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21l-4.343-4.343m0 0A8 8 0 1 0 5.343 5.343a8 8 0 0 0 11.314 11.314"/></svg>';
+  static const String favorite = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7a6.1 6.1 0 0 0 .584-7.5c-1.31-1.74-3.664-2.22-5.462-1.25L12 6Z"/></svg>';
+  static const String profile = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path stroke-linejoin="round" d="M4 18a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><circle cx="12" cy="7" r="3"/></g></svg>';
   
   // Volunteer Icons
-  static const String addVolunteer = 'formkit:add';
+  static const String addVolunteer = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 15c-3.86 0-7-3.14-7-7s3.14-7 7-7s7 3.14 7 7s-3.14 7-7 7M8 2C4.69 2 2 4.69 2 8s2.69 6 6 6s6-2.69 6-6s-2.69-6-6-6"/><path fill="currentColor" d="M8 11.5c-.28 0-.5-.22-.5-.5V5c0-.28.22-.5.5-.5s.5.22.5.5v6c0 .28-.22.5-.5.5"/><path fill="currentColor" d="M11 8.5H5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h6c.28 0 .5.22.5.5s-.22.5-.5.5"/></svg>';
   
   // Business Icons
-  static const String approvals = 'fluent:approvals-app-48-regular';
-  static const String addBusiness = 'codex:add-border';
+  static const String approvals = '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><path fill="currentColor" d="M21.616 3.366a1.25 1.25 0 0 1 1.768 0l5.25 5.25a1.25 1.25 0 0 1 0 1.768l-5.25 5.25a1.25 1.25 0 0 1-1.768-1.768l3.337-3.337q-.473-.03-.953-.029c-8.56 0-15.5 6.94-15.5 15.5S15.44 41.5 24 41.5c8.14 0 14.814-6.274 15.45-14.25c.055-.688.61-1.25 1.3-1.25s1.255.561 1.207 1.25C41.315 36.608 33.521 44 24 44c-9.941 0-18-8.059-18-18S14.059 8 24 8q.245 0 .489.007l-2.873-2.873a1.25 1.25 0 0 1 0-1.768m11.268 18.768a1.25 1.25 0 0 0-1.768-1.768L22.5 28.982l-3.366-3.366a1.25 1.25 0 0 0-1.768 1.768l4.25 4.25a1.25 1.25 0 0 0 1.768 0z"/></svg>';
+  static const String addBusiness = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.992 9.5h.01M14.5 5h.01"/><path stroke-linecap="round" d="M14.625 5H15a4 4 0 0 1 4 4v.375"/><path d="M9.375 5H9a4 4 0 0 0-4 4v.375"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.373 5h.01M5 9.5h.01"/><path d="M9.375 19H9a4 4 0 0 1-4-4v-.375"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.373 19h.01M5 14.55h.01"/><path stroke-linecap="round" d="M16 13v3m0 3v-3m3 0h-3m0 0h-3"/></g></svg>';
 
   // Common
-  static const String menu = 'material-symbols:menu-rounded';
+  static const String menu = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>';
 }

@@ -26,7 +26,9 @@ class OrderLocationMap extends StatelessWidget {
           options: MapOptions(
             initialCenter: businessLocation,
             initialZoom: 13.0,
-            interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.none,
+            ),
           ),
           children: [
             TileLayer(

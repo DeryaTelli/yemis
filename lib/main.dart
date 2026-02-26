@@ -16,11 +16,17 @@ import 'views/auth/register_view.dart';
 import 'views/auth/verification_view.dart';
 import 'views/business/business_home_view.dart';
 import 'views/food/food_detail_view.dart';
+import 'views/food/food_favorites_view.dart';
 import 'views/food/food_home_view.dart';
+import 'views/food/food_profile_view.dart';
+import 'views/food/food_search_view.dart';
 import 'views/home_view.dart';
 import 'views/location_view.dart';
 import 'views/map_picker_view.dart';
+import 'views/volunteer/volunteer_add_listing_view.dart';
 import 'views/volunteer/volunteer_home_view.dart';
+import 'views/volunteer/volunteer_profile_view.dart';
+import 'views/volunteer/volunteer_search_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -111,6 +117,21 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const FoodHomeView(),
                 settings: settings,
               );
+            case AppRoutes.foodSearch:
+              return MaterialPageRoute(
+                builder: (_) => const FoodSearchView(),
+                settings: settings,
+              );
+            case AppRoutes.foodFavorites:
+              return MaterialPageRoute(
+                builder: (_) => const FoodFavoritesView(),
+                settings: settings,
+              );
+            case AppRoutes.foodProfile:
+              return MaterialPageRoute(
+                builder: (_) => const FoodProfileView(),
+                settings: settings,
+              );
             case AppRoutes.foodDetail:
               final listing = settings.arguments as FoodListing;
               return MaterialPageRoute(
@@ -120,6 +141,21 @@ class MyApp extends StatelessWidget {
             case AppRoutes.volunteerHome:
               return MaterialPageRoute(
                 builder: (_) => const VolunteerHomeView(),
+                settings: settings,
+              );
+            case AppRoutes.volunteerSearch:
+              return MaterialPageRoute(
+                builder: (_) => const VolunteerSearchView(),
+                settings: settings,
+              );
+            case AppRoutes.volunteerProfile:
+              return MaterialPageRoute(
+                builder: (_) => const VolunteerProfileView(),
+                settings: settings,
+              );
+            case AppRoutes.volunteerAddListing:
+              return MaterialPageRoute(
+                builder: (_) => const VolunteerAddListingView(),
                 settings: settings,
               );
             case AppRoutes.businessHome:

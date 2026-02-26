@@ -112,6 +112,14 @@ class HomeViewModel extends ChangeNotifier {
 
   void stopAutoScroll() => _autoScrollTimer?.cancel();
 
+  int _selectedIndex = 2;
+  int get selectedIndex => _selectedIndex;
+
+  void onTabSelected(int index) {
+    _selectedIndex = index;
+    notifyListeners();
+  }
+
   void onBannerPageChanged(int index) {
     _currentBannerIndex = index;
     notifyListeners();

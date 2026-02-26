@@ -24,7 +24,6 @@ class AppBottomNavBar extends StatelessWidget {
         : AppColors.primaryColor;
 
     return Container(
-      height: 70,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
@@ -37,38 +36,47 @@ class AppBottomNavBar extends StatelessWidget {
         ],
       ),
       child: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            NavBarItem(
-              icon: AppIcons.home,
-              isSelected: selectedIndex == 0,
-              onTap: () => onItemSelected(0),
-              selectedColor: selectedColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            height: 50, // Exact Figma content height
+            child: Row(
+              children: [
+                NavBarItem(
+                  icon: AppIcons.home,
+                  isSelected: selectedIndex == 0,
+                  onTap: () => onItemSelected(0),
+                  selectedColor: selectedColor,
+                ),
+                NavBarItem(
+                  icon: _getSecondIcon(),
+                  isSelected: selectedIndex == 1,
+                  onTap: () => onItemSelected(1),
+                  selectedColor: selectedColor,
+                ),
+                Expanded(
+                  child: Center(
+                    child: CenterHomeButton(
+                      isSelected: selectedIndex == 2,
+                      onTap: () => onItemSelected(2),
+                    ),
+                  ),
+                ),
+                NavBarItem(
+                  icon: _getFourthIcon(),
+                  isSelected: selectedIndex == 3,
+                  onTap: () => onItemSelected(3),
+                  selectedColor: selectedColor,
+                ),
+                NavBarItem(
+                  icon: AppIcons.profile,
+                  isSelected: selectedIndex == 4,
+                  onTap: () => onItemSelected(4),
+                  selectedColor: selectedColor,
+                ),
+              ],
             ),
-            NavBarItem(
-              icon: _getSecondIcon(),
-              isSelected: selectedIndex == 1,
-              onTap: () => onItemSelected(1),
-              selectedColor: selectedColor,
-            ),
-            CenterHomeButton(
-              isSelected: selectedIndex == 2,
-              onTap: () => onItemSelected(2),
-            ),
-            NavBarItem(
-              icon: _getFourthIcon(),
-              isSelected: selectedIndex == 3,
-              onTap: () => onItemSelected(3),
-              selectedColor: selectedColor,
-            ),
-            NavBarItem(
-              icon: AppIcons.profile,
-              isSelected: selectedIndex == 4,
-              onTap: () => onItemSelected(4),
-              selectedColor: selectedColor,
-            ),
-          ],
+          ),
         ),
       ),
     );

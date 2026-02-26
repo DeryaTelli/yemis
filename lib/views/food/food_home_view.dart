@@ -10,6 +10,7 @@ import '../../widgets/food/food_listing_section.dart';
 import '../../widgets/food/food_map_section.dart';
 import '../../widgets/food/food_search_bar.dart';
 import '../../models/app_module_type.dart';
+import '../../widgets/common/home_app_bar.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 
 /// Yemek ana sayfası — tam MVVM ile uygulanmıştır.
@@ -50,59 +51,17 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-
       // ─── AppBar ──────────────────────────────────
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: GestureDetector(
-          onTap: () => Navigator.pushNamed(context, AppRoutes.location),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Yemiş avatar ikonu
-              Container(
-                width: 32,
-                height: 32,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.person_pin_circle_rounded,
-                  color: AppColors.primaryColor,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 8),
-
-              // Konum adı
-              Flexible(
-                child: Text(
-                  vm.isLoading ? 'Konum yükleniyor…' : vm.locationName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 4),
-              const Icon(Icons.keyboard_arrow_down_rounded,
-                  color: Colors.white, size: 20),
-            ],
-          ),
-        ),
+      appBar: HomeAppBar(
+        title: vm.appBarTitle,
+        backgroundColor: vm.appBarColor,
+        isLocationTitle: true,
       ),
 
       // ─── Body ────────────────────────────────────
       body: vm.isLoading
           ? const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primaryColor,
-              ),
+              child: CircularProgressIndicator(color: AppColors.primaryColor),
             )
           : SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -119,7 +78,7 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
                   const SizedBox(height: 16),
 
                   // ── Harita Alanı ────────────────────────────
-                  const FoodMapSection(),
+                  FoodMapSection(listings: vm.filteredListings),
                   const SizedBox(height: 16),
 
                   // ── Filtre Chip'leri ────────────────────────
@@ -186,7 +145,40 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
             ),
       bottomNavigationBar: AppBottomNavBar(
         selectedIndex: vm.selectedIndex,
-        onItemSelected: vm.onTabSelected,
+        onItemSelected: (index) {
+          if (index == 2) {
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                AppRoutes.home,
+                (route) => false,
+              );
+            }
+            return;
+          }
+
+          String route;
+          switch (index) {
+            case 0:
+              route = AppRoutes.foodHome;
+              break;
+            case 1:
+              route = AppRoutes.foodSearch;
+              break;
+            case 3:
+              route = AppRoutes.foodFavorites;
+              break;
+            case 4:
+              route = AppRoutes.foodProfile;
+              break;
+            default:
+              return;
+          }
+
+          if (ModalRoute.of(context)?.settings.name != route) {
+            Navigator.pushReplacementNamed(context, route);
+          }
+        },
         moduleType: AppModuleType.food,
       ),
     );
