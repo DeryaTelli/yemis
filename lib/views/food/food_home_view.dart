@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../../models/food/food_listing.dart';
 import '../../services/food/mock_food_service.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/food/food_home_viewmodel.dart';
 import '../../widgets/food/food_filter_chips.dart';
 import '../../widgets/food/food_listing_section.dart';
@@ -146,37 +145,22 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
       bottomNavigationBar: AppBottomNavBar(
         selectedIndex: vm.selectedIndex,
         onItemSelected: (index) {
-          if (index == 2) {
-            if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.home,
-                (route) => false,
-              );
+          final route = vm.getBottomNavRoute(index);
+
+          if (route != null) {
+            if (index == 2) {
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  route,
+                  (r) => false,
+                );
+              }
+            } else if (ModalRoute.of(context)?.settings.name != route) {
+              Navigator.pushReplacementNamed(context, route);
             }
-            return;
-          }
-
-          String route;
-          switch (index) {
-            case 0:
-              route = AppRoutes.foodHome;
-              break;
-            case 1:
-              route = AppRoutes.foodSearch;
-              break;
-            case 3:
-              route = AppRoutes.foodFavorites;
-              break;
-            case 4:
-              route = AppRoutes.foodProfile;
-              break;
-            default:
-              return;
-          }
-
-          if (ModalRoute.of(context)?.settings.name != route) {
-            Navigator.pushReplacementNamed(context, route);
+          } else {
+            vm.onTabSelected(index);
           }
         },
         moduleType: AppModuleType.food,

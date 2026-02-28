@@ -5,10 +5,7 @@ import '../../utils/constants/app_colors.dart';
 /// Harita alanını gösterir.
 /// Fotoğraftaki gibi gerçekçi bir harita görünümü sunar.
 class FoodMapSection extends StatelessWidget {
-  const FoodMapSection({
-    super.key,
-    this.listings = const [],
-  });
+  const FoodMapSection({super.key, this.listings = const []});
 
   final List<FoodListing> listings;
 
@@ -34,15 +31,11 @@ class FoodMapSection extends StatelessWidget {
             // ── Gerçekçi Harita Arka Planı (Painter) ────────
             Container(
               color: const Color(0xFFF2F2F2),
-              child: CustomPaint(
-                painter: _RealisticMapPainter(),
-              ),
+              child: CustomPaint(painter: _RealisticMapPainter()),
             ),
 
             // ── Merkez Konum Pin (Orange Teardrop) ─────────
-            const Center(
-              child: _MapPinTeardrop(isCenter: true),
-            ),
+            const Center(child: _MapPinTeardrop(isCenter: true)),
 
             // ── Konum Bul Butonu (sağ alt) ───────────
             Positioned(
@@ -70,11 +63,13 @@ class FoodMapSection extends StatelessWidget {
             ),
 
             // ── İlan Pinleri (dağıtılmış) ────────────────
-            ..._getMockPositions(listings.length).map((pos) => Positioned(
-                  left: pos.dx,
-                  top: pos.dy,
-                  child: const _MapPinTeardrop(isCenter: false),
-                )),
+            ..._getMockPositions(listings.length).map(
+              (pos) => Positioned(
+                left: pos.dx,
+                top: pos.dy,
+                child: const _MapPinTeardrop(isCenter: false),
+              ),
+            ),
           ],
         ),
       ),
@@ -180,16 +175,39 @@ class _RealisticMapPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     // Arka plan
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFFF1F1F1));
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()..color = const Color(0xFFF1F1F1),
+    );
 
     // Bazı yeşil alanlar (Parklar)
-    canvas.drawRRect(RRect.fromLTRBR(20, 30, 80, 100, const Radius.circular(20)), parkPaint);
-    canvas.drawRRect(RRect.fromLTRBR(size.width - 100, 150, size.width - 20, 230, const Radius.circular(20)), parkPaint);
+    canvas.drawRRect(
+      RRect.fromLTRBR(20, 30, 80, 100, const Radius.circular(20)),
+      parkPaint,
+    );
+    canvas.drawRRect(
+      RRect.fromLTRBR(
+        size.width - 100,
+        150,
+        size.width - 20,
+        230,
+        const Radius.circular(20),
+      ),
+      parkPaint,
+    );
 
     // Sokak Çizgileri
     canvas.drawLine(const Offset(0, 100), Offset(size.width, 100), streetPaint);
-    canvas.drawLine(const Offset(100, 0), Offset(100, size.height), streetPaint);
-    canvas.drawLine(Offset(size.width * 0.7, 0), Offset(size.width * 0.3, size.height), streetPaint);
+    canvas.drawLine(
+      const Offset(100, 0),
+      Offset(100, size.height),
+      streetPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.7, 0),
+      Offset(size.width * 0.3, size.height),
+      streetPaint,
+    );
 
     // Ana cadde (kuyruklu giden)
     final mainRoadPaint = Paint()
@@ -197,7 +215,11 @@ class _RealisticMapPainter extends CustomPainter {
       ..strokeWidth = 16
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
-    canvas.drawLine(const Offset(0, 50), Offset(size.width, 180), mainRoadPaint);
+    canvas.drawLine(
+      const Offset(0, 50),
+      Offset(size.width, 180),
+      mainRoadPaint,
+    );
 
     // Metin Etiketleri (Mock Karabük labels)
     _drawLabel(canvas, "Şirinevler", const Offset(110, 80));

@@ -4,7 +4,6 @@ import '../../models/app_module_type.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/food/food_search_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
-import '../../widgets/common/home_app_bar.dart';
 
 class FoodSearchView extends StatelessWidget {
   const FoodSearchView({super.key});
@@ -37,45 +36,30 @@ class FoodSearchView extends StatelessWidget {
             ),
             bottomNavigationBar: AppBottomNavBar(
               selectedIndex: vm.selectedIndex,
-              onItemSelected: (index) => _handleNavigation(context, index),
+              onItemSelected: (index) {
+                final route = vm.getBottomNavRoute(index);
+
+                if (route != null) {
+                  if (index == 2) {
+                    if (context.mounted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        route,
+                        (r) => false,
+                      );
+                    }
+                  } else if (ModalRoute.of(context)?.settings.name != route) {
+                    Navigator.pushReplacementNamed(context, route);
+                  }
+                } else {
+                  vm.onTabSelected(index);
+                }
+              },
               moduleType: AppModuleType.food,
             ),
           );
         },
       ),
     );
-  }
-
-  void _handleNavigation(BuildContext context, int index) {
-    if (index == 2) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRoutes.home,
-        (route) => false,
-      );
-      return;
-    }
-
-    String route;
-    switch (index) {
-      case 0:
-        route = AppRoutes.foodHome;
-        break;
-      case 1:
-        route = AppRoutes.foodSearch;
-        break;
-      case 3:
-        route = AppRoutes.foodFavorites;
-        break;
-      case 4:
-        route = AppRoutes.foodProfile;
-        break;
-      default:
-        return;
-    }
-
-    if (ModalRoute.of(context)?.settings.name != route) {
-      Navigator.pushReplacementNamed(context, route);
-    }
   }
 }

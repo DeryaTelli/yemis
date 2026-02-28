@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/routes/app_routes.dart';
 
 class BusinessHomeViewModel extends ChangeNotifier {
   int _selectedIndex = 0;
@@ -11,7 +12,12 @@ class BusinessHomeViewModel extends ChangeNotifier {
     if (_selectedIndex == index) return;
     _selectedIndex = index;
     notifyListeners();
-    
     debugPrint("Business Tab Selected: $index");
+  }
+
+  /// MVVM: Alt navigasyon rotalarını ViewModel sağlar
+  String? getBottomNavRoute(int index) {
+    if (index == 2) return AppRoutes.home;
+    return null;
   }
 }

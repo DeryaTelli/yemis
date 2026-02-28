@@ -16,4 +16,10 @@ abstract class IFoodService {
 
   /// Belirtilen ilanın yorumlarını döner.
   Future<List<FoodReview>> getFoodReviews(String id);
+
+  /// Favori durumunu değiştirir.
+  void toggleFavorite(String id);
+
+  /// Favori olan ilanları döner.
+  List<FoodListing> getFavorites();
 }

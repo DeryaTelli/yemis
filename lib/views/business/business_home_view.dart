@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yemis/utils/routes/app_routes.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/home/business_home_viewmodel.dart';
@@ -47,13 +46,19 @@ class BusinessHomeView extends StatelessWidget {
             bottomNavigationBar: AppBottomNavBar(
               selectedIndex: vm.selectedIndex,
               onItemSelected: (index) {
-                if (index == 2) {
-                  if (context.mounted) {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      AppRoutes.home,
-                      (route) => false,
-                    );
+                final route = vm.getBottomNavRoute(index);
+
+                if (route != null) {
+                  if (index == 2) {
+                    if (context.mounted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        route,
+                        (r) => false,
+                      );
+                    }
+                  } else if (ModalRoute.of(context)?.settings.name != route) {
+                    Navigator.pushReplacementNamed(context, route);
                   }
                 } else {
                   vm.onTabSelected(index);

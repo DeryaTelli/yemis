@@ -3,7 +3,14 @@ import '../../models/food/food_review.dart';
 import 'i_food_service.dart';
 
 /// Sahte yemek servisi — backend hazır olunca [ApiFoodService] ile değiştirilir.
+///
+/// Singleton olarak kullanılır; böylece tüm ViewModel'ler aynı
+/// [_listings] listesini paylaşır ve favori durumu ekranlar arasında senkron kalır.
 class MockFoodService implements IFoodService {
+  MockFoodService._internal();
+  static final MockFoodService _instance = MockFoodService._internal();
+  factory MockFoodService() => _instance;
+
   @override
   Future<String> getUserLocationName() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
@@ -13,15 +20,15 @@ class MockFoodService implements IFoodService {
   @override
   Future<List<FoodListing>> getFeaturedListings() async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
-    return _mockListings;
+    return List.unmodifiable(_listings);
   }
 
   @override
   Future<FoodListing> getFoodDetail(String id) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    return _mockListings.firstWhere(
+    return _listings.firstWhere(
       (l) => l.id == id,
-      orElse: () => _mockListings.first,
+      orElse: () => _listings.first,
     );
   }
 
@@ -31,9 +38,24 @@ class MockFoodService implements IFoodService {
     return _mockReviews;
   }
 
-  // ─── Mock Listings ────────────────────────────────────────────────────
+  /// Favori durumunu senkron olarak değiştirir.
+  /// ViewModel'ler bunu çağırır, ardından [getFeaturedListings] ile güncel listeyi alır.
+  void toggleFavorite(String id) {
+    final index = _listings.indexWhere((l) => l.id == id);
+    if (index == -1) return;
+    _listings[index] = _listings[index].copyWith(
+      isFavorite: !_listings[index].isFavorite,
+    );
+  }
 
-  static final List<FoodListing> _mockListings = [
+  /// Sadece favori olan ilanları döner.
+  List<FoodListing> getFavorites() {
+    return _listings.where((l) => l.isFavorite).toList();
+  }
+
+  // ─── Listings (mutable) ──────────────────────────────────────────────
+
+  static final List<FoodListing> _listings = [
     // ── Sürpriz Kutu ─────────────────────────────────────
     FoodListing(
       id: 'sb_1',

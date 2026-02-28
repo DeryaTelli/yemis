@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/food/food_filter.dart';
 import '../../models/food/food_listing.dart';
 import '../../services/food/i_food_service.dart';
+import '../../utils/routes/app_routes.dart';
 
 /// FoodHome ekranının ViewModel'i.
 ///
@@ -42,6 +43,18 @@ class FoodHomeViewModel extends ChangeNotifier {
     _selectedIndex = index;
     notifyListeners();
     debugPrint("Food Tab Selected: $index");
+  }
+
+  /// MVVM: Alt navigasyon rotalarını ViewModel sağlar
+  String? getBottomNavRoute(int index) {
+    switch (index) {
+      case 0: return AppRoutes.foodHome;
+      case 1: return AppRoutes.foodSearch;
+      case 2: return AppRoutes.home;
+      case 3: return AppRoutes.foodFavorites;
+      case 4: return AppRoutes.foodProfile;
+      default: return null;
+    }
   }
 
   // ─── Init ─────────────────────────────────────────────
@@ -121,12 +134,16 @@ class FoodHomeViewModel extends ChangeNotifier {
   // ─── Favori Toggle ───────────────────────────────────
 
   void toggleFavorite(String id) {
+    // Singleton servisteki mutable listeyi güncelle
+    _service.toggleFavorite(id);
+    // Yerel kopyayı da senkron olarak güncelle
     final index = _allListings.indexWhere((l) => l.id == id);
-    if (index == -1) return;
-    final updated = _allListings[index].copyWith(
-      isFavorite: !_allListings[index].isFavorite,
-    );
-    _allListings = List.of(_allListings)..[index] = updated;
+    if (index != -1) {
+      _allListings = List.of(_allListings)
+        ..[index] = _allListings[index].copyWith(
+          isFavorite: !_allListings[index].isFavorite,
+        );
+    }
     notifyListeners();
   }
 }
