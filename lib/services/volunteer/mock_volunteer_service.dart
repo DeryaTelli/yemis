@@ -1,0 +1,119 @@
+import '../../models/volunteer/volunteer_listing.dart';
+import 'i_volunteer_service.dart';
+
+/// Sahte gönüllü servisi — backend hazır olunca [ApiVolunteerService] ile değiştirilir.
+class MockVolunteerService implements IVolunteerService {
+  MockVolunteerService._internal();
+  static final MockVolunteerService _instance =
+      MockVolunteerService._internal();
+  factory MockVolunteerService() => _instance;
+
+  @override
+  Future<String> getUserLocationName() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    return 'Karabük, Merkez';
+  }
+
+  @override
+  Future<List<VolunteerListing>> getFeaturedListings() async {
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    return List.unmodifiable(_listings);
+  }
+
+  @override
+  Future<VolunteerListing> getVolunteerDetail(String id) async {
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+    return _listings.firstWhere(
+      (l) => l.id == id,
+      orElse: () => _listings.first,
+    );
+  }
+
+  // ─── LİSTELER (mutable) ──────────────────────────────────────────────
+
+  static final List<VolunteerListing> _listings = [
+    // ── Sana Yakın Yerler ─────────────────────────────────
+    VolunteerListing(
+      id: 'ny_1',
+      title: 'Sokak Hayvanları İçin Yemek',
+      userName: 'Kullanıcı Adı',
+      location: 'Karabük, Merkez',
+      timeRange: 'Bugün Al 15.30-19.00',
+      imageUrl: 'assets/foodIcon/foodSide.png', // todo: update image
+      rating: 4.8,
+      section: VolunteerSection.nearYou,
+      latitude: 41.2048,
+      longitude: 32.6218,
+      description:
+          'Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.',
+      ingredients:
+          'Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.',
+      packageInfo:
+          'Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.',
+      shelterLatitude: 41.2100,
+      shelterLongitude: 32.6100,
+    ),
+    VolunteerListing(
+      id: 'ny_2',
+      title: 'İhtiyaç Sahipleri İçin Ekstra Porsiyon',
+      userName: 'Kullanıcı Adı',
+      location: 'Karabük, 100. Yıl',
+      timeRange: 'Bugün Al 18.00-20.00',
+      imageUrl: 'assets/foodIcon/foodSide.png',
+      rating: 4.5,
+      section: VolunteerSection.nearYou,
+      latitude: 41.2060,
+      longitude: 32.6235,
+      description:
+          'Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.',
+      ingredients:
+          'Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.',
+      packageInfo:
+          'Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.',
+      shelterLatitude: 41.2100,
+      shelterLongitude: 32.6100,
+    ),
+
+    // ── Bugün Popüler Olanlar ─────────────────────────────
+    VolunteerListing(
+      id: 'tp_1',
+      title: 'Sokak Hayvanları İçin Yemek',
+      userName: 'Kullanıcı Adı',
+      location: 'Karabük, Merkez',
+      timeRange: 'Bugün Al 15.30-19.00',
+      imageUrl: 'assets/foodIcon/foodSide.png',
+      rating: 4.8,
+      section: VolunteerSection.todayPopular,
+      latitude: 41.2048,
+      longitude: 32.6218,
+      description:
+          'Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.',
+      ingredients:
+          'Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.',
+      packageInfo:
+          'Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.',
+      shelterLatitude: 41.2100,
+      shelterLongitude: 32.6100,
+    ),
+    VolunteerListing(
+      id: 'tp_2',
+      title: 'Öğrenciler İçin Sıcak Çorba',
+      userName: 'Kullanıcı Adı',
+      location: 'Karabük, Üniversite',
+      timeRange: 'Yarın Al 12.00-14.00',
+      imageUrl: 'assets/foodIcon/foodSide.png',
+      rating: 4.9,
+      section: VolunteerSection.todayPopular,
+      latitude: 41.2055,
+      longitude: 32.6210,
+      description:
+          'Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.',
+      ingredients:
+          'Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.',
+      packageInfo:
+          'Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.',
+      shelterLatitude: 41.2100,
+      shelterLongitude: 32.6100,
+    ),
+  ];
+}

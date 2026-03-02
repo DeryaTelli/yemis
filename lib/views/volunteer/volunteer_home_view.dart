@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yemis/utils/routes/app_routes.dart';
 import '../../models/app_module_type.dart';
+import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/home/volunteer_home_viewmodel.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
+import '../../widgets/common/home_app_bar.dart';
+import '../../widgets/volunteer/volunteer_listing_section.dart';
+import '../../widgets/volunteer/volunteer_map_section.dart';
+import '../../widgets/volunteer/volunteer_search_bar.dart';
 
-/// Gönüllü ana sayfası
+/// Gönüllü ana sayfası — tam MVVM ile uygulanmıştır.
 class VolunteerHomeView extends StatelessWidget {
   const VolunteerHomeView({super.key});
 
@@ -17,73 +21,108 @@ class VolunteerHomeView extends StatelessWidget {
       data: AppTheme.themeFor(AppSection.volunteer),
       child: ChangeNotifierProvider(
         create: (_) => VolunteerHomeViewModel(),
-        child: Consumer<VolunteerHomeViewModel>(
-          builder: (context, vm, child) {
-            return Scaffold(
-              backgroundColor: const Color(0xFFF5F5F5),
-              appBar: AppBar(title: const Text('Gönüllü Ol')),
-              body: const Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.volunteer_activism,
-                      size: 72,
-                      color: AppColors.volunteerColor,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Gönüllü sayfası yakında!',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.volunteerColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              bottomNavigationBar: AppBottomNavBar(
-                selectedIndex: vm.selectedIndex,
-                onItemSelected: (index) {
-                  if (index == 2) {
-                    if (context.mounted) {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        AppRoutes.home,
-                        (route) => false,
-                      );
-                    }
-                    return;
-                  }
+        child: const _VolunteerHomeBody(),
+      ),
+    );
+  }
+}
 
-                  String route;
-                  switch (index) {
-                    case 0:
-                      route = AppRoutes.volunteerHome;
-                      break;
-                    case 1:
-                      route = AppRoutes.volunteerSearch;
-                      break;
-                    case 3:
-                      route = AppRoutes.volunteerAddListing;
-                      break;
-                    case 4:
-                      route = AppRoutes.volunteerProfile;
-                      break;
-                    default:
-                      return;
-                  }
+// ─────────────────────────────────────────────
+// Body
+// ─────────────────────────────────────────────
+class _VolunteerHomeBody extends StatefulWidget {
+  const _VolunteerHomeBody();
 
-                  if (ModalRoute.of(context)?.settings.name != route) {
-                    Navigator.pushReplacementNamed(context, route);
-                  }
-                },
-                moduleType: AppModuleType.volunteer,
+  @override
+  State<_VolunteerHomeBody> createState() => _VolunteerHomeBodyState();
+}
+
+class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<VolunteerHomeViewModel>();
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
+      // ─── AppBar ──────────────────────────────────
+      appBar: HomeAppBar(
+        title: vm.appBarTitle,
+        backgroundColor: vm.appBarColor,
+        isLocationTitle: true,
+      ),
+
+      // ─── Body ────────────────────────────────────
+      body: vm.isLoading
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.volunteerColor),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 16),
+
+                  // ── Arama Barı ─────────────────────────────
+                  VolunteerSearchBar(
+                    controller: _searchController,
+                    onChanged: vm.onSearchChanged,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // ── Açık Yeşil/Yeşil Degrade Çizgi (Opsiyonel görsel şıklık için) 
+                  // Tasarımda arama ile harita arası boşluk var
+                  
+                  // ── Harita Alanı ────────────────────────────
+                  VolunteerMapSection(listings: vm.filteredListings),
+                  const SizedBox(height: 20),
+
+                  // ── Sana Yakın Yerler ───────────────────────
+                  const VolunteerListingSection(
+                    title: 'Sana Yakın Yerler',
+                    section: VolunteerSection.nearYou,
+                  ),
+                  const SizedBox(height: 24),
+
+                  // ── Bugün Popüler Olanlar ───────────────────
+                  const VolunteerListingSection(
+                    title: 'Bugün Popüler Olanlar',
+                    section: VolunteerSection.todayPopular,
+                  ),
+                  const SizedBox(height: 32),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+      bottomNavigationBar: AppBottomNavBar(
+        selectedIndex: vm.selectedIndex,
+        onItemSelected: (index) {
+          final route = vm.getBottomNavRoute(index);
+
+          if (route != null) {
+            if (index == 2) {
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  route,
+                  (r) => false,
+                );
+              }
+            } else if (ModalRoute.of(context)?.settings.name != route) {
+              Navigator.pushReplacementNamed(context, route);
+            }
+          } else {
+            vm.onTabSelected(index);
+          }
+        },
+        moduleType: AppModuleType.volunteer,
       ),
     );
   }

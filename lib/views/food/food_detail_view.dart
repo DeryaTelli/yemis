@@ -20,10 +20,9 @@ class FoodDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => FoodDetailViewModel(
-        service: MockFoodService(),
-        listingId: listing.id,
-      )..init(),
+      create: (_) =>
+          FoodDetailViewModel(service: MockFoodService(), listingId: listing.id)
+            ..init(),
       child: _FoodDetailBody(listing: listing),
     );
   }
