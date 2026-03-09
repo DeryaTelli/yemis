@@ -12,12 +12,18 @@ class NavigationView extends StatelessWidget {
     required this.longitude,
     required this.businessName,
     required this.address,
+    this.accentGradient,
+    this.accentColor,
   });
 
   final double latitude;
   final double longitude;
   final String businessName;
   final String address;
+  /// Buton ve vurgu gradientı — null ise primaryButtonGradient kullanılır.
+  final LinearGradient? accentGradient;
+  /// İkon ve badge rengi — null ise primaryColor kullanılır.
+  final Color? accentColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +34,22 @@ class NavigationView extends StatelessWidget {
         businessName: businessName,
         address: address,
       )..init(),
-      child: const _NavigationBody(),
+      child: _NavigationBody(
+        accentGradient: accentGradient,
+        accentColor: accentColor,
+      ),
     );
   }
 }
 
 class _NavigationBody extends StatelessWidget {
-  const _NavigationBody();
+  const _NavigationBody({
+    this.accentGradient,
+    this.accentColor,
+  });
+
+  final LinearGradient? accentGradient;
+  final Color? accentColor;
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +79,9 @@ class _NavigationBody extends StatelessWidget {
           // ── Map ────────────────────────────────────
           Positioned.fill(
             child: vm.isLoading
-                ? const Center(
+                ? Center(
                     child: CircularProgressIndicator(
-                      color: AppColors.primaryColor,
+                      color: accentColor ?? AppColors.primaryColor,
                     ),
                   )
                 : _buildMap(vm),
@@ -105,7 +120,7 @@ class _NavigationBody extends StatelessWidget {
             polylines: [
               Polyline(
                 points: [vm.userLocation!, vm.destination],
-                color: AppColors.primaryColor.withOpacity(0.7),
+                color: (accentColor ?? AppColors.primaryColor).withValues(alpha: 0.7),
                 strokeWidth: 4,
               ),
             ],
@@ -129,9 +144,9 @@ class _NavigationBody extends StatelessWidget {
               point: vm.destination,
               width: 40,
               height: 40,
-              child: const Icon(
+              child: Icon(
                 Icons.location_on_rounded,
-                color: AppColors.primaryColor,
+                color: accentColor ?? AppColors.primaryColor,
                 size: 40,
               ),
             ),
@@ -237,13 +252,13 @@ class _NavigationBody extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
+                  color: (accentColor ?? AppColors.primaryColor).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   vm.distanceText,
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
+                  style: TextStyle(
+                    color: accentColor ?? AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -272,14 +287,16 @@ class _NavigationBody extends StatelessWidget {
     required VoidCallback onTap,
     bool isGradient = false,
   }) {
+    final gradient = accentGradient ?? AppColors.primaryButtonGradient;
+    final color = accentColor ?? AppColors.primaryColor;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
         height: 46,
         decoration: BoxDecoration(
-          gradient: isGradient ? AppColors.primaryButtonGradient : null,
-          color: isGradient ? null : AppColors.primaryColor,
+          gradient: isGradient ? gradient : null,
+          color: isGradient ? null : color,
           borderRadius: BorderRadius.circular(12),
         ),
         alignment: Alignment.center,
@@ -351,7 +368,7 @@ class _NavigationBody extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey[100],
-        child: Icon(icon, color: AppColors.primaryColor),
+        child: Icon(icon, color: accentColor ?? AppColors.primaryColor),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       trailing: const Icon(Icons.chevron_right, size: 20),

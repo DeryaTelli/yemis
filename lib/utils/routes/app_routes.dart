@@ -13,9 +13,12 @@ class AppRoutes {
   static const String foodFavorites = '/food-favorites';
   static const String foodProfile = '/food-profile';
   static const String volunteerHome = '/volunteer-home';
-  static const String volunteerSearch = '/volunteer-search';
-  static const String volunteerProfile = '/volunteer-profile';
-  static const String volunteerAddListing = '/volunteer-add-listing';
+  static const String volunteerMap = '/volunteer/map';
+  static const String volunteerSearch = '/volunteer/search';
+  static const String volunteerProfile = '/volunteer/profile';
+  static const String volunteerDetail = '/volunteer/detail';
+  static const String volunteerAddListing = '/volunteer/add-listing';
+  static const String volunteerListings = '/volunteer/listings';
   static const String businessHome = '/business-home';
   static const String foodDetail = '/food-detail';
 

@@ -22,7 +22,7 @@ class HomeViewModel extends ChangeNotifier {
   /// Food kullanıcısı → Yemek + Gönüllü
   /// Business kullanıcısı → İşletme + Gönüllü
   List<HomeCardItem> get cards {
-    const volunteerCard = HomeCardItem(
+    final volunteerCard = HomeCardItem(
       title: 'Gönüllü Ol',
       subtitle: 'Evde kalan yemekleri paylaş!',
       imagePath: 'assets/foodIcon/volunteerSide.png',
@@ -32,8 +32,8 @@ class HomeViewModel extends ChangeNotifier {
     );
 
     if (userType == UserType.food) {
-      return const [
-        HomeCardItem(
+      return [
+        const HomeCardItem(
           title: 'Yemek',
           subtitle: 'Uygun fiyata yemek al israfın önüne geç!',
           imagePath: 'assets/foodIcon/foodSide.png',
@@ -44,8 +44,8 @@ class HomeViewModel extends ChangeNotifier {
         volunteerCard,
       ];
     } else {
-      return const [
-        HomeCardItem(
+      return [
+        const HomeCardItem(
           title: 'İşletme',
           subtitle: 'Menünü yönet, israfı azalt!',
           imagePath: 'assets/foodIcon/foodSide.png',

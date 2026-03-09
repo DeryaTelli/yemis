@@ -82,5 +82,69 @@
         "buyNow": "Buy Now",
         "todayPopular": "Today's Popular",
         "locationLoading": "Loading location…"
+    },
+    "volunteer": {
+        "becomeButton": "Be Volunteer",
+        "free": "Free"
+    },
+    "volunteerAddListing": {
+        "title": "Add Listing",
+        "photoLabel": "Add Listing Photo",
+        "endTimeLabel": "Listing End Time",
+        "locationLabel": "Listing Location",
+        "locationButton": "Select Location",
+        "priceLabel": "Listing Price",
+        "priceFree": "Free",
+        "shareButton": "Share",
+        "successMessage": "Your listing has been shared successfully!",
+        "errorNoLocation": "Please select a location.",
+        "photoSelected": "Photo Selected",
+        "pickFromCamera": "Take from Camera",
+        "pickFromGallery": "Choose from Gallery"
+    },
+    "volunteerDetail": {
+        "tabOrder": "Order",
+        "tabReview": "Review",
+        "becomeButton": "Become a Volunteer",
+        "freeLabel": "Free",
+        "goToLocation": "Go to Location",
+        "goToShelter": "Go to Shelter",
+        "nearestShelter": "Nearest Shelter",
+        "noLocation": "Location not available",
+        "noShelterLocation": "Shelter location not available",
+        "moreDetail": "More Details",
+        "ingredients": "Ingredients & Allergens",
+        "packaging": "Packaging",
+        "shareLabel": "Share",
+        "listingLocation": "Listing Location",
+        "volunteerSuccess": "You volunteered for {title}. Thank you!"
+    },
+    "volunteerHome": {
+        "nearbyPlaces": "Places Near You",
+        "todayPopular": "Today's Popular",
+        "seeAll": "See All",
+        "searchHint": "Search"
+    },
+    "volunteerSearch": {
+        "title": "Search Volunteers",
+        "comingSoon": "Volunteer search page coming soon!"
+    },
+    "volunteerProfile": {
+        "title": "Profile",
+        "comingSoon": "Volunteer profile page coming soon!",
+        "notifications": "Notifications",
+        "pastListings": "Past Listings",
+        "attendedListings": "Listings I Volunteered For",
+        "activeListings": "Active Listings",
+        "savedAddresses": "Saved Addresses",
+        "savedCards": "Saved Cards",
+        "changeLanguage": "Change Language",
+        "deleteAccount": "Delete Account"
+    },
+    "volunteerListings": {
+        "activeTitle": "Active Listings",
+        "pastTitle": "Past Listings",
+        "attendedTitle": "Listings I Volunteered For",
+        "emptyMessage": "You don't have any listings in this category yet."
     }
 }

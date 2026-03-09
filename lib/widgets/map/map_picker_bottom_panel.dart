@@ -15,6 +15,8 @@ class MapPickerBottomPanel extends StatelessWidget {
   final MapPickerViewModel vm;
   final void Function(PlaceResult) onSelectPlace;
   final VoidCallback onConfirm;
+  final LinearGradient? accentGradient;
+  final Color? accentColor;
 
   const MapPickerBottomPanel({
     super.key,
@@ -23,6 +25,8 @@ class MapPickerBottomPanel extends StatelessWidget {
     required this.vm,
     required this.onSelectPlace,
     required this.onConfirm,
+    this.accentGradient,
+    this.accentColor,
   });
 
   @override
@@ -70,14 +74,14 @@ class MapPickerBottomPanel extends StatelessWidget {
                   size: 20,
                 ),
                 suffixIcon: vm.isSearching
-                    ? const Padding(
-                        padding: EdgeInsets.all(12),
+                    ? Padding(
+                        padding: const EdgeInsets.all(12),
                         child: SizedBox(
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: AppColors.primaryColor,
+                            color: accentColor ?? AppColors.primaryColor,
                           ),
                         ),
                       )
@@ -108,9 +112,9 @@ class MapPickerBottomPanel extends StatelessWidget {
                     final place = vm.searchResults[index];
                     return ListTile(
                       dense: true,
-                      leading: const Icon(
+                      leading: Icon(
                         Icons.location_on_outlined,
-                        color: AppColors.primaryColor,
+                        color: accentColor ?? AppColors.primaryColor,
                         size: 18,
                       ),
                       title: Text(
@@ -132,6 +136,8 @@ class MapPickerBottomPanel extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CustomButton(
                 text: LocaleKeys.mapPicker_confirmButton.tr(),
+                gradient: accentGradient,
+                backgroundColor: accentColor,
                 onPressed: onConfirm,
                 height: 52,
                 width: double.infinity,

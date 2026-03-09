@@ -8,6 +8,7 @@ class ProfileMenuTile extends StatelessWidget {
     this.isDestructive = false,
     this.showTrailing = true,
     required this.onTap,
+    this.iconColor,
   });
 
   final IconData icon;
@@ -15,10 +16,11 @@ class ProfileMenuTile extends StatelessWidget {
   final bool isDestructive;
   final bool showTrailing;
   final VoidCallback onTap;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
-    final color = isDestructive ? const Color(0xFFE53935) : const Color(0xFFFE8800);
+    final color = isDestructive ? const Color(0xFFE53935) : (iconColor ?? const Color(0xFFFE8800));
     final textColor = isDestructive ? const Color(0xFFE53935) : const Color(0xFF555555);
 
     return InkWell(
@@ -44,10 +46,10 @@ class ProfileMenuTile extends StatelessWidget {
               ),
             ),
             if (showTrailing)
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
                 size: 24,
-                color: Color(0xFFFE8800),
+                color: iconColor ?? const Color(0xFFFE8800),
               ),
           ],
         ),

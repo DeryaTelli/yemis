@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 
 /// Gönüllü arama çubuğu widget'ı.
 class VolunteerSearchBar extends StatelessWidget {
@@ -36,7 +38,7 @@ class VolunteerSearchBar extends StatelessWidget {
           color: AppColors.primaryTextColor,
         ),
         decoration: InputDecoration(
-          hintText: 'Ara',
+          hintText: LocaleKeys.volunteerHome_searchHint.tr(),
           hintStyle: const TextStyle(
             color: AppColors.hintTextColor,
             fontSize: 14,

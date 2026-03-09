@@ -15,15 +15,25 @@ class MapPickerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final accentColor = args?['accentColor'] as Color?;
+    final accentGradient = args?['accentGradient'] as LinearGradient?;
+
     return ChangeNotifierProvider(
       create: (_) => MapPickerViewModel()..init(),
-      child: const _MapPickerBody(),
+      child: _MapPickerBody(
+        accentGradient: accentGradient,
+        accentColor: accentColor,
+      ),
     );
   }
 }
 
 class _MapPickerBody extends StatefulWidget {
-  const _MapPickerBody();
+  final LinearGradient? accentGradient;
+  final Color? accentColor;
+
+  const _MapPickerBody({this.accentGradient, this.accentColor});
 
   @override
   State<_MapPickerBody> createState() => _MapPickerBodyState();
@@ -116,7 +126,7 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
+                      color: widget.accentColor ?? AppColors.primaryColor,
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
@@ -160,12 +170,12 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppColors.primaryColor,
+                          color: widget.accentColor ?? AppColors.primaryColor,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -186,6 +196,8 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
               searchController: _searchController,
               searchFocus: _searchFocus,
               vm: vm,
+              accentGradient: widget.accentGradient,
+              accentColor: widget.accentColor,
               onSelectPlace: (place) {
                 final latLng = LatLng(place.lat, place.lon);
                 _mapController.move(latLng, 15);

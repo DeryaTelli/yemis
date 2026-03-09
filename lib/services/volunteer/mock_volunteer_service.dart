@@ -29,6 +29,27 @@ class MockVolunteerService implements IVolunteerService {
     );
   }
 
+  @override
+  Future<List<VolunteerListing>> getActiveListings() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    // Sadece ilk ilanı aktif ilanmış gibi döndürüyoruz
+    return [_listings.first];
+  }
+
+  @override
+  Future<List<VolunteerListing>> getPastListings() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    // İkinci ilanı geçmiş ilanmış gibi döndürüyoruz
+    return [_listings[1]];
+  }
+
+  @override
+  Future<List<VolunteerListing>> getAttendedListings() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    // Üçüncü ilanı gönüllü olduğum ilanmış gibi döndürüyoruz (varsa, yoksa ilkini seçecek şekilde güvenli yapalım)
+    return _listings.length > 2 ? [_listings[2]] : [_listings.first];
+  }
+
   // ─── LİSTELER (mutable) ──────────────────────────────────────────────
 
   static final List<VolunteerListing> _listings = [
@@ -52,6 +73,8 @@ class MockVolunteerService implements IVolunteerService {
           'Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.',
       shelterLatitude: 41.2100,
       shelterLongitude: 32.6100,
+      shelterName: 'Karabük Sokak Hayvanları Barınağı',
+      shelterAddress: 'Karabük, Merkez, Barınak Cd. No:1',
     ),
     VolunteerListing(
       id: 'ny_2',

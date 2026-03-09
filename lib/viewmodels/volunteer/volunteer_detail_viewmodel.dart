@@ -58,6 +58,10 @@ class VolunteerDetailViewModel extends ChangeNotifier {
       ? LatLng(_listing!.shelterLatitude!, _listing!.shelterLongitude!)
       : null;
 
+  String get shelterName => _listing?.shelterName ?? 'En Yakın Barınak';
+
+  String get shelterAddress => _listing?.shelterAddress ?? 'Barınak Lokasyonu';
+
   // ─── Init ────────────────────────────────────────────────
 
   Future<void> init() async {

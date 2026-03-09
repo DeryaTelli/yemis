@@ -84,6 +84,11 @@ class AppTheme {
           ),
         ),
       ),
+
+      // Loading indicator teması — her bölüm kendi rengini otomatik alır
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: primaryColor,
+      ),
     );
   }
 }

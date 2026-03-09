@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 import '../../viewmodels/volunteer/volunteer_detail_viewmodel.dart';
 
 class VolunteerDetailTabBar extends StatelessWidget {
@@ -14,13 +16,13 @@ class VolunteerDetailTabBar extends StatelessWidget {
       child: Row(
         children: [
           _TabItem(
-            label: "Sipariş",
+            label: LocaleKeys.volunteerDetail_tabOrder.tr(),
             index: 0,
             selectedTab: vm.selectedTab,
             onTap: () => vm.onTabChanged(0),
           ),
           _TabItem(
-            label: "Yorum",
+            label: LocaleKeys.volunteerDetail_tabReview.tr(),
             index: 1,
             selectedTab: vm.selectedTab,
             onTap: () => vm.onTabChanged(1),

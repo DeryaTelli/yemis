@@ -45,7 +45,7 @@ class _VolunteerDetailBody extends StatelessWidget {
       backgroundColor: Colors.white,
       body: vm.isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: AppColors.volunteerColor),
+              child: CircularProgressIndicator(),
             )
           : Stack(
               children: [

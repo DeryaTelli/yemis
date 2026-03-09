@@ -24,7 +24,9 @@ import 'views/home_view.dart';
 import 'views/location_view.dart';
 import 'views/map_picker_view.dart';
 import 'views/volunteer/volunteer_add_listing_view.dart';
+import 'views/volunteer/volunteer_detail_view.dart';
 import 'views/volunteer/volunteer_home_view.dart';
+import 'views/volunteer/volunteer_listings_view.dart';
 import 'views/volunteer/volunteer_profile_view.dart';
 import 'views/volunteer/volunteer_search_view.dart';
 
@@ -156,6 +158,11 @@ class MyApp extends StatelessWidget {
             case AppRoutes.volunteerAddListing:
               return MaterialPageRoute(
                 builder: (_) => const VolunteerAddListingView(),
+                settings: settings,
+              );
+            case AppRoutes.volunteerListings:
+              return MaterialPageRoute(
+                builder: (_) => const VolunteerListingsView(),
                 settings: settings,
               );
             case AppRoutes.businessHome:

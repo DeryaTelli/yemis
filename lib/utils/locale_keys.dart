@@ -19,7 +19,8 @@ abstract class LocaleKeys {
 
   // auth.forgotPassword
   static const auth_forgotPassword_title = 'auth.forgotPassword.title';
-  static const auth_forgotPassword_description = 'auth.forgotPassword.description';
+  static const auth_forgotPassword_description =
+      'auth.forgotPassword.description';
   static const auth_forgotPassword_button = 'auth.forgotPassword.button';
 
   // auth.verification
@@ -38,14 +39,18 @@ abstract class LocaleKeys {
   static const auth_validation_emailEmpty = 'auth.validation.emailEmpty';
   static const auth_validation_emailInvalid = 'auth.validation.emailInvalid';
   static const auth_validation_passwordEmpty = 'auth.validation.passwordEmpty';
-  static const auth_validation_passwordMinLength = 'auth.validation.passwordMinLength';
+  static const auth_validation_passwordMinLength =
+      'auth.validation.passwordMinLength';
   static const auth_validation_nameEmpty = 'auth.validation.nameEmpty';
   static const auth_validation_kvkkRequired = 'auth.validation.kvkkRequired';
-  static const auth_validation_codeIncomplete = 'auth.validation.codeIncomplete';
+  static const auth_validation_codeIncomplete =
+      'auth.validation.codeIncomplete';
 
   // auth.errors
-  static const auth_errors_invalidCredentials = 'auth.errors.invalidCredentials';
-  static const auth_errors_emailAlreadyRegistered = 'auth.errors.emailAlreadyRegistered';
+  static const auth_errors_invalidCredentials =
+      'auth.errors.invalidCredentials';
+  static const auth_errors_emailAlreadyRegistered =
+      'auth.errors.emailAlreadyRegistered';
   static const auth_errors_general = 'auth.errors.general';
   static const auth_errors_emailSendFailed = 'auth.errors.emailSendFailed';
   static const auth_errors_codeSendFailed = 'auth.errors.codeSendFailed';
@@ -83,5 +88,68 @@ abstract class LocaleKeys {
   static const home_buyNow = 'home.buyNow';
   static const home_todayPopular = 'home.todayPopular';
   static const home_locationLoading = 'home.locationLoading';
-}
 
+  // volunteer
+  static const volunteer_becomeButton = 'volunteer.becomeButton';
+  static const volunteer_free = 'volunteer.free';
+
+  // volunteerAddListing
+  static const volunteerAddListing_title = 'volunteerAddListing.title';
+  static const volunteerAddListing_photoLabel = 'volunteerAddListing.photoLabel';
+  static const volunteerAddListing_endTimeLabel = 'volunteerAddListing.endTimeLabel';
+  static const volunteerAddListing_locationLabel = 'volunteerAddListing.locationLabel';
+  static const volunteerAddListing_locationButton = 'volunteerAddListing.locationButton';
+  static const volunteerAddListing_priceLabel = 'volunteerAddListing.priceLabel';
+  static const volunteerAddListing_priceFree = 'volunteerAddListing.priceFree';
+  static const volunteerAddListing_shareButton = 'volunteerAddListing.shareButton';
+  static const volunteerAddListing_successMessage = 'volunteerAddListing.successMessage';
+  static const volunteerAddListing_errorNoLocation = 'volunteerAddListing.errorNoLocation';
+  static const volunteerAddListing_photoSelected = 'volunteerAddListing.photoSelected';
+  static const volunteerAddListing_pickFromCamera = 'volunteerAddListing.pickFromCamera';
+  static const volunteerAddListing_pickFromGallery = 'volunteerAddListing.pickFromGallery';
+
+  // volunteerDetail
+  static const volunteerDetail_tabOrder = 'volunteerDetail.tabOrder';
+  static const volunteerDetail_tabReview = 'volunteerDetail.tabReview';
+  static const volunteerDetail_becomeButton = 'volunteerDetail.becomeButton';
+  static const volunteerDetail_freeLabel = 'volunteerDetail.freeLabel';
+  static const volunteerDetail_goToLocation = 'volunteerDetail.goToLocation';
+  static const volunteerDetail_goToShelter = 'volunteerDetail.goToShelter';
+  static const volunteerDetail_nearestShelter = 'volunteerDetail.nearestShelter';
+  static const volunteerDetail_noLocation = 'volunteerDetail.noLocation';
+  static const volunteerDetail_noShelterLocation = 'volunteerDetail.noShelterLocation';
+  static const volunteerDetail_moreDetail = 'volunteerDetail.moreDetail';
+  static const volunteerDetail_ingredients = 'volunteerDetail.ingredients';
+  static const volunteerDetail_packaging = 'volunteerDetail.packaging';
+  static const volunteerDetail_shareLabel = 'volunteerDetail.shareLabel';
+  static const volunteerDetail_listingLocation = 'volunteerDetail.listingLocation';
+  static const volunteerDetail_volunteerSuccess = 'volunteerDetail.volunteerSuccess';
+
+  // volunteerHome
+  static const volunteerHome_nearbyPlaces = 'volunteerHome.nearbyPlaces';
+  static const volunteerHome_todayPopular = 'volunteerHome.todayPopular';
+  static const volunteerHome_seeAll = 'volunteerHome.seeAll';
+  static const volunteerHome_searchHint = 'volunteerHome.searchHint';
+
+  // volunteerSearch
+  static const volunteerSearch_title = 'volunteerSearch.title';
+  static const volunteerSearch_comingSoon = 'volunteerSearch.comingSoon';
+
+  // volunteerProfile
+  static const volunteerProfile_title = 'volunteerProfile.title';
+  static const volunteerProfile_comingSoon = 'volunteerProfile.comingSoon';
+  static const volunteerProfile_notifications = 'volunteerProfile.notifications';
+  static const volunteerProfile_pastListings = 'volunteerProfile.pastListings';
+  static const volunteerProfile_attendedListings = 'volunteerProfile.attendedListings';
+  static const volunteerProfile_activeListings = 'volunteerProfile.activeListings';
+  static const volunteerProfile_savedAddresses = 'volunteerProfile.savedAddresses';
+  static const volunteerProfile_savedCards = 'volunteerProfile.savedCards';
+  static const volunteerProfile_changeLanguage = 'volunteerProfile.changeLanguage';
+  static const volunteerProfile_deleteAccount = 'volunteerProfile.deleteAccount';
+
+  // volunteerListings
+  static const volunteerListings_activeTitle = 'volunteerListings.activeTitle';
+  static const volunteerListings_pastTitle = 'volunteerListings.pastTitle';
+  static const volunteerListings_attendedTitle = 'volunteerListings.attendedTitle';
+  static const volunteerListings_emptyMessage = 'volunteerListings.emptyMessage';
+}

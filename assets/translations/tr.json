@@ -82,5 +82,69 @@
     "buyNow": "Şimdi Al",
     "todayPopular": "Bugün Popüler Olanlar",
     "locationLoading": "Konum yükleniyor…"
+  },
+  "volunteer": {
+    "becomeButton": "Gönüllü Ol",
+    "free": "Ücretsiz"
+  },
+  "volunteerAddListing": {
+    "title": "İlan Ekle",
+    "photoLabel": "İlan Fotoğrafı Ekle",
+    "endTimeLabel": "İlan Bitiş Saati",
+    "locationLabel": "İlanın Konumu",
+    "locationButton": "Konum Seç",
+    "priceLabel": "İlan Fiyatı",
+    "priceFree": "Ücretsiz",
+    "shareButton": "Paylaş",
+    "successMessage": "İlanınız başarıyla paylaşıldı!",
+    "errorNoLocation": "Lütfen bir konum seçin.",
+    "photoSelected": "Fotoğraf Seçildi",
+    "pickFromCamera": "Kameradan Çek",
+    "pickFromGallery": "Galeriden Seç"
+  },
+  "volunteerDetail": {
+    "tabOrder": "Sipariş",
+    "tabReview": "Yorum",
+    "becomeButton": "Gönüllü Ol",
+    "freeLabel": "Ücretsiz",
+    "goToLocation": "Lokasyona Git",
+    "goToShelter": "Barınağa Git",
+    "nearestShelter": "En Yakın Barınak",
+    "noLocation": "Konum bilgisi yok",
+    "noShelterLocation": "Barınak konum bilgisi yok",
+    "moreDetail": "Daha Fazla Detay",
+    "ingredients": "İçerikler & Alerjenler",
+    "packaging": "Paket",
+    "shareLabel": "Paylaş",
+    "listingLocation": "İlan Lokasyonu",
+    "volunteerSuccess": "{title} için gönüllü oldunuz. Teşekkürler!"
+  },
+  "volunteerHome": {
+    "nearbyPlaces": "Sana Yakın Yerler",
+    "todayPopular": "Bugün Popüler Olanlar",
+    "seeAll": "Tümü",
+    "searchHint": "Ara"
+  },
+  "volunteerSearch": {
+    "title": "Gönüllü Ara",
+    "comingSoon": "Gönüllü arama sayfası yakında!"
+  },
+  "volunteerProfile": {
+    "title": "Profil",
+    "comingSoon": "Gönüllü profil sayfası yakında!",
+    "notifications": "Bildirimler",
+    "pastListings": "Geçmiş İlanlarım",
+    "attendedListings": "Gönüllü Olduğum İlanlar",
+    "activeListings": "Aktif İlanlarım",
+    "savedAddresses": "Kayıtlı Adreslerim",
+    "savedCards": "Kayıtlı Kartlarım",
+    "changeLanguage": "Dil Değiştir",
+    "deleteAccount": "Hesabı Sil"
+  },
+  "volunteerListings": {
+    "activeTitle": "Aktif İlanlarım",
+    "pastTitle": "Geçmiş İlanlarım",
+    "attendedTitle": "Gönüllü Olduğum İlanlar",
+    "emptyMessage": "Henüz bu kategoride ilanınız bulunmuyor."
   }
 }

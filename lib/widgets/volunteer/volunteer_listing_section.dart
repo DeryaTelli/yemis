@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 import '../../viewmodels/home/volunteer_home_viewmodel.dart';
 import '../../views/volunteer/volunteer_detail_view.dart';
 import 'volunteer_listing_card.dart';
@@ -48,9 +50,9 @@ class VolunteerListingSection extends StatelessWidget {
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Text(
-                'Tümü',
-                style: TextStyle(
+              child: Text(
+                LocaleKeys.volunteerHome_seeAll.tr(),
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: AppColors.volunteerColor,
@@ -63,7 +65,7 @@ class VolunteerListingSection extends StatelessWidget {
 
         // ── Yatay Liste ──────────────────────────────────
         SizedBox(
-          height: 240, // İlan kartı yüksekliği
+          height: 255, // İlan kartı yüksekliği (Önceden 240'tı, taşmayı önlemek için 255 yapıldı)
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: sectionListings.length,

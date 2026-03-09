@@ -1,11 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 import '../../viewmodels/volunteer/volunteer_detail_viewmodel.dart';
 import '../../views/location/navigation_view.dart';
 import '../food/order_location_map.dart';
 
+/// Volunteer Detay → Sipariş sekmesi içeriği.
+/// Food detail'deki FoodOrderTab ile aynı yapı; volunteer renk temasıyla.
 class VolunteerOrderTab extends StatelessWidget {
   const VolunteerOrderTab({super.key});
 
@@ -20,109 +24,136 @@ class VolunteerOrderTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Gönüllü Kutu Detayı Başlığı ──────────
-          const Text(
-            "Gönüllü Kutu Detayı",
-            style: TextStyle(
-              fontSize: 14,
+          // ── Ürün Başlığı ──────────────────────────────────
+          Text(
+            listing.title,
+            style: const TextStyle(
+              fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
 
-          // ── Açıklama ──────────────────────────
+          // ── Açıklama ──────────────────────────────────────
           if (listing.description != null)
             Text(
               listing.description!,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 13,
                 color: AppColors.hintTextColor,
                 height: 1.5,
               ),
             ),
           const SizedBox(height: 16),
 
-          // ── Harita: İlan Lokasyonu ────
-          if (vm.listingLatLng != null) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: OrderLocationMap(
-                businessLocation: vm.listingLatLng!,
-                userLocation: vm.userLatLng,
-                height: 100,
-              ),
+          // ── Harita: İlan Lokasyonu ─────────────────────────
+          if (vm.listingLatLng != null)
+            OrderLocationMap(
+              businessLocation: vm.listingLatLng!,
+              userLocation: vm.userLatLng,
+              height: 180,
+            )
+          else
+            const SizedBox(
+              height: 180,
+              child: Center(child: Text(
+                'Konum bilgisi yok', // volunteerDetail.noLocation
+              )),
             ),
-            const SizedBox(height: 8),
-            _ActionButton(
-              label: "Lokasyona Git",
-              onTap: () => _navigateTo(context, vm.listingLatLng!.latitude, vm.listingLatLng!.longitude, "İlan Lokasyonu", listing.location),
-            ),
-            const SizedBox(height: 20),
-          ],
+          const SizedBox(height: 12),
 
-          // ── Harita: Barınak Lokasyonu ─────
-          const Text(
-            "En Yakın Barınak",
-            style: TextStyle(
-              fontSize: 14,
+          // ── Lokasyona Git Butonu ───────────────────────────
+          _GoToButton(
+            label: LocaleKeys.volunteerDetail_goToLocation.tr(),
+            onTap: () => _push(
+              context,
+              lat: vm.listingLatLng?.latitude ?? 41.0082,
+              lng: vm.listingLatLng?.longitude ?? 28.9784,
+              name: listing.title,
+              address: listing.location,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // ── En Yakın Barınak başlığı ───────────────────────
+          Text(
+            LocaleKeys.volunteerDetail_nearestShelter.tr(),
+            style: const TextStyle(
+              fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
-          if (vm.shelterLatLng != null) ...[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: OrderLocationMap(
-                businessLocation: vm.shelterLatLng!,
-                userLocation: vm.userLatLng,
-                height: 100,
-              ),
-            ),
-            const SizedBox(height: 8),
-            _ActionButton(
-              label: "Barınağa Git",
-              onTap: () => _navigateTo(context, vm.shelterLatLng!.latitude, vm.shelterLatLng!.longitude, "En Yakın Barınak", "Barınak Lokasyonu"),
-            ),
-          ] else ...[
-            const SizedBox(
-              height: 100,
-              child: Center(child: Text("Barınak lokasyon bilgisi yok")),
-            ),
-            const SizedBox(height: 8),
-            _ActionButton(
-              label: "Barınağa Git",
-              onTap: () {},
-            ),
-          ],
-          const SizedBox(height: 20),
 
-          // ── Daha Fazla Detay (Expandable) ────────────
+          // ── Harita: Barınak Lokasyonu ──────────────────────
+          if (vm.shelterLatLng != null)
+            OrderLocationMap(
+              businessLocation: vm.shelterLatLng!,
+              userLocation: vm.userLatLng,
+              height: 180,
+            )
+          else
+            const SizedBox(
+              height: 180,
+              child: Center(child: Text(
+                'Barınak konum bilgisi yok', // volunteerDetail.noShelterLocation
+              )),
+            ),
+          const SizedBox(height: 12),
+
+          // ── Barınağa Git Butonu ────────────────────────────
+          _GoToButton(
+            label: LocaleKeys.volunteerDetail_goToShelter.tr(),
+            onTap: vm.shelterLatLng != null
+                ? () => _push(
+                      context,
+                      lat: vm.shelterLatLng!.latitude,
+                      lng: vm.shelterLatLng!.longitude,
+                      name: vm.shelterName,
+                      address: vm.shelterAddress,
+                    )
+                : () {},
+          ),
+          const SizedBox(height: 24),
+
+          // ── Daha Fazla Detay (Expandable) ─────────────────
           _ExpandableDetail(vm: vm, listing: listing),
         ],
       ),
     );
   }
 
-  void _navigateTo(BuildContext context, double lat, double lng, String name, String address) {
+  void _push(
+    BuildContext context, {
+    required double lat,
+    required double lng,
+    required String name,
+    required String address,
+  }) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => NavigationView(
+        builder: (_) => NavigationView(
           latitude: lat,
           longitude: lng,
           businessName: name,
           address: address,
+          accentGradient: AppColors.volunteerBackgroundGradient,
+          accentColor: AppColors.volunteerColor,
         ),
       ),
     );
   }
 }
 
-class _ActionButton extends StatelessWidget {
-  const _ActionButton({required this.label, required this.onTap});
-  
+// ─────────────────────────────────────────────────────
+// Lokasyona / Barınağa Git Butonu
+// ─────────────────────────────────────────────────────
+class _GoToButton extends StatelessWidget {
+  const _GoToButton({required this.label, required this.onTap});
+
   final String label;
   final VoidCallback onTap;
 
@@ -132,21 +163,28 @@ class _ActionButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        height: 40,
+        height: 46,
         decoration: BoxDecoration(
-          color: const Color(0xFF27AE60), // Hardcoded matching green from design for buttons
-          borderRadius: BorderRadius.circular(10),
+          gradient: AppColors.volunteerBackgroundGradient,
+          borderRadius: BorderRadius.circular(12),
         ),
         alignment: Alignment.center,
         child: Text(
           label,
-          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
     );
   }
 }
 
+// ─────────────────────────────────────────────────────
+// Genişleyen Detay Bölümü
+// ─────────────────────────────────────────────────────
 class _ExpandableDetail extends StatelessWidget {
   const _ExpandableDetail({required this.vm, required this.listing});
 
@@ -179,11 +217,11 @@ class _ExpandableDetail extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Daha Fazla Detay",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
+                  Text(
+                    LocaleKeys.volunteerDetail_moreDetail.tr(),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.primaryTextColor,
                     ),
                   ),
@@ -210,10 +248,10 @@ class _ExpandableDetail extends StatelessWidget {
                 children: [
                   const Divider(height: 1, color: Color(0xFFEEEEEE)),
                   const SizedBox(height: 12),
-                  const Text(
-                    "İçerikler & Alerjenler",
-                    style: TextStyle(
-                      fontSize: 13,
+                  Text(
+                    LocaleKeys.volunteerDetail_ingredients.tr(),
+                    style: const TextStyle(
+                      fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryTextColor,
                     ),
@@ -223,16 +261,16 @@ class _ExpandableDetail extends StatelessWidget {
                     Text(
                       listing.ingredients!,
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 13,
                         color: AppColors.hintTextColor,
                         height: 1.5,
                       ),
                     ),
                   const SizedBox(height: 16),
-                  const Text(
-                    "Paket",
+                  Text(
+                    LocaleKeys.volunteerDetail_packaging.tr(),
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryTextColor,
                     ),
@@ -242,7 +280,7 @@ class _ExpandableDetail extends StatelessWidget {
                     Text(
                       listing.packageInfo!,
                       style: const TextStyle(
-                        fontSize: 12,
+                        fontSize: 13,
                         color: AppColors.hintTextColor,
                         height: 1.5,
                       ),

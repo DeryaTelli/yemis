@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 import '../../viewmodels/volunteer/volunteer_detail_viewmodel.dart';
 
 class VolunteerDetailBottomBar extends StatelessWidget {
@@ -32,9 +34,9 @@ class VolunteerDetailBottomBar extends StatelessWidget {
       child: Row(
         children: [
           // Ücretsiz text
-          const Text(
-            'Ücretsiz',
-            style: TextStyle(
+          Text(
+            LocaleKeys.volunteerDetail_freeLabel.tr(),
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
@@ -50,7 +52,9 @@ class VolunteerDetailBottomBar extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      '${listing.title} için gönüllü oldunuz. Teşekkürler!',
+                      LocaleKeys.volunteerDetail_volunteerSuccess.tr(
+                        namedArgs: {'title': listing.title},
+                      ),
                     ),
                     backgroundColor: AppColors.volunteerColor,
                     behavior: SnackBarBehavior.floating,
@@ -62,12 +66,12 @@ class VolunteerDetailBottomBar extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
               decoration: BoxDecoration(
-                color: AppColors.volunteerColor,
+                gradient: AppColors.volunteerBackgroundGradient,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
-                'Gönüllü Ol',
-                style: TextStyle(
+              child: Text(
+                LocaleKeys.volunteerDetail_becomeButton.tr(),
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w700,

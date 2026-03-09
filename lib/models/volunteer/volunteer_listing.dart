@@ -23,6 +23,8 @@ class VolunteerListing {
     this.packageInfo,
     this.shelterLatitude,
     this.shelterLongitude,
+    this.shelterName,
+    this.shelterAddress,
   });
 
   final String id;
@@ -44,11 +46,16 @@ class VolunteerListing {
   final String? packageInfo;
   final double? shelterLatitude;
   final double? shelterLongitude;
+  final String? shelterName;
+  final String? shelterAddress;
 
   VolunteerListing copyWith({
     double? latitude,
     double? longitude,
+    String? shelterName,
+    String? shelterAddress,
   }) {
+    // ignore: unnecessary_this
     return VolunteerListing(
       id: id,
       title: title,
@@ -60,11 +67,13 @@ class VolunteerListing {
       section: section,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
-      description: description ?? this.description,
-      ingredients: ingredients ?? this.ingredients,
-      packageInfo: packageInfo ?? this.packageInfo,
-      shelterLatitude: shelterLatitude ?? this.shelterLatitude,
-      shelterLongitude: shelterLongitude ?? this.shelterLongitude,
+      description: description,
+      ingredients: ingredients,
+      packageInfo: packageInfo,
+      shelterLatitude: shelterLatitude,
+      shelterLongitude: shelterLongitude,
+      shelterName: shelterName ?? this.shelterName,
+      shelterAddress: shelterAddress ?? this.shelterAddress,
     );
   }
 }

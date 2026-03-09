@@ -1,8 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import '../../models/app_module_type.dart';
-import '../../models/volunteer/volunteer_listing.dart';
-import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 import '../../viewmodels/home/volunteer_home_viewmodel.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
@@ -61,9 +62,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
 
       // ─── Body ────────────────────────────────────
       body: vm.isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.volunteerColor),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -78,23 +77,23 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Açık Yeşil/Yeşil Degrade Çizgi (Opsiyonel görsel şıklık için) 
+                  // ── Açık Yeşil/Yeşil Degrade Çizgi (Opsiyonel görsel şıklık için)
                   // Tasarımda arama ile harita arası boşluk var
-                  
+
                   // ── Harita Alanı ────────────────────────────
                   VolunteerMapSection(listings: vm.filteredListings),
                   const SizedBox(height: 20),
 
                   // ── Sana Yakın Yerler ───────────────────────
-                  const VolunteerListingSection(
-                    title: 'Sana Yakın Yerler',
+                  VolunteerListingSection(
+                    title: LocaleKeys.volunteerHome_nearbyPlaces.tr(),
                     section: VolunteerSection.nearYou,
                   ),
                   const SizedBox(height: 24),
 
                   // ── Bugün Popüler Olanlar ───────────────────
-                  const VolunteerListingSection(
-                    title: 'Bugün Popüler Olanlar',
+                  VolunteerListingSection(
+                    title: LocaleKeys.volunteerHome_todayPopular.tr(),
                     section: VolunteerSection.todayPopular,
                   ),
                   const SizedBox(height: 32),
@@ -109,11 +108,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
           if (route != null) {
             if (index == 2) {
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  route,
-                  (r) => false,
-                );
+                Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
               }
             } else if (ModalRoute.of(context)?.settings.name != route) {
               Navigator.pushReplacementNamed(context, route);

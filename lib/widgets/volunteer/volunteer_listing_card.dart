@@ -1,20 +1,23 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 
 /// Bir gönüllü ilanı kartı.
 class VolunteerListingCard extends StatelessWidget {
-  const VolunteerListingCard({super.key, required this.listing, this.onTap});
+  const VolunteerListingCard({super.key, required this.listing, this.onTap, this.width});
 
   final VolunteerListing listing;
   final VoidCallback? onTap;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 200, // FoodListingCard ile aynı genişlik
+        width: width ?? 212, // FoodListingCard ile aynı genişlik
         decoration: BoxDecoration(
           color: const Color(0xFF8AE196), // Açık yeşil arka plan
           borderRadius: BorderRadius.circular(14),
@@ -113,19 +116,17 @@ class VolunteerListingCard extends StatelessWidget {
             ),
 
             // ── Bilgi Alanı ──────────────────────────
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                         // Kullanıcı Adı
                         Text(
                           listing.userName,
@@ -164,6 +165,8 @@ class VolunteerListingCard extends StatelessWidget {
                       ],
                     ),
 
+                    const SizedBox(height: 12),
+
                     Column(
                       children: [
                         // Ayırıcı çizgi (kesikli beyaz/açık yeşil)
@@ -174,7 +177,7 @@ class VolunteerListingCard extends StatelessWidget {
 
                         const SizedBox(height: 6),
 
-                        // Gönüllü Ol Butonu
+                        // Gönüllü Ol Butonu — gradient
                         Align(
                           alignment: Alignment.centerRight,
                           child: Container(
@@ -183,12 +186,12 @@ class VolunteerListingCard extends StatelessWidget {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.volunteerColor,
-                              borderRadius: BorderRadius.circular(12),
+                              gradient: AppColors.volunteerBackgroundGradient,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text(
-                              'Gönüllü Ol',
-                              style: TextStyle(
+                            child: Text(
+                              LocaleKeys.volunteerDetail_becomeButton.tr(),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
@@ -198,8 +201,7 @@ class VolunteerListingCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ],
-                ),
+                ],
               ),
             ),
           ],
