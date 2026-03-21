@@ -17,7 +17,7 @@ class VolunteerListingCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: width ?? 212, // FoodListingCard ile aynı genişlik
+        width: width ?? 200, // FoodListingCard ile aynı genişlik
         decoration: BoxDecoration(
           color: const Color(0xFF8AE196), // Açık yeşil arka plan
           borderRadius: BorderRadius.circular(14),
@@ -182,7 +182,7 @@ class VolunteerListingCard extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
+                              horizontal: 20,
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(

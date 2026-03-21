@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../utils/routes/app_routes.dart';
 
-class BusinessHomeViewModel extends ChangeNotifier {
-  int _selectedIndex = 0;
+class BusinessProfileViewModel extends ChangeNotifier {
+  int _selectedIndex = 4;
   int get selectedIndex => _selectedIndex;
 
-  String get appBarTitle => 'Karabük, Merkez';
-  Color get appBarColor => const Color(0xFFFE8800);
-
-  /// Mock haftalık satış verileri (Pzt → Paz)
-  List<double> get weeklySales => [45, 70, 30, 90, 120, 80, 60];
-
-  /// Satılan siparişler sayesinde önlenen CO₂ oranı (0.0 – 1.0)
-  double get co2SavedPercent => 0.80;
+  // ── Daily stats ──────────────────────────────
+  int get dailySoldCount => 10;
+  String get dailyTotalEarnings => '%25';
 
   void onTabSelected(int index) {
     if (_selectedIndex == index) return;
     _selectedIndex = index;
     notifyListeners();
-    debugPrint("Business Tab Selected: $index");
   }
 
   /// 0=BusinessHome, 1=Rezervasyon Onaylama, 2=Home(merkez), 3=Sipariş Ekle, 4=Profil

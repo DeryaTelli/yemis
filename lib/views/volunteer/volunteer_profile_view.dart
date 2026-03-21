@@ -169,7 +169,13 @@ class VolunteerProfileView extends StatelessWidget {
                             icon: Icons.public,
                             title: LocaleKeys.volunteerProfile_changeLanguage.tr(),
                             iconColor: AppColors.volunteerColor,
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.languageSelect,
+                                arguments: AppSection.volunteer,
+                              );
+                            },
                           ),
                           ProfileMenuTile(
                             icon: Icons.delete_outline_rounded,

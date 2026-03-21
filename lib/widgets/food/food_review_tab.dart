@@ -1,6 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 import '../../viewmodels/food/food_detail_viewmodel.dart';
 import 'food_review_item.dart';
 
@@ -23,9 +25,9 @@ class FoodReviewTab extends StatelessWidget {
               Icon(Icons.rate_review_outlined,
                   color: AppColors.hintTextColor, size: 48),
               const SizedBox(height: 12),
-              const Text(
-                'Henüz yorum yapılmamış.',
-                style: TextStyle(color: AppColors.hintTextColor, fontSize: 14),
+              Text(
+                LocaleKeys.foodDetail_noReviews.tr(),
+                style: const TextStyle(color: AppColors.hintTextColor, fontSize: 14),
               ),
             ],
           ),

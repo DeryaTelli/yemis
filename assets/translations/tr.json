@@ -73,7 +73,9 @@
     "moreDetail": "Daha Fazla Detay",
     "ingredients": "İçerikler & Alerjenler",
     "reserveButton": "Rezerve Et",
-    "shareLabel": "Paylaş"
+    "shareLabel": "Paylaş",
+    "noReviews": "Henüz yorum yapılmamış.",
+    "noLocation": "Konum bilgisi yok"
   },
   "home": {
     "nearbyPlaces": "Sana Yakın Yerler",
@@ -117,7 +119,8 @@
     "packaging": "Paket",
     "shareLabel": "Paylaş",
     "listingLocation": "İlan Lokasyonu",
-    "volunteerSuccess": "{title} için gönüllü oldunuz. Teşekkürler!"
+    "volunteerSuccess": "{title} için gönüllü oldunuz. Teşekkürler!",
+    "noReviews": "Henüz yorum bulunmamaktadır."
   },
   "volunteerHome": {
     "nearbyPlaces": "Sana Yakın Yerler",
@@ -146,5 +149,62 @@
     "pastTitle": "Geçmiş İlanlarım",
     "attendedTitle": "Gönüllü Olduğum İlanlar",
     "emptyMessage": "Henüz bu kategoride ilanınız bulunmuyor."
+  },
+  "languageSelect": {
+    "title": "Dil Seçin",
+    "description": "Uygulamayı istediğiniz dilde kullanabilmeniz için lütfen dil seçiminizi yapın.",
+    "turkish": "Türkçe",
+    "english": "İngilizce",
+    "confirmButton": "Tamam"
+  },
+  "businessHome": {
+    "weeklySalesTitle": "Haftalık Satış Özeti",
+    "addedOrders": "Eklenen\nSiparişler",
+    "soldOrders": "Satılan\nSiparişler",
+    "reportsTitle": "Raporlar",
+    "reportsDescription": "Sipariş performansını, yapılan rezervasyonları ve atık düşüşünü tek bir yerden takip edin. İşletmenizin günlük-aylık özetleri kolayca görüntüleyin.",
+    "co2Title": "CO₂ Etkisi",
+    "co2Description": "Yemek artığı oluşmadığında, gıdanın üretimi ve atık sürecinde ortaya çıkan CO₂ salımı önlenir. Her kurtarılan öğün, çevreye bırakılmayan karbon anlamına gelir.",
+    "addOrderButton": "Sipariş Ekle"
+  },
+  "businessProfile": {
+    "title": "Profil",
+    "dailyLabel": "Günlük",
+    "soldCountLabel": "Satılan Ürün Sayısı",
+    "earningsLabel": "Toplam Kazanç",
+    "notifications": "Bildirimler",
+    "reports": "Raporlar",
+    "pastListings": "Geçmiş İlanlar",
+    "soldListings": "Satılan İlanlar",
+    "unsoldListings": "Satılmayan İlanlar",
+    "savedCards": "Kayıtlı Kartlarım",
+    "updateProfile": "Profilimi Güncelle",
+    "changePassword": "Şifremi Değiştir",
+    "changeLanguage": "Dil Değiştir",
+    "deleteAccount": "Hesabı Sil"
+  },
+  "businessAddOrder": {
+    "title": "Sipariş Ekle",
+    "photoLabel": "İlan Fotoğrafı Ekle",
+    "endTimeLabel": "İlan Bitiş Saati",
+    "locationLabel": "İlanın Konumu",
+    "locationButton": "Konum Seç",
+    "quantityLabel": "İlan Sayısı",
+    "priceLabel": "İlan Fiyatı",
+    "shareButton": "Paylaş",
+    "successMessage": "Siparişiniz başarıyla paylaşıldı!",
+    "errorNoLocation": "Lütfen bir konum seçin.",
+    "pickFromCamera": "Kameradan Çek",
+    "pickFromGallery": "Galeriden Seç"
+  },
+  "businessApprovals": {
+    "title": "Rezervasyon Onayla",
+    "noPending": "Bekleyen rezervasyon yok.",
+    "reservedBy": "tarafından reserve edildi",
+    "todayPickup": "Bugün Al",
+    "approveButton": "Onayla",
+    "rejectButton": "Reddet",
+    "approved": "Onaylandı",
+    "rejected": "Reddedildi"
   }
-}
+}

@@ -29,6 +29,10 @@ import 'views/volunteer/volunteer_home_view.dart';
 import 'views/volunteer/volunteer_listings_view.dart';
 import 'views/volunteer/volunteer_profile_view.dart';
 import 'views/volunteer/volunteer_search_view.dart';
+import 'views/common/language_select_view.dart';
+import 'views/business/business_profile_view.dart';
+import 'views/business/business_add_order_view.dart';
+import 'views/business/business_approvals_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -170,10 +174,68 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const BusinessHomeView(),
                 settings: settings,
               );
+            case AppRoutes.businessProfile:
+              return MaterialPageRoute(
+                builder: (_) => const BusinessProfileView(),
+                settings: settings,
+              );
+            case AppRoutes.businessApprovals:
+              return MaterialPageRoute(
+                builder: (_) => const BusinessApprovalsView(),
+                settings: settings,
+              );
+            case AppRoutes.businessAddOrder:
+              return MaterialPageRoute(
+                builder: (_) => const BusinessAddOrderView(),
+                settings: settings,
+              );
+            case AppRoutes.languageSelect:
+              final section = (settings.arguments is AppSection)
+                  ? settings.arguments as AppSection
+                  : AppSection.food;
+              return MaterialPageRoute(
+                builder: (_) => LanguageSelectView(section: section),
+                settings: settings,
+              );
             default:
               return MaterialPageRoute(builder: (_) => const LoginView());
           }
         },
+      ),
+    );
+  }
+}
+
+/// Henüz uygulanmamış sayfalar için geçici iskelet ekran
+class _PlaceholderView extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  const _PlaceholderView({required this.title, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: const Color(0xFFFE8800),
+        foregroundColor: Colors.white,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 64, color: const Color(0xFFFE8800)),
+            const SizedBox(height: 16),
+            Text(
+              '$title yakında!',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF888888),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -9,9 +9,14 @@ import 'i_auth_service.dart';
 class MockAuthService implements IAuthService {
   static const _testEmail = 'test@yemis.app';
   static const _testPassword = '123456';
+  static const _businessEmail = 'business@yemis.app';
+  static const _businessPassword = '123456';
   static const _fakeToken = 'mock-jwt-token-abc123';
 
-  final Map<String, String> _registeredUsers = {_testEmail: _testPassword};
+  final Map<String, String> _registeredUsers = {
+    _testEmail: _testPassword,
+    _businessEmail: _businessPassword,
+  };
 
   @override
   Future<AuthResponse> login(LoginRequest request) async {
@@ -26,15 +31,17 @@ class MockAuthService implements IAuthService {
       );
     }
 
+    final isBusiness = request.email == _businessEmail;
+
     return AuthResponse(
       success: true,
       message: 'Login successful',
       token: _fakeToken,
       user: UserModel(
-        id: 'usr_001',
-        name: 'Test Kullanıcı',
+        id: isBusiness ? 'usr_bus_001' : 'usr_001',
+        name: isBusiness ? 'Test İşletme' : 'Test Kullanıcı',
         email: request.email,
-        userType: UserType.food, // mock default
+        userType: isBusiness ? UserType.business : UserType.food,
       ),
     );
   }

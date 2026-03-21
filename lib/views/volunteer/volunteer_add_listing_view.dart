@@ -144,9 +144,9 @@ class _Body extends StatelessWidget {
                   child: const Icon(Icons.camera_alt_outlined,
                       color: AppColors.volunteerColor),
                 ),
-                title: const Text(
-                  'Kameradan Çek',
-                  style: TextStyle(
+                title: Text(
+                  LocaleKeys.volunteerAddListing_pickFromCamera.tr(),
+                  style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 15),
                 ),
                 trailing: const Icon(Icons.chevron_right,
@@ -168,9 +168,9 @@ class _Body extends StatelessWidget {
                   child: const Icon(Icons.photo_library_outlined,
                       color: AppColors.volunteerColor),
                 ),
-                title: const Text(
-                  'Galeriden Seç',
-                  style: TextStyle(
+                title: Text(
+                  LocaleKeys.volunteerAddListing_pickFromGallery.tr(),
+                  style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 15),
                 ),
                 trailing: const Icon(Icons.chevron_right,

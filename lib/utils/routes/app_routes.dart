@@ -20,6 +20,10 @@ class AppRoutes {
   static const String volunteerAddListing = '/volunteer/add-listing';
   static const String volunteerListings = '/volunteer/listings';
   static const String businessHome = '/business-home';
+  static const String businessProfile = '/business-profile';
+  static const String businessApprovals = '/business-approvals';
+  static const String businessAddOrder = '/business-add-order';
   static const String foodDetail = '/food-detail';
+  static const String languageSelect = '/language-select';
 
 }

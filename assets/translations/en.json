@@ -73,7 +73,9 @@
         "moreDetail": "More Details",
         "ingredients": "Ingredients & Allergens",
         "reserveButton": "Reserve",
-        "shareLabel": "Share"
+        "shareLabel": "Share",
+        "noReviews": "No reviews yet.",
+        "noLocation": "Location not available"
     },
     "home": {
         "nearbyPlaces": "Places Near You",
@@ -117,7 +119,8 @@
         "packaging": "Packaging",
         "shareLabel": "Share",
         "listingLocation": "Listing Location",
-        "volunteerSuccess": "You volunteered for {title}. Thank you!"
+        "volunteerSuccess": "You volunteered for {title}. Thank you!",
+        "noReviews": "No reviews yet."
     },
     "volunteerHome": {
         "nearbyPlaces": "Places Near You",
@@ -146,5 +149,62 @@
         "pastTitle": "Past Listings",
         "attendedTitle": "Listings I Volunteered For",
         "emptyMessage": "You don't have any listings in this category yet."
+    },
+    "languageSelect": {
+        "title": "Select Language",
+        "description": "Please make your language selection to use the app in your preferred language.",
+        "turkish": "Turkish",
+        "english": "English",
+        "confirmButton": "OK"
+    },
+    "businessHome": {
+        "weeklySalesTitle": "Weekly Sales Summary",
+        "addedOrders": "Added\nOrders",
+        "soldOrders": "Sold\nOrders",
+        "reportsTitle": "Reports",
+        "reportsDescription": "Track order performance, reservations, and waste reduction all in one place. Easily view your daily and monthly business summaries.",
+        "co2Title": "CO₂ Impact",
+        "co2Description": "When no food surplus is generated, the CO₂ emitted during food production and the waste process is prevented. Every saved meal means less carbon left behind.",
+        "addOrderButton": "Add Order"
+    },
+    "businessProfile": {
+        "title": "Profile",
+        "dailyLabel": "Daily",
+        "soldCountLabel": "Items Sold",
+        "earningsLabel": "Total Earnings",
+        "notifications": "Notifications",
+        "reports": "Reports",
+        "pastListings": "Past Listings",
+        "soldListings": "Sold Listings",
+        "unsoldListings": "Unsold Listings",
+        "savedCards": "Saved Cards",
+        "updateProfile": "Update Profile",
+        "changePassword": "Change Password",
+        "changeLanguage": "Change Language",
+        "deleteAccount": "Delete Account"
+    },
+    "businessAddOrder": {
+        "title": "Add Order",
+        "photoLabel": "Add Listing Photo",
+        "endTimeLabel": "Listing End Time",
+        "locationLabel": "Listing Location",
+        "locationButton": "Select Location",
+        "quantityLabel": "Listing Quantity",
+        "priceLabel": "Listing Price",
+        "shareButton": "Share",
+        "successMessage": "Your order has been shared successfully!",
+        "errorNoLocation": "Please select a location.",
+        "pickFromCamera": "Take from Camera",
+        "pickFromGallery": "Choose from Gallery"
+    },
+    "businessApprovals": {
+        "title": "Approve Reservation",
+        "noPending": "No pending reservations.",
+        "reservedBy": "reserved by",
+        "todayPickup": "Pick Up Today",
+        "approveButton": "Approve",
+        "rejectButton": "Reject",
+        "approved": "Approved",
+        "rejected": "Rejected"
     }
-}
+}

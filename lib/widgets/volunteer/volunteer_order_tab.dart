@@ -55,10 +55,10 @@ class VolunteerOrderTab extends StatelessWidget {
               height: 180,
             )
           else
-            const SizedBox(
+            SizedBox(
               height: 180,
               child: Center(child: Text(
-                'Konum bilgisi yok', // volunteerDetail.noLocation
+                LocaleKeys.volunteerDetail_noLocation.tr(),
               )),
             ),
           const SizedBox(height: 12),
@@ -95,10 +95,10 @@ class VolunteerOrderTab extends StatelessWidget {
               height: 180,
             )
           else
-            const SizedBox(
+            SizedBox(
               height: 180,
               child: Center(child: Text(
-                'Barınak konum bilgisi yok', // volunteerDetail.noShelterLocation
+                LocaleKeys.volunteerDetail_noShelterLocation.tr(),
               )),
             ),
           const SizedBox(height: 12),

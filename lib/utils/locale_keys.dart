@@ -80,6 +80,8 @@ abstract class LocaleKeys {
   static const foodDetail_ingredients = 'foodDetail.ingredients';
   static const foodDetail_reserveButton = 'foodDetail.reserveButton';
   static const foodDetail_shareLabel = 'foodDetail.shareLabel';
+  static const foodDetail_noReviews = 'foodDetail.noReviews';
+  static const foodDetail_noLocation = 'foodDetail.noLocation';
 
   // home
   static const home_nearbyPlaces = 'home.nearbyPlaces';
@@ -124,6 +126,7 @@ abstract class LocaleKeys {
   static const volunteerDetail_shareLabel = 'volunteerDetail.shareLabel';
   static const volunteerDetail_listingLocation = 'volunteerDetail.listingLocation';
   static const volunteerDetail_volunteerSuccess = 'volunteerDetail.volunteerSuccess';
+  static const volunteerDetail_noReviews = 'volunteerDetail.noReviews';
 
   // volunteerHome
   static const volunteerHome_nearbyPlaces = 'volunteerHome.nearbyPlaces';
@@ -152,4 +155,61 @@ abstract class LocaleKeys {
   static const volunteerListings_pastTitle = 'volunteerListings.pastTitle';
   static const volunteerListings_attendedTitle = 'volunteerListings.attendedTitle';
   static const volunteerListings_emptyMessage = 'volunteerListings.emptyMessage';
+
+  // languageSelect
+  static const languageSelect_title = 'languageSelect.title';
+  static const languageSelect_description = 'languageSelect.description';
+  static const languageSelect_turkish = 'languageSelect.turkish';
+  static const languageSelect_english = 'languageSelect.english';
+  static const languageSelect_confirmButton = 'languageSelect.confirmButton';
+
+  // businessHome
+  static const businessHome_weeklySalesTitle = 'businessHome.weeklySalesTitle';
+  static const businessHome_addedOrders = 'businessHome.addedOrders';
+  static const businessHome_soldOrders = 'businessHome.soldOrders';
+  static const businessHome_reportsTitle = 'businessHome.reportsTitle';
+  static const businessHome_reportsDescription = 'businessHome.reportsDescription';
+  static const businessHome_co2Title = 'businessHome.co2Title';
+  static const businessHome_co2Description = 'businessHome.co2Description';
+  static const businessHome_addOrderButton = 'businessHome.addOrderButton';
+
+  // businessProfile
+  static const businessProfile_title = 'businessProfile.title';
+  static const businessProfile_dailyLabel = 'businessProfile.dailyLabel';
+  static const businessProfile_soldCountLabel = 'businessProfile.soldCountLabel';
+  static const businessProfile_earningsLabel = 'businessProfile.earningsLabel';
+  static const businessProfile_notifications = 'businessProfile.notifications';
+  static const businessProfile_reports = 'businessProfile.reports';
+  static const businessProfile_pastListings = 'businessProfile.pastListings';
+  static const businessProfile_soldListings = 'businessProfile.soldListings';
+  static const businessProfile_unsoldListings = 'businessProfile.unsoldListings';
+  static const businessProfile_savedCards = 'businessProfile.savedCards';
+  static const businessProfile_updateProfile = 'businessProfile.updateProfile';
+  static const businessProfile_changePassword = 'businessProfile.changePassword';
+  static const businessProfile_changeLanguage = 'businessProfile.changeLanguage';
+  static const businessProfile_deleteAccount = 'businessProfile.deleteAccount';
+
+  // businessAddOrder
+  static const businessAddOrder_title = 'businessAddOrder.title';
+  static const businessAddOrder_photoLabel = 'businessAddOrder.photoLabel';
+  static const businessAddOrder_endTimeLabel = 'businessAddOrder.endTimeLabel';
+  static const businessAddOrder_locationLabel = 'businessAddOrder.locationLabel';
+  static const businessAddOrder_locationButton = 'businessAddOrder.locationButton';
+  static const businessAddOrder_quantityLabel = 'businessAddOrder.quantityLabel';
+  static const businessAddOrder_priceLabel = 'businessAddOrder.priceLabel';
+  static const businessAddOrder_shareButton = 'businessAddOrder.shareButton';
+  static const businessAddOrder_successMessage = 'businessAddOrder.successMessage';
+  static const businessAddOrder_errorNoLocation = 'businessAddOrder.errorNoLocation';
+  static const businessAddOrder_pickFromCamera = 'businessAddOrder.pickFromCamera';
+  static const businessAddOrder_pickFromGallery = 'businessAddOrder.pickFromGallery';
+
+  // businessApprovals
+  static const businessApprovals_title = 'businessApprovals.title';
+  static const businessApprovals_noPending = 'businessApprovals.noPending';
+  static const businessApprovals_reservedBy = 'businessApprovals.reservedBy';
+  static const businessApprovals_todayPickup = 'businessApprovals.todayPickup';
+  static const businessApprovals_approveButton = 'businessApprovals.approveButton';
+  static const businessApprovals_rejectButton = 'businessApprovals.rejectButton';
+  static const businessApprovals_approved = 'businessApprovals.approved';
+  static const businessApprovals_rejected = 'businessApprovals.rejected';
 }

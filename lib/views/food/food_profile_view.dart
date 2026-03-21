@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../models/app_module_type.dart';
+import '../../utils/routes/app_routes.dart';
+import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/food/food_profile_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/food/profile_menu_tile.dart';
@@ -154,7 +156,13 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.public,
                     title: 'Dil Değiştir',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.languageSelect,
+                        arguments: AppSection.food,
+                      );
+                    },
                   ),
                   ProfileMenuTile(
                     icon: Icons.delete_outline_rounded,

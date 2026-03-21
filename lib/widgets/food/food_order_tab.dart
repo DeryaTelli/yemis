@@ -54,9 +54,9 @@ class FoodOrderTab extends StatelessWidget {
               height: 180,
             )
           else
-            const SizedBox(
+            SizedBox(
               height: 180,
-              child: Center(child: Text("Konum bilgisi yok")),
+              child: Center(child: Text(LocaleKeys.foodDetail_noLocation.tr())),
             ),
           const SizedBox(height: 12),
 

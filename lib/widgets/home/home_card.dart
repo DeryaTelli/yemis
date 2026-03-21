@@ -8,11 +8,7 @@ class HomeCard extends StatelessWidget {
   final HomeCardItem item;
   final VoidCallback onTap;
 
-  const HomeCard({
-    super.key,
-    required this.item,
-    required this.onTap,
-  });
+  const HomeCard({super.key, required this.item, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +43,7 @@ class HomeCard extends StatelessWidget {
                       ? CrossAxisAlignment.end
                       : CrossAxisAlignment.start,
                   children: [
-                    Text(item.title,
-                        style: CustomTextStyles.orelegaOne32White),
+                    Text(item.title, style: CustomTextStyles.orelegaOne32White),
                     const SizedBox(height: 6),
                     Text(
                       item.subtitle,
@@ -68,11 +63,7 @@ class HomeCard extends StatelessWidget {
             top: -60,
             left: item.imageOnLeft ? -10 : null,
             right: item.imageOnLeft ? null : -10,
-            child: Image.asset(
-              item.imagePath,
-              width: 140,
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset(item.imagePath, width: 140, fit: BoxFit.contain),
           ),
         ],
       ),
