@@ -206,5 +206,16 @@
     "rejectButton": "Reddet",
     "approved": "Onaylandı",
     "rejected": "Reddedildi"
+  },
+  "foodReserve": {
+    "title": "Rezerve Et",
+    "paymentMethod": "Ödeme Yöntemi",
+    "selectPayment": "Bir Ödeme Yöntemi Seç",
+    "quantity": "Adet Sayısı",
+    "price": "Fiyat",
+    "reserveButton": "Rezerve Et",
+    "successMessage": "{title} için rezervasyon alındı!",
+    "googlePay": "Google Pay ile öde",
+    "applePay": "Apple Pay ile öde"
   }
 }

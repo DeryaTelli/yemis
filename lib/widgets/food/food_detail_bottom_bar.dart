@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
+import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/food/food_detail_viewmodel.dart';
 
 class FoodDetailBottomBar extends StatelessWidget {
@@ -44,22 +45,14 @@ class FoodDetailBottomBar extends StatelessWidget {
           ),
           const Spacer(),
 
-          // Rezerve Et
+          // Rezerve Et → rezervasyon ekranına yönlendir
           GestureDetector(
-            onTap: () async {
-              await vm.reserve();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      '${listing.title} için rezervasyon alındı!',
-                    ),
-                    backgroundColor: AppColors.primaryColor,
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.foodReserve,
+                arguments: listing,
+              );
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),

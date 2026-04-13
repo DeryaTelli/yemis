@@ -15,7 +15,8 @@ class MapPickerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final accentColor = args?['accentColor'] as Color?;
     final accentGradient = args?['accentGradient'] as LinearGradient?;
 
@@ -92,8 +93,7 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
             ),
             children: [
               TileLayer(
-                urlTemplate:
-                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.yemis.app',
                 maxZoom: 19,
               ),
@@ -156,7 +156,9 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
               child: Center(
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 8),
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),

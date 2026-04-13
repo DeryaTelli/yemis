@@ -1,0 +1,8 @@
+Analyzing search_app_bar_custom.dart, food_listing_card.dart, volunteer_listing_card.dart, food_search_view.dart, volunteer_search_view.dart...
+
+   info - lib\widgets\food\food_listing_card.dart:56:41 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\widgets\food\food_listing_card.dart:56:45 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\widgets\volunteer\volunteer_listing_card.dart:56:41 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+   info - lib\widgets\volunteer\volunteer_listing_card.dart:56:45 - Unnecessary use of multiple underscores. Try using '_'. - unnecessary_underscores
+
+4 issues found.

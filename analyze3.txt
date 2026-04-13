@@ -1,0 +1,2 @@
+INFO|LINT|UNNECESSARY_UNDERSCORES|C:\\Src\\proje\\yemis\\lib\\views\\food\\food_reservation_confirm_view.dart|280|37|2|Unnecessary use of multiple underscores.
+INFO|LINT|UNNECESSARY_UNDERSCORES|C:\\Src\\proje\\yemis\\lib\\views\\food\\food_reservation_confirm_view.dart|280|41|3|Unnecessary use of multiple underscores.

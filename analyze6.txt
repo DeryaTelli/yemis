@@ -1,0 +1,6 @@
+ERROR|COMPILE_TIME_ERROR|UNDEFINED_METHOD|C:\\Src\\proje\\yemis\\lib\\main.dart|60|5|15|The method 'MockFoodService' isn't defined for the type 'MyApp'.
+ERROR|COMPILE_TIME_ERROR|NON_BOOL_CONDITION|C:\\Src\\proje\\yemis\\lib\\viewmodels\\food\\food_home_viewmodel.dart|42|7|52|Conditions must have a static type of 'bool'.
+WARNING|STATIC_WARNING|UNUSED_IMPORT|C:\\Src\\proje\\yemis\\lib\\main.dart|28|8|44|Unused import: 'views/volunteer/volunteer_detail_view.dart'.
+WARNING|STATIC_WARNING|UNUSED_ELEMENT|C:\\Src\\proje\\yemis\\lib\\main.dart|218|7|16|The declaration '_PlaceholderView' isn't referenced.
+INFO|LINT|ANNOTATE_OVERRIDES|C:\\Src\\proje\\yemis\\lib\\services\\food\\mock_food_service.dart|51|8|14|The member 'toggleFavorite' overrides an inherited member but isn't annotated with '@override'.
+INFO|LINT|ANNOTATE_OVERRIDES|C:\\Src\\proje\\yemis\\lib\\services\\food\\mock_food_service.dart|60|21|12|The member 'getFavorites' overrides an inherited member but isn't annotated with '@override'.

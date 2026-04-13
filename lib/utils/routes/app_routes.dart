@@ -24,6 +24,7 @@ class AppRoutes {
   static const String businessApprovals = '/business-approvals';
   static const String businessAddOrder = '/business-add-order';
   static const String foodDetail = '/food-detail';
+  static const String foodReserve = '/food-reserve';
   static const String languageSelect = '/language-select';
 
 }

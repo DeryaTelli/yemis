@@ -1,5 +1,6 @@
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_review.dart';
+import '../auth/user_session.dart';
 import 'i_food_service.dart';
 
 /// Sahte yemek servisi — backend hazır olunca [ApiFoodService] ile değiştirilir.
@@ -11,10 +12,17 @@ class MockFoodService implements IFoodService {
   static final MockFoodService _instance = MockFoodService._internal();
   factory MockFoodService() => _instance;
 
+  UserSession? _userSession;
+
+  /// UserSession'ı dışarıdan set etmek için (ViewModel'lerde kolaylık sağlar)
+  void setUserSession(UserSession session) {
+    _userSession = session;
+  }
+
   @override
   Future<String> getUserLocationName() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    return 'Karabük, Merkez';
+    return _userSession?.currentAddress ?? 'Karabük, Merkez';
   }
 
   @override

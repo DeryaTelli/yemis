@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'services/food/mock_food_service.dart';
 import 'services/auth/mock_auth_service.dart';
 import 'services/auth/user_session.dart';
 import 'models/food/food_listing.dart';
@@ -19,6 +20,7 @@ import 'views/food/food_detail_view.dart';
 import 'views/food/food_favorites_view.dart';
 import 'views/food/food_home_view.dart';
 import 'views/food/food_profile_view.dart';
+import 'views/food/food_reserve_view.dart';
 import 'views/food/food_search_view.dart';
 import 'views/home_view.dart';
 import 'views/location_view.dart';
@@ -56,6 +58,7 @@ class MyApp extends StatelessWidget {
     // Servis instance'ı — ileride ApiAuthService ile değiştir
     final authService = MockAuthService();
     final userSession = UserSession();
+    MockFoodService().setUserSession(userSession);
 
     return MultiProvider(
       providers: [
@@ -120,7 +123,7 @@ class MyApp extends StatelessWidget {
               );
             case AppRoutes.foodHome:
               return MaterialPageRoute(
-                builder: (_) => const FoodHomeView(),
+                builder: (ctx) => FoodHomeView(userSession: ctx.read<UserSession>()),
                 settings: settings,
               );
             case AppRoutes.foodSearch:
@@ -142,6 +145,12 @@ class MyApp extends StatelessWidget {
               final listing = settings.arguments as FoodListing;
               return MaterialPageRoute(
                 builder: (_) => FoodDetailView(listing: listing),
+                settings: settings,
+              );
+            case AppRoutes.foodReserve:
+              final reserveListing = settings.arguments as FoodListing;
+              return MaterialPageRoute(
+                builder: (_) => FoodReserveView(listing: reserveListing),
                 settings: settings,
               );
             case AppRoutes.volunteerHome:

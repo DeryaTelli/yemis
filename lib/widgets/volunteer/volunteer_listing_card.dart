@@ -6,18 +6,25 @@ import '../../utils/locale_keys.dart';
 
 /// Bir gönüllü ilanı kartı.
 class VolunteerListingCard extends StatelessWidget {
-  const VolunteerListingCard({super.key, required this.listing, this.onTap, this.width});
+  const VolunteerListingCard({
+    super.key,
+    required this.listing,
+    this.onTap,
+    this.width,
+    this.imageHeight = 110, // Küçültüldü
+  });
 
   final VolunteerListing listing;
   final VoidCallback? onTap;
   final double? width;
+  final double imageHeight;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: width ?? 200, // FoodListingCard ile aynı genişlik
+        width: width ?? 200,
         decoration: BoxDecoration(
           color: const Color(0xFF8AE196), // Açık yeşil arka plan
           borderRadius: BorderRadius.circular(14),
@@ -41,7 +48,7 @@ class VolunteerListingCard extends StatelessWidget {
                     top: Radius.circular(14),
                   ),
                   child: SizedBox(
-                    height: 130, // FoodListingCard ile aynı resim yüksekliği
+                    height: imageHeight,
                     width: double.infinity,
                     child: Image.asset(
                       listing.imageUrl,
@@ -51,28 +58,8 @@ class VolunteerListingCard extends StatelessWidget {
                         child: const Icon(
                           Icons.volunteer_activism_rounded,
                           color: AppColors.volunteerColor,
-                          size: 40,
+                          size: 32,
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Opsiyonel degrade (Görselde alt kısımdan geçiş var gibi)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          const Color(0xFF8AE196).withValues(alpha: 0.8),
-                          Colors.transparent,
-                        ],
                       ),
                     ),
                   ),
@@ -97,14 +84,14 @@ class VolunteerListingCard extends StatelessWidget {
                         const Icon(
                           Icons.star_rounded,
                           color: Colors.white,
-                          size: 12,
+                          size: 10,
                         ),
                         const SizedBox(width: 2),
                         Text(
                           listing.rating.toString(),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -131,33 +118,33 @@ class VolunteerListingCard extends StatelessWidget {
                         Text(
                           listing.userName,
                           style: const TextStyle(
-                            fontSize: 13,
+                            fontSize: 12,
                             fontWeight: FontWeight.w800,
                             color: AppColors.primaryTextColor,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 1),
 
-                        // Başlık "Sokak Hayvanları İçin Yemek"
+                        // Başlık
                         Text(
                           listing.title,
                           style: const TextStyle(
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color: AppColors.primaryTextColor,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 1),
 
                         // Zaman
                         Text(
                           listing.timeRange,
                           style: const TextStyle(
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: FontWeight.w500,
                             color: AppColors.primaryTextColor,
                           ),
@@ -165,11 +152,11 @@ class VolunteerListingCard extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
 
                     Column(
                       children: [
-                        // Ayırıcı çizgi (kesikli beyaz/açık yeşil)
+                        // Ayırıcı çizgi
                         CustomPaint(
                           painter: _DashedLinePainter(),
                           size: const Size(double.infinity, 1),
@@ -177,13 +164,13 @@ class VolunteerListingCard extends StatelessWidget {
 
                         const SizedBox(height: 6),
 
-                        // Gönüllü Ol Butonu — gradient
+                        // Gönüllü Ol Butonu
                         Align(
                           alignment: Alignment.centerRight,
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 6,
+                              horizontal: 16,
+                              vertical: 4,
                             ),
                             decoration: BoxDecoration(
                               gradient: AppColors.volunteerBackgroundGradient,
@@ -193,7 +180,7 @@ class VolunteerListingCard extends StatelessWidget {
                               LocaleKeys.volunteerDetail_becomeButton.tr(),
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),

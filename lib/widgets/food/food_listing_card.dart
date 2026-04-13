@@ -9,18 +9,22 @@ class FoodListingCard extends StatelessWidget {
     required this.listing,
     required this.onFavoriteTap,
     this.onTap,
+    this.width,
+    this.imageHeight = 110, // Default'u biraz küçülttük (130 -> 110)
   });
 
   final FoodListing listing;
   final VoidCallback onFavoriteTap;
   final VoidCallback? onTap;
+  final double? width;
+  final double imageHeight;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 200,
+        width: width ?? 200,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
@@ -44,7 +48,7 @@ class FoodListingCard extends StatelessWidget {
                     top: Radius.circular(14),
                   ),
                   child: SizedBox(
-                    height: 130,
+                    height: imageHeight,
                     width: double.infinity,
                     child: Image.asset(
                       listing.imageUrl,
@@ -54,7 +58,7 @@ class FoodListingCard extends StatelessWidget {
                         child: const Icon(
                           Icons.restaurant_rounded,
                           color: AppColors.primaryColor,
-                          size: 40,
+                          size: 32,
                         ),
                       ),
                     ),
@@ -68,8 +72,8 @@ class FoodListingCard extends StatelessWidget {
                   child: GestureDetector(
                     onTap: onFavoriteTap,
                     child: Container(
-                      width: 30,
-                      height: 30,
+                      width: 28,
+                      height: 28,
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -79,7 +83,7 @@ class FoodListingCard extends StatelessWidget {
                             ? Icons.favorite_rounded
                             : Icons.favorite_border_rounded,
                         color: listing.isFavorite ? Colors.red : Colors.grey,
-                        size: 16,
+                        size: 14,
                       ),
                     ),
                   ),
@@ -104,14 +108,14 @@ class FoodListingCard extends StatelessWidget {
                         const Icon(
                           Icons.star_rounded,
                           color: Color(0xFFFFC107),
-                          size: 12,
+                          size: 10,
                         ),
                         const SizedBox(width: 2),
                         Text(
                           listing.rating.toString(),
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 11,
+                            fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -124,7 +128,7 @@ class FoodListingCard extends StatelessWidget {
 
             // ── Bilgi Alanı ──────────────────────────
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -141,7 +145,7 @@ class FoodListingCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
 
-                  // Kategori
+                  // Kategori/Başlık
                   Text(
                     listing.title,
                     style: const TextStyle(
@@ -151,7 +155,7 @@ class FoodListingCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 1),
 
                   // Zaman
                   Text(
@@ -162,15 +166,15 @@ class FoodListingCard extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
 
                   // Ayırıcı çizgi (kesikli)
                   const Divider(
                     color: Color(0xFFE0E0E0),
-                    thickness: 1,
+                    thickness: 0.5,
                     height: 1,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
 
                   // Fiyat
                   Align(
@@ -178,7 +182,7 @@ class FoodListingCard extends StatelessWidget {
                     child: Text(
                       '${listing.price.toInt()} TL',
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                         fontWeight: FontWeight.w800,
                         color: AppColors.primaryTextColor,
                       ),

@@ -206,5 +206,16 @@
         "rejectButton": "Reject",
         "approved": "Approved",
         "rejected": "Rejected"
+    },
+    "foodReserve": {
+        "title": "Reserve",
+        "paymentMethod": "Payment Method",
+        "selectPayment": "Select a Payment Method",
+        "quantity": "Quantity",
+        "price": "Price",
+        "reserveButton": "Reserve",
+        "successMessage": "Reservation placed for {title}!",
+        "googlePay": "Pay with Google Pay",
+        "applePay": "Pay with Apple Pay"
     }
 }

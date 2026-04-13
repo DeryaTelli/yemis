@@ -1,0 +1,9 @@
+Analyzing search_app_bar_custom.dart, search_map_view.dart, food_search_viewmodel.dart, food_search_view.dart, volunteer_search_viewmodel.dart, volunteer_search_view.dart...
+
+  error - lib\views\food\food_search_view.dart:89:18 - The named parameter 'onFavoriteTap' is required, but there's no corresponding argument. Try adding the required argument. - missing_required_argument
+warning - lib\viewmodels\volunteer\volunteer_search_viewmodel.dart:4:8 - Unused import: '../../utils/routes/app_routes.dart'. Try removing the import directive. - unused_import
+warning - lib\widgets\common\search_map_view.dart:4:8 - Unused import: '../../utils/constants/app_colors.dart'. Try removing the import directive. - unused_import
+   info - lib\widgets\common\search_app_bar_custom.dart:114:29 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib\widgets\common\search_map_view.dart:49:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+
+5 issues found.

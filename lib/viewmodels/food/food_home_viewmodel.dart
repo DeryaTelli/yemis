@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../models/food/food_filter.dart';
 import '../../models/food/food_listing.dart';
+import '../../services/auth/user_session.dart';
 import '../../services/food/i_food_service.dart';
 import '../../utils/routes/app_routes.dart';
 
 /// FoodHome ekranının ViewModel'i.
-///
-/// Sorumluluklar:
-/// - Konum adını yükler
-/// - Arama sorgusunu yönetir
-/// - Filtre chip seçimini yönetir
-/// - İlanları filtreli olarak sunar
 class FoodHomeViewModel extends ChangeNotifier {
-  FoodHomeViewModel({required IFoodService service}) : _service = service;
+  FoodHomeViewModel({
+    required IFoodService service,
+    required UserSession userSession,
+  }) : _service = service,
+       _userSession = userSession {
+    // UserSession dinle -> konum değişince başlığı güncelle
+    _userSession.addListener(_onUserSessionChanged);
+  }
 
   final IFoodService _service;
+  final UserSession _userSession;
 
   // ─── State ────────────────────────────────────────────
 
@@ -35,25 +38,41 @@ class FoodHomeViewModel extends ChangeNotifier {
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
 
-  String get appBarTitle => _locationName.isEmpty ? 'Konum yükleniyor…' : _locationName;
+  String get appBarTitle {
+    if (_userSession.currentAddress != null)
+      return _userSession.currentAddress!;
+    return _locationName.isEmpty ? 'Konum yükleniyor…' : _locationName;
+  }
+
   Color get appBarColor => const Color(0xFFFE8800);
+
+  void _onUserSessionChanged() {
+    if (_userSession.currentAddress != null) {
+      _locationName = _userSession.currentAddress!;
+      notifyListeners();
+    }
+  }
 
   void onTabSelected(int index) {
     if (_selectedIndex == index) return;
     _selectedIndex = index;
     notifyListeners();
-    debugPrint("Food Tab Selected: $index");
   }
 
-  /// MVVM: Alt navigasyon rotalarını ViewModel sağlar
   String? getBottomNavRoute(int index) {
     switch (index) {
-      case 0: return AppRoutes.foodHome;
-      case 1: return AppRoutes.foodSearch;
-      case 2: return AppRoutes.home;
-      case 3: return AppRoutes.foodFavorites;
-      case 4: return AppRoutes.foodProfile;
-      default: return null;
+      case 0:
+        return AppRoutes.foodHome;
+      case 1:
+        return AppRoutes.foodSearch;
+      case 2:
+        return AppRoutes.home;
+      case 3:
+        return AppRoutes.foodFavorites;
+      case 4:
+        return AppRoutes.foodProfile;
+      default:
+        return null;
     }
   }
 
@@ -94,8 +113,6 @@ class FoodHomeViewModel extends ChangeNotifier {
 
   List<FoodListing> get filteredListings {
     var list = _allListings;
-
-    // Kategori filtresi
     if (_selectedFilter != FoodFilter.all) {
       list = list.where((l) {
         switch (_selectedFilter) {
@@ -112,8 +129,6 @@ class FoodHomeViewModel extends ChangeNotifier {
         }
       }).toList();
     }
-
-    // Metin filtresi
     if (_searchQuery.isNotEmpty) {
       final q = _searchQuery.toLowerCase();
       list = list.where((l) {
@@ -122,11 +137,9 @@ class FoodHomeViewModel extends ChangeNotifier {
             l.category.toLowerCase().contains(q);
       }).toList();
     }
-
     return list;
   }
 
-  /// Section'a göre filtrelenmiş ilanlar.
   List<FoodListing> sectionListings(FoodSection section) {
     return filteredListings.where((l) => l.section == section).toList();
   }
@@ -134,9 +147,7 @@ class FoodHomeViewModel extends ChangeNotifier {
   // ─── Favori Toggle ───────────────────────────────────
 
   void toggleFavorite(String id) {
-    // Singleton servisteki mutable listeyi güncelle
     _service.toggleFavorite(id);
-    // Yerel kopyayı da senkron olarak güncelle
     final index = _allListings.indexWhere((l) => l.id == id);
     if (index != -1) {
       _allListings = List.of(_allListings)
@@ -145,5 +156,11 @@ class FoodHomeViewModel extends ChangeNotifier {
         );
     }
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _userSession.removeListener(_onUserSessionChanged);
+    super.dispose();
   }
 }

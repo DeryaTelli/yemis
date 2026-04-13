@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/food/food_listing.dart';
+import '../../services/auth/user_session.dart';
 import '../../services/food/mock_food_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_home_viewmodel.dart';
@@ -14,12 +15,17 @@ import '../../widgets/common/app_bottom_nav_bar.dart';
 
 /// Yemek ana sayfası — tam MVVM ile uygulanmıştır.
 class FoodHomeView extends StatelessWidget {
-  const FoodHomeView({super.key});
+  const FoodHomeView({super.key, required this.userSession});
+
+  final UserSession userSession;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => FoodHomeViewModel(service: MockFoodService())..init(),
+      create: (_) => FoodHomeViewModel(
+        service: MockFoodService(),
+        userSession: userSession,
+      )..init(),
       child: const _FoodHomeBody(),
     );
   }
@@ -126,7 +132,7 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
                   ),
                   const SizedBox(height: 24),
 
-                  // ── Şimdi Al ────────────────────────────────
+                  // ── Sekarang Al ────────────────────────────────
                   const FoodListingSection(
                     title: 'Şimdi Al',
                     section: FoodSection.buyNow,

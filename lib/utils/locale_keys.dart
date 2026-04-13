@@ -212,4 +212,15 @@ abstract class LocaleKeys {
   static const businessApprovals_rejectButton = 'businessApprovals.rejectButton';
   static const businessApprovals_approved = 'businessApprovals.approved';
   static const businessApprovals_rejected = 'businessApprovals.rejected';
+
+  // foodReserve
+  static const foodReserve_title = 'foodReserve.title';
+  static const foodReserve_paymentMethod = 'foodReserve.paymentMethod';
+  static const foodReserve_selectPayment = 'foodReserve.selectPayment';
+  static const foodReserve_quantity = 'foodReserve.quantity';
+  static const foodReserve_price = 'foodReserve.price';
+  static const foodReserve_reserveButton = 'foodReserve.reserveButton';
+  static const foodReserve_successMessage = 'foodReserve.successMessage';
+  static const foodReserve_googlePay = 'foodReserve.googlePay';
+  static const foodReserve_applePay = 'foodReserve.applePay';
 }

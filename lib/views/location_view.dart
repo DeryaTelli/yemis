@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import '../services/auth/user_session.dart';
 import '../utils/locale_keys.dart';
 import '../utils/routes/app_routes.dart';
 import '../utils/theme/text_styles_custom.dart';
@@ -14,8 +16,9 @@ class LocationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userSession = context.read<UserSession>();
     return ChangeNotifierProvider(
-      create: (_) => LocationViewModel()..init(),
+      create: (_) => LocationViewModel(userSession: userSession)..init(),
       child: const _LocationBody(),
     );
   }
@@ -45,8 +48,6 @@ class _LocationBodyState extends State<_LocationBody>
     super.dispose();
   }
 
-  /// Uygulama arka plandan ön plana döndüğünde çağrılır.
-  /// → Kullanıcı ayarlardan izin vermiş olabilir.
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state != AppLifecycleState.resumed) return;
@@ -56,15 +57,14 @@ class _LocationBodyState extends State<_LocationBody>
     vm.onAppResumed(
       onShareSuccess: (lat, lng) {
         if (!mounted) return;
-        debugPrint('GPS (ayarlardan sonra): $lat, $lng');
         Navigator.pushReplacementNamed(context, AppRoutes.home);
       },
       onPickNavigate: () async {
         if (!mounted) return;
         final result = await Navigator.pushNamed(context, AppRoutes.mapPicker);
         if (!mounted) return;
-        if (result != null) {
-          await vm.onLocationPicked(() {
+        if (result != null && result is LatLng) {
+          await vm.onLocationPicked(result.latitude, result.longitude, () {
             if (!mounted) return;
             Navigator.pushReplacementNamed(context, AppRoutes.home);
           });
@@ -146,7 +146,6 @@ class _LocationBodyState extends State<_LocationBody>
                   onOpenSettings: openAppSettings,
                   onSuccess: (lat, lng) {
                     if (!mounted) return;
-                    debugPrint('GPS: $lat, $lng');
                     Navigator.pushReplacementNamed(context, AppRoutes.home);
                   },
                 ),
@@ -166,8 +165,8 @@ class _LocationBodyState extends State<_LocationBody>
                     final result = await Navigator.pushNamed(
                         context, AppRoutes.mapPicker);
                     if (!mounted) return;
-                    if (result != null) {
-                      await vm.onLocationPicked(() {
+                    if (result != null && result is LatLng) {
+                      await vm.onLocationPicked(result.latitude, result.longitude, () {
                         if (!mounted) return;
                         Navigator.pushReplacementNamed(
                             context, AppRoutes.home);

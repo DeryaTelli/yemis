@@ -1,0 +1,10 @@
+Analyzing main.dart, user_session.dart, location_viewmodel.dart, food_home_viewmodel.dart, food_home_view.dart, location_view.dart, mock_food_service.dart...
+
+  error - lib\main.dart:60:5 - The method 'MockFoodService' isn't defined for the type 'MyApp'. Try correcting the name to the name of an existing method, or defining a method named 'MockFoodService'. - undefined_method
+  error - lib\viewmodels\food\food_home_viewmodel.dart:42:7 - Conditions must have a static type of 'bool'. Try changing the condition. - non_bool_condition
+warning - lib\main.dart:28:8 - Unused import: 'views/volunteer/volunteer_detail_view.dart'. Try removing the import directive. - unused_import
+warning - lib\main.dart:218:7 - The declaration '_PlaceholderView' isn't referenced. Try removing the declaration of '_PlaceholderView'. - unused_element
+   info - lib\services\food\mock_food_service.dart:51:8 - The member 'toggleFavorite' overrides an inherited member but isn't annotated with '@override'. Try adding the '@override' annotation. - annotate_overrides
+   info - lib\services\food\mock_food_service.dart:60:21 - The member 'getFavorites' overrides an inherited member but isn't annotated with '@override'. Try adding the '@override' annotation. - annotate_overrides
+
+6 issues found.
