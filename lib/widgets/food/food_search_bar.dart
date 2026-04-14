@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../utils/constants/app_colors.dart';
 
 /// Arama çubuğu widget'ı.
@@ -30,19 +31,13 @@ class FoodSearchBar extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-        style: const TextStyle(
-          fontSize: 14,
-          color: AppColors.primaryTextColor,
-        ),
+        style: const TextStyle(fontSize: 14, color: AppColors.primaryTextColor),
         decoration: InputDecoration(
           hintText: 'Ara',
-          hintStyle: const TextStyle(
-            color: AppColors.hintTextColor,
-            fontSize: 14,
-          ),
+          hintStyle: CustomTextStyles.semiBold16Grey,
           prefixIcon: const Icon(
             Icons.search_rounded,
-            color: AppColors.hintTextColor,
+            color: AppColors.primaryColor,
             size: 22,
           ),
           suffixIcon: const Icon(

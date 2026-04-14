@@ -6,6 +6,7 @@ import '../../utils/theme/text_styles_custom.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
+  final TextStyle? hintStyle;
   final String? labelText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -29,6 +30,7 @@ class CustomTextField extends StatelessWidget {
     super.key,
     this.controller,
     this.hintText,
+    this.hintStyle,
     this.labelText,
     this.prefixIcon,
     this.suffixIcon,
@@ -46,7 +48,7 @@ class CustomTextField extends StatelessWidget {
     this.minLines,
     this.contentPadding,
     this.hasShadow = false,
-    this.borderColor,
+    this.borderColor, 
   });
 
   @override
@@ -79,7 +81,7 @@ class CustomTextField extends StatelessWidget {
         style: CustomTextStyles.regular16DarkGrey, // Default text style
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: CustomTextStyles.regular16Grey,
+          hintStyle: hintStyle ?? CustomTextStyles.semiBold16Grey, // Default hint style
           labelText: labelText,
           labelStyle: CustomTextStyles.regular16Grey,
           prefixIcon: prefixIcon,

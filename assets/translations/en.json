@@ -107,7 +107,7 @@
     "volunteerDetail": {
         "tabOrder": "Order",
         "tabReview": "Review",
-        "becomeButton": "Become a Volunteer",
+        "becomeButton": "Be Volunteer",
         "freeLabel": "Free",
         "goToLocation": "Go to Location",
         "goToShelter": "Go to Shelter",
@@ -218,4 +218,4 @@
         "googlePay": "Pay with Google Pay",
         "applePay": "Pay with Apple Pay"
     }
-}
+}

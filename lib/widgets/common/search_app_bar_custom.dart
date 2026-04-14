@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../utils/constants/app_colors.dart';
 import '../common/custom_text_field.dart';
 
@@ -55,6 +56,7 @@ class SearchAppBarCustom extends StatelessWidget
                       child: CustomTextField(
                         controller: searchController,
                         hintText: 'Ara',
+                        hintStyle: CustomTextStyles.semiBold16Grey,
                         onChanged: onSearchChanged,
                         fillColor: Colors.white,
                         borderColor: accentColor, // Modül renginde çerçeve
@@ -63,9 +65,9 @@ class SearchAppBarCustom extends StatelessWidget
                           color: accentColor,
                           size: 22,
                         ),
-                        suffixIcon: const Icon(
+                        suffixIcon: Icon(
                           Icons.mic_none_rounded,
-                          color: AppColors.hintTextColor,
+                          color: accentColor,
                           size: 22,
                         ),
                         contentPadding: const EdgeInsets.symmetric(
@@ -169,11 +171,11 @@ class _TabItem extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             title,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              color: isSelected ? accentColor : AppColors.hintTextColor,
-            ),
+            style: isSelected
+                ? CustomTextStyles.semiBold16Primary.copyWith(
+                    color: accentColor,
+                  )
+                : CustomTextStyles.semiBold16Grey,
           ),
         ),
       ),

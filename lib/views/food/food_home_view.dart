@@ -93,38 +93,6 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
                   ),
                   const SizedBox(height: 20),
 
-                  // ── "Sana Yakın Yerler" başlığı ─────────────
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Sana Yakın Yerler',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.primaryTextColor,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Text(
-                          'Tümü',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
                   // ── Sürpriz Kutu ────────────────────────────
                   const FoodListingSection(
                     title: 'Sürpriz Kutu',
@@ -156,11 +124,7 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
           if (route != null) {
             if (index == 2) {
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  route,
-                  (r) => false,
-                );
+                Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
               }
             } else if (ModalRoute.of(context)?.settings.name != route) {
               Navigator.pushReplacementNamed(context, route);

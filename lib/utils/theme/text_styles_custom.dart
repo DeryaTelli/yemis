@@ -8,6 +8,7 @@ class CustomTextStyles {
 
   // Black (0xFF1B1B1B)
   static TextStyle get regular14Black => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w400, color: const Color(0xFF1B1B1B));
+   static TextStyle get extraBold16Black => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w800, color: const Color(0xFF1B1B1B)); // Unified color
 
   // Grey (0xFF838383)
   static TextStyle get regular14Grey => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w400, color: const Color(0xFF838383));
@@ -29,6 +30,7 @@ class CustomTextStyles {
   static TextStyle get extraBold20DarkGreyCompact => GoogleFonts.nunito(fontSize: 20, fontWeight: FontWeight.w800, color: const Color(0xFF4F4F4F), height: 22 / 20, letterSpacing: -0.4);
 
   // White (0xFFFFFFFF)
+    static TextStyle get semiBold13White => GoogleFonts.nunito(fontSize: 13, fontWeight: FontWeight.w600, color:  Colors.white, height: 20 / 14, letterSpacing: -0.24);
   static TextStyle get medium16White => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white);
   static TextStyle get regular16White => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white);
   static TextStyle get semiBold16WhiteCompact => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white, height: 22 / 16, letterSpacing: -0.4);

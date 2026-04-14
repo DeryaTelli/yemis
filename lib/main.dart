@@ -19,6 +19,7 @@ import 'views/business/business_home_view.dart';
 import 'views/food/food_detail_view.dart';
 import 'views/food/food_favorites_view.dart';
 import 'views/food/food_home_view.dart';
+import 'views/food/food_profile_edit_view.dart';
 import 'views/food/food_profile_view.dart';
 import 'views/food/food_reserve_view.dart';
 import 'views/food/food_search_view.dart';
@@ -26,7 +27,6 @@ import 'views/home_view.dart';
 import 'views/location_view.dart';
 import 'views/map_picker_view.dart';
 import 'views/volunteer/volunteer_add_listing_view.dart';
-import 'views/volunteer/volunteer_detail_view.dart';
 import 'views/volunteer/volunteer_home_view.dart';
 import 'views/volunteer/volunteer_listings_view.dart';
 import 'views/volunteer/volunteer_profile_view.dart';
@@ -139,6 +139,11 @@ class MyApp extends StatelessWidget {
             case AppRoutes.foodProfile:
               return MaterialPageRoute(
                 builder: (_) => const FoodProfileView(),
+                settings: settings,
+              );
+            case AppRoutes.foodProfileEdit:
+              return MaterialPageRoute(
+                builder: (_) => const FoodProfileEditView(),
                 settings: settings,
               );
             case AppRoutes.foodDetail:

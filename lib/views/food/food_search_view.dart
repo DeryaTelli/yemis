@@ -8,6 +8,7 @@ import '../../viewmodels/food/food_search_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/common/search_app_bar_custom.dart';
 import '../../widgets/common/search_map_view.dart';
+import '../../widgets/food/food_filter_bottom_sheet.dart';
 import '../../widgets/food/food_listing_card.dart';
 
 class FoodSearchView extends StatefulWidget {
@@ -19,6 +20,18 @@ class FoodSearchView extends StatefulWidget {
 
 class _FoodSearchViewState extends State<FoodSearchView> {
   final TextEditingController _searchController = TextEditingController();
+  late final FoodSearchViewModel _vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = FoodSearchViewModel(service: MockFoodService())..init();
+
+    // Arama çubuğundaki değişiklikler her zaman ViewModel ile senkron kalır.
+    _searchController.addListener(() {
+      _vm.onSearchChanged(_searchController.text);
+    });
+  }
 
   @override
   void dispose() {
@@ -28,8 +41,8 @@ class _FoodSearchViewState extends State<FoodSearchView> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => FoodSearchViewModel(service: MockFoodService())..init(),
+    return ChangeNotifierProvider.value(
+      value: _vm,
       child: Consumer<FoodSearchViewModel>(
         builder: (context, vm, child) {
           return Scaffold(
@@ -37,18 +50,26 @@ class _FoodSearchViewState extends State<FoodSearchView> {
             appBar: SearchAppBarCustom(
               searchController: _searchController,
               onSearchChanged: vm.onSearchChanged,
-              onFilterTap: () => _showFilterBottomSheet(context),
+              onFilterTap: () => _showFilterBottomSheet(context, vm),
               isMapView: vm.isMapView,
               onViewModeChanged: vm.toggleViewMode,
             ),
             body: vm.isLoading
-                ? const Center(child: CircularProgressIndicator(color: AppColors.primaryColor))
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
+                  )
                 : vm.isMapView
                     ? SearchMapView(
                         listings: vm.filteredListings,
                         accentColor: AppColors.primaryColor,
                         onMarkerTap: (listing) {
-                          Navigator.pushNamed(context, AppRoutes.foodDetail, arguments: listing);
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.foodDetail,
+                            arguments: listing,
+                          );
                         },
                       )
                     : _buildListView(vm),
@@ -58,7 +79,8 @@ class _FoodSearchViewState extends State<FoodSearchView> {
                 final route = vm.getBottomNavRoute(index);
                 if (route != null) {
                   if (index == 2) {
-                    Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, route, (r) => false);
                   } else if (ModalRoute.of(context)?.settings.name != route) {
                     Navigator.pushReplacementNamed(context, route);
                   }
@@ -76,7 +98,12 @@ class _FoodSearchViewState extends State<FoodSearchView> {
 
   Widget _buildListView(FoodSearchViewModel vm) {
     if (vm.filteredListings.isEmpty) {
-      return const Center(child: Text('Sonuç bulunamadı.'));
+      return const Center(
+        child: Text(
+          'Sonuç bulunamadı.',
+          style: TextStyle(color: AppColors.hintTextColor, fontSize: 15),
+        ),
+      );
     }
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -90,7 +117,11 @@ class _FoodSearchViewState extends State<FoodSearchView> {
             width: double.infinity,
             onFavoriteTap: () => vm.toggleFavorite(listing.id),
             onTap: () {
-              Navigator.pushNamed(context, AppRoutes.foodDetail, arguments: listing);
+              Navigator.pushNamed(
+                context,
+                AppRoutes.foodDetail,
+                arguments: listing,
+              );
             },
           ),
         );
@@ -98,43 +129,17 @@ class _FoodSearchViewState extends State<FoodSearchView> {
     );
   }
 
-  void _showFilterBottomSheet(BuildContext context) {
+  void _showFilterBottomSheet(BuildContext context, FoodSearchViewModel vm) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(24),
-          height: 300,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Filtreleme',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-              const Text('Kategori seçimi, mesafe aralığı vb. burada olacak.'),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: const Text('Uygula'),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (_) => FoodFilterBottomSheet(
+        currentSort: vm.activeSortType,
+        onSortSelected: vm.selectSortType,
+      ),
     );
   }
 }

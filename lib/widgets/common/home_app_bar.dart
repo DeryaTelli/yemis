@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/constants/app_colors.dart';
+import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../utils/routes/app_routes.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -21,7 +23,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: backgroundColor,
       foregroundColor: Colors.white,
       elevation: 0,
-      centerTitle: true,
+      centerTitle: false,
       automaticallyImplyLeading: false,
       title: isLocationTitle
           ? _buildLocationTitle(context)
@@ -31,49 +33,30 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildLocationTitle(BuildContext context) {
     return GestureDetector(
-      onTap: onLocationTap ??
+      onTap:
+          onLocationTap ??
           () => Navigator.pushNamed(context, AppRoutes.location),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Lokasyon ikonu (beyaz daire içinde)
           Container(
             width: 28,
             height: 28,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.person_pin_circle_rounded,
-              color: backgroundColor,
-              size: 18,
-            ),
+            child: Image.asset('assets/foodIcon/locationSelect.png'),
           ),
           const SizedBox(width: 6),
-
           // "Lokasyon Seç" + şehir adı
-          Column(
+          Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Lokasyon Seç',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white70,
-                  height: 1.0,
-                ),
-              ),
+              Text('Lokasyon Seç', style: CustomTextStyles.extraBold16DarkGrey),
+              const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  height: 1.2,
-                ),
+                style: CustomTextStyles.medium16White,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
@@ -81,8 +64,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           const SizedBox(width: 4),
           const Icon(
             Icons.keyboard_arrow_down_rounded,
-            color: Colors.white,
-            size: 20,
+            color: Color(0xFF4F4F4F),
+            size: 24,
           ),
         ],
       ),

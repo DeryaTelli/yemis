@@ -11,6 +11,7 @@ import '../../viewmodels/volunteer/volunteer_search_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/common/search_app_bar_custom.dart';
 import '../../widgets/common/search_map_view.dart';
+import '../../widgets/volunteer/volunteer_filter_bottom_sheet.dart';
 import '../../widgets/volunteer/volunteer_listing_card.dart';
 
 class VolunteerSearchView extends StatefulWidget {
@@ -22,6 +23,17 @@ class VolunteerSearchView extends StatefulWidget {
 
 class _VolunteerSearchViewState extends State<VolunteerSearchView> {
   final TextEditingController _searchController = TextEditingController();
+  late final VolunteerSearchViewModel _vm;
+
+  @override
+  void initState() {
+    super.initState();
+    _vm = VolunteerSearchViewModel(service: MockVolunteerService())..init();
+
+    _searchController.addListener(() {
+      _vm.onSearchChanged(_searchController.text);
+    });
+  }
 
   @override
   void dispose() {
@@ -33,9 +45,8 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
   Widget build(BuildContext context) {
     return Theme(
       data: AppTheme.themeFor(AppSection.volunteer),
-      child: ChangeNotifierProvider(
-        create: (_) =>
-            VolunteerSearchViewModel(service: MockVolunteerService())..init(),
+      child: ChangeNotifierProvider.value(
+        value: _vm,
         child: Consumer<VolunteerSearchViewModel>(
           builder: (context, vm, child) {
             return Scaffold(
@@ -43,7 +54,7 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
               appBar: SearchAppBarCustom(
                 searchController: _searchController,
                 onSearchChanged: vm.onSearchChanged,
-                onFilterTap: () => _showFilterBottomSheet(context),
+                onFilterTap: () => _showFilterBottomSheet(context, vm),
                 isMapView: vm.isMapView,
                 onViewModeChanged: vm.toggleViewMode,
                 accentColor: AppColors.volunteerColor,
@@ -82,7 +93,14 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
 
   Widget _buildListView(VolunteerSearchViewModel vm) {
     if (vm.filteredListings.isEmpty) {
-      return Center(child: Text(LocaleKeys.volunteerSearch_comingSoon.tr()));
+      return Center(
+        child: Text(
+          vm.searchQuery.isEmpty
+              ? LocaleKeys.volunteerSearch_comingSoon.tr()
+              : "Sonuç bulunamadı.",
+          style: const TextStyle(color: AppColors.hintTextColor, fontSize: 15),
+        ),
+      );
     }
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -146,49 +164,17 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
     }
   }
 
-  void _showFilterBottomSheet(BuildContext context) {
+  void _showFilterBottomSheet(BuildContext context, VolunteerSearchViewModel vm) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(24),
-          height: 300,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                LocaleKeys.volunteerSearch_title
-                    .tr(), // Or a dynamic filter title
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Text('Filtreleme seçenekleri burada olacak...'),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.volunteerColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text('Uygula'),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (_) => VolunteerFilterBottomSheet(
+        currentSort: vm.activeSortType,
+        onSortSelected: vm.selectSortType,
+      ),
     );
   }
 }
