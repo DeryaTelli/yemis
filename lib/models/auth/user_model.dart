@@ -25,13 +25,13 @@ class UserModel {
   bool get canAccessVolunteer => true;
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final dynamic rawRole = json['userType'] ?? json['user_type'] ?? json['userRole'] ?? json['user_role'];
+    final role = (rawRole?.toString().toLowerCase() ?? 'food');
     return UserModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      userType: (json['userType'] as String?) == 'business'
-          ? UserType.business
-          : UserType.food,
+      id: (json['id'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+      email: (json['email'] ?? '').toString(),
+      userType: role == 'business' ? UserType.business : UserType.food,
     );
   }
 

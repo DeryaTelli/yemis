@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'services/food/mock_food_service.dart';
-import 'services/auth/mock_auth_service.dart';
+import 'services/auth/api_auth_service.dart';
 import 'services/auth/user_session.dart';
 import 'models/food/food_listing.dart';
 import 'utils/routes/app_routes.dart';
@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Servis instance'ı — ileride ApiAuthService ile değiştir
-    final authService = MockAuthService();
+    // Servis instance'ı
+    final authService = ApiAuthService();
     final userSession = UserSession();
     MockFoodService().setUserSession(userSession);
 

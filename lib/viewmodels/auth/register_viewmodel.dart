@@ -27,6 +27,10 @@ class RegisterViewModel extends ChangeNotifier {
   String? _errorKey;
   String? get errorKey => _errorKey;
 
+  /// Backend'den gelen ham hata mesajı (LocaleKey yoksa kullanılır)
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
   // --- Actions ---
 
   void togglePasswordVisibility() {
@@ -41,6 +45,7 @@ class RegisterViewModel extends ChangeNotifier {
 
   void clearError() {
     _errorKey = null;
+    _errorMessage = null;
     notifyListeners();
   }
 
@@ -58,6 +63,7 @@ class RegisterViewModel extends ChangeNotifier {
 
     _isLoading = true;
     _errorKey = null;
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -72,7 +78,11 @@ class RegisterViewModel extends ChangeNotifier {
       if (response.success) {
         onSuccess(emailController.text.trim());
       } else {
-        _errorKey = response.errorKey ?? LocaleKeys.auth_errors_general;
+        _errorKey = response.errorKey;
+        // Eğer errorKey yoksa backend'den gelen detaylı mesajı al
+        if (_errorKey == null) {
+          _errorMessage = response.message;
+        }
       }
     } catch (_) {
       _errorKey = LocaleKeys.auth_errors_general;

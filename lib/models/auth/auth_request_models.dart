@@ -39,7 +39,6 @@ class RegisterRequest {
         'name': name,
         'email': email,
         'password': password,
-        'userType': userType.name,
       };
 }
 

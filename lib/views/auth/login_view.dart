@@ -37,9 +37,9 @@ class _LoginViewState extends State<LoginView> {
                   children: [
                     const SizedBox(height: 48),
 
-                    if (vm.errorKey != null) ...[
+                    if (vm.errorMessage != null || vm.errorKey != null) ...[
                       ErrorBanner(
-                        message: vm.errorKey!.tr(),
+                        message: vm.errorMessage ?? vm.errorKey!.tr(),
                         onDismiss: vm.clearError,
                       ),
                       const SizedBox(height: 16),

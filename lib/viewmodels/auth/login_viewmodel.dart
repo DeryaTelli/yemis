@@ -33,6 +33,10 @@ class LoginViewModel extends ChangeNotifier {
   String? _errorKey;
   String? get errorKey => _errorKey;
 
+  /// Backend'den gelen ham hata mesajı (LocaleKey yoksa kullanılır)
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
   // --- Actions ---
 
   void togglePasswordVisibility() {
@@ -47,6 +51,7 @@ class LoginViewModel extends ChangeNotifier {
 
   void clearError() {
     _errorKey = null;
+    _errorMessage = null;
     notifyListeners();
   }
 
@@ -59,6 +64,7 @@ class LoginViewModel extends ChangeNotifier {
 
     _isLoading = true;
     _errorKey = null;
+    _errorMessage = null;
     notifyListeners();
 
     try {
@@ -74,7 +80,11 @@ class LoginViewModel extends ChangeNotifier {
         _userSession.setUser(response.user!);
         onSuccess();
       } else {
-        _errorKey = response.errorKey ?? LocaleKeys.auth_errors_general;
+        _errorKey = response.errorKey;
+        // Eğer errorKey yoksa backend'den gelen detaylı mesajı al
+        if (_errorKey == null) {
+          _errorMessage = response.message;
+        }
       }
     } catch (_) {
       _errorKey = LocaleKeys.auth_errors_general;
