@@ -18,13 +18,24 @@ class ForgotPasswordView extends StatefulWidget {
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   final _formKey = GlobalKey<FormState>();
+  late ForgotPasswordViewModel _viewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewModel = context.read<ForgotPasswordViewModel>();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.clearFields();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(LocaleKeys.auth_forgotPassword_title.tr()),
-      ),
+      appBar: AppBar(title: Text(LocaleKeys.auth_forgotPassword_title.tr())),
       body: Consumer<ForgotPasswordViewModel>(
         builder: (context, vm, _) {
           return SafeArea(
@@ -74,11 +85,14 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       isLoading: vm.isLoading,
                       onPressed: () => vm.sendResetEmail(
                         formKey: _formKey,
-                        onSuccess: (email) => Navigator.pushNamed(
-                          context,
-                          AppRoutes.verification,
-                          arguments: email,
-                        ),
+                        onSuccess: (email) {
+                          vm.clearFields();
+                          Navigator.pushReplacementNamed(
+                            context,
+                            AppRoutes.verification,
+                            arguments: {'email': email, 'isPasswordReset': true},
+                          );
+                        },
                       ),
                     ),
                   ],

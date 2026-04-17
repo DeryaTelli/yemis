@@ -18,6 +18,19 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
+  late RegisterViewModel _viewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewModel = context.read<RegisterViewModel>();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.clearFields();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +100,8 @@ class _RegisterViewState extends State<RegisterView> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           vm.passwordVisible
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                           color: const Color(0xFF838383),
                         ),
                         onPressed: vm.togglePasswordVisibility,
@@ -130,11 +143,14 @@ class _RegisterViewState extends State<RegisterView> {
                       isLoading: vm.isLoading,
                       onPressed: () => vm.register(
                         formKey: _formKey,
-                        onSuccess: (email) => Navigator.pushReplacementNamed(
-                          context,
-                          AppRoutes.verification,
-                          arguments: email,
-                        ),
+                        onSuccess: (email) {
+                          vm.clearFields();
+                          Navigator.pushReplacementNamed(
+                            context,
+                            AppRoutes.verification,
+                            arguments: {'email': email, 'isPasswordReset': false},
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -146,7 +162,10 @@ class _RegisterViewState extends State<RegisterView> {
                             style: CustomTextStyles.regular14Grey),
                         const SizedBox(width: 4),
                         GestureDetector(
-                          onTap: () => Navigator.pop(context),
+                          onTap: () {
+                            vm.clearFields();
+                            Navigator.pop(context);
+                          },
                           child: Text(LocaleKeys.auth_register_login.tr(),
                               style: CustomTextStyles.bold14Primary),
                         ),

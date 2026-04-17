@@ -74,21 +74,34 @@ class MockAuthService implements IAuthService {
   }
 
   @override
-  Future<void> forgotPassword(ForgotPasswordRequest request) async {
+  Future<AuthResponse> forgotPassword(ForgotPasswordRequest request) async {
     await _simulateDelay();
+    return const AuthResponse(success: true, message: 'OTP sent');
   }
 
   @override
-  Future<void> verifyCode(VerifyCodeRequest request) async {
+  Future<AuthResponse> verifyCode(VerifyCodeRequest request) async {
     await _simulateDelay();
     if (request.code != '1234') {
-      throw Exception('Invalid code');
+      return const AuthResponse(
+        success: false,
+        message: 'Invalid code',
+        errorKey: LocaleKeys.auth_errors_codeInvalid,
+      );
     }
+    return const AuthResponse(success: true, message: 'Code verified');
   }
 
   @override
-  Future<void> resendCode(String email) async {
+  Future<AuthResponse> resendCode(String email) async {
     await _simulateDelay();
+    return const AuthResponse(success: true, message: 'Code resent');
+  }
+
+  @override
+  Future<AuthResponse> resetPassword(ResetPasswordRequest request) async {
+    await _simulateDelay();
+    return const AuthResponse(success: true, message: 'Password reset successful');
   }
 
   Future<void> _simulateDelay() =>

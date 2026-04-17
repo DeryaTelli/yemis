@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
@@ -22,7 +23,9 @@ class VolunteerListingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<VolunteerHomeViewModel>();
-    final sectionListings = vm.listings.where((l) => l.section == section).toList();
+    final sectionListings = vm.listings
+        .where((l) => l.section == section)
+        .toList();
 
     if (sectionListings.isEmpty) {
       return const SizedBox.shrink();
@@ -44,7 +47,11 @@ class VolunteerListingSection extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.pushNamed(
+                context,
+                AppRoutes.volunteerAllListings,
+                arguments: {'title': title, 'listings': sectionListings},
+              ),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,
@@ -65,7 +72,8 @@ class VolunteerListingSection extends StatelessWidget {
 
         // ── Yatay Liste ──────────────────────────────────
         SizedBox(
-          height: 255, // İlan kartı yüksekliği (Önceden 240'tı, taşmayı önlemek için 255 yapıldı)
+          height:
+              255, // İlan kartı yüksekliği (Önceden 240'tı, taşmayı önlemek için 255 yapıldı)
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: sectionListings.length,

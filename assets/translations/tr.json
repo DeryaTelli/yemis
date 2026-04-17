@@ -18,7 +18,8 @@
     "forgotPassword": {
       "title": "Şifremi Unuttum",
       "description": "Hesabınıza kayıtlı e-posta adresini girin, şifrenizi yenileyebilmeniz için size bir kod gönderelim.",
-      "button": "Gönder"
+      "button": "Gönder",
+      "success": "Şifreniz başarıyla yenilendi."
     },
     "verification": {
       "title": "Doğrulama Kodu",
@@ -30,7 +31,9 @@
     "fields": {
       "email": "Email",
       "password": "Şifre",
-      "name": "İsim"
+      "name": "İsim",
+      "newPassword": "Yeni Şifre",
+      "confirmPassword": "Şifre Tekrar"
     },
     "validation": {
       "emailEmpty": "E-posta adresi boş olamaz.",
@@ -39,7 +42,8 @@
       "passwordMinLength": "Şifre en az 6 karakter olmalıdır.",
       "nameEmpty": "İsim boş olamaz.",
       "kvkkRequired": "Lütfen KVKK metnini onaylayın.",
-      "codeIncomplete": "Lütfen 4 haneli kodu eksiksiz girin."
+      "codeIncomplete": "Lütfen 4 haneli kodu eksiksiz girin.",
+      "passwordsNotMatch": "Şifreler eşleşmiyor."
     },
     "errors": {
       "invalidCredentials": "E-posta veya şifre hatalı.",

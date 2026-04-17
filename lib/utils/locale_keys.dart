@@ -22,6 +22,7 @@ abstract class LocaleKeys {
   static const auth_forgotPassword_description =
       'auth.forgotPassword.description';
   static const auth_forgotPassword_button = 'auth.forgotPassword.button';
+  static const auth_forgotPassword_success = 'auth.forgotPassword.success';
 
   // auth.verification
   static const auth_verification_title = 'auth.verification.title';
@@ -34,6 +35,8 @@ abstract class LocaleKeys {
   static const auth_fields_email = 'auth.fields.email';
   static const auth_fields_password = 'auth.fields.password';
   static const auth_fields_name = 'auth.fields.name';
+  static const auth_fields_newPassword = 'auth.fields.newPassword';
+  static const auth_fields_confirmPassword = 'auth.fields.confirmPassword';
 
   // auth.validation
   static const auth_validation_emailEmpty = 'auth.validation.emailEmpty';
@@ -45,6 +48,8 @@ abstract class LocaleKeys {
   static const auth_validation_kvkkRequired = 'auth.validation.kvkkRequired';
   static const auth_validation_codeIncomplete =
       'auth.validation.codeIncomplete';
+  static const auth_validation_passwordsNotMatch =
+      'auth.validation.passwordsNotMatch';
 
   // auth.errors
   static const auth_errors_invalidCredentials =

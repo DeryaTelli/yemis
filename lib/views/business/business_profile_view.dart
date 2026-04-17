@@ -193,11 +193,16 @@ class BusinessProfileView extends StatelessWidget {
                             },
                           ),
                           ProfileMenuTile(
+                            icon: Icons.logout_rounded,
+                            title: 'Çıkış Yap',
+                            onTap: () => vm.logout(context),
+                          ),
+                          ProfileMenuTile(
                             icon: Icons.delete_outline_rounded,
                             title: LocaleKeys.businessProfile_deleteAccount.tr(),
                             isDestructive: true,
                             showTrailing: false,
-                            onTap: () {},
+                            onTap: () => vm.deleteAccount(context),
                           ),
                         ],
                       ),

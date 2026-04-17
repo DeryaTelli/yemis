@@ -40,7 +40,14 @@ class FoodListingSection extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => Navigator.pushNamed(
+                context,
+                AppRoutes.foodAllListings,
+                arguments: {
+                  'title': title,
+                  'listings': listings,
+                },
+              ),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,

@@ -18,7 +18,8 @@
         "forgotPassword": {
             "title": "Forgot Password",
             "description": "Enter the email address associated with your account and we'll send you a code to reset your password.",
-            "button": "Send"
+            "button": "Send",
+            "success": "Your password has been reset successfully."
         },
         "verification": {
             "title": "Verification Code",
@@ -30,7 +31,9 @@
         "fields": {
             "email": "Email",
             "password": "Password",
-            "name": "Name"
+            "name": "Name",
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm Password"
         },
         "validation": {
             "emailEmpty": "Email address cannot be empty.",
@@ -39,7 +42,8 @@
             "passwordMinLength": "Password must be at least 6 characters.",
             "nameEmpty": "Name cannot be empty.",
             "kvkkRequired": "Please approve the KVKK terms.",
-            "codeIncomplete": "Please enter the complete 4-digit code."
+            "codeIncomplete": "Please enter the complete 4-digit code.",
+            "passwordsNotMatch": "Passwords do not match."
         },
         "errors": {
             "invalidCredentials": "Invalid email or password.",

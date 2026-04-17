@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../views/food/food_expanded_map_view.dart';
 
 /// Harita alanını gösterir.
 /// Fotoğraftaki gibi gerçekçi bir harita görünümü sunar.
@@ -11,66 +12,90 @@ class FoodMapSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => FoodExpandedMapView(listings: listings),
+        ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // ── Gerçekçi Harita Arka Planı (Painter) ────────
-            Container(
-              color: const Color(0xFFF2F2F2),
-              child: CustomPaint(painter: _RealisticMapPainter()),
-            ),
-
-            // ── Merkez Konum Pin (Orange Teardrop) ─────────
-            const Center(child: _MapPinTeardrop(isCenter: true)),
-
-            // ── Konum Bul Butonu (sağ alt) ───────────
-            Positioned(
-              right: 12,
-              bottom: 12,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.my_location_rounded,
-                  color: AppColors.primaryColor,
-                  size: 20,
-                ),
-              ),
-            ),
-
-            // ── İlan Pinleri (dağıtılmış) ────────────────
-            ..._getMockPositions(listings.length).map(
-              (pos) => Positioned(
-                left: pos.dx,
-                top: pos.dy,
-                child: const _MapPinTeardrop(isCenter: false),
-              ),
+      child: Container(
+        height: 250,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Hero(
+            tag: 'food_map',
+            child: InteractiveViewer(
+              minScale: 0.5,
+              maxScale: 3.0,
+              boundaryMargin: const EdgeInsets.all(100),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // ── Gerçekçi Harita Arka Planı (Painter) ────────
+                  Container(
+                    color: const Color(0xFFF2F2F2),
+                    child: CustomPaint(painter: RealisticMapPainter()),
+                  ),
+
+                  // ── Merkez Konum Pin (Orange Teardrop) ─────────
+                  const Center(child: MapPinTeardrop(isCenter: true)),
+
+                  // ── İlan Pinleri (dağıtılmış) ────────────────
+                  ..._getMockPositions(listings.length).map(
+                    (pos) => Positioned(
+                      left: pos.dx,
+                      top: pos.dy,
+                      child: const MapPinTeardrop(isCenter: false),
+                    ),
+                  ),
+
+                  // ── Konum Bul / Genişlet Butonu (sağ alt) ───────────
+                  Positioned(
+                    right: 12,
+                    bottom: 12,
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => FoodExpandedMapView(listings: listings),
+                        ),
+                      ),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 8,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.fullscreen_rounded,
+                          color: AppColors.primaryColor,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -90,8 +115,8 @@ class FoodMapSection extends StatelessWidget {
 }
 
 /// Orange Teardrop Pin (Fotoğraftaki gibi)
-class _MapPinTeardrop extends StatelessWidget {
-  const _MapPinTeardrop({this.isCenter = false});
+class MapPinTeardrop extends StatelessWidget {
+  const MapPinTeardrop({this.isCenter = false});
 
   final bool isCenter;
 
@@ -126,15 +151,15 @@ class _MapPinTeardrop extends StatelessWidget {
         // Alt Teardrop kuyruğu (Basit bir üçgen/çizgi)
         CustomPaint(
           size: const Size(8, 6),
-          painter: _TeardropTailPainter(color: AppColors.primaryColor),
+          painter: TeardropTailPainter(color: AppColors.primaryColor),
         ),
       ],
     );
   }
 }
 
-class _TeardropTailPainter extends CustomPainter {
-  _TeardropTailPainter({required this.color});
+class TeardropTailPainter extends CustomPainter {
+  TeardropTailPainter({required this.color});
   final Color color;
 
   @override
@@ -157,7 +182,7 @@ class _TeardropTailPainter extends CustomPainter {
 }
 
 // ─── Gerçekçi Harita Çizgisi (Painter) ───────────────
-class _RealisticMapPainter extends CustomPainter {
+class RealisticMapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final streetPaint = Paint()

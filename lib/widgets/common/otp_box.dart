@@ -48,19 +48,16 @@ class OtpBox extends StatelessWidget {
           style: CustomTextStyles.extraBold20DarkGrey,
           decoration: const InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: Colors.transparent,
             contentPadding: EdgeInsets.zero,
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(
-                color: AppColors.hintTextColor,
-                width: 1.5,
+                color: Color(0xFF838383), // Darker grey
+                width: 2.0,
               ),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: AppColors.primaryColor,
-                width: 2.0,
-              ),
+              borderSide: BorderSide(color: AppColors.primaryColor, width: 3.0),
             ),
           ),
           onChanged: onChanged,

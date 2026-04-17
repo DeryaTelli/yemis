@@ -55,6 +55,13 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearFields() {
+    emailController.clear();
+    passwordController.clear();
+    _errorKey = null;
+    _errorMessage = null;
+  }
+
   /// Giriş yapar. Başarılıysa [onSuccess] callback'i çağrılır.
   Future<void> login({
     required GlobalKey<FormState> formKey,

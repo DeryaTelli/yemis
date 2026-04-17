@@ -49,6 +49,15 @@ class RegisterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearFields() {
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+    _kvkkAccepted = false;
+    _errorKey = null;
+    _errorMessage = null;
+  }
+
   /// Kayıt olur. Başarılıysa [onSuccess] callback'i çağrılır.
   Future<void> register({
     required GlobalKey<FormState> formKey,

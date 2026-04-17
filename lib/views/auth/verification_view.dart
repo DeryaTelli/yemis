@@ -10,104 +10,154 @@ import '../../viewmodels/auth/verification_viewmodel.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/otp_box.dart';
 
-class VerificationView extends StatelessWidget {
+class VerificationView extends StatefulWidget {
   const VerificationView({super.key});
+
+  @override
+  State<VerificationView> createState() => _VerificationViewState();
+}
+
+class _VerificationViewState extends State<VerificationView> {
+  late VerificationViewModel _viewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewModel = context.read<VerificationViewModel>();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.clearFields();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(LocaleKeys.auth_verification_title.tr()),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: AppBar(
+          toolbarHeight: 80,
+          leading: Consumer<VerificationViewModel>(
+            builder: (context, vm, _) => IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                if (vm.isPasswordReset) {
+                  // Şifre sıfırlama akışındaysak girişe dön
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    AppRoutes.login,
+                    (route) => false,
+                  );
+                } else {
+                  // Kayıt akışındaysak kayıt sayfasına dön
+                  Navigator.pushReplacementNamed(context, AppRoutes.register);
+                }
+              },
+            ),
+          ),
+          title: Text(LocaleKeys.auth_verification_title.tr()),
+          backgroundColor: AppColors.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
       ),
       body: Consumer<VerificationViewModel>(
         builder: (context, vm, _) {
           return SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 40),
 
                   Text(
-                    LocaleKeys.auth_verification_description.tr(),
-                    style: CustomTextStyles.regular14Grey,
+                    vm.isPasswordReset
+                        ? 'Şifrenizi yenilemek için doğrulama kodunu girin'
+                        : LocaleKeys.auth_verification_description.tr(),
+                    style: CustomTextStyles.semiBold16Grey,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 48),
 
-                  // 4 haneli OTP input
+                  // ... (Row ile OTP inputları - değişmedi)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(4, (index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: OtpBox(
                           controller: vm.codeControllers[index],
                           focusNode: vm.focusNodes[index],
-                          onChanged: (v) =>
-                              vm.onCodeChanged(index, v, context),
-                          onBackspace: () =>
-                              vm.onCodeBackspace(index, context),
+                          onChanged: (v) => vm.onCodeChanged(index, v, context),
+                          onBackspace: () => vm.onCodeBackspace(index, context),
                         ),
                       );
                     }),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 40),
 
                   // Hata mesajı
                   if (vm.errorKey != null) ...[
                     Text(
                       vm.errorKey!.tr(),
-                      style: CustomTextStyles.regular14Black
-                          .copyWith(color: Colors.red),
+                      style: CustomTextStyles.regular14Black.copyWith(
+                        color: Colors.red,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
                   ],
 
-                  Text(
-                    LocaleKeys.auth_verification_codeSent.tr(),
-                    style: CustomTextStyles.regular14Grey,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-
                   // Timer veya Tekrar gönder
-                  Center(
-                    child: vm.canResend
-                        ? GestureDetector(
-                            onTap: vm.isLoading ? null : vm.resendCode,
-                            child: Text(
-                              LocaleKeys.auth_verification_resend.tr(),
-                              style: CustomTextStyles.bold14Primary,
-                            ),
-                          )
-                        : Column(
-                            children: [
-                              Text(
-                                vm.timerDisplay,
-                                style: CustomTextStyles.extraBold20DarkGrey,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                LocaleKeys.auth_verification_resend.tr(),
-                                style: CustomTextStyles.regular14Grey,
-                              ),
-                            ],
+                  Column(
+                    children: [
+                      if (!vm.canResend)
+                        Text(
+                          vm.timerDisplay,
+                          style: CustomTextStyles.semiBold16Grey,
+                        )
+                      else
+                        GestureDetector(
+                          onTap: vm.isLoading ? null : vm.resendCode,
+                          child: Text(
+                            LocaleKeys.auth_verification_resend.tr(),
+                            style: CustomTextStyles.extraBold16Primary,
                           ),
+                        ),
+                    ],
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 12),
 
                   CustomButton(
                     text: LocaleKeys.auth_verification_button.tr(),
                     isLoading: vm.isLoading,
                     onPressed: () => vm.verify(
-                      onSuccess: () => Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        AppRoutes.home,
-                        (route) => false,
-                      ),
+                      onSuccess: () {
+                        if (vm.isPasswordReset) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            AppRoutes.resetPassword,
+                            arguments: {'email': vm.email, 'otp': vm.otp},
+                          );
+                        } else {
+                          vm.clearFields();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Hesap doğrulandı! Lütfen giriş yapın.',
+                              ),
+                            ),
+                          );
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AppRoutes.login,
+                            (route) => false,
+                          );
+                        }
+                      },
                     ),
                   ),
                 ],

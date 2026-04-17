@@ -10,12 +10,15 @@ abstract class IAuthService {
   /// Yeni hesap oluşturur.
   Future<AuthResponse> register(RegisterRequest request);
 
-  /// Şifre sıfırlama e-postası gönderir.
-  Future<void> forgotPassword(ForgotPasswordRequest request);
+  /// Şifre sıfırlama e-postası gönderir (OTP gönderir).
+  Future<AuthResponse> forgotPassword(ForgotPasswordRequest request);
 
   /// E-postaya gönderilen doğrulama kodunu doğrular.
-  Future<void> verifyCode(VerifyCodeRequest request);
+  Future<AuthResponse> verifyCode(VerifyCodeRequest request);
 
   /// Doğrulama kodunu tekrar gönderir.
-  Future<void> resendCode(String email);
+  Future<AuthResponse> resendCode(String email);
+
+  /// Şifre yenileme işlemini tamamlar.
+  Future<AuthResponse> resetPassword(ResetPasswordRequest request);
 }

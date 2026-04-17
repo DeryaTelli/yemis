@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/routes/app_routes.dart';
 
 class VolunteerProfileViewModel extends ChangeNotifier {
   int _selectedIndex = 4;
@@ -8,5 +9,21 @@ class VolunteerProfileViewModel extends ChangeNotifier {
     if (_selectedIndex == index) return;
     _selectedIndex = index;
     notifyListeners();
+  }
+
+  void logout(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.login,
+      (route) => false,
+    );
+  }
+
+  void deleteAccount(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.login,
+      (route) => false,
+    );
   }
 }

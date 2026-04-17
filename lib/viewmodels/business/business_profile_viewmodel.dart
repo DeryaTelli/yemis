@@ -15,6 +15,22 @@ class BusinessProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void logout(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.login,
+      (route) => false,
+    );
+  }
+
+  void deleteAccount(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.login,
+      (route) => false,
+    );
+  }
+
   /// 0=BusinessHome, 1=Rezervasyon Onaylama, 2=Home(merkez), 3=Sipariş Ekle, 4=Profil
   String? getBottomNavRoute(int index) {
     switch (index) {

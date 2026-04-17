@@ -7,10 +7,14 @@ import '../../utils/locale_keys.dart';
 class VerificationViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final String email;
+  final bool isPasswordReset;
 
-  VerificationViewModel(this._authService, {required this.email}) {
+  VerificationViewModel(this._authService,
+      {required this.email, this.isPasswordReset = false}) {
     _startTimer();
   }
+
+  String get otp => _fullCode;
 
   // --- Controllers (4 haneli kod için) ---
   final List<TextEditingController> codeControllers =
@@ -76,6 +80,13 @@ class VerificationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearFields() {
+    for (final c in codeControllers) {
+      c.clear();
+    }
+    _errorKey = null;
+  }
+
   Future<void> verify({required VoidCallback onSuccess}) async {
     if (_fullCode.length < 4) {
       _errorKey = LocaleKeys.auth_validation_codeIncomplete;
@@ -88,10 +99,14 @@ class VerificationViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _authService.verifyCode(
+      final response = await _authService.verifyCode(
         VerifyCodeRequest(email: email, code: _fullCode),
       );
-      onSuccess();
+      if (response.success) {
+        onSuccess();
+      } else {
+        _errorKey = response.errorKey ?? LocaleKeys.auth_errors_codeInvalid;
+      }
     } catch (_) {
       _errorKey = LocaleKeys.auth_errors_codeInvalid;
     } finally {
@@ -108,8 +123,12 @@ class VerificationViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _authService.resendCode(email);
-      _startTimer();
+      final response = await _authService.resendCode(email);
+      if (response.success) {
+        _startTimer();
+      } else {
+        _errorKey = response.errorKey ?? LocaleKeys.auth_errors_codeSendFailed;
+      }
     } catch (_) {
       _errorKey = LocaleKeys.auth_errors_codeSendFailed;
     } finally {

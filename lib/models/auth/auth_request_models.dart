@@ -39,9 +39,10 @@ class RegisterRequest {
         'name': name,
         'email': email,
         'password': password,
+        'role': 'food',
+        'is_volunteer': true,
       };
 }
-
 
 /// Şifre sıfırlama isteği
 class ForgotPasswordRequest {
@@ -62,5 +63,24 @@ class VerifyCodeRequest {
   Map<String, dynamic> toJson() => {
         'email': email,
         'code': code,
+      };
+}
+
+/// Şifre yenileme isteği
+class ResetPasswordRequest {
+  final String email;
+  final String otp;
+  final String password;
+
+  const ResetPasswordRequest({
+    required this.email,
+    required this.otp,
+    required this.password,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'email': email,
+        'otp': otp,
+        'password': password,
       };
 }

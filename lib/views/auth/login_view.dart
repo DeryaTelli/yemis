@@ -18,6 +18,19 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
+  late LoginViewModel _viewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewModel = context.read<LoginViewModel>();
+  }
+
+  @override
+  void dispose() {
+    _viewModel.clearFields();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +85,8 @@ class _LoginViewState extends State<LoginView> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           vm.passwordVisible
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
                           color: const Color(0xFF838383),
                         ),
                         onPressed: vm.togglePasswordVisibility,
@@ -108,8 +121,11 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         const Spacer(),
                         GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, AppRoutes.forgotPassword),
+                          onTap: () {
+                            vm.clearFields();
+                            Navigator.pushNamed(
+                                context, AppRoutes.forgotPassword);
+                          },
                           child: Text(
                             LocaleKeys.auth_login_forgotPassword.tr(),
                             style: CustomTextStyles.regular14Grey,
@@ -127,6 +143,7 @@ class _LoginViewState extends State<LoginView> {
                         onSuccess: () async {
                           final route = await vm.afterLoginRoute();
                           if (!context.mounted) return;
+                          vm.clearFields();
                           Navigator.pushReplacementNamed(context, route);
                         },
                       ),
@@ -140,8 +157,11 @@ class _LoginViewState extends State<LoginView> {
                             style: CustomTextStyles.regular14Grey),
                         const SizedBox(width: 4),
                         GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, AppRoutes.register),
+                          onTap: () {
+                            vm.clearFields();
+                            Navigator.pushNamed(
+                                context, AppRoutes.register);
+                          },
                           child: Text(LocaleKeys.auth_login_register.tr(),
                               style: CustomTextStyles.bold14Primary),
                         ),

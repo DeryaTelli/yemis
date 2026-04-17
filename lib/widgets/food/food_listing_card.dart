@@ -123,6 +123,39 @@ class FoodListingCard extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  // Business Logo (sol-alt) - YENİ
+                  Positioned(
+                    bottom: 8,
+                    left: 8,
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/placeholder_shop.png', // Varsayılan dükkan logosu
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.storefront_rounded,
+                            color: AppColors.primaryColor,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
 

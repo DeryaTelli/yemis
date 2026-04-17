@@ -178,11 +178,17 @@ class VolunteerProfileView extends StatelessWidget {
                             },
                           ),
                           ProfileMenuTile(
+                            icon: Icons.logout_rounded,
+                            title: 'Çıkış Yap',
+                            iconColor: AppColors.volunteerColor,
+                            onTap: () => vm.logout(context),
+                          ),
+                          ProfileMenuTile(
                             icon: Icons.delete_outline_rounded,
                             title: LocaleKeys.volunteerProfile_deleteAccount.tr(),
                             isDestructive: true,
                             showTrailing: false,
-                            onTap: () {},
+                            onTap: () => vm.deleteAccount(context),
                           ),
                         ],
                       ),

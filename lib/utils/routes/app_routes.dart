@@ -5,6 +5,7 @@ class AppRoutes {
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
   static const String verification = '/verification';
+  static const String resetPassword = '/reset-password';
   static const String location = '/location';
   static const String mapPicker = '/map-picker';
   static const String home = '/home';
@@ -27,5 +28,6 @@ class AppRoutes {
   static const String foodReserve = '/food-reserve';
   static const String foodProfileEdit = '/food-profile-edit';
   static const String languageSelect = '/language-select';
-
+  static const String foodAllListings = '/food-all-listings';
+  static const String volunteerAllListings = '/volunteer-all-listings';
 }

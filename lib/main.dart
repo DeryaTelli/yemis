@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'services/food/mock_food_service.dart';
 import 'services/auth/api_auth_service.dart';
 import 'services/auth/user_session.dart';
@@ -15,6 +16,8 @@ import 'views/auth/forgot_password_view.dart';
 import 'views/auth/login_view.dart';
 import 'views/auth/register_view.dart';
 import 'views/auth/verification_view.dart';
+import 'views/auth/reset_password_view.dart';
+import 'viewmodels/auth/reset_password_viewmodel.dart';
 import 'views/business/business_home_view.dart';
 import 'views/food/food_detail_view.dart';
 import 'views/food/food_favorites_view.dart';
@@ -23,6 +26,8 @@ import 'views/food/food_profile_edit_view.dart';
 import 'views/food/food_profile_view.dart';
 import 'views/food/food_reserve_view.dart';
 import 'views/food/food_search_view.dart';
+import 'views/food/food_all_listings_view.dart';
+import 'views/volunteer/volunteer_all_listings_view.dart';
 import 'views/home_view.dart';
 import 'views/location_view.dart';
 import 'views/map_picker_view.dart';
@@ -64,10 +69,12 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: userSession),
         ChangeNotifierProvider(
-            create: (_) => LoginViewModel(authService, userSession)),
+          create: (_) => LoginViewModel(authService, userSession),
+        ),
         ChangeNotifierProvider(create: (_) => RegisterViewModel(authService)),
         ChangeNotifierProvider(
-            create: (_) => ForgotPasswordViewModel(authService)),
+          create: (_) => ForgotPasswordViewModel(authService),
+        ),
         // VerificationViewModel route-level'da inject edilir (email argümanı gerektirir)
       ],
       child: MaterialApp(
@@ -97,12 +104,32 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case AppRoutes.verification:
-              final email = settings.arguments as String? ?? '';
+              final args = settings.arguments as Map<String, dynamic>? ?? {};
+              final email = args['email'] as String? ?? '';
+              final isPasswordReset = args['isPasswordReset'] as bool? ?? false;
               return MaterialPageRoute(
                 builder: (_) => ChangeNotifierProvider(
-                  create: (_) =>
-                      VerificationViewModel(authService, email: email),
+                  create: (_) => VerificationViewModel(
+                    authService,
+                    email: email,
+                    isPasswordReset: isPasswordReset,
+                  ),
                   child: const VerificationView(),
+                ),
+                settings: settings,
+              );
+            case AppRoutes.resetPassword:
+              final args = settings.arguments as Map<String, dynamic>? ?? {};
+              final email = args['email'] as String? ?? '';
+              final otp = args['otp'] as String? ?? '';
+              return MaterialPageRoute(
+                builder: (_) => ChangeNotifierProvider(
+                  create: (_) => ResetPasswordViewModel(
+                    authService,
+                    email: email,
+                    otp: otp,
+                  ),
+                  child: const ResetPasswordView(),
                 ),
                 settings: settings,
               );
@@ -123,7 +150,8 @@ class MyApp extends StatelessWidget {
               );
             case AppRoutes.foodHome:
               return MaterialPageRoute(
-                builder: (ctx) => FoodHomeView(userSession: ctx.read<UserSession>()),
+                builder: (ctx) =>
+                    FoodHomeView(userSession: ctx.read<UserSession>()),
                 settings: settings,
               );
             case AppRoutes.foodSearch:
@@ -139,6 +167,24 @@ class MyApp extends StatelessWidget {
             case AppRoutes.foodProfile:
               return MaterialPageRoute(
                 builder: (_) => const FoodProfileView(),
+                settings: settings,
+              );
+            case AppRoutes.foodAllListings:
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (_) => FoodAllListingsView(
+                  title: args['title'] as String,
+                  listings: args['listings'] as List<FoodListing>,
+                ),
+                settings: settings,
+              );
+            case AppRoutes.volunteerAllListings:
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (_) => VolunteerAllListingsView(
+                  title: args['title'] as String,
+                  listings: args['listings'] as List<VolunteerListing>,
+                ),
                 settings: settings,
               );
             case AppRoutes.foodProfileEdit:

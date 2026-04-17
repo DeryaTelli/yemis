@@ -80,17 +80,22 @@ class ApiAuthService implements IAuthService {
   }
 
   @override
-  Future<void> forgotPassword(ForgotPasswordRequest request) async {
-    await _post(ApiConstants.forgotPassword, request.toJson());
+  Future<AuthResponse> forgotPassword(ForgotPasswordRequest request) async {
+    return _post(ApiConstants.forgotPassword, request.toJson());
   }
 
   @override
-  Future<void> verifyCode(VerifyCodeRequest request) async {
-    await _post(ApiConstants.verifyCode, request.toJson());
+  Future<AuthResponse> verifyCode(VerifyCodeRequest request) async {
+    return _post(ApiConstants.verifyCode, request.toJson());
   }
 
   @override
-  Future<void> resendCode(String email) async {
-    await _post(ApiConstants.register, {'email': email}); // Örnek, endpoint değişebilir
+  Future<AuthResponse> resendCode(String email) async {
+    return _post(ApiConstants.resendCode, {'email': email});
+  }
+
+  @override
+  Future<AuthResponse> resetPassword(ResetPasswordRequest request) async {
+    return _post(ApiConstants.resetPassword, request.toJson());
   }
 }

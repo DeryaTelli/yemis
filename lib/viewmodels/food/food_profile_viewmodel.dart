@@ -70,7 +70,7 @@ class FoodProfileViewModel extends ChangeNotifier {
     // Burada gerçek çıkış mantığı (Token temizleme vs.) yapılır.
     Navigator.pushNamedAndRemoveUntil(
       context,
-      AppRoutes.home,
+      AppRoutes.login,
       (route) => false,
     );
   }
@@ -79,7 +79,7 @@ class FoodProfileViewModel extends ChangeNotifier {
     // Hesap silme onay mantığı
     Navigator.pushNamedAndRemoveUntil(
       context,
-      AppRoutes.home,
+      AppRoutes.login,
       (route) => false,
     );
   }

@@ -29,6 +29,12 @@ class ForgotPasswordViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearFields() {
+    emailController.clear();
+    _emailSent = false;
+    _errorKey = null;
+  }
+
   /// Şifre sıfırlama e-postası gönderir. Başarılıysa [onSuccess] çağrılır.
   Future<void> sendResetEmail({
     required GlobalKey<FormState> formKey,
@@ -41,11 +47,15 @@ class ForgotPasswordViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _authService.forgotPassword(
+      final response = await _authService.forgotPassword(
         ForgotPasswordRequest(email: emailController.text.trim()),
       );
-      _emailSent = true;
-      onSuccess(emailController.text.trim());
+      if (response.success) {
+        _emailSent = true;
+        onSuccess(emailController.text.trim());
+      } else {
+        _errorKey = response.errorKey ?? LocaleKeys.auth_errors_emailSendFailed;
+      }
     } catch (_) {
       _errorKey = LocaleKeys.auth_errors_emailSendFailed;
     } finally {

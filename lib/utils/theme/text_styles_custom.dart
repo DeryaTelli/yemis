@@ -39,6 +39,7 @@ class CustomTextStyles {
   // Primary Orange (0xFFFE8800)
   static TextStyle get bold14Primary => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w700, color: const Color(0xFFFE8800), height: 24 / 14);
   static TextStyle get semiBold16Primary => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFFFE8800), height: 1.2);
+  static TextStyle get extraBold16Primary => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w800, color: const Color(0xFFFE8800));
 
   // Other Primary Orange (0xFFEF9F27)
   static TextStyle get semiBold16PrimaryDense => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFFEF9F27), height: 12 / 16, letterSpacing: -0.2);
