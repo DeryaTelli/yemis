@@ -25,14 +25,15 @@ class OrderLocationMap extends StatelessWidget {
         child: FlutterMap(
           options: MapOptions(
             initialCenter: businessLocation,
-            initialZoom: 13.0,
+            initialZoom: 15.5,
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.none,
             ),
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+              subdomains: const ['a', 'b', 'c'],
               userAgentPackageName: 'com.deryatelli.yemis',
             ),
             if (userLocation != null)
@@ -60,12 +61,28 @@ class OrderLocationMap extends StatelessWidget {
                   ),
                 Marker(
                   point: businessLocation,
-                  width: 30,
-                  height: 30,
-                  child: const Icon(
-                    Icons.location_on_rounded,
-                    color: AppColors.primaryColor,
-                    size: 30,
+                  width: 32,
+                  height: 32,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.15),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.restaurant,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
                   ),
                 ),
               ],

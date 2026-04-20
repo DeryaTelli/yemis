@@ -36,8 +36,9 @@ class VolunteerListingCard extends StatelessWidget {
         child: Container(
           width: width ?? 200,
           decoration: BoxDecoration(
-            color: AppColors.volunteerColor.withValues(alpha: 0.08),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(bRadius),
+            border: Border.all(color: AppColors.volunteerColor, width: 1.5),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),

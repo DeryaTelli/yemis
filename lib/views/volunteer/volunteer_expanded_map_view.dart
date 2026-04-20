@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import '../../models/food/food_listing.dart';
+import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../widgets/food/food_listing_card.dart';
+import '../../utils/routes/app_routes.dart';
+import '../../widgets/volunteer/volunteer_listing_card.dart';
 
-class FoodExpandedMapView extends StatefulWidget {
-  final List<FoodListing> listings;
+class VolunteerExpandedMapView extends StatefulWidget {
+  final List<VolunteerListing> listings;
 
-  const FoodExpandedMapView({super.key, required this.listings});
+  const VolunteerExpandedMapView({super.key, required this.listings});
 
   @override
-  State<FoodExpandedMapView> createState() => _FoodExpandedMapViewState();
+  State<VolunteerExpandedMapView> createState() => _VolunteerExpandedMapViewState();
 }
 
-class _FoodExpandedMapViewState extends State<FoodExpandedMapView> {
-  FoodListing? _selectedListing;
+class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
+  VolunteerListing? _selectedListing;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
+          // ── Harita Alanı ────────────────────────────
           FlutterMap(
             options: MapOptions(
               initialCenter: widget.listings.isNotEmpty && widget.listings.first.latitude != null
@@ -53,7 +55,7 @@ class _FoodExpandedMapViewState extends State<FoodExpandedMapView> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 250),
                             decoration: BoxDecoration(
-                              color: isSelected ? Colors.red : AppColors.primaryColor,
+                              color: isSelected ? Colors.red : AppColors.volunteerColor,
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: Colors.white,
@@ -69,9 +71,9 @@ class _FoodExpandedMapViewState extends State<FoodExpandedMapView> {
                             ),
                             child: Center(
                               child: Icon(
-                                isSelected ? Icons.location_on : Icons.restaurant,
+                                isSelected ? Icons.location_on : Icons.volunteer_activism,
                                 color: Colors.white,
-                                size: isSelected ? 20 : 16,
+                                size: isSelected ? 20 : 14,
                               ),
                             ),
                           ),
@@ -113,13 +115,12 @@ class _FoodExpandedMapViewState extends State<FoodExpandedMapView> {
                     ),
                   ),
                   // Kart
-                  FoodListingCard(
+                  VolunteerListingCard(
                     listing: _selectedListing!,
                     width: double.infinity,
-                    onFavoriteTap: () {},
                     onTap: () => Navigator.pushNamed(
                       context,
-                      '/food-detail',
+                      AppRoutes.volunteerDetail,
                       arguments: _selectedListing,
                     ),
                   ),
@@ -130,5 +131,4 @@ class _FoodExpandedMapViewState extends State<FoodExpandedMapView> {
       ),
     );
   }
-
 }

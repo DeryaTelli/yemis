@@ -55,8 +55,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               Text('Lokasyon Seç', style: CustomTextStyles.extraBold16DarkGrey),
               const SizedBox(width: 8),
               Text(
-                title,
-                style: CustomTextStyles.medium16White,
+                title.split(',').first.trim(),
+                style: CustomTextStyles.semiBold16White,
                 overflow: TextOverflow.ellipsis,
               ),
             ],

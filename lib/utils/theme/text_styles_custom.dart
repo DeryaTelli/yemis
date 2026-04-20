@@ -31,6 +31,7 @@ class CustomTextStyles {
 
   // White (0xFFFFFFFF)
     static TextStyle get semiBold13White => GoogleFonts.nunito(fontSize: 13, fontWeight: FontWeight.w600, color:  Colors.white, height: 20 / 14, letterSpacing: -0.24);
+  static TextStyle get semiBold16White => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white);
   static TextStyle get medium16White => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white);
   static TextStyle get regular16White => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white);
   static TextStyle get semiBold16WhiteCompact => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white, height: 22 / 16, letterSpacing: -0.4);
