@@ -103,11 +103,15 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
         'accentGradient': AppColors.primaryButtonGradient,
       },
     );
-    if (result is LatLng) {
-      _selectedLatLng = result;
-      _locationAddress =
-          '${result.latitude.toStringAsFixed(4)}, ${result.longitude.toStringAsFixed(4)}';
-      notifyListeners();
+    if (result is Map<String, dynamic>) {
+      final latLng = result['latLng'] as LatLng?;
+      final address = result['address'] as String?;
+      if (latLng != null) {
+        _selectedLatLng = latLng;
+        _locationAddress = address ??
+            '${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
+        notifyListeners();
+      }
     }
   }
 

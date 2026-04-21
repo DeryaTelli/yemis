@@ -25,9 +25,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: false,
       automaticallyImplyLeading: false,
+      titleTextStyle: CustomTextStyles.orelegaOne32White,
       title: isLocationTitle
           ? _buildLocationTitle(context)
-          : Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+          : Text(title),
     );
   }
 

@@ -16,6 +16,7 @@ class AppRoutes {
   static const String volunteerHome = '/volunteer-home';
   static const String volunteerMap = '/volunteer/map';
   static const String volunteerSearch = '/volunteer/search';
+  static const String volunteerAddAddress = '/volunteer-add-address';
   static const String volunteerProfile = '/volunteer/profile';
   static const String volunteerDetail = '/volunteer/detail';
   static const String volunteerAddListing = '/volunteer/add-listing';

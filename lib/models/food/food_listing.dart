@@ -11,6 +11,7 @@ class FoodListing {
     required this.price,
     required this.rating,
     required this.section,
+    this.shopLogoUrl,
     this.isFavorite = false,
     // ─── Detay alanları (opsiyonel) ───────────────────────
     this.description,
@@ -32,6 +33,7 @@ class FoodListing {
   final double price;
   final double rating;
   final FoodSection section;
+  final String? shopLogoUrl;
   final bool isFavorite;
 
   // Detay ekranında kullanılır

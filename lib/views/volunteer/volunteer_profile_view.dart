@@ -19,191 +19,246 @@ class VolunteerProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: AppTheme.themeFor(AppSection.volunteer),
-      child: ChangeNotifierProvider(
-        create: (_) => VolunteerProfileViewModel(),
-        child: Consumer<VolunteerProfileViewModel>(
-          builder: (context, vm, child) {
-            return Scaffold(
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                title: Text(LocaleKeys.volunteerProfile_title.tr()),
+      child: const _VolunteerProfileBody(),
+    );
+  }
+}
+
+class _VolunteerProfileBody extends StatefulWidget {
+  const _VolunteerProfileBody();
+
+  @override
+  State<_VolunteerProfileBody> createState() => _VolunteerProfileBodyState();
+}
+
+class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
+  void _showPhotoSelectBS(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-              body: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                child: Column(
-                  children: [
-                    // ─── Header: Avatar & User Info ─────────────────
-                    Row(
-                      children: [
-                        // Avatar
-                        SizedBox(
-                          width: 64,
-                          height: 64,
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  color: AppColors.volunteerColor.withValues(alpha: 0.3),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.person,
-                                  size: 32,
-                                  color: AppColors.volunteerColor,
-                                ),
-                              ),
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.add_circle_outline,
-                                    size: 20,
-                                    color: AppColors.volunteerColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 16),
+              _BSOption(
+                icon: Icons.camera_alt_rounded,
+                title: 'Take from Camera',
+                onTap: () => Navigator.pop(context),
+              ),
+              const Divider(height: 1),
+              _BSOption(
+                icon: Icons.photo_library_rounded,
+                title: 'Choose from Gallery',
+                onTap: () => Navigator.pop(context),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
-                        // Name & Email
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Derya Telli',
-                                style: CustomTextStyles.orelegaOne18DarkGrey,
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                '2002derya2002@gmail.com',
-                                style: CustomTextStyles.italic14Grey,
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Right Arrow
-                        const Icon(
-                          Icons.chevron_right_rounded,
-                          color: AppColors.volunteerColor,
-                          size: 28,
-                        ),
-                      ],
-                    ),
+  @override
+  Widget build(BuildContext context) {
+    final vm = context.watch<VolunteerProfileViewModel>();
 
-                    const SizedBox(height: 24),
-
-                    // ─── Menu Container ──────────────────────────────
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.volunteerColor.withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(LocaleKeys.volunteerProfile_title.tr()),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        child: Column(
+          children: [
+            // ─── Header: Avatar & User Info ─────────────────
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(
+                context,
+                AppRoutes.foodProfileEdit,
+                arguments: AppSection.volunteer,
+              ),
+              child: Row(
+                children: [
+                  // Avatar
+                  GestureDetector(
+                    onTap: () => _showPhotoSelectBS(context),
+                    child: SizedBox(
+                      width: 64,
+                      height: 64,
+                      child: Stack(
                         children: [
-                          ProfileMenuTile(
-                            icon: Icons.notifications_none_rounded,
-                            title: LocaleKeys.volunteerProfile_notifications.tr(),
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () {},
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: AppColors.volunteerColor.withValues(alpha: 0.3),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.person,
+                              size: 32,
+                              color: AppColors.volunteerColor,
+                            ),
                           ),
-                          ProfileMenuTile(
-                            icon: Icons.public,
-                            title: LocaleKeys.volunteerProfile_pastListings.tr(),
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.volunteerListings,
-                                arguments: VolunteerListingType.past,
-                              );
-                            },
-                          ),
-                          ProfileMenuTile(
-                            icon: Icons.public,
-                            title: LocaleKeys.volunteerProfile_attendedListings.tr(),
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.volunteerListings,
-                                arguments: VolunteerListingType.attended,
-                              );
-                            },
-                          ),
-                          ProfileMenuTile(
-                            icon: Icons.public,
-                            title: LocaleKeys.volunteerProfile_activeListings.tr(),
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.volunteerListings,
-                                arguments: VolunteerListingType.active,
-                              );
-                            },
-                          ),
-                          ProfileMenuTile(
-                            icon: Icons.public,
-                            title: LocaleKeys.volunteerProfile_savedAddresses.tr(),
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () {},
-                          ),
-                          ProfileMenuTile(
-                            icon: Icons.public,
-                            title: LocaleKeys.volunteerProfile_savedCards.tr(),
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () {},
-                          ),
-                          ProfileMenuTile(
-                            icon: Icons.public,
-                            title: LocaleKeys.volunteerProfile_changeLanguage.tr(),
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.languageSelect,
-                                arguments: AppSection.volunteer,
-                              );
-                            },
-                          ),
-                          ProfileMenuTile(
-                            icon: Icons.logout_rounded,
-                            title: 'Çıkış Yap',
-                            iconColor: AppColors.volunteerColor,
-                            onTap: () => vm.logout(context),
-                          ),
-                          ProfileMenuTile(
-                            icon: Icons.delete_outline_rounded,
-                            title: LocaleKeys.volunteerProfile_deleteAccount.tr(),
-                            isDestructive: true,
-                            showTrailing: false,
-                            onTap: () => vm.deleteAccount(context),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.add_circle_outline,
+                                size: 20,
+                                color: AppColors.volunteerColor,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Name & Email
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${vm.name} ${vm.surname}',
+                          style: CustomTextStyles.orelegaOne18DarkGrey,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          vm.email,
+                          style: CustomTextStyles.italic14Grey,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Right Arrow
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.volunteerColor,
+                    size: 28,
+                  ),
+                ],
               ),
-              bottomNavigationBar: AppBottomNavBar(
-                selectedIndex: vm.selectedIndex,
-                onItemSelected: (index) => _handleNavigation(context, index),
-                moduleType: AppModuleType.volunteer,
+            ),
+
+            const SizedBox(height: 24),
+
+            // ─── Menu Container ──────────────────────────────
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.volunteerColor.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(20),
               ),
-            );
-          },
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                children: [
+                  ProfileMenuTile(
+                    icon: Icons.notifications_none_rounded,
+                    title: LocaleKeys.volunteerProfile_notifications.tr(),
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () {},
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.history_rounded,
+                    title: LocaleKeys.volunteerProfile_pastListings.tr(),
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.volunteerListings,
+                        arguments: VolunteerListingType.past,
+                      );
+                    },
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.volunteer_activism,
+                    title: LocaleKeys.volunteerProfile_attendedListings.tr(),
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.volunteerListings,
+                        arguments: VolunteerListingType.attended,
+                      );
+                    },
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.event_available,
+                    title: LocaleKeys.volunteerProfile_activeListings.tr(),
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.volunteerListings,
+                        arguments: VolunteerListingType.active,
+                      );
+                    },
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.location_on_outlined,
+                    title: LocaleKeys.volunteerProfile_savedAddresses.tr(),
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () {},
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.credit_card_rounded,
+                    title: LocaleKeys.volunteerProfile_savedCards.tr(),
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () {},
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.public,
+                    title: LocaleKeys.volunteerProfile_changeLanguage.tr(),
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.languageSelect,
+                        arguments: AppSection.volunteer,
+                      );
+                    },
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.logout_rounded,
+                    title: 'Çıkış Yap',
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () => vm.logout(context),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
+      ),
+      bottomNavigationBar: AppBottomNavBar(
+        selectedIndex: vm.selectedIndex,
+        onItemSelected: (index) => _handleNavigation(context, index),
+        moduleType: AppModuleType.volunteer,
       ),
     );
   }
@@ -237,5 +292,45 @@ class VolunteerProfileView extends StatelessWidget {
     if (ModalRoute.of(context)?.settings.name != route) {
       Navigator.pushReplacementNamed(context, route);
     }
+  }
+}
+
+class _BSOption extends StatelessWidget {
+  const _BSOption({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppColors.volunteerColor.withValues(alpha: 0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: AppColors.volunteerColor, size: 24),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF1B1B1B),
+        ),
+      ),
+      trailing: const Icon(
+        Icons.chevron_right_rounded,
+        color: AppColors.volunteerColor,
+      ),
+    );
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../viewmodels/food/food_profile_viewmodel.dart';
 import '../../widgets/common/custom_text_field.dart';
 
 class FoodProfileEditView extends StatelessWidget {
@@ -9,10 +10,7 @@ class FoodProfileEditView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => FoodProfileViewModel(),
-      child: const _FoodProfileEditBody(),
-    );
+    return const _FoodProfileEditBody();
   }
 }
 
@@ -24,9 +22,17 @@ class _FoodProfileEditBody extends StatefulWidget {
 }
 
 class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
+  final _phoneMaskFormatter = MaskTextInputFormatter(
+    mask: '(###) ### ## ##',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<FoodProfileViewModel>();
+
+    final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -48,17 +54,13 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
                 child: Stack(
                   children: [
                     Container(
-                      width: 60,
-                      height: 60,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFEADCC6),
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: primaryColor.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 32,
-                        color: Color(0xFFFE8800),
-                      ),
+                      child: Icon(Icons.person, size: 32, color: primaryColor),
                     ),
 
                     Positioned(
@@ -69,10 +71,10 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
                           color: Colors.white,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.add_circle_outline,
                           size: 20,
-                          color: Color(0xFFFE8800),
+                          color: primaryColor,
                         ),
                       ),
                     ),
@@ -102,6 +104,15 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
               hintText: 'E-posta adresinizi girin',
               keyboardType: TextInputType.emailAddress,
             ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              controller: vm.phoneController,
+              labelText: 'Telefon Numarası',
+              hintText: '(5XX) XXX XX XX',
+              prefixText: '+90 ',
+              keyboardType: TextInputType.phone,
+              inputFormatters: [_phoneMaskFormatter],
+            ),
             const SizedBox(height: 40),
 
             // ─── Aksiyon Butonları ─────────────────────
@@ -113,7 +124,7 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
+                  backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -123,6 +134,25 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
                 ),
                 child: const Text(
                   'Hesabı Düzenle',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () => vm.deleteAccount(context),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: primaryColor, width: 1.5),
+                  foregroundColor: primaryColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Hesabı Sil',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ),
@@ -191,16 +221,17 @@ class _BSOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return ListTile(
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(vertical: 8),
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.primaryColor.withValues(alpha: 0.1),
+          color: primaryColor.withValues(alpha: 0.1),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: AppColors.primaryColor, size: 24),
+        child: Icon(icon, color: primaryColor, size: 24),
       ),
       title: Text(
         title,
@@ -210,10 +241,7 @@ class _BSOption extends StatelessWidget {
           color: Color(0xFF1B1B1B),
         ),
       ),
-      trailing: Icon(
-        Icons.chevron_right_rounded,
-        color: AppColors.primaryColor,
-      ),
+      trailing: Icon(Icons.chevron_right_rounded, color: primaryColor),
     );
   }
 }

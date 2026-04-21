@@ -21,4 +21,7 @@ abstract class IAuthService {
 
   /// Şifre yenileme işlemini tamamlar.
   Future<AuthResponse> resetPassword(ResetPasswordRequest request);
+
+  /// Oturumu kapatır.
+  Future<AuthResponse> logout();
 }

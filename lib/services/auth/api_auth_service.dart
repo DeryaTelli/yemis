@@ -8,24 +8,32 @@ import 'i_auth_service.dart';
 
 class ApiAuthService implements IAuthService {
   final http.Client _client = http.Client();
+  String? _authToken;
+
+  /// Token'ı günceller (Login sonrası veya Session'dan).
+  void setToken(String? token) => _authToken = token;
 
   /// Ortak POST isteği metodur. Detaylı loglama içerir.
-  Future<AuthResponse> _post(String endpoint, Map<String, dynamic> body) async {
+  Future<AuthResponse> _post(String endpoint, Map<String, dynamic>? body) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
     
     if (kDebugMode) {
       print('--- API REQUEST ---');
       print('URL: $url');
       print('Method: POST');
-      print('Body: ${jsonEncode(body)}');
+      if (body != null) print('Body: ${jsonEncode(body)}');
+      if (_authToken != null) print('Token: ${_authToken!.substring(0, 5)}...');
       print('-------------------');
     }
 
     try {
       final response = await _client.post(
         url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(body),
+        headers: {
+          'Content-Type': 'application/json',
+          if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+        },
+        body: body != null ? jsonEncode(body) : null,
       );
 
       if (kDebugMode) {
@@ -97,5 +105,14 @@ class ApiAuthService implements IAuthService {
   @override
   Future<AuthResponse> resetPassword(ResetPasswordRequest request) async {
     return _post(ApiConstants.resetPassword, request.toJson());
+  }
+
+  @override
+  Future<AuthResponse> logout() async {
+    final response = await _post(ApiConstants.logout, null);
+    if (response.success) {
+      setToken(null);
+    }
+    return response;
   }
 }

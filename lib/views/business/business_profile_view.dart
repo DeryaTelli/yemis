@@ -18,9 +18,7 @@ class BusinessProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => BusinessProfileViewModel(),
-      child: Consumer<BusinessProfileViewModel>(
+    return Consumer<BusinessProfileViewModel>(
         builder: (context, vm, _) {
           return Theme(
             data: AppTheme.themeFor(AppSection.food),
@@ -235,7 +233,6 @@ class BusinessProfileView extends StatelessWidget {
             ),
           );
         },
-      ),
     );
   }
 }

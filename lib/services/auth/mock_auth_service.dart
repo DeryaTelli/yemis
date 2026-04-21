@@ -104,6 +104,12 @@ class MockAuthService implements IAuthService {
     return const AuthResponse(success: true, message: 'Password reset successful');
   }
 
+  @override
+  Future<AuthResponse> logout() async {
+    await _simulateDelay();
+    return const AuthResponse(success: true, message: 'Logout successful');
+  }
+
   Future<void> _simulateDelay() =>
       Future.delayed(const Duration(milliseconds: 1200));
 }

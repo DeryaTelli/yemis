@@ -14,10 +14,7 @@ class FoodProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => FoodProfileViewModel(),
-      child: const _FoodProfileBody(),
-    );
+    return const _FoodProfileBody();
   }
 }
 
@@ -89,54 +86,54 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
         child: Column(
           children: [
             // ─── Header: Avatar & User Info ─────────────────
-            Row(
-              children: [
-                // Avatar
-                GestureDetector(
-                  onTap: () => _showPhotoSelectBS(context),
-                  child: SizedBox(
-                    width: 64,
-                    height: 64,
-                    child: Stack(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFEADCC6),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.person,
-                            size: 32,
-                            color: Color(0xFFFE8800),
-                          ),
-                        ),
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
+              child: Row(
+                children: [
+                  // Avatar
+                  GestureDetector(
+                    onTap: () => _showPhotoSelectBS(context),
+                    child: SizedBox(
+                      width: 64,
+                      height: 64,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
                             decoration: const BoxDecoration(
-                              color: Colors.white,
+                              color: Color(0xFFEADCC6),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
-                              Icons.add_circle_outline,
-                              size: 20,
+                              Icons.person,
+                              size: 32,
                               color: Color(0xFFFE8800),
                             ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.add_circle_outline,
+                                size: 20,
+                                color: Color(0xFFFE8800),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                
-                // Name & Email
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
+                  const SizedBox(width: 16),
+                  
+                  // Name & Email
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -152,17 +149,14 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                       ],
                     ),
                   ),
-                ),
-                
-                IconButton(
-                  onPressed: () => Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
-                  icon: const Icon(
+                  
+                  const Icon(
                     Icons.chevron_right_rounded,
                     color: Color(0xFFFE8800),
                     size: 28,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             const SizedBox(height: 24),
@@ -217,7 +211,6 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                       );
                     },
                   ),
-                  const Divider(color: Color(0xFFEADCC6), indent: 20, endIndent: 20),
                   ProfileMenuTile(
                     icon: Icons.logout_rounded,
                     title: 'Çıkış Yap',

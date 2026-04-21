@@ -43,6 +43,9 @@ class MapPickerViewModel extends ChangeNotifier {
   bool _isLocating = true;
   bool get isLocating => _isLocating;
 
+  String _currentAddress = '';
+  String get currentAddress => _currentAddress;
+
   List<PlaceResult> _searchResults = [];
   List<PlaceResult> get searchResults => List.unmodifiable(_searchResults);
 
@@ -51,13 +54,20 @@ class MapPickerViewModel extends ChangeNotifier {
 
   // ─── Init ─────────────────────────────────────────
   Future<void> init() async {
-    await _moveToCurrentLocation();
+    final latLng = await _moveToCurrentLocation();
+    if (latLng != null) {
+      _reverseGeocode(latLng);
+    }
   }
 
   // ─── Harita merkezi güncelleme ────────────────────
   void updateCenter(LatLng newCenter) {
     _center = newCenter;
-    // notifyListeners çağırmıyoruz: harita her karede çağırır, performans için
+    // Debounced reverse geocoding
+    _addressDebounce?.cancel();
+    _addressDebounce = Timer(const Duration(milliseconds: 600), () {
+      _reverseGeocode(newCenter);
+    });
   }
 
   // ─── GPS ─────────────────────────────────────────
@@ -83,6 +93,7 @@ class MapPickerViewModel extends ChangeNotifier {
 
   // ─── Nominatim Arama ─────────────────────────────
   Timer? _debounce;
+  Timer? _addressDebounce;
 
   void onSearchChanged(String query) {
     _debounce?.cancel();
@@ -123,6 +134,28 @@ class MapPickerViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> _reverseGeocode(LatLng latLng) async {
+    try {
+      final uri = Uri.https('nominatim.openstreetmap.org', '/reverse', {
+        'lat': latLng.latitude.toString(),
+        'lon': latLng.longitude.toString(),
+        'format': 'json',
+        'accept-language': 'tr',
+      });
+      final res = await http.get(
+        uri,
+        headers: {'User-Agent': 'YemisApp/1.0'},
+      );
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body) as Map<String, dynamic>;
+        _currentAddress = data['display_name'] as String? ?? '';
+        notifyListeners();
+      }
+    } catch (_) {
+      // sessizce geç
+    }
+  }
+
   void clearSearch() {
     _debounce?.cancel();
     _searchResults = [];
@@ -133,6 +166,7 @@ class MapPickerViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _debounce?.cancel();
+    _addressDebounce?.cancel();
     super.dispose();
   }
 }

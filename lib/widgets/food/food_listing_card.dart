@@ -67,68 +67,74 @@ class FoodListingCard extends StatelessWidget {
                   ),
 
                   // Favori butonu (sol-üst)
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: GestureDetector(
-                      onTap: onFavoriteTap,
-                      child: Container(
-                        width: 28,
-                        height: 28,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          listing.isFavorite
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_border_rounded,
-                          color: listing.isFavorite ? Colors.red : Colors.grey,
-                          size: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Rating badge (sağ-üst)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.star_rounded,
-                            color: Color(0xFFFFC107),
-                            size: 10,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            listing.rating.toString(),
-                            style: const TextStyle(
+                  Row(
+                    children: [
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: GestureDetector(
+                          onTap: onFavoriteTap,
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: const BoxDecoration(
                               color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              listing.isFavorite
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_border_rounded,
+                              color: listing.isFavorite
+                                  ? Colors.red
+                                  : Colors.grey,
+                              size: 20,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 104),
+                      // Rating badge (sağ-üst)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(alpha: 0.6),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.star_rounded,
+                                color: Color(0xFFFFC107),
+                                size: 10,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                listing.rating.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
 
                   // Business Logo (sol-alt) - YENİ
                   Positioned(
                     bottom: 8,
-                    left: 8,
+                    left: 1,
                     child: Container(
                       width: 44,
                       height: 44,
@@ -145,15 +151,27 @@ class FoodListingCard extends StatelessWidget {
                         border: Border.all(color: Colors.white, width: 2),
                       ),
                       child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/placeholder_shop.png', // Varsayılan dükkan logosu
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const Icon(
-                            Icons.storefront_rounded,
-                            color: AppColors.primaryColor,
-                            size: 20,
-                          ),
-                        ),
+                        child:
+                            listing.shopLogoUrl != null &&
+                                listing.shopLogoUrl!.isNotEmpty
+                            ? Image.asset(
+                                listing.shopLogoUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.storefront_rounded,
+                                  color: AppColors.primaryColor,
+                                  size: 20,
+                                ),
+                              )
+                            : Image.asset(
+                                'assets/images/placeholder_shop.png',
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.storefront_rounded,
+                                  color: AppColors.primaryColor,
+                                  size: 20,
+                                ),
+                              ),
                       ),
                     ),
                   ),

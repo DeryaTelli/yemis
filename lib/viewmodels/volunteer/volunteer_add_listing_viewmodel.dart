@@ -102,6 +102,12 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
 
   bool get hasLocation => _selectedLatLng != null;
 
+  void setLocationAddress(String address) {
+    _locationAddress = address;
+    _selectedLatLng = null; // Manuel adres girildiyse koordinatı sıfırla (veya sonradan ekle)
+    notifyListeners();
+  }
+
   Future<void> pickLocation(BuildContext context) async {
     final result = await Navigator.pushNamed(
       context,
@@ -111,11 +117,22 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
         'accentGradient': AppColors.volunteerBackgroundGradient,
       },
     );
-    if (result is LatLng) {
-      _selectedLatLng = result;
-      _locationAddress =
-          '${result.latitude.toStringAsFixed(4)}, ${result.longitude.toStringAsFixed(4)}';
-      notifyListeners();
+    if (result is Map<String, dynamic>) {
+      final latLng = result['latLng'] as LatLng?;
+      final address = result['address'] as String?;
+      if (latLng != null) {
+        _selectedLatLng = latLng;
+        _locationAddress = address ??
+            '${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> addNewAddress(BuildContext context) async {
+    final result = await Navigator.pushNamed(context, AppRoutes.volunteerAddAddress);
+    if (result != null && result is String) {
+      setLocationAddress(result);
     }
   }
 

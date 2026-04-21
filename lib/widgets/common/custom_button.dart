@@ -33,6 +33,12 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    
+    final Color shadowColor = (gradient == AppColors.volunteerBackgroundGradient)
+        ? AppColors.volunteerColor.withValues(alpha: 0.3)
+        : (backgroundColor == AppColors.volunteerColor)
+            ? AppColors.volunteerColor.withValues(alpha: 0.3)
+            : AppColors.primaryColor.withValues(alpha: 0.3);
+
     final decoration = isOutlined
         ? BoxDecoration(
             color: Colors.white,
@@ -40,14 +46,16 @@ class CustomButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius),
           )
         : BoxDecoration(
-            color: backgroundColor, 
-            gradient: backgroundColor == null ? (gradient ?? AppColors.primaryButtonGradient) : null, // Default to gradient if no solid color
+            color: backgroundColor,
+            gradient: backgroundColor == null
+                ? (gradient ?? AppColors.primaryButtonGradient)
+                : null,
             borderRadius: BorderRadius.circular(borderRadius),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primaryColor.withOpacity(0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                color: shadowColor,
+                blurRadius: (gradient == AppColors.volunteerBackgroundGradient) ? 14 : 10,
+                offset: (gradient == AppColors.volunteerBackgroundGradient) ? const Offset(0, 5) : const Offset(0, 4),
               ),
             ],
           );

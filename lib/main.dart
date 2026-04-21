@@ -2,8 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/viewmodels/business/business_profile_viewmodel.dart';
+import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
+import 'package:yemis/viewmodels/volunteer/volunteer_profile_viewmodel.dart';
+import 'package:yemis/views/volunteer/volunteer_add_address_view.dart';
 import 'services/food/mock_food_service.dart';
 import 'services/auth/api_auth_service.dart';
+import 'services/auth/i_auth_service.dart';
 import 'services/auth/user_session.dart';
 import 'models/food/food_listing.dart';
 import 'utils/routes/app_routes.dart';
@@ -36,6 +41,7 @@ import 'views/volunteer/volunteer_home_view.dart';
 import 'views/volunteer/volunteer_listings_view.dart';
 import 'views/volunteer/volunteer_profile_view.dart';
 import 'views/volunteer/volunteer_search_view.dart';
+import 'views/volunteer/volunteer_detail_view.dart';
 import 'views/common/language_select_view.dart';
 import 'views/business/business_profile_view.dart';
 import 'views/business/business_add_order_view.dart';
@@ -68,6 +74,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: userSession),
+        Provider<IAuthService>.value(value: authService),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(authService, userSession),
         ),
@@ -166,7 +173,13 @@ class MyApp extends StatelessWidget {
               );
             case AppRoutes.foodProfile:
               return MaterialPageRoute(
-                builder: (_) => const FoodProfileView(),
+                builder: (ctx) => ChangeNotifierProvider(
+                  create: (_) => FoodProfileViewModel(
+                    ctx.read<IAuthService>(),
+                    ctx.read<UserSession>(),
+                  ),
+                  child: const FoodProfileView(),
+                ),
                 settings: settings,
               );
             case AppRoutes.foodAllListings:
@@ -188,8 +201,26 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case AppRoutes.foodProfileEdit:
+              final section =
+                  settings.arguments as AppSection? ?? AppSection.food;
               return MaterialPageRoute(
-                builder: (_) => const FoodProfileEditView(),
+                builder: (ctx) {
+                  Widget view = ChangeNotifierProvider(
+                    create: (_) => FoodProfileViewModel(
+                      ctx.read<IAuthService>(),
+                      ctx.read<UserSession>(),
+                    ),
+                    child: const FoodProfileEditView(),
+                  );
+
+                  if (section == AppSection.volunteer) {
+                    view = Theme(
+                      data: AppTheme.themeFor(AppSection.volunteer),
+                      child: view,
+                    );
+                  }
+                  return view;
+                },
                 settings: settings,
               );
             case AppRoutes.foodDetail:
@@ -214,9 +245,20 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const VolunteerSearchView(),
                 settings: settings,
               );
+            case AppRoutes.volunteerAddAddress:
+              return MaterialPageRoute(
+                builder: (_) => const VolunteerAddAddressView(),
+                settings: settings,
+              );
             case AppRoutes.volunteerProfile:
               return MaterialPageRoute(
-                builder: (_) => const VolunteerProfileView(),
+                builder: (ctx) => ChangeNotifierProvider(
+                  create: (_) => VolunteerProfileViewModel(
+                    ctx.read<IAuthService>(),
+                    ctx.read<UserSession>(),
+                  ),
+                  child: const VolunteerProfileView(),
+                ),
                 settings: settings,
               );
             case AppRoutes.volunteerAddListing:
@@ -229,6 +271,12 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const VolunteerListingsView(),
                 settings: settings,
               );
+            case AppRoutes.volunteerDetail:
+              final volunteerListing = settings.arguments as VolunteerListing;
+              return MaterialPageRoute(
+                builder: (_) => VolunteerDetailView(listing: volunteerListing),
+                settings: settings,
+              );
             case AppRoutes.businessHome:
               return MaterialPageRoute(
                 builder: (_) => const BusinessHomeView(),
@@ -236,7 +284,13 @@ class MyApp extends StatelessWidget {
               );
             case AppRoutes.businessProfile:
               return MaterialPageRoute(
-                builder: (_) => const BusinessProfileView(),
+                builder: (ctx) => ChangeNotifierProvider(
+                  create: (_) => BusinessProfileViewModel(
+                    ctx.read<IAuthService>(),
+                    ctx.read<UserSession>(),
+                  ),
+                  child: const BusinessProfileView(),
+                ),
                 settings: settings,
               );
             case AppRoutes.businessApprovals:

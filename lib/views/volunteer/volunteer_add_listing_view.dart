@@ -102,16 +102,18 @@ class _Body extends StatelessWidget {
   }
 
   Widget _label(String text) => Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.primaryTextColor,
-        ),
-      );
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.primaryTextColor,
+    ),
+  );
 
   void _showImagePickerSheet(
-      BuildContext context, VolunteerAddListingViewModel vm) {
+    BuildContext context,
+    VolunteerAddListingViewModel vm,
+  ) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.white,
@@ -141,16 +143,22 @@ class _Body extends StatelessWidget {
                     color: AppColors.volunteerColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.camera_alt_outlined,
-                      color: AppColors.volunteerColor),
+                  child: const Icon(
+                    Icons.camera_alt_outlined,
+                    color: AppColors.volunteerColor,
+                  ),
                 ),
                 title: Text(
                   LocaleKeys.volunteerAddListing_pickFromCamera.tr(),
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 15),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
-                trailing: const Icon(Icons.chevron_right,
-                    color: AppColors.volunteerColor),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.volunteerColor,
+                ),
                 onTap: () async {
                   Navigator.pop(context);
                   await vm.pickFromCamera();
@@ -165,16 +173,22 @@ class _Body extends StatelessWidget {
                     color: AppColors.volunteerColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.photo_library_outlined,
-                      color: AppColors.volunteerColor),
+                  child: const Icon(
+                    Icons.photo_library_outlined,
+                    color: AppColors.volunteerColor,
+                  ),
                 ),
                 title: Text(
                   LocaleKeys.volunteerAddListing_pickFromGallery.tr(),
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 15),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
-                trailing: const Icon(Icons.chevron_right,
-                    color: AppColors.volunteerColor),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.volunteerColor,
+                ),
                 onTap: () async {
                   Navigator.pop(context);
                   await vm.pickFromGallery();
@@ -190,8 +204,7 @@ class _Body extends StatelessWidget {
 
   void _navigate(BuildContext context, int index) {
     if (index == 2) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, AppRoutes.home, (r) => false);
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (r) => false);
       return;
     }
     final map = {
@@ -362,8 +375,7 @@ class _WheelColumn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: CupertinoPicker(
-        scrollController:
-            FixedExtentScrollController(initialItem: initialItem),
+        scrollController: FixedExtentScrollController(initialItem: initialItem),
         itemExtent: 40,
         diameterRatio: 1.4,
         selectionOverlay: const SizedBox.shrink(),
@@ -391,35 +403,141 @@ class _LocationButton extends StatelessWidget {
   const _LocationButton({required this.vm});
   final VolunteerAddListingViewModel vm;
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => vm.pickLocation(context),
-      child: Container(
-        width: double.infinity,
-        height: 46,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: AppColors.volunteerColor,
-            width: 1.3,
+  void _showLocationPickerSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const Text(
+                'Adres Seçiniz',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.volunteerColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.map_outlined,
+                    color: AppColors.volunteerColor,
+                  ),
+                ),
+                title: const Text(
+                  'Haritadan Seç',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                ),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.volunteerColor,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  vm.pickLocation(context);
+                },
+              ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              ListTile(
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.volunteerColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.add_location_alt_outlined,
+                    color: AppColors.volunteerColor,
+                  ),
+                ),
+                title: const Text(
+                  'Yeni Adres Ekle',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                ),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.volunteerColor,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  vm.addNewAddress(context);
+                },
+              ),
+              const SizedBox(height: 12),
+            ],
           ),
         ),
-        alignment: Alignment.center,
-        child: Text(
-          vm.hasLocation
-              ? vm.locationAddress
-              : LocaleKeys.volunteerAddListing_locationButton.tr(),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: vm.hasLocation
-                ? AppColors.primaryTextColor
-                : AppColors.primaryTextColor,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool hasData = vm.locationAddress.isNotEmpty;
+
+    return GestureDetector(
+      onTap: () => _showLocationPickerSheet(context),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: hasData
+                ? const Color(0xFFE0E0E0)
+                : AppColors.volunteerColor.withValues(alpha: 0.3),
+            width: 1.5,
           ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              hasData ? Icons.location_on_rounded : Icons.add_rounded,
+              color: AppColors.volunteerColor,
+              size: 22,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                hasData ? vm.locationAddress : 'Lokasyon Seç',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: hasData ? FontWeight.w500 : FontWeight.w600,
+                  color: hasData
+                      ? AppColors.primaryTextColor
+                      : AppColors.volunteerColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (hasData)
+              const Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: AppColors.hintTextColor,
+              ),
+          ],
         ),
       ),
     );
@@ -465,7 +583,8 @@ class _ShareButton extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                        LocaleKeys.volunteerAddListing_successMessage.tr()),
+                      LocaleKeys.volunteerAddListing_successMessage.tr(),
+                    ),
                     backgroundColor: AppColors.volunteerColor,
                     behavior: SnackBarBehavior.floating,
                     duration: const Duration(seconds: 2),
@@ -494,7 +613,9 @@ class _ShareButton extends StatelessWidget {
                 width: 22,
                 height: 22,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2.5, color: Colors.white),
+                  strokeWidth: 2.5,
+                  color: Colors.white,
+                ),
               )
             : Text(
                 LocaleKeys.volunteerAddListing_shareButton.tr(),

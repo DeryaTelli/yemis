@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import '../../services/auth/i_auth_service.dart';
+import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
 
 class BusinessProfileViewModel extends ChangeNotifier {
+  final IAuthService _authService;
+  final UserSession _userSession;
+
   int _selectedIndex = 4;
   int get selectedIndex => _selectedIndex;
+
+  BusinessProfileViewModel(this._authService, this._userSession);
 
   // ── Daily stats ──────────────────────────────
   int get dailySoldCount => 10;
@@ -15,12 +22,16 @@ class BusinessProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logout(BuildContext context) {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRoutes.login,
-      (route) => false,
-    );
+  Future<void> logout(BuildContext context) async {
+    await _authService.logout();
+    _userSession.clear();
+    if (context.mounted) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.login,
+        (route) => false,
+      );
+    }
   }
 
   void deleteAccount(BuildContext context) {

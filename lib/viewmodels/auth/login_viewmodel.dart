@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yemis/services/auth/api_auth_service.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
@@ -84,7 +85,10 @@ class LoginViewModel extends ChangeNotifier {
       );
 
       if (response.success && response.user != null) {
-        _userSession.setUser(response.user!);
+        _userSession.setUser(response.user!, token: response.token);
+        if (_authService is ApiAuthService) {
+          (_authService as ApiAuthService).setToken(response.token);
+        }
         onSuccess();
       } else {
         _errorKey = response.errorKey;

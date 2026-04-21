@@ -10,6 +10,7 @@ class VolunteerListing {
     required this.id,
     required this.title,
     required this.userName,
+    this.userLogoUrl,
     required this.location,
     required this.timeRange,
     required this.imageUrl,
@@ -30,6 +31,7 @@ class VolunteerListing {
   final String id;
   final String title;
   final String userName;
+  final String? userLogoUrl;
   final String location;
   final String timeRange;
   final String imageUrl;

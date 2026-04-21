@@ -17,9 +17,9 @@ class FoodDetailViewModel extends ChangeNotifier {
   FoodDetailViewModel({
     required IFoodService service,
     required String listingId,
-  })  : _service = service,
-        _listingId = listingId,
-        _locationService = LocationService();
+  }) : _service = service,
+       _listingId = listingId,
+       _locationService = LocationService();
 
   final IFoodService _service;
   final String _listingId;
@@ -58,13 +58,17 @@ class FoodDetailViewModel extends ChangeNotifier {
   }
 
   String get deliveryText {
-    if (_listing == null || _listing!.deliveryStartTime == null) return _listing?.timeRange ?? "";
-    
+    if (_listing == null || _listing!.deliveryStartTime == null)
+      return _listing?.timeRange ?? "";
+
     final now = DateTime.now();
     final start = _listing!.deliveryStartTime!;
-    
-    final isToday = now.year == start.year && now.month == start.month && now.day == start.day;
-    
+
+    final isToday =
+        now.year == start.year &&
+        now.month == start.month &&
+        now.day == start.day;
+
     if (isToday) {
       return "Bugün Al | ${_listing!.timeRange}";
     } else {
@@ -73,11 +77,12 @@ class FoodDetailViewModel extends ChangeNotifier {
     }
   }
 
-  LatLng? get userLatLng => _userPosition != null 
-      ? LatLng(_userPosition!.latitude, _userPosition!.longitude) 
+  LatLng? get userLatLng => _userPosition != null
+      ? LatLng(_userPosition!.latitude, _userPosition!.longitude)
       : null;
 
-  LatLng? get businessLatLng => _listing?.latitude != null && _listing?.longitude != null
+  LatLng? get businessLatLng =>
+      _listing?.latitude != null && _listing?.longitude != null
       ? LatLng(_listing!.latitude!, _listing!.longitude!)
       : null;
 
@@ -114,7 +119,9 @@ class FoodDetailViewModel extends ChangeNotifier {
   }
 
   void _calculateDistance() {
-    if (_userPosition != null && _listing?.latitude != null && _listing?.longitude != null) {
+    if (_userPosition != null &&
+        _listing?.latitude != null &&
+        _listing?.longitude != null) {
       _distanceInMeters = Geolocator.distanceBetween(
         _userPosition!.latitude,
         _userPosition!.longitude,
@@ -159,8 +166,19 @@ class FoodDetailViewModel extends ChangeNotifier {
 class _TurkishDateFormatter {
   String format(DateTime date) {
     const months = [
-      '', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-      'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+      '',
+      'Ocak',
+      'Şubat',
+      'Mart',
+      'Nisan',
+      'Mayıs',
+      'Haziran',
+      'Temmuz',
+      'Ağustos',
+      'Eylül',
+      'Ekim',
+      'Kasım',
+      'Aralık',
     ];
     return "${date.day} ${months[date.month]}";
   }

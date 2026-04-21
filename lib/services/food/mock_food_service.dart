@@ -76,6 +76,7 @@ class MockFoodService implements IFoodService {
       price: 100,
       rating: 4.8,
       section: FoodSection.surpriseBox,
+      shopLogoUrl: null,
       isFavorite: true,
       description:
           'Bu paket, gün sonunda satılamayan ama hâlâ taze olan çeşitli yiyeceklerden oluşur. '
@@ -101,6 +102,7 @@ class MockFoodService implements IFoodService {
       price: 45,
       rating: 4.5,
       section: FoodSection.surpriseBox,
+      shopLogoUrl: null,
       description:
           'Günün ilk saatlerinde hazırlanan taze simitler ve açma çeşitleri. '
           'Miktarlar her gün değişebilir.',
@@ -141,6 +143,7 @@ class MockFoodService implements IFoodService {
       price: 100,
       rating: 4.5,
       section: FoodSection.buyNow,
+      shopLogoUrl: null,
       isFavorite: true,
       description: 'Taze meyvelerle hazırlanan güzel bir pasta dilimi.',
       ingredients: 'Un, yumurta, şeker, tereyağı, çilek, muz.',
@@ -197,6 +200,7 @@ class MockFoodService implements IFoodService {
       price: 100,
       rating: 4.9,
       section: FoodSection.todayPopular,
+      shopLogoUrl: null,
       description: 'En çok tercih edilen pasta. Taze meyveler ile süslü.',
       ingredients: 'Un, yumurta, şeker, tereyağı, çilek, muz, çikolata.',
       allergens: 'Gluten, Süt, Yumurta',

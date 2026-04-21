@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/text_styles_custom.dart';
@@ -35,9 +36,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(LocaleKeys.auth_login_title.tr()),
-      ),
+      appBar: AppBar(title: Text(LocaleKeys.auth_login_title.tr())),
       body: Consumer<LoginViewModel>(
         builder: (context, vm, _) {
           return SafeArea(
@@ -48,7 +47,15 @@ class _LoginViewState extends State<LoginView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 48),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Lottie.asset(
+                        'assets/lottie/login_register.json',
+                        height: 280,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
 
                     if (vm.errorMessage != null || vm.errorKey != null) ...[
                       ErrorBanner(
@@ -114,8 +121,10 @@ class _LoginViewState extends State<LoginView> {
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.shrinkWrap,
                               ),
-                              Text(LocaleKeys.auth_login_rememberMe.tr(),
-                                  style: CustomTextStyles.regular14Black),
+                              Text(
+                                LocaleKeys.auth_login_rememberMe.tr(),
+                                style: CustomTextStyles.regular14Black,
+                              ),
                             ],
                           ),
                         ),
@@ -124,7 +133,9 @@ class _LoginViewState extends State<LoginView> {
                           onTap: () {
                             vm.clearFields();
                             Navigator.pushNamed(
-                                context, AppRoutes.forgotPassword);
+                              context,
+                              AppRoutes.forgotPassword,
+                            );
                           },
                           child: Text(
                             LocaleKeys.auth_login_forgotPassword.tr(),
@@ -153,17 +164,20 @@ class _LoginViewState extends State<LoginView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(LocaleKeys.auth_login_noAccount.tr(),
-                            style: CustomTextStyles.regular14Grey),
+                        Text(
+                          LocaleKeys.auth_login_noAccount.tr(),
+                          style: CustomTextStyles.regular14Grey,
+                        ),
                         const SizedBox(width: 4),
                         GestureDetector(
                           onTap: () {
                             vm.clearFields();
-                            Navigator.pushNamed(
-                                context, AppRoutes.register);
+                            Navigator.pushNamed(context, AppRoutes.register);
                           },
-                          child: Text(LocaleKeys.auth_login_register.tr(),
-                              style: CustomTextStyles.bold14Primary),
+                          child: Text(
+                            LocaleKeys.auth_login_register.tr(),
+                            style: CustomTextStyles.bold14Primary,
+                          ),
                         ),
                       ],
                     ),

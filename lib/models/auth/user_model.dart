@@ -9,6 +9,7 @@ class UserModel {
   final String id;
   final String name;
   final String email;
+  final String? phoneNumber;
   final UserType userType;
 
   const UserModel({
@@ -16,6 +17,7 @@ class UserModel {
     required this.name,
     required this.email,
     required this.userType,
+    this.phoneNumber,
   });
 
   bool get isBusiness => userType == UserType.business;
@@ -31,6 +33,7 @@ class UserModel {
       id: (json['id'] ?? '').toString(),
       name: (json['name'] ?? '').toString(),
       email: (json['email'] ?? '').toString(),
+      phoneNumber: json['phoneNumber']?.toString() ?? json['phone']?.toString(),
       userType: role == 'business' ? UserType.business : UserType.food,
     );
   }
@@ -39,6 +42,7 @@ class UserModel {
         'id': id,
         'name': name,
         'email': email,
+        'phoneNumber': phoneNumber,
         'userType': userType.name,
       };
 }

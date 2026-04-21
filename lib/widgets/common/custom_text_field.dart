@@ -25,6 +25,9 @@ class CustomTextField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final bool hasShadow;
   final Color? borderColor;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? maxLength;
+  final String? prefixText;
 
   const CustomTextField({
     super.key,
@@ -48,7 +51,10 @@ class CustomTextField extends StatelessWidget {
     this.minLines,
     this.contentPadding,
     this.hasShadow = false,
-    this.borderColor, 
+    this.borderColor,
+    this.inputFormatters,
+    this.maxLength,
+    this.prefixText,
   });
 
   @override
@@ -78,6 +84,8 @@ class CustomTextField extends StatelessWidget {
         onTap: onTap,
         maxLines: maxLines,
         minLines: minLines,
+        inputFormatters: inputFormatters,
+        maxLength: maxLength,
         style: CustomTextStyles.regular16DarkGrey, // Default text style
         decoration: InputDecoration(
           hintText: hintText,
@@ -85,6 +93,8 @@ class CustomTextField extends StatelessWidget {
           labelText: labelText,
           labelStyle: CustomTextStyles.regular16Grey,
           prefixIcon: prefixIcon,
+          prefixText: prefixText,
+          prefixStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1B1B1B)),
           suffixIcon: suffixIcon,
           filled: true,
           fillColor: fillColor,
@@ -99,7 +109,7 @@ class CustomTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
-            borderSide: const BorderSide(color: AppColors.primaryColor, width: 1.5),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),

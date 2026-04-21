@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 import '../services/auth/user_session.dart';
 import '../utils/locale_keys.dart';
 import '../utils/routes/app_routes.dart';
@@ -63,11 +64,14 @@ class _LocationBodyState extends State<_LocationBody>
         if (!mounted) return;
         final result = await Navigator.pushNamed(context, AppRoutes.mapPicker);
         if (!mounted) return;
-        if (result != null && result is LatLng) {
-          await vm.onLocationPicked(result.latitude, result.longitude, () {
-            if (!mounted) return;
-            Navigator.pushReplacementNamed(context, AppRoutes.home);
-          });
+        if (result is Map<String, dynamic>) {
+          final latLng = result['latLng'] as LatLng?;
+          if (latLng != null) {
+            await vm.onLocationPicked(latLng.latitude, latLng.longitude, () {
+              if (!mounted) return;
+              Navigator.pushReplacementNamed(context, AppRoutes.home);
+            });
+          }
         }
       },
     );
@@ -93,20 +97,15 @@ class _LocationBodyState extends State<_LocationBody>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Image.asset(
-                        'assets/foodIcon/locationPoint.png',
-                        width: 120,
-                        height: 120,
+                      Lottie.asset(
+                        'assets/lottie/location.json',
+                        height: 360,
+                        fit: BoxFit.contain,
                       ),
                       if (!vm.hasPermission &&
                           vm.permissionState !=
                               LocationPermissionState.unknown) ...[
                         const SizedBox(height: 16),
-                        Text(
-                          LocaleKeys.location_permissionDenied.tr(),
-                          style: CustomTextStyles.regular14Grey,
-                          textAlign: TextAlign.center,
-                        ),
                       ],
                     ],
                   ),
@@ -163,14 +162,25 @@ class _LocationBodyState extends State<_LocationBody>
                   onNavigate: () async {
                     if (!mounted) return;
                     final result = await Navigator.pushNamed(
-                        context, AppRoutes.mapPicker);
+                      context,
+                      AppRoutes.mapPicker,
+                    );
                     if (!mounted) return;
-                    if (result != null && result is LatLng) {
-                      await vm.onLocationPicked(result.latitude, result.longitude, () {
-                        if (!mounted) return;
-                        Navigator.pushReplacementNamed(
-                            context, AppRoutes.home);
-                      });
+                    if (result is Map<String, dynamic>) {
+                      final latLng = result['latLng'] as LatLng?;
+                      if (latLng != null) {
+                        await vm.onLocationPicked(
+                          latLng.latitude,
+                          latLng.longitude,
+                          () {
+                            if (!mounted) return;
+                            Navigator.pushReplacementNamed(
+                              context,
+                              AppRoutes.home,
+                            );
+                          },
+                        );
+                      }
                     }
                   },
                 ),

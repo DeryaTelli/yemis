@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/text_styles_custom.dart';
@@ -35,9 +36,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(LocaleKeys.auth_register_title.tr()),
-      ),
+      appBar: AppBar(title: Text(LocaleKeys.auth_register_title.tr())),
       body: Consumer<RegisterViewModel>(
         builder: (context, vm, _) {
           return SafeArea(
@@ -48,7 +47,15 @@ class _RegisterViewState extends State<RegisterView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 48),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Lottie.asset(
+                        'assets/lottie/login_register.json',
+                        height: 280,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
 
                     if (vm.errorMessage != null || vm.errorKey != null) ...[
                       ErrorBanner(
@@ -131,8 +138,10 @@ class _RegisterViewState extends State<RegisterView> {
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
                           ),
-                          Text(LocaleKeys.auth_register_kvkk.tr(),
-                              style: CustomTextStyles.regular14Black),
+                          Text(
+                            LocaleKeys.auth_register_kvkk.tr(),
+                            style: CustomTextStyles.regular14Black,
+                          ),
                         ],
                       ),
                     ),
@@ -148,7 +157,10 @@ class _RegisterViewState extends State<RegisterView> {
                           Navigator.pushReplacementNamed(
                             context,
                             AppRoutes.verification,
-                            arguments: {'email': email, 'isPasswordReset': false},
+                            arguments: {
+                              'email': email,
+                              'isPasswordReset': false,
+                            },
                           );
                         },
                       ),
@@ -158,16 +170,20 @@ class _RegisterViewState extends State<RegisterView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(LocaleKeys.auth_register_hasAccount.tr(),
-                            style: CustomTextStyles.regular14Grey),
+                        Text(
+                          LocaleKeys.auth_register_hasAccount.tr(),
+                          style: CustomTextStyles.regular14Grey,
+                        ),
                         const SizedBox(width: 4),
                         GestureDetector(
                           onTap: () {
                             vm.clearFields();
                             Navigator.pop(context);
                           },
-                          child: Text(LocaleKeys.auth_register_login.tr(),
-                              style: CustomTextStyles.bold14Primary),
+                          child: Text(
+                            LocaleKeys.auth_register_login.tr(),
+                            style: CustomTextStyles.bold14Primary,
+                          ),
                         ),
                       ],
                     ),

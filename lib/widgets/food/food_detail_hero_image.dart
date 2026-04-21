@@ -55,6 +55,46 @@ class FoodDetailHeroImage extends StatelessWidget {
             ),
           ),
 
+          // Mağaza Logosu (sol alt)
+          Positioned(
+            bottom: 20,
+            left: 16,
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+                border: Border.all(color: Colors.white, width: 2),
+              ),
+              child: ClipOval(
+                child: listing.shopLogoUrl != null &&
+                        listing.shopLogoUrl!.isNotEmpty
+                    ? Image.asset(
+                        listing.shopLogoUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.storefront_rounded,
+                          color: AppColors.primaryColor,
+                          size: 24,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.storefront_rounded,
+                        color: AppColors.primaryColor,
+                        size: 24,
+                      ),
+              ),
+            ),
+          ),
+
           // Geri butonu (sol üst)
           Positioned(
             top: MediaQuery.of(context).padding.top + 10,

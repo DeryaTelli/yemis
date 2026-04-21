@@ -105,10 +105,10 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
             child: IgnorePointer(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 40),
-                child: Image.asset(
-                  'assets/foodIcon/locationPoint.png',
-                  width: 48,
-                  height: 48,
+                child: Icon(
+                  Icons.location_on_rounded,
+                  size: 48,
+                  color: widget.accentColor ?? AppColors.primaryColor,
                 ),
               ),
             ),
@@ -207,10 +207,13 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
                 _searchController.clear();
                 _searchFocus.unfocus();
               },
-              onConfirm: () => Navigator.pop(
-                context,
-                context.read<MapPickerViewModel>().center,
-              ),
+              onConfirm: () {
+                final currentVm = context.read<MapPickerViewModel>();
+                Navigator.pop(context, {
+                  'latLng': currentVm.center,
+                  'address': currentVm.currentAddress,
+                });
+              },
             ),
           ),
         ],

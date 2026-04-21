@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
@@ -58,9 +59,6 @@ class _VerificationViewState extends State<VerificationView> {
             ),
           ),
           title: Text(LocaleKeys.auth_verification_title.tr()),
-          backgroundColor: AppColors.primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
         ),
       ),
       body: Consumer<VerificationViewModel>(
@@ -71,7 +69,14 @@ class _VerificationViewState extends State<VerificationView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 40),
+                  Center(
+                    child: Lottie.asset(
+                      'assets/lottie/otp_verification.json',
+                      height: 280,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
                   Text(
                     vm.isPasswordReset
@@ -80,7 +85,7 @@ class _VerificationViewState extends State<VerificationView> {
                     style: CustomTextStyles.semiBold16Grey,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 12),
 
                   // ... (Row ile OTP inputları - değişmedi)
                   Row(
