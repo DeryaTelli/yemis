@@ -73,21 +73,12 @@ class CustomButton extends StatelessWidget {
           height: height,
           decoration: decoration,
           child: Center(
-            child: isLoading
-                ? SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: isOutlined ? AppColors.primaryColor : Colors.white,
-                      strokeWidth: 2.5,
-                    ),
-                  )
-                : child ??
-                    Text(
-                      text!,
-                      style: textStyle ?? defaultTextStyle,
-                      textAlign: TextAlign.center,
-                    ),
+            child: child ??
+                Text(
+                  text!,
+                  style: textStyle ?? defaultTextStyle,
+                  textAlign: TextAlign.center,
+                ),
           ),
         ),
       ),

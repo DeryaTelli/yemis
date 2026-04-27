@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../models/auth/address_model.dart';
+import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
 import '../../utils/locale_keys.dart';
 
@@ -12,9 +14,14 @@ enum LocationPermissionState { unknown, granted, denied }
 enum _PendingAction { none, share, pick }
 
 class LocationViewModel extends ChangeNotifier {
-  LocationViewModel({required UserSession userSession}) : _userSession = userSession;
+  LocationViewModel({
+    required UserSession userSession,
+    required IAuthService authService,
+  }) : _userSession = userSession,
+       _authService = authService;
 
   final UserSession _userSession;
+  final IAuthService _authService;
 
   static const String _prefKey = 'location_onboarding_done';
   static const String _prefAddressKey = 'current_location_address';
@@ -32,8 +39,7 @@ class LocationViewModel extends ChangeNotifier {
   String? _errorKey;
   String? get errorKey => _errorKey;
 
-  bool get hasPermission =>
-      _permissionState == LocationPermissionState.granted;
+  bool get hasPermission => _permissionState == LocationPermissionState.granted;
 
   _PendingAction _pendingAction = _PendingAction.none;
 
@@ -44,12 +50,34 @@ class LocationViewModel extends ChangeNotifier {
     _permissionState = status.isGranted
         ? LocationPermissionState.granted
         : LocationPermissionState.denied;
-    
-    // Yüklü lokasyonu SharedPreferences'dan oku
+
+    // 1. Önce SharedPreferences'dan oku
     final prefs = await SharedPreferences.getInstance();
-    final savedAddress = prefs.getString(_prefAddressKey);
-    final savedLat = prefs.getDouble(_prefLatKey);
-    final savedLng = prefs.getDouble(_prefLngKey);
+    String? savedAddress = prefs.getString(_prefAddressKey);
+    double? savedLat = prefs.getDouble(_prefLatKey);
+    double? savedLng = prefs.getDouble(_prefLngKey);
+
+    // 2. Eğer yerelde yoksa API'den çekmeye çalış
+    if (savedAddress == null) {
+      try {
+        final addresses = await _authService.getAddresses();
+        if (addresses.isNotEmpty) {
+          final def = addresses.firstWhere(
+            (a) => a.isDefault,
+            orElse: () => addresses.first,
+          );
+          savedAddress = def.addressLine;
+          savedLat = def.latitude;
+          savedLng = def.longitude;
+
+          // Yerel belleğe de yaz
+          await prefs.setString(_prefAddressKey, savedAddress);
+          await prefs.setDouble(_prefLatKey, savedLat);
+          await prefs.setDouble(_prefLngKey, savedLng);
+          await prefs.setBool(_prefKey, true);
+        }
+      } catch (_) {}
+    }
 
     if (savedAddress != null) {
       _userSession.updateLocation(savedAddress, lat: savedLat, lng: savedLng);
@@ -108,11 +136,11 @@ class LocationViewModel extends ChangeNotifier {
           timeLimit: Duration(seconds: 15),
         ),
       );
-      
+
       // Reverse Geocode
       final address = await _reverseGeocode(pos.latitude, pos.longitude);
       await _saveLocation(address, pos.latitude, pos.longitude);
-      
+
       await _markShown();
       onSuccess(pos.latitude, pos.longitude);
     } catch (_) {
@@ -159,7 +187,11 @@ class LocationViewModel extends ChangeNotifier {
 
   // ─── Seçim Tamamlandı ────────────────────────────
 
-  Future<void> onLocationPicked(double lat, double lng, VoidCallback onDone) async {
+  Future<void> onLocationPicked(
+    double lat,
+    double lng,
+    VoidCallback onDone,
+  ) async {
     _isLoading = true;
     notifyListeners();
     try {
@@ -191,7 +223,12 @@ class LocationViewModel extends ChangeNotifier {
         final data = jsonDecode(res.body);
         final address = data['address'];
         if (address != null) {
-          final city = address['city'] ?? address['town'] ?? address['village'] ?? address['suburb'] ?? '';
+          final city =
+              address['city'] ??
+              address['town'] ??
+              address['village'] ??
+              address['suburb'] ??
+              '';
           final road = address['road'] ?? '';
           if (city.isNotEmpty && road.isNotEmpty) {
             return '$city, $road';
@@ -212,8 +249,26 @@ class LocationViewModel extends ChangeNotifier {
     await prefs.setString(_prefAddressKey, address);
     await prefs.setDouble(_prefLatKey, lat);
     await prefs.setDouble(_prefLngKey, lng);
-    
+
     _userSession.updateLocation(address, lat: lat, lng: lng);
+
+    // API'ye gönder
+    try {
+      await _authService.createAddress(
+        AddressModel(
+          id: 0,
+          userId: 0,
+          label: 'Ev', // Varsayılan etiket
+          addressLine: address,
+          latitude: lat,
+          longitude: lng,
+          isDefault: true,
+        ),
+      );
+    } catch (message) {
+      // Hata olsa bile kullanıcı devam edebilsin diye sessiz geçiyoruz
+      debugPrint('Adres API hatası: $message');
+    }
   }
 
   // ─── clearError ──────────────────────────────────

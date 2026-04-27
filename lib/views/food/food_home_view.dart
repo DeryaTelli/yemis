@@ -12,6 +12,7 @@ import '../../widgets/food/food_search_bar.dart';
 import '../../models/app_module_type.dart';
 import '../../widgets/common/home_app_bar.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
+import '../../widgets/common/loading_overlay.dart';
 
 /// Yemek ana sayfası — tam MVVM ile uygulanmıştır.
 class FoodHomeView extends StatelessWidget {
@@ -54,86 +55,86 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
   Widget build(BuildContext context) {
     final vm = context.watch<FoodHomeViewModel>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      // ─── AppBar ──────────────────────────────────
-      appBar: HomeAppBar(
-        title: vm.appBarTitle,
-        backgroundColor: vm.appBarColor,
-        isLocationTitle: true,
-      ),
+    return LoadingOverlay(
+      isLoading: vm.isLoading,
+      moduleType: AppModuleType.food,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        // ─── AppBar ──────────────────────────────────
+        appBar: HomeAppBar(
+          title: vm.appBarTitle,
+          backgroundColor: vm.appBarColor,
+          isLocationTitle: true,
+        ),
 
-      // ─── Body ────────────────────────────────────
-      body: vm.isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryColor),
-            )
-          : SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
+        // ─── Body ────────────────────────────────────
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
 
-                  // ── Arama Barı ─────────────────────────────
-                  FoodSearchBar(
-                    controller: _searchController,
-                    onChanged: vm.onSearchChanged,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // ── Harita Alanı ────────────────────────────
-                  FoodMapSection(listings: vm.filteredListings),
-                  const SizedBox(height: 16),
-
-                  // ── Filtre Chip'leri ────────────────────────
-                  FoodFilterChips(
-                    selectedFilter: vm.selectedFilter,
-                    onFilterChanged: vm.onFilterChanged,
-                  ),
-                  const SizedBox(height: 20),
-
-                  // ── Sürpriz Kutu ────────────────────────────
-                  const FoodListingSection(
-                    title: 'Sürpriz Kutu',
-                    section: FoodSection.surpriseBox,
-                  ),
-                  const SizedBox(height: 24),
-
-                  // ── Sekarang Al ────────────────────────────────
-                  const FoodListingSection(
-                    title: 'Şimdi Al',
-                    section: FoodSection.buyNow,
-                  ),
-                  const SizedBox(height: 24),
-
-                  // ── Bugün Popüler Olanlar ────────────────────
-                  const FoodListingSection(
-                    title: 'Bugün Popüler Olanlar',
-                    section: FoodSection.todayPopular,
-                  ),
-                  const SizedBox(height: 32),
-                ],
+              // ── Arama Barı ─────────────────────────────
+              FoodSearchBar(
+                controller: _searchController,
+                onChanged: vm.onSearchChanged,
               ),
-            ),
-      bottomNavigationBar: AppBottomNavBar(
-        selectedIndex: vm.selectedIndex,
-        onItemSelected: (index) {
-          final route = vm.getBottomNavRoute(index);
+              const SizedBox(height: 16),
 
-          if (route != null) {
-            if (index == 2) {
-              if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
+              // ── Harita Alanı ────────────────────────────
+              FoodMapSection(listings: vm.filteredListings),
+              const SizedBox(height: 16),
+
+              // ── Filtre Chip'leri ────────────────────────
+              FoodFilterChips(
+                selectedFilter: vm.selectedFilter,
+                onFilterChanged: vm.onFilterChanged,
+              ),
+              const SizedBox(height: 20),
+
+              // ── Sürpriz Kutu ────────────────────────────
+              const FoodListingSection(
+                title: 'Sürpriz Kutu',
+                section: FoodSection.surpriseBox,
+              ),
+              const SizedBox(height: 24),
+
+              // ── Sekarang Al ────────────────────────────────
+              const FoodListingSection(
+                title: 'Şimdi Al',
+                section: FoodSection.buyNow,
+              ),
+              const SizedBox(height: 24),
+
+              // ── Bugün Popüler Olanlar ────────────────────
+              const FoodListingSection(
+                title: 'Bugün Popüler Olanlar',
+                section: FoodSection.todayPopular,
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
+        ),
+        bottomNavigationBar: AppBottomNavBar(
+          selectedIndex: vm.selectedIndex,
+          onItemSelected: (index) {
+            final route = vm.getBottomNavRoute(index);
+
+            if (route != null) {
+              if (index == 2) {
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
+                }
+              } else if (ModalRoute.of(context)?.settings.name != route) {
+                Navigator.pushReplacementNamed(context, route);
               }
-            } else if (ModalRoute.of(context)?.settings.name != route) {
-              Navigator.pushReplacementNamed(context, route);
+            } else {
+              vm.onTabSelected(index);
             }
-          } else {
-            vm.onTabSelected(index);
-          }
-        },
-        moduleType: AppModuleType.food,
+          },
+          moduleType: AppModuleType.food,
+        ),
       ),
     );
   }

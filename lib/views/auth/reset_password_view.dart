@@ -8,6 +8,10 @@ import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/otp_box.dart';
 
+import '../../widgets/common/error_dialog_custom.dart';
+import '../../widgets/common/loading_overlay.dart';
+import '../../models/app_module_type.dart';
+
 class ResetPasswordView extends StatefulWidget {
   const ResetPasswordView({super.key});
 
@@ -33,118 +37,114 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
-        child: AppBar(
-          toolbarHeight: 80,
-          title: const Text('Şifre Yenileme'),
-          backgroundColor: const Color(0xFFFE8800),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-      ),
-      body: Consumer<ResetPasswordViewModel>(
-        builder: (context, vm, _) {
-          return SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 40),
+    return Consumer<ResetPasswordViewModel>(
+      builder: (context, vm, _) {
+        return LoadingOverlay(
+          isLoading: vm.isLoading,
+          moduleType: AppModuleType.food,
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(80),
+              child: AppBar(
+                toolbarHeight: 80,
+                title: const Text('Şifre Yenileme'),
+                backgroundColor: const Color(0xFFFE8800),
+                foregroundColor: Colors.white,
+                elevation: 0,
+              ),
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 40),
 
-                    Text(
-                      'Lütfen yeni şifrenizi girin.',
-                      style: CustomTextStyles.semiBold16Grey,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-
-                    // Yeni Şifre
-                    CustomTextField(
-                      controller: vm.passwordController,
-                      hintText: LocaleKeys.auth_fields_newPassword.tr(),
-                      obscureText: !vm.passwordVisible,
-                      textInputAction: TextInputAction.next,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          vm.passwordVisible
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: const Color(0xFF838383),
-                        ),
-                        onPressed: vm.togglePasswordVisibility,
-                      ),
-                      validator: (v) {
-                        if (v == null || v.isEmpty) {
-                          return LocaleKeys.auth_validation_passwordEmpty.tr();
-                        }
-                        if (v.length < 6) {
-                          return LocaleKeys.auth_validation_passwordMinLength
-                              .tr();
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Şifre Tekrar
-                    CustomTextField(
-                      controller: vm.confirmPasswordController,
-                      hintText: LocaleKeys.auth_fields_confirmPassword.tr(),
-                      obscureText: !vm.passwordVisible,
-                      textInputAction: TextInputAction.done,
-                      validator: (v) {
-                        if (v == null || v.isEmpty) {
-                          return LocaleKeys.auth_validation_passwordEmpty.tr();
-                        }
-                        if (v != vm.passwordController.text) {
-                          return LocaleKeys.auth_validation_passwordsNotMatch
-                              .tr();
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 32),
-
-                    // Hata mesajı
-                    if (vm.errorKey != null) ...[
                       Text(
-                        vm.errorKey!.tr(),
-                        style: CustomTextStyles.regular14Black
-                            .copyWith(color: Colors.red),
+                        'Lütfen yeni şifrenizi girin.',
+                        style: CustomTextStyles.semiBold16Grey,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 12),
-                    ],
+                      const SizedBox(height: 32),
 
-                    CustomButton(
-                      text: LocaleKeys.auth_forgotPassword_button.tr(),
-                      isLoading: vm.isLoading,
-                      onPressed: () => vm.resetPassword(
-                        formKey: _formKey,
-                        onSuccess: () {
-                          vm.clearFields();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(LocaleKeys
-                                    .auth_forgotPassword_success
-                                    .tr())),
-                          );
-                          Navigator.popUntil(context, (route) => route.isFirst);
+                      // Yeni Şifre
+                      CustomTextField(
+                        controller: vm.passwordController,
+                        hintText: LocaleKeys.auth_fields_newPassword.tr(),
+                        obscureText: !vm.passwordVisible,
+                        textInputAction: TextInputAction.next,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            vm.passwordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: const Color(0xFF838383),
+                          ),
+                          onPressed: vm.togglePasswordVisibility,
+                        ),
+                        validator: (v) {
+                          if (v == null || v.isEmpty) {
+                            return LocaleKeys.auth_validation_passwordEmpty.tr();
+                          }
+                          if (v.length < 6) {
+                            return LocaleKeys.auth_validation_passwordMinLength
+                                .tr();
+                          }
+                          return null;
                         },
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 12),
+
+                      // Şifre Tekrar
+                      CustomTextField(
+                        controller: vm.confirmPasswordController,
+                        hintText: LocaleKeys.auth_fields_confirmPassword.tr(),
+                        obscureText: !vm.passwordVisible,
+                        textInputAction: TextInputAction.done,
+                        validator: (v) {
+                          if (v == null || v.isEmpty) {
+                            return LocaleKeys.auth_validation_passwordEmpty.tr();
+                          }
+                          if (v != vm.passwordController.text) {
+                            return LocaleKeys.auth_validation_passwordsNotMatch
+                                .tr();
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 32),
+
+                      // Hata mesajı
+                      CustomButton(
+                        text: LocaleKeys.auth_forgotPassword_button.tr(),
+                        onPressed: () => vm.resetPassword(
+                          formKey: _formKey,
+                          onSuccess: () {
+                            vm.clearFields();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(LocaleKeys
+                                      .auth_forgotPassword_success
+                                      .tr())),
+                            );
+                            Navigator.popUntil(context, (route) => route.isFirst);
+                          },
+                          onError: (msg) {
+                            ErrorDialogCustom.show(context, message: msg);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

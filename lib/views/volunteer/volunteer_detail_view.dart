@@ -11,6 +11,9 @@ import '../../widgets/volunteer/volunteer_detail_tab_bar.dart';
 import '../../widgets/volunteer/volunteer_order_tab.dart';
 import '../../widgets/volunteer/volunteer_review_tab.dart';
 
+import '../../widgets/common/loading_overlay.dart';
+import '../../models/app_module_type.dart';
+
 /// Gönüllü ilan detay ekranı.
 class VolunteerDetailView extends StatelessWidget {
   const VolunteerDetailView({super.key, required this.listing});
@@ -41,44 +44,44 @@ class _VolunteerDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<VolunteerDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: vm.isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Stack(
+    return LoadingOverlay(
+      isLoading: vm.isLoading,
+      moduleType: AppModuleType.volunteer,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // ── Ana İçerik ────────────────────────────
+            Column(
               children: [
-                // ── Ana İçerik ────────────────────────────
-                Column(
-                  children: [
-                    // Hero Resim
-                    VolunteerDetailHeroImage(listing: listing),
+                // Hero Resim
+                VolunteerDetailHeroImage(listing: listing),
 
-                    // Başlık Alanı
-                    VolunteerDetailHeader(listing: listing),
+                // Başlık Alanı
+                VolunteerDetailHeader(listing: listing),
 
-                    // Tab Bar
-                    VolunteerDetailTabBar(vm: vm),
+                // Tab Bar
+                VolunteerDetailTabBar(vm: vm),
 
-                    // Tab İçeriği
-                    Expanded(
-                      child: vm.selectedTab == 0
-                          ? const VolunteerOrderTab()
-                          : const VolunteerReviewTab(),
-                    ),
-                  ],
-                ),
-
-                // ── Alt Ücretsiz + Gönüllü Ol Bar ──────────
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: VolunteerDetailBottomBar(vm: vm),
+                // Tab İçeriği
+                Expanded(
+                  child: vm.selectedTab == 0
+                      ? const VolunteerOrderTab()
+                      : const VolunteerReviewTab(),
                 ),
               ],
             ),
+
+            // ── Alt Ücretsiz + Gönüllü Ol Bar ──────────
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: VolunteerDetailBottomBar(vm: vm),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

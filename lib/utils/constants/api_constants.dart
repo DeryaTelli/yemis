@@ -12,6 +12,7 @@ class ApiConstants {
   static const String resendCode = '/api/auth/resend-code';
   static const String resetPassword = '/api/auth/reset-password';
   static const String logout = '/api/auth/logout';
+  static const String profile = '/api/users/me';
 
   // --- Reviews ---
   static String reviewsForStore(int storeId) => '/api/reviews/stores/$storeId';

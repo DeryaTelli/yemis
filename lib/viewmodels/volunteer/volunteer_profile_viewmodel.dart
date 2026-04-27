@@ -34,8 +34,15 @@ class VolunteerProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> logout(BuildContext context) async {
-    await _authService.logout();
+    // API çağrısını arka planda başlatıyoruz, cevabı beklemiyoruz (yavaşlığı engellemek için)
+    _authService.logout().catchError((e) {
+      debugPrint('Logout API error: $e');
+    });
+
+    // Yerel verileri anında temizliyoruz
     _userSession.clear();
+
+    // Kullanıcıyı hemen giriş ekranına yönlendiriyoruz
     if (context.mounted) {
       Navigator.pushNamedAndRemoveUntil(
         context,

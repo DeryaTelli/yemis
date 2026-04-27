@@ -62,6 +62,7 @@ class RegisterViewModel extends ChangeNotifier {
   Future<void> register({
     required GlobalKey<FormState> formKey,
     required void Function(String email) onSuccess,
+    Function(String)? onError,
   }) async {
     if (!formKey.currentState!.validate()) return;
     if (!_kvkkAccepted) {
@@ -92,9 +93,15 @@ class RegisterViewModel extends ChangeNotifier {
         if (_errorKey == null) {
           _errorMessage = response.message;
         }
+        if (onError != null) {
+          onError(_errorMessage ?? _errorKey?.toString() ?? 'Kayıt sırasında bir hata oluştu');
+        }
       }
     } catch (_) {
       _errorKey = LocaleKeys.auth_errors_general;
+      if (onError != null) {
+        onError('Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

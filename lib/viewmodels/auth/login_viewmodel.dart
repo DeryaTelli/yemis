@@ -67,6 +67,7 @@ class LoginViewModel extends ChangeNotifier {
   Future<void> login({
     required GlobalKey<FormState> formKey,
     required VoidCallback onSuccess,
+    Function(String)? onError,
   }) async {
     if (!formKey.currentState!.validate()) return;
 
@@ -85,20 +86,42 @@ class LoginViewModel extends ChangeNotifier {
       );
 
       if (response.success && response.user != null) {
+        // --- Hata Ayıklama Logları ---
+        debugPrint('--- LOGIN SUCCESS ---');
+        debugPrint('User ID: ${response.user?.id}');
+        debugPrint('User Name: ${response.user?.name}');
+        debugPrint('User Email: ${response.user?.email}');
+        debugPrint('User Role (API): ${response.user?.userType}');
+        debugPrint('Is Business: ${response.user?.isBusiness}');
+        debugPrint('Is Food: ${response.user?.isFood}');
+        debugPrint('----------------------');
+
         _userSession.setUser(response.user!, token: response.token);
         if (_authService is ApiAuthService) {
           (_authService as ApiAuthService).setToken(response.token);
         }
+
+        // Token'ı kalıcı kaydet
+        if (response.token != null) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('auth_token', response.token!);
+        }
+        
         onSuccess();
       } else {
         _errorKey = response.errorKey;
-        // Eğer errorKey yoksa backend'den gelen detaylı mesajı al
         if (_errorKey == null) {
           _errorMessage = response.message;
         }
+        if (onError != null) {
+          onError(_errorMessage ?? _errorKey?.toString() ?? 'Bir hata oluştu');
+        }
       }
-    } catch (_) {
+    } catch (e) {
       _errorKey = LocaleKeys.auth_errors_general;
+      if (onError != null) {
+        onError('Bağlantı hatası oluştu. Lütfen tekrar deneyin.');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -106,12 +129,29 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   /// Login başarısından sonra hangi sayfaya gidileceğini döner.
-  /// - `location_onboarding_done = true` → Home
-  /// - aksi halde → Location (ilk kez)
   Future<String> afterLoginRoute() async {
-    final prefs = await SharedPreferences.getInstance();
-    final done = prefs.getBool(locationOnboardingKey) ?? false;
-    return done ? AppRoutes.home : AppRoutes.location;
+    try {
+      final addresses = await _authService.getAddresses();
+      if (addresses.isEmpty) {
+        return AppRoutes.location;
+      } else {
+        // İlk adresi veya varsayılan adresi seçip oturuma ekle
+        final def = addresses.firstWhere((a) => a.isDefault, orElse: () => addresses.first);
+        _userSession.updateLocation(def.addressLine, lat: def.latitude, lng: def.longitude);
+        
+        // Yerel belleğe de işaret koy (onboarding tamamlandı gibi)
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(locationOnboardingKey, true);
+        await prefs.setString('current_location_address', def.addressLine);
+        await prefs.setDouble('current_lat', def.latitude);
+        await prefs.setDouble('current_lng', def.longitude);
+
+        return AppRoutes.home;
+      }
+    } catch (_) {
+      // Hata durumunda güvenli tarafta kalıp Home'a atıyoruz (veya Location'a da atılabilir)
+      return AppRoutes.home;
+    }
   }
 
   @override

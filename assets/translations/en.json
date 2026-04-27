@@ -195,6 +195,7 @@
         "locationButton": "Select Location",
         "quantityLabel": "Listing Quantity",
         "priceLabel": "Listing Price",
+        "discountPriceLabel": "Discount Price",
         "shareButton": "Share",
         "successMessage": "Your order has been shared successfully!",
         "errorNoLocation": "Please select a location.",

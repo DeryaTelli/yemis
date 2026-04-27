@@ -6,10 +6,36 @@ import '../../utils/constants/app_colors.dart';
 import '../../views/volunteer/volunteer_expanded_map_view.dart';
 
 /// Gönüllü harita alanını gösterir.
-class VolunteerMapSection extends StatelessWidget {
+class VolunteerMapSection extends StatefulWidget {
   const VolunteerMapSection({super.key, this.listings = const []});
 
   final List<VolunteerListing> listings;
+
+  @override
+  State<VolunteerMapSection> createState() => _VolunteerMapSectionState();
+}
+
+class _VolunteerMapSectionState extends State<VolunteerMapSection> {
+  final MapController _mapController = MapController();
+
+  @override
+  void didUpdateWidget(VolunteerMapSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.listings.isNotEmpty && oldWidget.listings.isEmpty) {
+      final first = widget.listings.first;
+      if (first.latitude != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _mapController.move(LatLng(first.latitude!, first.longitude!), 15.0);
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +57,17 @@ class VolunteerMapSection extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             FlutterMap(
+              mapController: _mapController,
               options: MapOptions(
                 initialCenter:
-                    listings.isNotEmpty && listings.first.latitude != null
+                    widget.listings.isNotEmpty &&
+                        widget.listings.first.latitude != null
                     ? LatLng(
-                        listings.first.latitude!,
-                        listings.first.longitude!,
+                        widget.listings.first.latitude!,
+                        widget.listings.first.longitude!,
                       )
                     : const LatLng(41.1993, 32.6247),
-                initialZoom: 15.5,
+                initialZoom: 15.0,
                 interactionOptions: const InteractionOptions(
                   flags: InteractiveFlag.none,
                 ),
@@ -53,7 +81,7 @@ class VolunteerMapSection extends StatelessWidget {
                 ),
                 MarkerLayer(
                   markers: [
-                    ...listings
+                    ...widget.listings
                         .where((l) => l.latitude != null)
                         .map(
                           (l) => Marker(
@@ -70,9 +98,9 @@ class VolunteerMapSection extends StatelessWidget {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.15),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 3),
+                                    color: Colors.black.withValues(alpha: 0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
                                   ),
                                 ],
                               ),
@@ -80,7 +108,7 @@ class VolunteerMapSection extends StatelessWidget {
                                 child: Icon(
                                   Icons.volunteer_activism,
                                   color: Colors.white,
-                                  size: 14,
+                                  size: 16,
                                 ),
                               ),
                             ),
@@ -100,7 +128,7 @@ class VolunteerMapSection extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) =>
-                        VolunteerExpandedMapView(listings: listings),
+                        VolunteerExpandedMapView(listings: widget.listings),
                   ),
                 ),
                 child: Container(
@@ -108,6 +136,7 @@ class VolunteerMapSection extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     color: Colors.white,
+
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(

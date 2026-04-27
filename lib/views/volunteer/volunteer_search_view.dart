@@ -14,6 +14,8 @@ import '../../widgets/common/search_map_view.dart';
 import '../../widgets/volunteer/volunteer_filter_bottom_sheet.dart';
 import '../../widgets/volunteer/volunteer_listing_card.dart';
 
+import '../../widgets/common/loading_overlay.dart';
+
 class VolunteerSearchView extends StatefulWidget {
   const VolunteerSearchView({super.key});
 
@@ -49,40 +51,38 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
         value: _vm,
         child: Consumer<VolunteerSearchViewModel>(
           builder: (context, vm, child) {
-            return Scaffold(
-              backgroundColor: const Color(0xFFF5F5F5),
-              appBar: SearchAppBarCustom(
-                searchController: _searchController,
-                onSearchChanged: vm.onSearchChanged,
-                onFilterTap: () => _showFilterBottomSheet(context, vm),
-                isMapView: vm.isMapView,
-                onViewModeChanged: vm.toggleViewMode,
-                accentColor: AppColors.volunteerColor,
-              ),
-              body: vm.isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.volunteerColor,
-                      ),
-                    )
-                  : vm.isMapView
-                  ? SearchMapView(
-                      listings: vm.filteredListings,
-                      accentColor: AppColors.volunteerColor,
-                      onMarkerTap: (listing) {
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.volunteerDetail,
-                          arguments: listing,
-                        );
-                      },
-                    )
-                  : _buildListView(vm),
-              bottomNavigationBar: AppBottomNavBar(
-                selectedIndex: vm.selectedIndex,
-                onItemSelected: (index) =>
-                    _handleNavigation(context, index, vm),
-                moduleType: AppModuleType.volunteer,
+            return LoadingOverlay(
+              isLoading: vm.isLoading,
+              moduleType: AppModuleType.volunteer,
+              child: Scaffold(
+                backgroundColor: const Color(0xFFF5F5F5),
+                appBar: SearchAppBarCustom(
+                  searchController: _searchController,
+                  onSearchChanged: vm.onSearchChanged,
+                  onFilterTap: () => _showFilterBottomSheet(context, vm),
+                  isMapView: vm.isMapView,
+                  onViewModeChanged: vm.toggleViewMode,
+                  accentColor: AppColors.volunteerColor,
+                ),
+                body: vm.isMapView
+                    ? SearchMapView(
+                        listings: vm.filteredListings,
+                        accentColor: AppColors.volunteerColor,
+                        onMarkerTap: (listing) {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.volunteerDetail,
+                            arguments: listing,
+                          );
+                        },
+                      )
+                    : _buildListView(vm),
+                bottomNavigationBar: AppBottomNavBar(
+                  selectedIndex: vm.selectedIndex,
+                  onItemSelected: (index) =>
+                      _handleNavigation(context, index, vm),
+                  moduleType: AppModuleType.volunteer,
+                ),
               ),
             );
           },

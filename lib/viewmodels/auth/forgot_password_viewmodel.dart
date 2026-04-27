@@ -39,6 +39,7 @@ class ForgotPasswordViewModel extends ChangeNotifier {
   Future<void> sendResetEmail({
     required GlobalKey<FormState> formKey,
     required void Function(String email) onSuccess,
+    Function(String)? onError,
   }) async {
     if (!formKey.currentState!.validate()) return;
 
@@ -55,9 +56,15 @@ class ForgotPasswordViewModel extends ChangeNotifier {
         onSuccess(emailController.text.trim());
       } else {
         _errorKey = response.errorKey ?? LocaleKeys.auth_errors_emailSendFailed;
+        if (onError != null) {
+          onError(response.message ?? 'E-posta gönderilemedi. Lütfen tekrar deneyin.');
+        }
       }
-    } catch (_) {
+    } catch (e) {
       _errorKey = LocaleKeys.auth_errors_emailSendFailed;
+      if (onError != null) {
+        onError('Sunucuya bağlanılamadı. Lütfen tekrar deneyin.');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

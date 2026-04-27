@@ -14,7 +14,7 @@ import '../../utils/locale_keys.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/business/business_add_order_viewmodel.dart';
-
+import '../../widgets/common/loading_overlay.dart';
 
 class BusinessAddOrderView extends StatelessWidget {
   const BusinessAddOrderView({super.key});
@@ -62,68 +62,84 @@ class _BodyState extends State<_Body> {
         title: Text(LocaleKeys.businessAddOrder_title.tr()),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Fotoğraf ──────────────────────────────────────
-            _label(LocaleKeys.businessAddOrder_photoLabel.tr()),
-            const SizedBox(height: 8),
-            PhotoBox(
-              imagePath: vm.selectedImage?.path,
-              onTap: () => _showImagePickerSheet(context, vm),
-            ),
-            const SizedBox(height: 24),
-
-            // ── Bitiş Saati ───────────────────────────────────
-            _label(LocaleKeys.businessAddOrder_endTimeLabel.tr()),
-            const SizedBox(height: 8),
-            TimeWheelSection(vm: vm),
-            const SizedBox(height: 24),
-
-            // ── Konum ─────────────────────────────────────────
-            _label(LocaleKeys.businessAddOrder_locationLabel.tr()),
-            const SizedBox(height: 8),
-            LocationButton(vm: vm),
-            const SizedBox(height: 20),
-
-            // ── İlan Sayısı ───────────────────────────────────
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _label(LocaleKeys.businessAddOrder_quantityLabel.tr()),
-                QuantityRow(vm: vm),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // ── İlan Fiyatı ───────────────────────────────────
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _label(LocaleKeys.businessAddOrder_priceLabel.tr()),
-                PriceField(
-                  controller: _priceController,
-                  onChanged: vm.onPriceChanged,
-                ),
-              ],
-            ),
-            const SizedBox(height: 28),
-
-            // ── Hata ──────────────────────────────────────────
-            if (vm.errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  LocaleKeys.businessAddOrder_errorNoLocation.tr(),
-                  style: const TextStyle(color: Colors.red, fontSize: 13),
-                ),
+      body: LoadingOverlay(
+        isLoading: vm.isSubmitting,
+        moduleType: AppModuleType.business,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Fotoğraf ──────────────────────────────────────
+              _label(LocaleKeys.businessAddOrder_photoLabel.tr()),
+              const SizedBox(height: 8),
+              PhotoBox(
+                imagePath: vm.selectedImage?.path,
+                onTap: () => _showImagePickerSheet(context, vm),
               ),
+              const SizedBox(height: 12),
 
-            // ── Paylaş ────────────────────────────────────────
-            ShareButton(vm: vm),
-          ],
+              // ── Bitiş Saati ───────────────────────────────────
+              _label(LocaleKeys.businessAddOrder_endTimeLabel.tr()),
+              const SizedBox(height: 8),
+              TimeWheelSection(vm: vm),
+              const SizedBox(height: 24),
+
+              // ── Konum ─────────────────────────────────────────
+              _label(LocaleKeys.businessAddOrder_locationLabel.tr()),
+              const SizedBox(height: 8),
+              LocationButton(vm: vm),
+              const SizedBox(height: 20),
+
+              // ── İlan Sayısı ───────────────────────────────────
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _label(LocaleKeys.businessAddOrder_quantityLabel.tr()),
+                  QuantityRow(vm: vm),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // ── İlan Fiyatı ───────────────────────────────────
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _label(LocaleKeys.businessAddOrder_priceLabel.tr()),
+                  PriceField(
+                    controller: _priceController,
+                    onChanged: vm.onPriceChanged,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // ── İndirim Fiyatı ───────────────────────────────────
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _label(LocaleKeys.businessAddOrder_discountPriceLabel.tr()),
+                  PriceField(
+                    controller: _priceController,
+                    onChanged: vm.onPriceChanged,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 28),
+
+              // ── Hata ──────────────────────────────────────────
+              if (vm.errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    LocaleKeys.businessAddOrder_errorNoLocation.tr(),
+                    style: const TextStyle(color: Colors.red, fontSize: 13),
+                  ),
+                ),
+
+              // ── Paylaş ────────────────────────────────────────
+              ShareButton(vm: vm),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: AppBottomNavBar(
@@ -135,15 +151,18 @@ class _BodyState extends State<_Body> {
   }
 
   Widget _label(String text) => Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.primaryTextColor,
-        ),
-      );
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.primaryTextColor,
+    ),
+  );
 
-  void _showImagePickerSheet(BuildContext context, BusinessAddOrderViewModel vm) {
+  void _showImagePickerSheet(
+    BuildContext context,
+    BusinessAddOrderViewModel vm,
+  ) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.white,
@@ -173,16 +192,22 @@ class _BodyState extends State<_Body> {
                     color: AppColors.primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.camera_alt_outlined,
-                      color: AppColors.primaryColor),
+                  child: const Icon(
+                    Icons.camera_alt_outlined,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
                 title: Text(
                   LocaleKeys.businessAddOrder_pickFromCamera.tr(),
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 15),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
-                trailing: const Icon(Icons.chevron_right,
-                    color: AppColors.primaryColor),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.primaryColor,
+                ),
                 onTap: () async {
                   Navigator.pop(context);
                   await vm.pickFromCamera();
@@ -197,16 +222,22 @@ class _BodyState extends State<_Body> {
                     color: AppColors.primaryColor.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.photo_library_outlined,
-                      color: AppColors.primaryColor),
+                  child: const Icon(
+                    Icons.photo_library_outlined,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
                 title: Text(
                   LocaleKeys.businessAddOrder_pickFromGallery.tr(),
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 15),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
                 ),
-                trailing: const Icon(Icons.chevron_right,
-                    color: AppColors.primaryColor),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: AppColors.primaryColor,
+                ),
                 onTap: () async {
                   Navigator.pop(context);
                   await vm.pickFromGallery();
@@ -222,8 +253,7 @@ class _BodyState extends State<_Body> {
 
   void _navigate(BuildContext context, int index) {
     if (index == 2) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, AppRoutes.home, (r) => false);
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (r) => false);
       return;
     }
     final map = {
@@ -238,5 +268,3 @@ class _BodyState extends State<_Body> {
     }
   }
 }
-
-

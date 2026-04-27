@@ -11,6 +11,10 @@ import '../../viewmodels/auth/verification_viewmodel.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/otp_box.dart';
 
+import '../../widgets/common/error_dialog_custom.dart';
+import '../../widgets/common/loading_overlay.dart';
+import '../../models/app_module_type.dart';
+
 class VerificationView extends StatefulWidget {
   const VerificationView({super.key});
 
@@ -35,142 +39,137 @@ class _VerificationViewState extends State<VerificationView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
-        child: AppBar(
-          toolbarHeight: 80,
-          leading: Consumer<VerificationViewModel>(
-            builder: (context, vm, _) => IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                if (vm.isPasswordReset) {
-                  // Şifre sıfırlama akışındaysak girişe dön
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    AppRoutes.login,
-                    (route) => false,
-                  );
-                } else {
-                  // Kayıt akışındaysak kayıt sayfasına dön
-                  Navigator.pushReplacementNamed(context, AppRoutes.register);
-                }
-              },
-            ),
-          ),
-          title: Text(LocaleKeys.auth_verification_title.tr()),
-        ),
-      ),
-      body: Consumer<VerificationViewModel>(
-        builder: (context, vm, _) {
-          return SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(
-                    child: Lottie.asset(
-                      'assets/lottie/otp_verification.json',
-                      height: 280,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  Text(
-                    vm.isPasswordReset
-                        ? 'Şifrenizi yenilemek için doğrulama kodunu girin'
-                        : LocaleKeys.auth_verification_description.tr(),
-                    style: CustomTextStyles.semiBold16Grey,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-
-                  // ... (Row ile OTP inputları - değişmedi)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(4, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: OtpBox(
-                          controller: vm.codeControllers[index],
-                          focusNode: vm.focusNodes[index],
-                          onChanged: (v) => vm.onCodeChanged(index, v, context),
-                          onBackspace: () => vm.onCodeBackspace(index, context),
-                        ),
+    return Consumer<VerificationViewModel>(
+      builder: (context, vm, _) {
+        return LoadingOverlay(
+          isLoading: vm.isLoading,
+          moduleType: AppModuleType.food,
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(80),
+              child: AppBar(
+                toolbarHeight: 80,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    if (vm.isPasswordReset) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.login,
+                        (route) => false,
                       );
-                    }),
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Hata mesajı
-                  if (vm.errorKey != null) ...[
-                    Text(
-                      vm.errorKey!.tr(),
-                      style: CustomTextStyles.regular14Black.copyWith(
-                        color: Colors.red,
+                    } else {
+                      Navigator.pushReplacementNamed(context, AppRoutes.register);
+                    }
+                  },
+                ),
+                title: Text(LocaleKeys.auth_verification_title.tr()),
+              ),
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Lottie.asset(
+                        'assets/lottie/otp_verification.json',
+                        height: 280,
+                        fit: BoxFit.contain,
                       ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    Text(
+                      vm.isPasswordReset
+                          ? 'Şifrenizi yenilemek için doğrulama kodunu girin'
+                          : LocaleKeys.auth_verification_description.tr(),
+                      style: CustomTextStyles.semiBold16Grey,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
-                  ],
 
-                  // Timer veya Tekrar gönder
-                  Column(
-                    children: [
-                      if (!vm.canResend)
-                        Text(
-                          vm.timerDisplay,
-                          style: CustomTextStyles.semiBold16Grey,
-                        )
-                      else
-                        GestureDetector(
-                          onTap: vm.isLoading ? null : vm.resendCode,
-                          child: Text(
-                            LocaleKeys.auth_verification_resend.tr(),
-                            style: CustomTextStyles.extraBold16Primary,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(4, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: OtpBox(
+                            controller: vm.codeControllers[index],
+                            focusNode: vm.focusNodes[index],
+                            onChanged: (v) => vm.onCodeChanged(index, v, context),
+                            onBackspace: () => vm.onCodeBackspace(index, context),
                           ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
-                  CustomButton(
-                    text: LocaleKeys.auth_verification_button.tr(),
-                    isLoading: vm.isLoading,
-                    onPressed: () => vm.verify(
-                      onSuccess: () {
-                        if (vm.isPasswordReset) {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            AppRoutes.resetPassword,
-                            arguments: {'email': vm.email, 'otp': vm.otp},
-                          );
-                        } else {
-                          vm.clearFields();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Hesap doğrulandı! Lütfen giriş yapın.',
-                              ),
-                            ),
-                          );
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            AppRoutes.login,
-                            (route) => false,
-                          );
-                        }
-                      },
+                        );
+                      }),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 40),
+
+                    // Timer veya Tekrar gönder
+                    Column(
+                      children: [
+                        if (!vm.canResend)
+                          Text(
+                            vm.timerDisplay,
+                            style: CustomTextStyles.semiBold16Grey,
+                          )
+                        else
+                          GestureDetector(
+                            onTap: vm.isLoading
+                                ? null
+                                : () => vm.resendCode(
+                                      onError: (msg) => ErrorDialogCustom.show(
+                                          context,
+                                          message: msg),
+                                    ),
+                            child: Text(
+                              LocaleKeys.auth_verification_resend.tr(),
+                              style: CustomTextStyles.extraBold16Primary,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    CustomButton(
+                      text: LocaleKeys.auth_verification_button.tr(),
+                      onPressed: () => vm.verify(
+                        onSuccess: () {
+                          if (vm.isPasswordReset) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              AppRoutes.resetPassword,
+                              arguments: {'email': vm.email, 'otp': vm.otp},
+                            );
+                          } else {
+                            vm.clearFields();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Hesap doğrulandı! Lütfen giriş yapın.',
+                                ),
+                              ),
+                            );
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.login,
+                              (route) => false,
+                            );
+                          }
+                        },
+                        onError: (msg) {
+                          ErrorDialogCustom.show(context, message: msg);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

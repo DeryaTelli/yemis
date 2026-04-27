@@ -1,3 +1,4 @@
+import '../../models/auth/address_model.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../models/auth/auth_response_models.dart';
 import '../../models/auth/user_model.dart';
@@ -102,6 +103,16 @@ class MockAuthService implements IAuthService {
   Future<AuthResponse> resetPassword(ResetPasswordRequest request) async {
     await _simulateDelay();
     return const AuthResponse(success: true, message: 'Password reset successful');
+  }
+
+  @override
+  Future<List<AddressModel>> getAddresses() async {
+    return [];
+  }
+
+  @override
+  Future<bool> createAddress(AddressModel address) async {
+    return true;
   }
 
   @override

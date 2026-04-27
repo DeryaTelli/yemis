@@ -85,12 +85,17 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
   String? getBottomNavRoute(int index) {
     switch (index) {
-      case 0: return AppRoutes.volunteerHome;
-      case 1: return AppRoutes.volunteerSearch;
-      case 2: return AppRoutes.home;
-      case 3: return AppRoutes.volunteerAddListing;
-      case 4: return AppRoutes.volunteerProfile;
-      default: return null;
+      case 0:
+      case 2:
+        return AppRoutes.home;
+      case 1:
+        return AppRoutes.volunteerSearch;
+      case 3:
+        return AppRoutes.volunteerAddListing;
+      case 4:
+        return AppRoutes.volunteerProfile;
+      default:
+        return null;
     }
   }
 }

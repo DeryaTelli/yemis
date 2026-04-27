@@ -43,22 +43,15 @@ class ShareButton extends StatelessWidget {
           ],
         ),
         alignment: Alignment.center,
-        child: vm.isSubmitting
-            ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2.5, color: Colors.white),
-              )
-            : Text(
-                LocaleKeys.businessAddOrder_shareButton.tr(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.3,
-                ),
-              ),
+        child: Text(
+          LocaleKeys.businessAddOrder_shareButton.tr(),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
+        ),
       ),
     );
   }

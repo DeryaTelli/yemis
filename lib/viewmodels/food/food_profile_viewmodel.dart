@@ -95,8 +95,15 @@ class FoodProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> logout(BuildContext context) async {
-    await _authService.logout();
+    // API çağrısını arka planda başlatıyoruz, cevabı beklemiyoruz
+    _authService.logout().catchError((e) {
+      debugPrint('Logout API error: $e');
+    });
+
+    // Yerel verileri anında temizliyoruz
     _userSession.clear();
+
+    // Kullanıcıyı hemen giriş ekranına yönlendiriyoruz
     if (context.mounted) {
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -138,7 +145,7 @@ class FoodProfileViewModel extends ChangeNotifier {
   String? getBottomNavRoute(int index) {
     switch (index) {
       case 0:
-        return AppRoutes.foodHome;
+        return AppRoutes.home;
       case 1:
         return AppRoutes.foodSearch;
       case 2:

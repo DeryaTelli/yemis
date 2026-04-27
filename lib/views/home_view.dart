@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/widgets/common/loading_overlay.dart';
 import '../models/app_module_type.dart';
 import '../models/auth/user_model.dart';
 import '../services/auth/user_session.dart';
@@ -17,14 +18,17 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userType = context.read<UserSession>().userType;
+    final userType = context.watch<UserSession>().userType;
 
     return ChangeNotifierProvider(
+      key: ValueKey(userType),
       create: (_) => HomeViewModel(userType: userType),
       child: const _HomeBody(),
     );
   }
 }
+
+
 
 /// Scaffold + layout — HomeViewModel'i dinler.
 class _HomeBody extends StatefulWidget {
@@ -44,48 +48,52 @@ class _HomeBodyState extends State<_HomeBody> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final vm = context.watch<HomeViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ── Banner Slider ─────────────────────────────
-            const AdBannerSection(),
+    return LoadingOverlay(
+      isLoading: vm.isLoading,
+      moduleType: AppModuleType.food,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // ── Banner Slider ─────────────────────────────
+              const AdBannerSection(),
 
-            const SizedBox(height: 60),
+              const SizedBox(height: 60),
 
-            // ── Navigasyon Kartları ───────────────────────
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: vm.cards.asMap().entries.map((entry) {
-                  final i = entry.key;
-                  final card = entry.value;
+              // ── Navigasyon Kartları ───────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: vm.cards.asMap().entries.map((entry) {
+                    final i = entry.key;
+                    final card = entry.value;
 
-                  return Padding(
-                    padding: EdgeInsets.only(top: i == 0 ? 0 : 16),
-                    child: SizedBox(
-                      height: 140,
-                      child: HomeCard(
-                        item: card,
-                        onTap: () => Navigator.pushNamed(context, card.route),
+                    return Padding(
+                      padding: EdgeInsets.only(top: i == 0 ? 0 : 16),
+                      child: SizedBox(
+                        height: 140,
+                        child: HomeCard(
+                          item: card,
+                          onTap: () {
+                            vm.setLoading(true);
+                            Navigator.pushNamed(context, card.route).then((_) {
+                              if (mounted) vm.setLoading(false);
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

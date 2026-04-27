@@ -195,6 +195,7 @@
     "locationButton": "Konum Seç",
     "quantityLabel": "İlan Sayısı",
     "priceLabel": "İlan Fiyatı",
+    "discountPriceLabel": "İndirim Fiyatı",
     "shareButton": "Paylaş",
     "successMessage": "Siparişiniz başarıyla paylaşıldı!",
     "errorNoLocation": "Lütfen bir konum seçin.",
@@ -222,4 +223,4 @@
     "googlePay": "Google Pay ile öde",
     "applePay": "Apple Pay ile öde"
   }
-}
+}

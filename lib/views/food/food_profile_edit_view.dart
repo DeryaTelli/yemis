@@ -118,23 +118,30 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
             // ─── Aksiyon Butonları ─────────────────────
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  vm.updateAccount();
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryButtonGradient,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text(
-                  'Hesabı Düzenle',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                child: ElevatedButton(
+                  onPressed: () {
+                    vm.updateAccount();
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Hesabı Düzenle',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
                 ),
               ),
             ),

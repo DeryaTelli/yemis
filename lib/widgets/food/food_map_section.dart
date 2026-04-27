@@ -7,10 +7,37 @@ import '../../views/food/food_expanded_map_view.dart';
 
 /// Harita alanını gösterir.
 /// Fotoğraftaki gibi gerçekçi bir harita görünümü sunar.
-class FoodMapSection extends StatelessWidget {
+class FoodMapSection extends StatefulWidget {
   const FoodMapSection({super.key, this.listings = const []});
 
   final List<FoodListing> listings;
+
+  @override
+  State<FoodMapSection> createState() => _FoodMapSectionState();
+}
+
+class _FoodMapSectionState extends State<FoodMapSection> {
+  final MapController _mapController = MapController();
+
+  @override
+  void didUpdateWidget(FoodMapSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // İlanlar geldiğinde haritayı ilk ilana odakla
+    if (widget.listings.isNotEmpty && oldWidget.listings.isEmpty) {
+      final first = widget.listings.first;
+      if (first.latitude != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _mapController.move(LatLng(first.latitude!, first.longitude!), 15.0);
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +45,7 @@ class FoodMapSection extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => FoodExpandedMapView(listings: listings),
+          builder: (_) => FoodExpandedMapView(listings: widget.listings),
         ),
       ),
       child: Container(
@@ -40,56 +67,70 @@ class FoodMapSection extends StatelessWidget {
             child: Stack(
               children: [
                 FlutterMap(
+                  mapController: _mapController,
                   options: MapOptions(
-                    initialCenter: listings.isNotEmpty && listings.first.latitude != null
-                        ? LatLng(listings.first.latitude!, listings.first.longitude!)
+                    initialCenter:
+                        widget.listings.isNotEmpty &&
+                            widget.listings.first.latitude != null
+                        ? LatLng(
+                            widget.listings.first.latitude!,
+                            widget.listings.first.longitude!,
+                          )
                         : const LatLng(41.1993, 32.6247),
-                    initialZoom: 16.5,
+                    initialZoom: 15.0,
                     interactionOptions: const InteractionOptions(
                       flags: InteractiveFlag.none,
                     ),
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      urlTemplate:
+                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                       subdomains: const ['a', 'b', 'c'],
                       userAgentPackageName: 'com.deryatelli.yemis',
                     ),
                     MarkerLayer(
                       markers: [
-                        ...listings.where((l) => l.latitude != null).map(
-                          (l) => Marker(
-                            point: LatLng(l.latitude!, l.longitude!),
-                            width: 32,
-                            height: 32,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryColor,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.15),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 3),
+                        ...widget.listings
+                            .where((l) => l.latitude != null)
+                            .map(
+                              (l) => Marker(
+                                point: LatLng(l.latitude!, l.longitude!),
+                                width: 36,
+                                height: 36,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryColor,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              child: const Center(
-                                child: Icon(
-                                  Icons.restaurant,
-                                  color: Colors.white,
-                                  size: 16,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.restaurant,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
                       ],
                     ),
                   ],
                 ),
-                // ── Konum Bul / Genişlet Butonu (sağ alt) ───────────
+                // ── Genişlet Butonu (sağ alt) ───────────
                 Positioned(
                   right: 12,
                   bottom: 12,
@@ -97,7 +138,8 @@ class FoodMapSection extends StatelessWidget {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => FoodExpandedMapView(listings: listings),
+                        builder: (_) =>
+                            FoodExpandedMapView(listings: widget.listings),
                       ),
                     ),
                     child: Container(
@@ -129,4 +171,3 @@ class FoodMapSection extends StatelessWidget {
     );
   }
 }
-

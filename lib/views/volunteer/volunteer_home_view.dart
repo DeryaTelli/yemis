@@ -11,6 +11,7 @@ import '../../widgets/common/home_app_bar.dart';
 import '../../widgets/volunteer/volunteer_listing_section.dart';
 import '../../widgets/volunteer/volunteer_map_section.dart';
 import '../../widgets/volunteer/volunteer_search_bar.dart';
+import '../../widgets/common/loading_overlay.dart';
 
 /// Gönüllü ana sayfası — tam MVVM ile uygulanmıştır.
 class VolunteerHomeView extends StatelessWidget {
@@ -51,73 +52,75 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
   Widget build(BuildContext context) {
     final vm = context.watch<VolunteerHomeViewModel>();
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      // ─── AppBar ──────────────────────────────────
-      appBar: HomeAppBar(
-        title: vm.appBarTitle,
-        backgroundColor: vm.appBarColor,
-        isLocationTitle: true,
-      ),
+    return LoadingOverlay(
+      isLoading: vm.isLoading,
+      moduleType: AppModuleType.volunteer,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF5F5F5),
+        // ─── AppBar ──────────────────────────────────
+        appBar: HomeAppBar(
+          title: vm.appBarTitle,
+          backgroundColor: vm.appBarColor,
+          isLocationTitle: true,
+        ),
 
-      // ─── Body ────────────────────────────────────
-      body: vm.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
+        // ─── Body ────────────────────────────────────
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
 
-                  // ── Arama Barı ─────────────────────────────
-                  VolunteerSearchBar(
-                    controller: _searchController,
-                    onChanged: vm.onSearchChanged,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // ── Açık Yeşil/Yeşil Degrade Çizgi (Opsiyonel görsel şıklık için)
-                  // Tasarımda arama ile harita arası boşluk var
-
-                  // ── Harita Alanı ────────────────────────────
-                  VolunteerMapSection(listings: vm.filteredListings),
-                  const SizedBox(height: 20),
-
-                  // ── Sana Yakın Yerler ───────────────────────
-                  VolunteerListingSection(
-                    title: LocaleKeys.volunteerHome_nearbyPlaces.tr(),
-                    section: VolunteerSection.nearYou,
-                  ),
-                  const SizedBox(height: 24),
-
-                  // ── Bugün Popüler Olanlar ───────────────────
-                  VolunteerListingSection(
-                    title: LocaleKeys.volunteerHome_todayPopular.tr(),
-                    section: VolunteerSection.todayPopular,
-                  ),
-                  const SizedBox(height: 32),
-                ],
+              // ── Arama Barı ─────────────────────────────
+              VolunteerSearchBar(
+                controller: _searchController,
+                onChanged: vm.onSearchChanged,
               ),
-            ),
-      bottomNavigationBar: AppBottomNavBar(
-        selectedIndex: vm.selectedIndex,
-        onItemSelected: (index) {
-          final route = vm.getBottomNavRoute(index);
+              const SizedBox(height: 16),
 
-          if (route != null) {
-            if (index == 2) {
-              if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
+              // ── Açık Yeşil/Yeşil Degrade Çizgi (Opsiyonel görsel şıklık için)
+              // Tasarımda arama ile harita arası boşluk var
+
+              // ── Harita Alanı ────────────────────────────
+              VolunteerMapSection(listings: vm.filteredListings),
+              const SizedBox(height: 20),
+
+              // ── Sana Yakın Yerler ───────────────────────
+              VolunteerListingSection(
+                title: LocaleKeys.volunteerHome_nearbyPlaces.tr(),
+                section: VolunteerSection.nearYou,
+              ),
+              const SizedBox(height: 24),
+
+              // ── Bugün Popüler Olanlar ───────────────────
+              VolunteerListingSection(
+                title: LocaleKeys.volunteerHome_todayPopular.tr(),
+                section: VolunteerSection.todayPopular,
+              ),
+              const SizedBox(height: 32),
+            ],
+          ),
+        ),
+        bottomNavigationBar: AppBottomNavBar(
+          selectedIndex: vm.selectedIndex,
+          onItemSelected: (index) {
+            final route = vm.getBottomNavRoute(index);
+
+            if (route != null) {
+              if (index == 2) {
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
+                }
+              } else if (ModalRoute.of(context)?.settings.name != route) {
+                Navigator.pushReplacementNamed(context, route);
               }
-            } else if (ModalRoute.of(context)?.settings.name != route) {
-              Navigator.pushReplacementNamed(context, route);
+            } else {
+              vm.onTabSelected(index);
             }
-          } else {
-            vm.onTabSelected(index);
-          }
-        },
-        moduleType: AppModuleType.volunteer,
+          },
+          moduleType: AppModuleType.volunteer,
+        ),
       ),
     );
   }

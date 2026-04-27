@@ -9,16 +9,21 @@ class VerificationViewModel extends ChangeNotifier {
   final String email;
   final bool isPasswordReset;
 
-  VerificationViewModel(this._authService,
-      {required this.email, this.isPasswordReset = false}) {
+  VerificationViewModel(
+    this._authService, {
+    required this.email,
+    this.isPasswordReset = false,
+  }) {
     _startTimer();
   }
 
   String get otp => _fullCode;
 
   // --- Controllers (4 haneli kod için) ---
-  final List<TextEditingController> codeControllers =
-      List.generate(4, (_) => TextEditingController());
+  final List<TextEditingController> codeControllers = List.generate(
+    4,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> focusNodes = List.generate(4, (_) => FocusNode());
 
   // --- State ---
@@ -87,12 +92,13 @@ class VerificationViewModel extends ChangeNotifier {
     _errorKey = null;
   }
 
-  Future<void> verify({required VoidCallback onSuccess}) async {
-    if (_fullCode.length < 4) {
-      _errorKey = LocaleKeys.auth_validation_codeIncomplete;
-      notifyListeners();
-      return;
-    }
+  /// Kodu doğrular. Başarılıysa [onSuccess] çağrılır.
+  Future<void> verify({
+    required VoidCallback onSuccess,
+    Function(String)? onError,
+  }) async {
+    final code = otp;
+    if (code.length < 4) return;
 
     _isLoading = true;
     _errorKey = null;
@@ -100,22 +106,32 @@ class VerificationViewModel extends ChangeNotifier {
 
     try {
       final response = await _authService.verifyCode(
-        VerifyCodeRequest(email: email, code: _fullCode),
+        VerifyCodeRequest(email: email, code: code),
       );
+
       if (response.success) {
         onSuccess();
       } else {
         _errorKey = response.errorKey ?? LocaleKeys.auth_errors_codeInvalid;
+        if (onError != null) {
+          onError(
+            response.message ?? 'Doğrulama kodu geçersiz veya süresi dolmuş.',
+          );
+        }
       }
-    } catch (_) {
-      _errorKey = LocaleKeys.auth_errors_codeInvalid;
+    } catch (e) {
+      _errorKey = LocaleKeys.auth_errors_general;
+      if (onError != null) {
+        onError('Sunucuya bağlanılamadı. Lütfen tekrar deneyin.');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> resendCode() async {
+  /// Kodu tekrar gönderir.
+  Future<void> resendCode({Function(String)? onError}) async {
     if (!canResend) return;
 
     _isLoading = true;
@@ -127,10 +143,19 @@ class VerificationViewModel extends ChangeNotifier {
       if (response.success) {
         _startTimer();
       } else {
-        _errorKey = response.errorKey ?? LocaleKeys.auth_errors_codeSendFailed;
+        _errorKey = response.errorKey ?? LocaleKeys.auth_errors_emailSendFailed;
+        if (onError != null) {
+          onError(
+            response.message ??
+                'Kod tekrar gönderilemedi. Lütfen biraz bekleyip tekrar deneyin.',
+          );
+        }
       }
-    } catch (_) {
-      _errorKey = LocaleKeys.auth_errors_codeSendFailed;
+    } catch (e) {
+      _errorKey = LocaleKeys.auth_errors_general;
+      if (onError != null) {
+        onError('Sunucuya bağlanılamadı. Lütfen tekrar deneyin.');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

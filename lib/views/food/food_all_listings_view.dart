@@ -20,12 +20,7 @@ class FoodAllListingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        title: Text(title, style: CustomTextStyles.orelegaOne32White.copyWith(fontSize: 24)),
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text(title)),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: listings.length,
@@ -39,11 +34,8 @@ class FoodAllListingsView extends StatelessWidget {
             onFavoriteTap: () {
               // Not: Burada ViewModel'e erişim gerekebilir eğer favori işlemi yapılacaksa
             },
-            onTap: () => Navigator.pushNamed(
-              context,
-              '/food-detail',
-              arguments: item,
-            ),
+            onTap: () =>
+                Navigator.pushNamed(context, '/food-detail', arguments: item),
           );
         },
       ),

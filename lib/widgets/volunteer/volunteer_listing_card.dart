@@ -27,218 +27,210 @@ class VolunteerListingCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: CustomPaint(
-        painter: _GradientBorderPainter(
-          gradient: AppColors.volunteerBackgroundGradient,
-          width: bWidth,
-          borderRadius: bRadius,
+      child: Container(
+        width: width ?? 200,
+        decoration: BoxDecoration(
+          color: Colors.white70,
+          borderRadius: BorderRadius.circular(bRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-        child: Container(
-          width: width ?? 200,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(bRadius),
-            border: Border.all(color: AppColors.volunteerColor, width: 1.5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // ── Resim Alanı ──────────────────────────
-                Stack(
-                  children: [
-                    // Resim
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(bRadius - 2),
-                      child: SizedBox(
-                        height: imageHeight,
-                        width: double.infinity,
-                        child: Image.asset(
-                          listing.imageUrl,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Container(
-                            color: AppColors.volunteerColor.withValues(
-                              alpha: 0.1,
-                            ),
-                            child: const Icon(
-                              Icons.volunteer_activism_rounded,
-                              color: AppColors.volunteerColor,
-                              size: 32,
-                            ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Resim Alanı ──────────────────────────
+              Stack(
+                children: [
+                  // Resim
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(bRadius - 2),
+                    child: SizedBox(
+                      height: imageHeight,
+                      width: double.infinity,
+                      child: Image.asset(
+                        listing.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          color: AppColors.volunteerColor.withValues(
+                            alpha: 0.1,
+                          ),
+                          child: const Icon(
+                            Icons.volunteer_activism_rounded,
+                            color: AppColors.volunteerColor,
+                            size: 32,
                           ),
                         ),
                       ),
                     ),
+                  ),
 
-                    // Rating badge (sağ-üst)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.volunteerColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.star_rounded,
+                  // Rating badge (sağ-üst)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.volunteerColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.star_rounded,
+                            color: Colors.white,
+                            size: 10,
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            listing.rating.toString(),
+                            style: const TextStyle(
                               color: Colors.white,
-                              size: 10,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
                             ),
-                            const SizedBox(width: 2),
-                            Text(
-                              listing.rating.toString(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    // User Logo (sol-alt)
-                    Positioned(
-                      bottom: 8,
-                      left: 8,
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                        child: ClipOval(
-                          child:
-                              listing.userLogoUrl != null &&
-                                  listing.userLogoUrl!.isNotEmpty
-                              ? Image.asset(
-                                  listing.userLogoUrl!,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => const Icon(
-                                    Icons.person_rounded,
-                                    color: AppColors.volunteerColor,
-                                    size: 20,
-                                  ),
-                                )
-                              : const Icon(
+                  ),
+                  // User Logo (sol-alt)
+                  Positioned(
+                    bottom: 8,
+                    left: 8,
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: ClipOval(
+                        child:
+                            listing.userLogoUrl != null &&
+                                listing.userLogoUrl!.isNotEmpty
+                            ? Image.asset(
+                                listing.userLogoUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => const Icon(
                                   Icons.person_rounded,
                                   color: AppColors.volunteerColor,
                                   size: 20,
                                 ),
-                        ),
+                              )
+                            : const Icon(
+                                Icons.person_rounded,
+                                color: AppColors.volunteerColor,
+                                size: 20,
+                              ),
                       ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // ── Bilgi Alanı ──────────────────────────
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Kullanıcı Adı
+                        Text(
+                          listing.userName,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.primaryTextColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 1),
+
+                        // Başlık
+                        Text(
+                          listing.title,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryTextColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 1),
+
+                        // Zaman
+                        Text(
+                          listing.timeRange,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.primaryTextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Column(
+                      children: [
+                        // Ayırıcı çizgi
+                        CustomPaint(
+                          painter: _DashedLinePainter(),
+                          size: const Size(double.infinity, 1),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Gönüllü Ol Butonu
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 5,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: AppColors.volunteerBackgroundGradient,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              LocaleKeys.volunteerDetail_becomeButton.tr(),
+                              style: CustomTextStyles.semiBold13White,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-
-                // ── Bilgi Alanı ──────────────────────────
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Kullanıcı Adı
-                          Text(
-                            listing.userName,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.primaryTextColor,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 1),
-
-                          // Başlık
-                          Text(
-                            listing.title,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryTextColor,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 1),
-
-                          // Zaman
-                          Text(
-                            listing.timeRange,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryTextColor,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Column(
-                        children: [
-                          // Ayırıcı çizgi
-                          CustomPaint(
-                            painter: _DashedLinePainter(),
-                            size: const Size(double.infinity, 1),
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          // Gönüllü Ol Butonu
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: AppColors.volunteerBackgroundGradient,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                LocaleKeys.volunteerDetail_becomeButton.tr(),
-                                style: CustomTextStyles.semiBold13White,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

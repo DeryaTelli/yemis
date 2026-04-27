@@ -183,7 +183,11 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.location_on_outlined,
                     title: 'Kayıtlı Adreslerim',
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.addresses,
+                      arguments: AppModuleType.food,
+                    ),
                   ),
                   ProfileMenuTile(
                     icon: Icons.credit_card_rounded,

@@ -1,3 +1,4 @@
+import '../../models/auth/address_model.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../models/auth/auth_response_models.dart';
 
@@ -24,4 +25,10 @@ abstract class IAuthService {
 
   /// Oturumu kapatır.
   Future<AuthResponse> logout();
+
+  /// Kullanıcının adreslerini listeler.
+  Future<List<AddressModel>> getAddresses();
+
+  /// Yeni adres oluşturur.
+  Future<bool> createAddress(AddressModel address);
 }

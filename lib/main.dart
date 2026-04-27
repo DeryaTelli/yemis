@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/viewmodels/business/business_profile_viewmodel.dart';
@@ -10,6 +11,8 @@ import 'services/food/mock_food_service.dart';
 import 'services/auth/api_auth_service.dart';
 import 'services/auth/i_auth_service.dart';
 import 'services/auth/user_session.dart';
+import 'models/auth/address_model.dart';
+import 'models/app_module_type.dart';
 import 'models/food/food_listing.dart';
 import 'utils/routes/app_routes.dart';
 import 'utils/theme/app_theme.dart';
@@ -42,6 +45,8 @@ import 'views/volunteer/volunteer_listings_view.dart';
 import 'views/volunteer/volunteer_profile_view.dart';
 import 'views/volunteer/volunteer_search_view.dart';
 import 'views/volunteer/volunteer_detail_view.dart';
+import 'views/auth/addresses_view.dart';
+import 'views/auth/food_add_address_view.dart';
 import 'views/common/language_select_view.dart';
 import 'views/business/business_profile_view.dart';
 import 'views/business/business_add_order_view.dart';
@@ -51,26 +56,44 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
+  final authService = ApiAuthService();
+  final userSession = UserSession();
+
+  // Kayıtlı token'ı yükle
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('auth_token');
+  if (token != null) {
+    authService.setToken(token);
+    // UserSession için de gerekebilir (currentUser null ise bile token kalsın diye)
+  }
+
+  MockFoodService().setUserSession(userSession);
+
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('tr'), Locale('en')],
       path: 'assets/translations',
       fallbackLocale: const Locale('tr'),
-      child: const MyApp(),
+      child: MyApp(
+        authService: authService,
+        userSession: userSession,
+      ),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ApiAuthService authService;
+  final UserSession userSession;
+
+  const MyApp({
+    super.key,
+    required this.authService,
+    required this.userSession,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Servis instance'ı
-    final authService = ApiAuthService();
-    final userSession = UserSession();
-    MockFoodService().setUserSession(userSession);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: userSession),
@@ -301,6 +324,24 @@ class MyApp extends StatelessWidget {
             case AppRoutes.businessAddOrder:
               return MaterialPageRoute(
                 builder: (_) => const BusinessAddOrderView(),
+                settings: settings,
+              );
+            case AppRoutes.addresses:
+              final moduleType = settings.arguments as AppModuleType? ?? AppModuleType.food;
+              return MaterialPageRoute(
+                builder: (_) => AddressesView(moduleType: moduleType),
+                settings: settings,
+              );
+            case AppRoutes.foodAddAddress:
+              final args = settings.arguments as Map<String, dynamic>?;
+              final address = args?['address'] as AddressModel?;
+              final moduleType = args?['moduleType'] as AppModuleType? ?? AppModuleType.food;
+              
+              return MaterialPageRoute(
+                builder: (_) => FoodAddAddressView(
+                  address: address,
+                  moduleType: moduleType,
+                ),
                 settings: settings,
               );
             case AppRoutes.languageSelect:

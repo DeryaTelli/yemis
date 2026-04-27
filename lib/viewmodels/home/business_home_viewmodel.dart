@@ -25,11 +25,10 @@ class BusinessHomeViewModel extends ChangeNotifier {
   String? getBottomNavRoute(int index) {
     switch (index) {
       case 0:
-        return AppRoutes.businessHome;
-      case 1:
-        return AppRoutes.businessApprovals;
       case 2:
         return AppRoutes.home;
+      case 1:
+        return AppRoutes.businessApprovals;
       case 3:
         return AppRoutes.businessAddOrder;
       case 4:

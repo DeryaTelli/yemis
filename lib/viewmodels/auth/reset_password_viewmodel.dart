@@ -47,6 +47,7 @@ class ResetPasswordViewModel extends ChangeNotifier {
   Future<void> resetPassword({
     required GlobalKey<FormState> formKey,
     required VoidCallback onSuccess,
+    Function(String)? onError,
   }) async {
     if (!formKey.currentState!.validate()) return;
 
@@ -73,9 +74,15 @@ class ResetPasswordViewModel extends ChangeNotifier {
         onSuccess();
       } else {
         _errorKey = response.errorKey ?? LocaleKeys.auth_errors_general;
+        if (onError != null) {
+          onError(response.message ?? 'Şifre yenilenemedi. Lütfen tekrar deneyin.');
+        }
       }
-    } catch (_) {
+    } catch (e) {
       _errorKey = LocaleKeys.auth_errors_general;
+      if (onError != null) {
+        onError('Sunucuya bağlanılamadı. Lütfen tekrar deneyin.');
+      }
     } finally {
       _isLoading = false;
       notifyListeners();

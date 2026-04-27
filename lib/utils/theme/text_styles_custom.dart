@@ -38,6 +38,7 @@ class CustomTextStyles {
   static TextStyle get bold17White => GoogleFonts.nunito(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white, height: 26 / 17, letterSpacing: 0.1);
 
   // Primary Orange (0xFFFE8800)
+  static TextStyle get regular14Primary => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w400, color: const Color(0xFFFE8800));
   static TextStyle get bold14Primary => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w700, color: const Color(0xFFFE8800), height: 24 / 14);
   static TextStyle get semiBold16Primary => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFFFE8800), height: 1.2);
   static TextStyle get extraBold16Primary => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w800, color: const Color(0xFFFE8800));
@@ -50,6 +51,7 @@ class CustomTextStyles {
   static TextStyle get orelegaOne18DarkGrey => GoogleFonts.orelegaOne(fontSize: 18, fontWeight: FontWeight.w400, color: const Color(0xFF4F4F4F));
   static TextStyle get orelegaOne32White => GoogleFonts.orelegaOne(fontSize: 32, fontWeight: FontWeight.w400, color: Colors.white);
   static TextStyle get orelegaOne32Primary => GoogleFonts.orelegaOne(fontSize: 32, fontWeight: FontWeight.w400, color: const Color(0xFFFE8800), height: 1.2);
+  static TextStyle get orelegaOne30Primary => GoogleFonts.orelegaOne(fontSize: 30, fontWeight: FontWeight.w400, color: const Color(0xFFFE8800), height: 1.2);
 
   // --- Plus Jakarta Sans ---
 

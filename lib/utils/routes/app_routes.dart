@@ -31,4 +31,6 @@ class AppRoutes {
   static const String languageSelect = '/language-select';
   static const String foodAllListings = '/food-all-listings';
   static const String volunteerAllListings = '/volunteer-all-listings';
+  static const String addresses = '/addresses';
+  static const String foodAddAddress = '/food-add-address';
 }

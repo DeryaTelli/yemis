@@ -11,6 +11,9 @@ import '../../widgets/food/food_detail_tab_bar.dart';
 import '../../widgets/food/food_order_tab.dart';
 import '../../widgets/food/food_review_tab.dart';
 
+import '../../widgets/common/loading_overlay.dart';
+import '../../models/app_module_type.dart';
+
 /// Yemek ilan detay ekranı.
 class FoodDetailView extends StatelessWidget {
   const FoodDetailView({super.key, required this.listing});
@@ -40,44 +43,44 @@ class _FoodDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<FoodDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: vm.isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryColor),
-            )
-          : Stack(
+    return LoadingOverlay(
+      isLoading: vm.isLoading,
+      moduleType: AppModuleType.food,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // ── Ana İçerik ────────────────────────────
+            Column(
               children: [
-                // ── Ana İçerik ────────────────────────────
-                Column(
-                  children: [
-                    // Hero Resim
-                    FoodDetailHeroImage(listing: listing, vm: vm),
+                // Hero Resim
+                FoodDetailHeroImage(listing: listing, vm: vm),
 
-                    // Başlık Alanı
-                    FoodDetailHeader(listing: listing),
+                // Başlık Alanı
+                FoodDetailHeader(listing: listing),
 
-                    // Tab Bar
-                    FoodDetailTabBar(vm: vm),
+                // Tab Bar
+                FoodDetailTabBar(vm: vm),
 
-                    // Tab İçeriği
-                    Expanded(
-                      child: vm.selectedTab == 0
-                          ? const FoodOrderTab()
-                          : const FoodReviewTab(),
-                    ),
-                  ],
-                ),
-
-                // ── Alt Fiyat + Rezerve Bar ───────────────
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: FoodDetailBottomBar(vm: vm),
+                // Tab İçeriği
+                Expanded(
+                  child: vm.selectedTab == 0
+                      ? const FoodOrderTab()
+                      : const FoodReviewTab(),
                 ),
               ],
             ),
+
+            // ── Alt Fiyat + Rezerve Bar ───────────────
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: FoodDetailBottomBar(vm: vm),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

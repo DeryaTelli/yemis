@@ -76,6 +76,7 @@ class VolunteerListingSection extends StatelessWidget {
               255, // İlan kartı yüksekliği (Önceden 240'tı, taşmayı önlemek için 255 yapıldı)
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
             itemCount: sectionListings.length,
             separatorBuilder: (_, __) => const SizedBox(width: 16),
             itemBuilder: (context, index) {

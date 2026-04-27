@@ -223,7 +223,13 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                     icon: Icons.location_on_outlined,
                     title: LocaleKeys.volunteerProfile_savedAddresses.tr(),
                     iconColor: AppColors.volunteerColor,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.addresses,
+                        arguments: AppModuleType.volunteer,
+                      );
+                    },
                   ),
                   ProfileMenuTile(
                     icon: Icons.credit_card_rounded,

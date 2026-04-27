@@ -11,6 +11,8 @@ import '../../widgets/common/search_map_view.dart';
 import '../../widgets/food/food_filter_bottom_sheet.dart';
 import '../../widgets/food/food_listing_card.dart';
 
+import '../../widgets/common/loading_overlay.dart';
+
 class FoodSearchView extends StatefulWidget {
   const FoodSearchView({super.key});
 
@@ -45,50 +47,48 @@ class _FoodSearchViewState extends State<FoodSearchView> {
       value: _vm,
       child: Consumer<FoodSearchViewModel>(
         builder: (context, vm, child) {
-          return Scaffold(
-            backgroundColor: const Color(0xFFF5F5F5),
-            appBar: SearchAppBarCustom(
-              searchController: _searchController,
-              onSearchChanged: vm.onSearchChanged,
-              onFilterTap: () => _showFilterBottomSheet(context, vm),
-              isMapView: vm.isMapView,
-              onViewModeChanged: vm.toggleViewMode,
-            ),
-            body: vm.isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primaryColor,
-                    ),
-                  )
-                : vm.isMapView
-                    ? SearchMapView(
-                        listings: vm.filteredListings,
-                        accentColor: AppColors.primaryColor,
-                        onMarkerTap: (listing) {
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.foodDetail,
-                            arguments: listing,
-                          );
-                        },
-                      )
-                    : _buildListView(vm),
-            bottomNavigationBar: AppBottomNavBar(
-              selectedIndex: vm.selectedIndex,
-              onItemSelected: (index) {
-                final route = vm.getBottomNavRoute(index);
-                if (route != null) {
-                  if (index == 2) {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, route, (r) => false);
-                  } else if (ModalRoute.of(context)?.settings.name != route) {
-                    Navigator.pushReplacementNamed(context, route);
+          return LoadingOverlay(
+            isLoading: vm.isLoading,
+            moduleType: AppModuleType.food,
+            child: Scaffold(
+              backgroundColor: const Color(0xFFF5F5F5),
+              appBar: SearchAppBarCustom(
+                searchController: _searchController,
+                onSearchChanged: vm.onSearchChanged,
+                onFilterTap: () => _showFilterBottomSheet(context, vm),
+                isMapView: vm.isMapView,
+                onViewModeChanged: vm.toggleViewMode,
+              ),
+              body: vm.isMapView
+                  ? SearchMapView(
+                      listings: vm.filteredListings,
+                      accentColor: AppColors.primaryColor,
+                      onMarkerTap: (listing) {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.foodDetail,
+                          arguments: listing,
+                        );
+                      },
+                    )
+                  : _buildListView(vm),
+              bottomNavigationBar: AppBottomNavBar(
+                selectedIndex: vm.selectedIndex,
+                onItemSelected: (index) {
+                  final route = vm.getBottomNavRoute(index);
+                  if (route != null) {
+                    if (index == 2) {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, route, (r) => false);
+                    } else if (ModalRoute.of(context)?.settings.name != route) {
+                      Navigator.pushReplacementNamed(context, route);
+                    }
+                  } else {
+                    vm.onTabSelected(index);
                   }
-                } else {
-                  vm.onTabSelected(index);
-                }
-              },
-              moduleType: AppModuleType.food,
+                },
+                moduleType: AppModuleType.food,
+              ),
             ),
           );
         },

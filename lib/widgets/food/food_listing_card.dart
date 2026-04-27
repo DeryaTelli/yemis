@@ -26,9 +26,8 @@ class FoodListingCard extends StatelessWidget {
       child: Container(
         width: width ?? 200,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white70,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.primaryColor, width: 1.5),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.08),
@@ -67,68 +66,62 @@ class FoodListingCard extends StatelessWidget {
                   ),
 
                   // Favori butonu (sol-üst)
-                  Row(
-                    children: [
-                      Positioned(
-                        top: 8,
-                        left: 8,
-                        child: GestureDetector(
-                          onTap: onFavoriteTap,
-                          child: Container(
-                            width: 28,
-                            height: 28,
-                            decoration: const BoxDecoration(
+                  Positioned(
+                    top: 4,
+                    left: 8,
+                    child: GestureDetector(
+                      onTap: onFavoriteTap,
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          listing.isFavorite
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          color: listing.isFavorite ? Colors.red : Colors.grey,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Rating badge (sağ-üst)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.6),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.star_rounded,
+                            color: Color(0xFFFFC107),
+                            size: 10,
+                          ),
+                          const SizedBox(width: 2),
+                          Text(
+                            listing.rating.toString(),
+                            style: const TextStyle(
                               color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              listing.isFavorite
-                                  ? Icons.favorite_rounded
-                                  : Icons.favorite_border_rounded,
-                              color: listing.isFavorite
-                                  ? Colors.red
-                                  : Colors.grey,
-                              size: 20,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                      const SizedBox(width: 104),
-                      // Rating badge (sağ-üst)
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.6),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.star_rounded,
-                                color: Color(0xFFFFC107),
-                                size: 10,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                listing.rating.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
 
                   // Business Logo (sol-alt) - YENİ
@@ -221,10 +214,9 @@ class FoodListingCard extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     // Ayırıcı çizgi (kesikli)
-                    const Divider(
-                      color: AppColors.hintTextColor,
-                      thickness: 0.5,
-                      height: 1,
+                    CustomPaint(
+                      painter: _DashedLinePainter(),
+                      size: const Size(double.infinity, 1),
                     ),
                     const SizedBox(height: 12),
 
@@ -249,4 +241,25 @@ class FoodListingCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _DashedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..color = AppColors.primaryColor.withValues(alpha: 0.3)
+      ..strokeWidth = 1;
+
+    var dashWidth = 4.0;
+    var dashSpace = 3.0;
+    double startX = 0;
+
+    while (startX < size.width) {
+      canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
