@@ -52,7 +52,7 @@ class BusinessProfileViewModel extends ChangeNotifier {
   String? getBottomNavRoute(int index) {
     switch (index) {
       case 0:
-        return AppRoutes.home;
+        return AppRoutes.businessHome;
       case 1:
         return AppRoutes.businessApprovals;
       case 2:

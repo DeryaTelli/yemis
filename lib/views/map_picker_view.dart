@@ -212,6 +212,9 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
                 Navigator.pop(context, {
                   'latLng': currentVm.center,
                   'address': currentVm.currentAddress,
+                  'city': currentVm.city,
+                  'district': currentVm.district,
+                  'neighborhood': currentVm.neighborhood,
                 });
               },
             ),

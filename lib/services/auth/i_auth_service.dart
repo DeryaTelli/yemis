@@ -31,4 +31,10 @@ abstract class IAuthService {
 
   /// Yeni adres oluşturur.
   Future<bool> createAddress(AddressModel address);
+
+  /// Mevcut adresi günceller.
+  Future<bool> updateAddress(int id, AddressModel address);
+
+  /// Adresi siler.
+  Future<bool> deleteAddress(int id);
 }

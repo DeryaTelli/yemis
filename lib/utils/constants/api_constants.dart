@@ -18,4 +18,9 @@ class ApiConstants {
   static String reviewsForStore(int storeId) => '/api/reviews/stores/$storeId';
   static const String myReviews = '/api/reviews/my';
   static String reviewById(int id) => '/api/reviews/$id';
+
+  // --- Locations ---
+  static const String provinces = '/api/locations/provinces';
+  static String districts(int provinceId) => '/api/locations/provinces/$provinceId/districts';
+  static String neighborhoods(int districtId) => '/api/locations/districts/$districtId/neighborhoods';
 }

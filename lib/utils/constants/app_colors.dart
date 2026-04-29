@@ -49,11 +49,11 @@ class AppColors {
   // 7. Gönüllü ol yeri arka planı (Green Gradient)
   static const LinearGradient volunteerBackgroundGradient = LinearGradient(
     colors: [
-      Color(0xFF22B05A), // 0%
-      Color(0xFF24F276), // 39%
-      Color(0xFF22B05A), // 100%
+      Color.fromARGB(225, 34, 176, 91), // 0%
+      Color.fromARGB(211, 33, 197, 99), // 39%
+      Color.fromARGB(221, 34, 176, 91), // 100%
     ],
-    stops: [0.0, 0.39, 1.0],
+    stops: [0.0, 0.16, 1.0],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );

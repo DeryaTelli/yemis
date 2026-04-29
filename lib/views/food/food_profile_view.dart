@@ -75,11 +75,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'Profil',
-          ),
-        ),
+      appBar: AppBar(title: const Text('Profil')),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -87,7 +83,8 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
           children: [
             // ─── Header: Avatar & User Info ─────────────────
             GestureDetector(
-              onTap: () => Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
+              onTap: () =>
+                  Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
               child: Row(
                 children: [
                   // Avatar
@@ -131,7 +128,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  
+
                   // Name & Email
                   Expanded(
                     child: Column(
@@ -142,14 +139,11 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                           style: CustomTextStyles.orelegaOne18DarkGrey,
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          vm.email,
-                          style: CustomTextStyles.italic14Grey,
-                        ),
+                        Text(vm.email, style: CustomTextStyles.italic14Grey),
                       ],
                     ),
                   ),
-                  
+
                   const Icon(
                     Icons.chevron_right_rounded,
                     color: Color(0xFFFE8800),
@@ -164,7 +158,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
             // ─── Menu Container ──────────────────────────────
             Container(
               decoration: BoxDecoration(
-                color: const Color(0xFFF5E4CA),
+                color: AppColors.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -197,7 +191,8 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.person_outline_rounded,
                     title: 'Profil Güncelle',
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
                   ),
                   ProfileMenuTile(
                     icon: Icons.lock_outline_rounded,
@@ -235,11 +230,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
           if (route != null) {
             if (index == 2) {
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  route,
-                  (r) => false,
-                );
+                Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
               }
             } else if (ModalRoute.of(context)?.settings.name != route) {
               Navigator.pushReplacementNamed(context, route);
@@ -293,5 +284,3 @@ class _BSOption extends StatelessWidget {
     );
   }
 }
-
-

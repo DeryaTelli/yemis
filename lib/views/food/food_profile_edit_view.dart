@@ -120,7 +120,9 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
               width: double.infinity,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: AppColors.primaryButtonGradient,
+                  gradient: primaryColor == AppColors.volunteerColor
+                      ? AppColors.volunteerBackgroundGradient
+                      : AppColors.primaryButtonGradient,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: ElevatedButton(

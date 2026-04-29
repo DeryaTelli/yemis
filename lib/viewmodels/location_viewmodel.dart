@@ -13,6 +13,20 @@ enum LocationPermissionState { unknown, granted, denied }
 
 enum _PendingAction { none, share, pick }
 
+class _GeoResult {
+  final String addressLine;
+  final String city;
+  final String district;
+  final String neighborhood;
+
+  const _GeoResult({
+    required this.addressLine,
+    required this.city,
+    required this.district,
+    required this.neighborhood,
+  });
+}
+
 class LocationViewModel extends ChangeNotifier {
   LocationViewModel({
     required UserSession userSession,
@@ -138,8 +152,8 @@ class LocationViewModel extends ChangeNotifier {
       );
 
       // Reverse Geocode
-      final address = await _reverseGeocode(pos.latitude, pos.longitude);
-      await _saveLocation(address, pos.latitude, pos.longitude);
+      final geo = await _reverseGeocode(pos.latitude, pos.longitude);
+      await _saveLocation(geo, pos.latitude, pos.longitude);
 
       await _markShown();
       onSuccess(pos.latitude, pos.longitude);
@@ -195,8 +209,8 @@ class LocationViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     try {
-      final address = await _reverseGeocode(lat, lng);
-      await _saveLocation(address, lat, lng);
+      final geo = await _reverseGeocode(lat, lng);
+      await _saveLocation(geo, lat, lng);
       await _markShown();
       onDone();
     } catch (_) {
@@ -209,7 +223,8 @@ class LocationViewModel extends ChangeNotifier {
 
   // ─── Nominatim Reverse Geocoding ──────────────────
 
-  Future<String> _reverseGeocode(double lat, double lng) async {
+  /// Lat/Lng'den Nominatim ile adres bilgilerini çeker.
+  Future<_GeoResult> _reverseGeocode(double lat, double lng) async {
     try {
       final uri = Uri.https('nominatim.openstreetmap.org', '/reverse', {
         'lat': lat.toString(),
@@ -223,51 +238,99 @@ class LocationViewModel extends ChangeNotifier {
         final data = jsonDecode(res.body);
         final address = data['address'];
         if (address != null) {
-          final city =
-              address['city'] ??
-              address['town'] ??
-              address['village'] ??
-              address['suburb'] ??
-              '';
-          final road = address['road'] ?? '';
-          if (city.isNotEmpty && road.isNotEmpty) {
-            return '$city, $road';
-          } else if (city.isNotEmpty) {
-            return city;
-          }
+          final province = (address['province']?.toString() ?? '')
+              .replaceAll(' İli', '')
+              .trim();
+          final cityRaw =
+              (address['city'] ?? address['town'] ?? address['village'] ?? '')
+                  .toString();
+          final districtClean = cityRaw.replaceAll(' İlçesi', '').trim();
+          final neighborhoodClean =
+              (address['suburb'] ??
+                      address['neighbourhood'] ??
+                      address['quarter'] ??
+                      '')
+                  .toString()
+                  .trim();
+          final road = (address['road'] ?? '').toString();
+          final houseNumber = (address['house_number'] ?? '').toString();
+
+          final details = [
+            if (road.isNotEmpty) road,
+            if (houseNumber.isNotEmpty) 'No: $houseNumber',
+          ].join(', ');
+
+          final parts = [
+            if (province.isNotEmpty) province,
+            if (districtClean.isNotEmpty) districtClean,
+            if (neighborhoodClean.isNotEmpty) neighborhoodClean,
+            if (details.isNotEmpty) details,
+          ];
+
+          final addressLine = parts.length >= 3
+              ? parts.join(' / ')
+              : (data['display_name'] ?? 'Bilinmeyen Konum') as String;
+
+          debugPrint(
+            '📍 [ReverseGeocode] city=$province | district=$districtClean | neighborhood=$neighborhoodClean',
+          );
+
+          return _GeoResult(
+            addressLine: addressLine,
+            city: province,
+            district: districtClean,
+            neighborhood: neighborhoodClean,
+          );
         }
-        return data['display_name'] ?? 'Bilinmeyen Konum';
+        final displayName =
+            (data['display_name'] ?? 'Bilinmeyen Konum') as String;
+        return _GeoResult(
+          addressLine: displayName,
+          city: '',
+          district: '',
+          neighborhood: '',
+        );
       }
     } catch (_) {}
-    return 'Karabük, Merkez'; // Fallback
+    return const _GeoResult(
+      addressLine: 'Karabük / Merkez / Bilinmeyen Mahalle',
+      city: 'Karabük',
+      district: 'Merkez',
+      neighborhood: '',
+    );
   }
 
   // ─── Kayıt ───────────────────────────────────────
 
-  Future<void> _saveLocation(String address, double lat, double lng) async {
+  Future<void> _saveLocation(_GeoResult geo, double lat, double lng) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_prefAddressKey, address);
+    await prefs.setString(_prefAddressKey, geo.addressLine);
     await prefs.setDouble(_prefLatKey, lat);
     await prefs.setDouble(_prefLngKey, lng);
 
-    _userSession.updateLocation(address, lat: lat, lng: lng);
+    _userSession.updateLocation(geo.addressLine, lat: lat, lng: lng);
 
-    // API'ye gönder
+    // API'ye gönder — city/district/neighborhood dahil
     try {
       await _authService.createAddress(
         AddressModel(
           id: 0,
           userId: 0,
-          label: 'Ev', // Varsayılan etiket
-          addressLine: address,
+          label: 'Ev',
+          addressLine: geo.addressLine,
+          city: geo.city.isNotEmpty ? geo.city : null,
+          district: geo.district.isNotEmpty ? geo.district : null,
+          neighborhood: geo.neighborhood.isNotEmpty ? geo.neighborhood : null,
           latitude: lat,
           longitude: lng,
           isDefault: true,
         ),
       );
-    } catch (message) {
-      // Hata olsa bile kullanıcı devam edebilsin diye sessiz geçiyoruz
-      debugPrint('Adres API hatası: $message');
+      debugPrint(
+        '✅ [LocationViewModel] Adres API\'ye gönderildi: ${geo.addressLine}',
+      );
+    } catch (e) {
+      debugPrint('⚠️ [LocationViewModel] Adres API hatası: $e');
     }
   }
 

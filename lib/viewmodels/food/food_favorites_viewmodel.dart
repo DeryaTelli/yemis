@@ -52,7 +52,7 @@ class FoodFavoritesViewModel extends ChangeNotifier {
   /// MVVM: Alt navigasyon rotalarını ViewModel sağlar
   String? getBottomNavRoute(int index) {
     switch (index) {
-      case 0: return AppRoutes.home;
+      case 0: return AppRoutes.foodHome;
       case 1: return AppRoutes.foodSearch;
       case 2: return AppRoutes.home;
       case 3: return AppRoutes.foodFavorites;

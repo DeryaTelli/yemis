@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
+import 'package:yemis/utils/constants/app_colors.dart';
 import '../services/auth/i_auth_service.dart';
 import '../services/auth/user_session.dart';
 import '../utils/locale_keys.dart';
@@ -17,18 +18,31 @@ import '../widgets/common/loading_overlay.dart';
 import '../models/app_module_type.dart';
 
 class LocationView extends StatelessWidget {
-  const LocationView({super.key});
+  final bool returnToSender;
+  final AppModuleType moduleType;
+  const LocationView({
+    super.key,
+    this.returnToSender = false,
+    this.moduleType = AppModuleType.food,
+  });
 
   @override
   Widget build(BuildContext context) {
     final userSession = context.read<UserSession>();
     final authService = context.read<IAuthService>();
+    final themeColor = moduleType == AppModuleType.food
+        ? AppColors.primaryColor
+        : AppColors.volunteerColor;
+
     return ChangeNotifierProvider(
-      create: (_) => LocationViewModel(
-        userSession: userSession,
-        authService: authService,
-      )..init(),
-      child: const _LocationBody(),
+      create: (_) =>
+          LocationViewModel(userSession: userSession, authService: authService)
+            ..init(),
+      child: _LocationBody(
+        returnToSender: returnToSender,
+        moduleType: moduleType,
+        themeColor: themeColor,
+      ),
     );
   }
 }
@@ -37,7 +51,15 @@ class LocationView extends StatelessWidget {
 // WidgetsBindingObserver: Kullanıcı ayarlardan döndüğünde onAppResumed tetiklenir
 // ─────────────────────────────────────────────────────────────────────────────
 class _LocationBody extends StatefulWidget {
-  const _LocationBody();
+  final bool returnToSender;
+  final AppModuleType moduleType;
+  final Color themeColor;
+
+  const _LocationBody({
+    required this.returnToSender,
+    required this.moduleType,
+    required this.themeColor,
+  });
 
   @override
   State<_LocationBody> createState() => _LocationBodyState();
@@ -66,7 +88,11 @@ class _LocationBodyState extends State<_LocationBody>
     vm.onAppResumed(
       onShareSuccess: (lat, lng) {
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+        if (widget.returnToSender) {
+          Navigator.pop(context, true);
+        } else {
+          Navigator.pushReplacementNamed(context, AppRoutes.home);
+        }
       },
       onPickNavigate: () async {
         if (!mounted) return;
@@ -75,10 +101,18 @@ class _LocationBodyState extends State<_LocationBody>
         if (result is Map<String, dynamic>) {
           final latLng = result['latLng'] as LatLng?;
           if (latLng != null) {
-            await vm.onLocationPicked(latLng.latitude, latLng.longitude, () {
-              if (!mounted) return;
-              Navigator.pushReplacementNamed(context, AppRoutes.home);
-            });
+            await vm.onLocationPicked(
+              latLng.latitude,
+              latLng.longitude,
+              () {
+                if (!mounted) return;
+                if (widget.returnToSender) {
+                  Navigator.pop(context, true);
+                } else {
+                  Navigator.pushReplacementNamed(context, AppRoutes.home);
+                }
+              },
+            );
           }
         }
       },
@@ -91,11 +125,21 @@ class _LocationBodyState extends State<_LocationBody>
 
     return LoadingOverlay(
       isLoading: vm.isLoading,
-      moduleType: AppModuleType.food,
+      moduleType: widget.moduleType,
       child: Scaffold(
         appBar: AppBar(
           title: Text(LocaleKeys.location_title.tr()),
+          backgroundColor: widget.themeColor,
           automaticallyImplyLeading: false,
+          leading: widget.returnToSender
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                )
+              : null,
         ),
         body: SafeArea(
           child: Padding(
@@ -135,7 +179,9 @@ class _LocationBodyState extends State<_LocationBody>
                 // ── Başlık & Açıklama ──
                 Text(
                   LocaleKeys.location_shareTitle.tr(),
-                  style: CustomTextStyles.semiBold16Primary,
+                  style: CustomTextStyles.semiBold16Primary.copyWith(
+                    color: widget.themeColor,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
@@ -150,12 +196,17 @@ class _LocationBodyState extends State<_LocationBody>
                 CustomButton(
                   text: LocaleKeys.location_buttonShare.tr(),
                   width: double.infinity,
+                  backgroundColor: widget.themeColor,
                   height: 52,
                   onPressed: () => vm.shareLocation(
                     onOpenSettings: openAppSettings,
                     onSuccess: (lat, lng) {
                       if (!mounted) return;
-                      Navigator.pushReplacementNamed(context, AppRoutes.home);
+                      if (widget.returnToSender) {
+                        Navigator.pop(context, true);
+                      } else {
+                        Navigator.pushReplacementNamed(context, AppRoutes.home);
+                      }
                     },
                   ),
                 ),
@@ -166,6 +217,7 @@ class _LocationBodyState extends State<_LocationBody>
                   text: LocaleKeys.location_buttonPick.tr(),
                   isOutlined: true,
                   width: double.infinity,
+                  backgroundColor: widget.themeColor,
                   height: 52,
                   onPressed: () => vm.pickOnMap(
                     onOpenSettings: openAppSettings,
@@ -184,10 +236,14 @@ class _LocationBodyState extends State<_LocationBody>
                             latLng.longitude,
                             () {
                               if (!mounted) return;
-                              Navigator.pushReplacementNamed(
-                                context,
-                                AppRoutes.home,
-                              );
+                              if (widget.returnToSender) {
+                                Navigator.pop(context, true);
+                              } else {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.home,
+                                );
+                              }
                             },
                           );
                         }

@@ -4,9 +4,11 @@ import '../../utils/constants/app_colors.dart';
 import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/auth/food_add_address_viewmodel.dart';
 import '../../services/auth/i_auth_service.dart';
+import '../../services/location/i_location_data_service.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/loading_overlay.dart';
+import '../../widgets/common/location_picker_bottom_sheet.dart';
 import '../../models/app_module_type.dart';
 import '../../models/auth/address_model.dart';
 import '../../services/auth/user_session.dart';
@@ -31,60 +33,72 @@ class FoodAddAddressView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => FoodAddAddressViewModel(
         authService: context.read<IAuthService>(),
+        locationService: context.read<ILocationDataService>(),
         initialAddress: address,
-        defaultPhone: userSession.currentUser?.phoneNumber,
       ),
       child: _FoodAddAddressBody(themeColor: themeColor),
     );
   }
 }
 
-class _FoodAddAddressBody extends StatelessWidget {
+class _FoodAddAddressBody extends StatefulWidget {
   final Color themeColor;
   const _FoodAddAddressBody({required this.themeColor});
 
   @override
+  State<_FoodAddAddressBody> createState() => _FoodAddAddressBodyState();
+}
+
+class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
+  FoodAddAddressViewModel? _viewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // ViewModel referansını güvenli bir şekilde sakla
+    if (_viewModel == null) {
+      _viewModel = context.read<FoodAddAddressViewModel>();
+      _viewModel!.addListener(_onVmChanged);
+    }
+  }
+
+  void _onVmChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _viewModel?.removeListener(_onVmChanged);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final vm = context.watch<FoodAddAddressViewModel>();
+    final themeColor = widget.themeColor;
 
     return LoadingOverlay(
       isLoading: vm.isLoading,
-      moduleType: AppModuleType.food,
+      moduleType: themeColor == AppColors.volunteerColor
+          ? AppModuleType.volunteer
+          : AppModuleType.food,
       child: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
+          backgroundColor: themeColor,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: Colors.black,
+              color: Colors.white,
             ),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text(
-            vm.isEditMode ? 'Adresi Düzenle' : 'Adres Ekle',
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
+          title: Text(vm.isEditMode ? 'Adresi Düzenle' : 'Adres Ekle'),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _fieldLabel('Telefon Numarası'),
-              CustomTextField(
-                controller: vm.phoneController,
-                hintText: '05xx xxx xx xx',
-                keyboardType: TextInputType.phone,
-                borderColor: const Color(0xFFE0E0E0),
-                fillColor: const Color(0xFFF9F9F9),
-              ),
-              const SizedBox(height: 16),
               _fieldLabel('İl'),
               _SelectionField(
                 hint: 'Seçiniz',
@@ -190,65 +204,12 @@ class _FoodAddAddressBody extends StatelessWidget {
     void Function(String?) onSelect,
     Color themeColor,
   ) {
-    showModalBottomSheet<void>(
+    LocationPickerBottomSheet.show(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.55,
-          minChildSize: 0.3,
-          maxChildSize: 0.85,
-          expand: false,
-          builder: (ctx, scrollController) => Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const Divider(height: 1),
-              Expanded(
-                child: ListView.separated(
-                  controller: scrollController,
-                  itemCount: items.length,
-                  separatorBuilder: (_, __) =>
-                      const Divider(height: 1, indent: 16, endIndent: 16),
-                  itemBuilder: (ctx, i) => ListTile(
-                    leading: Icon(
-                      Icons.location_on_outlined,
-                      color: themeColor,
-                      size: 20,
-                    ),
-                    title: Text(items[i], style: const TextStyle(fontSize: 14)),
-                    onTap: () {
-                      onSelect(items[i]);
-                      Navigator.pop(ctx);
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      title: title,
+      items: items,
+      onSelect: onSelect,
+      themeColor: themeColor,
     );
   }
 }
@@ -279,7 +240,7 @@ class _SelectionField extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: value != null
-                ? AppColors.primaryColor.withOpacity(0.5)
+                ? themeColor.withOpacity(0.5)
                 : const Color(0xFFE0E0E0),
             width: 1.2,
           ),
@@ -299,7 +260,7 @@ class _SelectionField extends StatelessWidget {
             Icon(
               Icons.keyboard_arrow_down_rounded,
               color: enabled
-                  ? (value != null ? AppColors.primaryColor : Colors.grey)
+                  ? (value != null ? themeColor : Colors.grey)
                   : Colors.grey,
               size: 22,
             ),

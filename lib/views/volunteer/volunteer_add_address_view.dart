@@ -4,8 +4,10 @@ import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/volunteer/volunteer_add_address_viewmodel.dart';
+import '../../services/location/i_location_data_service.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
+import '../../widgets/common/location_picker_bottom_sheet.dart';
 
 /// Gönüllü tarafı için yeni adres ekleme ekranı.
 /// Volunteer teması otomatik uygulanır.
@@ -17,7 +19,9 @@ class VolunteerAddAddressView extends StatelessWidget {
     return Theme(
       data: AppTheme.themeFor(AppSection.volunteer),
       child: ChangeNotifierProvider(
-        create: (_) => VolunteerAddAddressViewModel(),
+        create: (_) => VolunteerAddAddressViewModel(
+          locationService: context.read<ILocationDataService>(),
+        ),
         child: const _Body(),
       ),
     );
@@ -156,65 +160,12 @@ class _Body extends StatelessWidget {
     List<String> items,
     void Function(String?) onSelect,
   ) {
-    showModalBottomSheet<void>(
+    LocationPickerBottomSheet.show(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.55,
-          minChildSize: 0.3,
-          maxChildSize: 0.85,
-          expand: false,
-          builder: (ctx, scrollController) => Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              const Divider(height: 1),
-              Expanded(
-                child: ListView.separated(
-                  controller: scrollController,
-                  itemCount: items.length,
-                  separatorBuilder: (_, __) =>
-                      const Divider(height: 1, indent: 16, endIndent: 16),
-                  itemBuilder: (ctx, i) => ListTile(
-                    leading: const Icon(
-                      Icons.location_on_outlined,
-                      color: AppColors.volunteerColor,
-                      size: 18,
-                    ),
-                    title: Text(items[i], style: const TextStyle(fontSize: 14)),
-                    onTap: () {
-                      onSelect(items[i]);
-                      Navigator.pop(ctx);
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      title: title,
+      items: items,
+      onSelect: (selected) => onSelect(selected),
+      themeColor: AppColors.volunteerColor,
     );
   }
 }

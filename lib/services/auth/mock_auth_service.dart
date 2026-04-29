@@ -116,6 +116,18 @@ class MockAuthService implements IAuthService {
   }
 
   @override
+  Future<bool> updateAddress(int id, AddressModel address) async {
+    await _simulateDelay();
+    return true;
+  }
+
+  @override
+  Future<bool> deleteAddress(int id) async {
+    await _simulateDelay();
+    return true;
+  }
+
+  @override
   Future<AuthResponse> logout() async {
     await _simulateDelay();
     return const AuthResponse(success: true, message: 'Logout successful');

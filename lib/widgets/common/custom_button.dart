@@ -42,7 +42,10 @@ class CustomButton extends StatelessWidget {
     final decoration = isOutlined
         ? BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: AppColors.primaryBorderColor, width: 2),
+            border: Border.all(
+              color: backgroundColor ?? AppColors.primaryBorderColor,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(borderRadius),
           )
         : BoxDecoration(
@@ -61,7 +64,9 @@ class CustomButton extends StatelessWidget {
           );
 
     final defaultTextStyle = isOutlined
-        ? CustomTextStyles.bold16DarkGreyCompact 
+        ? (backgroundColor != null
+            ? CustomTextStyles.bold16DarkGreyCompact.copyWith(color: backgroundColor)
+            : CustomTextStyles.bold16DarkGreyCompact)
         : CustomTextStyles.bold17White; 
     return Material(
       color: Colors.transparent,

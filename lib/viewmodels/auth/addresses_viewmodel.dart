@@ -38,8 +38,30 @@ class AddressesViewModel extends ChangeNotifier {
   }
 
   Future<void> deleteAddress(int id) async {
-    // API'de silme endpoint'i eklenince burası güncellenecek
-    _addresses.removeWhere((a) => a.id == id);
+    debugPrint('🗑️ [AddressesViewModel] Adres silme işlemi başlatıldı. ID: $id');
+    
+    // Dismissible hatasını önlemek için önce yerel listeden hemen çıkarıyoruz
+    final index = _addresses.indexWhere((a) => a.id == id);
+    if (index == -1) return;
+
+    final removedAddress = _addresses.removeAt(index);
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      final success = await _authService.deleteAddress(id);
+      if (success) {
+        debugPrint('✅ [AddressesViewModel] Adres başarıyla silindi: ${removedAddress.label}');
+      } else {
+        debugPrint('❌ [AddressesViewModel] Adres silme başarısız (API hatası). Geri ekleniyor...');
+        // Hata durumunda (opsiyonel) listeye geri ekleyebilirsiniz:
+        // _addresses.insert(index, removedAddress);
+      }
+    } catch (e) {
+      debugPrint('❌ [AddressesViewModel] Adres silme sırasında istisna oluştu: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

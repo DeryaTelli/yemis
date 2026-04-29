@@ -32,37 +32,16 @@ class AddressesView extends StatelessWidget {
             moduleType: moduleType,
             child: Scaffold(
               appBar: AppBar(
-                title: const Text(
-                  'Adreslerim',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                title: Text('Adreslerim'),
+                backgroundColor: themeColor,
                 centerTitle: true,
                 leading: IconButton(
                   icon: const Icon(
                     Icons.arrow_back_ios_new_rounded,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () =>
-                        _showAddAddressOptions(context, themeColor),
-                    child: Text(
-                      'Adres Ekle',
-                      style: TextStyle(
-                        color: themeColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                ],
               ),
               body: ListView(
                 padding: const EdgeInsets.all(16),
@@ -97,35 +76,98 @@ class AddressesView extends StatelessWidget {
                     ...vm.addresses.map(
                       (address) => Padding(
                         padding: const EdgeInsets.only(bottom: 12),
-                        child: _AddressCard(
-                          key: ValueKey(address.id),
-                          label: address.label.isEmpty ? 'Ev' : address.label,
-                          name:
-                              context.read<UserSession>().currentUser?.name ??
-                              '',
-                          phone:
-                              context
-                                  .read<UserSession>()
-                                  .currentUser
-                                  ?.phoneNumber ??
-                              '',
-                          addressLine: address.addressLine,
-                          themeColor: themeColor,
-                          onEdit: () async {
-                            final result = await Navigator.pushNamed(
-                              context,
-                              AppRoutes.foodAddAddress,
-                              arguments: {
-                                'address': address,
-                                'moduleType': moduleType,
-                              },
+                        child: Dismissible(
+                          key: ValueKey('dismiss_${address.id}'),
+                          direction: DismissDirection.endToStart,
+                          confirmDismiss: (direction) async {
+                            final confirmed = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                title: const Text(
+                                  'Adresi Sil',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                content: const Text(
+                                  'Bu adresi silmek istediğinizden emin misiniz?',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: const Text(
+                                      'Vazgeç',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    child: const Text(
+                                      'Sil',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             );
-                            if (result == true && context.mounted) {
-                              context
-                                  .read<AddressesViewModel>()
-                                  .fetchAddresses();
-                            }
+                            return confirmed;
                           },
+                          onDismissed: (direction) {
+                            vm.deleteAddress(address.id);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Adres silindi'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.delete_outline_rounded,
+                              color: Colors.white,
+                              size: 28,
+                            ),
+                          ),
+                          child: _AddressCard(
+                            key: ValueKey(address.id),
+                            label: address.label.isEmpty ? 'Ev' : address.label,
+                            name:
+                                context.read<UserSession>().currentUser?.name ??
+                                '',
+                            phone:
+                                context
+                                    .read<UserSession>()
+                                    .currentUser
+                                    ?.phoneNumber ??
+                                '',
+                            addressLine: address.addressLine,
+                            themeColor: themeColor,
+                            onEdit: () async {
+                              final result = await Navigator.pushNamed(
+                                context,
+                                AppRoutes.foodAddAddress,
+                                arguments: {
+                                  'address': address,
+                                  'moduleType': moduleType,
+                                },
+                              );
+                              if (result == true && context.mounted) {
+                                context
+                                    .read<AddressesViewModel>()
+                                    .fetchAddresses();
+                              }
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -213,6 +255,10 @@ class AddressesView extends StatelessWidget {
                 final result = await Navigator.pushNamed(
                   context,
                   AppRoutes.location,
+                  arguments: {
+                    'returnToSender': true,
+                    'moduleType': moduleType,
+                  },
                 );
                 // Eğer konum seçildiyse listeyi yenile
                 if (context.mounted) {
@@ -333,7 +379,7 @@ class _AddressCard extends StatelessWidget {
                 child: Text(
                   'Düzenle',
                   style: TextStyle(
-                    color: AppColors.primaryColor,
+                    color: themeColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),

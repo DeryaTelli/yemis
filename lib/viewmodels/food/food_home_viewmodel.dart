@@ -62,6 +62,7 @@ class FoodHomeViewModel extends ChangeNotifier {
   String? getBottomNavRoute(int index) {
     switch (index) {
       case 0:
+        return AppRoutes.foodHome;
       case 2:
         return AppRoutes.home;
       case 1:

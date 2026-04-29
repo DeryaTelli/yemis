@@ -46,6 +46,15 @@ class MapPickerViewModel extends ChangeNotifier {
   String _currentAddress = '';
   String get currentAddress => _currentAddress;
 
+  String _city = '';
+  String get city => _city;
+
+  String _district = '';
+  String get district => _district;
+
+  String _neighborhood = '';
+  String get neighborhood => _neighborhood;
+
   List<PlaceResult> _searchResults = [];
   List<PlaceResult> get searchResults => List.unmodifiable(_searchResults);
 
@@ -140,6 +149,7 @@ class MapPickerViewModel extends ChangeNotifier {
         'lat': latLng.latitude.toString(),
         'lon': latLng.longitude.toString(),
         'format': 'json',
+        'addressdetails': '1',
         'accept-language': 'tr',
       });
       final res = await http.get(
@@ -149,6 +159,16 @@ class MapPickerViewModel extends ChangeNotifier {
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body) as Map<String, dynamic>;
         _currentAddress = data['display_name'] as String? ?? '';
+
+        // Yapısal adres bilgilerini de sakla
+        final addr = data['address'] as Map<String, dynamic>?;
+        if (addr != null) {
+          _city = (addr['province']?.toString() ?? '').replaceAll(' İli', '').trim();
+          final cityRaw = (addr['city'] ?? addr['town'] ?? addr['village'] ?? '').toString();
+          _district = cityRaw.replaceAll(' İlçesi', '').trim();
+          _neighborhood = (addr['suburb'] ?? addr['neighbourhood'] ?? addr['quarter'] ?? '').toString().trim();
+        }
+
         notifyListeners();
       }
     } catch (_) {

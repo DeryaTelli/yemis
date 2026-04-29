@@ -145,7 +145,7 @@ class FoodProfileViewModel extends ChangeNotifier {
   String? getBottomNavRoute(int index) {
     switch (index) {
       case 0:
-        return AppRoutes.home;
+        return AppRoutes.foodHome;
       case 1:
         return AppRoutes.foodSearch;
       case 2:

@@ -111,6 +111,10 @@ class ApiAuthService implements IAuthService {
       }
 
       final dynamic data = jsonDecode(response.body);
+      if (data is Map<String, dynamic> && !data.containsKey('success')) {
+        // API bazen direkt objeyi döner (success: true demeden). Status code 2xx ise başarılı kabul et.
+        return AuthResponse.fromJson({...data, 'success': true});
+      }
       return AuthResponse.fromJson(data as Map<String, dynamic>);
     } catch (e) {
       if (kDebugMode) {
@@ -184,6 +188,18 @@ class ApiAuthService implements IAuthService {
   }
 
   @override
+  Future<bool> updateAddress(int id, AddressModel address) async {
+    final response = await _put('/api/users/me/addresses/$id', address.toJson());
+    return response.success;
+  }
+
+  @override
+  Future<bool> deleteAddress(int id) async {
+    final response = await _delete('/api/users/me/addresses/$id');
+    return response.success;
+  }
+
+  @override
   Future<UserModel?> getProfile() async {
     final data = await _get(ApiConstants.profile);
     if (data != null && data is Map<String, dynamic>) {
@@ -218,6 +234,37 @@ class ApiAuthService implements IAuthService {
 
     try {
       final response = await _client.patch(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+        },
+        body: body != null ? jsonEncode(body) : null,
+      );
+
+      return _processResponse(response);
+    } catch (e) {
+      return AuthResponse(success: false, message: e.toString());
+    }
+  }
+
+  /// Ortak PUT isteği metodu.
+  Future<AuthResponse> _put(
+    String endpoint,
+    Map<String, dynamic>? body,
+  ) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
+
+    if (kDebugMode) {
+      print('--- API REQUEST (PUT) ---');
+      print('URL: $url');
+      if (body != null) print('Body: ${jsonEncode(body)}');
+      print('Token: ${_authToken?.substring(0, 5)}...');
+      print('-------------------');
+    }
+
+    try {
+      final response = await _client.put(
         url,
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +329,14 @@ class ApiAuthService implements IAuthService {
 
     try {
       final data = jsonDecode(response.body);
-      return AuthResponse.fromJson(data);
+      if (data is Map<String, dynamic>) {
+        if (!data.containsKey('success')) {
+          // API doğrudan nesne döndü (örn. address objesi), 2xx ise başarılı say
+          return const AuthResponse(success: true, message: 'İşlem başarılı.');
+        }
+        return AuthResponse.fromJson(data);
+      }
+      return const AuthResponse(success: true, message: 'İşlem başarılı.');
     } catch (_) {
       return const AuthResponse(success: true, message: 'İşlem başarılı.');
     }

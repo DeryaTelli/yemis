@@ -171,7 +171,7 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
             // ─── Menu Container ──────────────────────────────
             Container(
               decoration: BoxDecoration(
-                color: AppColors.volunteerColor.withValues(alpha: 0.3),
+                color: AppColors.volunteerColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -231,9 +231,20 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                       );
                     },
                   ),
+
                   ProfileMenuTile(
-                    icon: Icons.credit_card_rounded,
-                    title: LocaleKeys.volunteerProfile_savedCards.tr(),
+                    icon: Icons.person_outline_rounded,
+                    title: 'Profil Güncelle',
+                    iconColor: AppColors.volunteerColor,
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.foodProfileEdit,
+                      arguments: AppSection.volunteer,
+                    ),
+                  ),
+                  ProfileMenuTile(
+                    icon: Icons.lock_outline_rounded,
+                    title: 'Şifre Değiştir',
                     iconColor: AppColors.volunteerColor,
                     onTap: () {},
                   ),

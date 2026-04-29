@@ -28,8 +28,6 @@ class HomeView extends StatelessWidget {
   }
 }
 
-
-
 /// Scaffold + layout — HomeViewModel'i dinler.
 class _HomeBody extends StatefulWidget {
   const _HomeBody();

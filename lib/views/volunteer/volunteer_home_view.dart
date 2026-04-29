@@ -62,6 +62,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
           title: vm.appBarTitle,
           backgroundColor: vm.appBarColor,
           isLocationTitle: true,
+          moduleType: AppModuleType.volunteer,
         ),
 
         // ─── Body ────────────────────────────────────

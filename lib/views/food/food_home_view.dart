@@ -65,6 +65,7 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
           title: vm.appBarTitle,
           backgroundColor: vm.appBarColor,
           isLocationTitle: true,
+          moduleType: AppModuleType.food,
         ),
 
         // ─── Body ────────────────────────────────────

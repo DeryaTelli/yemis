@@ -11,6 +11,8 @@ import 'services/food/mock_food_service.dart';
 import 'services/auth/api_auth_service.dart';
 import 'services/auth/i_auth_service.dart';
 import 'services/auth/user_session.dart';
+import 'services/location/api_location_data_service.dart';
+import 'services/location/i_location_data_service.dart';
 import 'models/auth/address_model.dart';
 import 'models/app_module_type.dart';
 import 'models/food/food_listing.dart';
@@ -58,6 +60,7 @@ void main() async {
 
   final authService = ApiAuthService();
   final userSession = UserSession();
+  final locationDataService = ApiLocationDataService();
 
   // Kayıtlı token'ı yükle
   final prefs = await SharedPreferences.getInstance();
@@ -77,6 +80,7 @@ void main() async {
       child: MyApp(
         authService: authService,
         userSession: userSession,
+        locationDataService: locationDataService,
       ),
     ),
   );
@@ -85,11 +89,13 @@ void main() async {
 class MyApp extends StatelessWidget {
   final ApiAuthService authService;
   final UserSession userSession;
+  final ApiLocationDataService locationDataService;
 
   const MyApp({
     super.key,
     required this.authService,
     required this.userSession,
+    required this.locationDataService,
   });
 
   @override
@@ -98,6 +104,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: userSession),
         Provider<IAuthService>.value(value: authService),
+        Provider<ILocationDataService>.value(value: locationDataService),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(authService, userSession),
         ),
@@ -164,8 +171,14 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case AppRoutes.location:
+              final args = settings.arguments as Map<String, dynamic>? ?? {};
+              final returnToSender = args['returnToSender'] as bool? ?? false;
+              final moduleType = args['moduleType'] as AppModuleType? ?? AppModuleType.food;
               return MaterialPageRoute(
-                builder: (_) => const LocationView(),
+                builder: (_) => LocationView(
+                  returnToSender: returnToSender,
+                  moduleType: moduleType,
+                ),
                 settings: settings,
               );
             case AppRoutes.mapPicker:
