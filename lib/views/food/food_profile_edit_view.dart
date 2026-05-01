@@ -1,4 +1,7 @@
+// ignore: unused_import
+import 'dart:io'; // Required for Image.file() which takes dart:io.File
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
@@ -50,7 +53,7 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
             // ─── Profil Fotoğrafı ──────────────────────
             Center(
               child: GestureDetector(
-                onTap: () => _showPhotoSelectBS(context),
+                onTap: () => _showPhotoSelectBS(context, vm),
                 child: Stack(
                   children: [
                     Container(
@@ -60,7 +63,9 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
                         color: primaryColor.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(Icons.person, size: 32, color: primaryColor),
+                      child: ClipOval(
+                        child: _buildAvatar(vm, primaryColor),
+                      ),
                     ),
 
                     Positioned(
@@ -127,8 +132,7 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    vm.updateAccount();
-                    Navigator.pop(context);
+                    vm.updateAccount(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
@@ -173,11 +177,36 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
     );
   }
 
-  void _showPhotoSelectBS(BuildContext context) {
+  Widget _buildAvatar(FoodProfileViewModel vm, Color primaryColor) {
+    // 1. Öncelik: Yerel seçilen dosya
+    if (vm.selectedImageFile != null) {
+      return Image.file(
+        vm.selectedImageFile!,
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+      );
+    }
+    // 2. Öncelik: API'den gelen URL
+    if (vm.remoteImageUrl != null && vm.remoteImageUrl!.isNotEmpty) {
+      return Image.network(
+        vm.remoteImageUrl!,
+        width: 80,
+        height: 80,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) =>
+            Icon(Icons.person, size: 32, color: primaryColor),
+      );
+    }
+    // 3. Varsayılan ikon
+    return Icon(Icons.person, size: 32, color: primaryColor);
+  }
+
+  void _showPhotoSelectBS(BuildContext context, FoodProfileViewModel vm) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) {
+      builder: (ctx) {
         return Container(
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -199,14 +228,20 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
               ),
               _BSOption(
                 icon: Icons.camera_alt_rounded,
-                title: 'Take from Camera',
-                onTap: () => Navigator.pop(context),
+                title: 'Kamera ile Çek',
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  await vm.pickImage(ImageSource.camera);
+                },
               ),
               const Divider(height: 1),
               _BSOption(
                 icon: Icons.photo_library_rounded,
-                title: 'Choose from Gallery',
-                onTap: () => Navigator.pop(context),
+                title: 'Galeriden Seç',
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  await vm.pickImage(ImageSource.gallery);
+                },
               ),
               const SizedBox(height: 20),
             ],

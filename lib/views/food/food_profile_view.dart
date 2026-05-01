@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'dart:io'; // Required for Image.file() which takes dart:io.File
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
@@ -26,48 +28,40 @@ class _FoodProfileBody extends StatefulWidget {
 }
 
 class _FoodProfileBodyState extends State<_FoodProfileBody> {
-  void _showPhotoSelectBS(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              _BSOption(
-                icon: Icons.camera_alt_rounded,
-                title: 'Take from Camera',
-                onTap: () => Navigator.pop(context),
-              ),
-              const Divider(height: 1),
-              _BSOption(
-                icon: Icons.photo_library_rounded,
-                title: 'Choose from Gallery',
-                onTap: () => Navigator.pop(context),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
+  Widget _buildAvatar(FoodProfileViewModel vm) {
+    const Color fallbackBg = Color(0xFFEADCC6);
+    const Color fallbackIcon = Color(0xFFFE8800);
+
+    if (vm.selectedImageFile != null) {
+      return Image.file(
+        vm.selectedImageFile!,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+      );
+    }
+    if (vm.remoteImageUrl != null && vm.remoteImageUrl!.isNotEmpty) {
+      return Image.network(
+        vm.remoteImageUrl!,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          width: 60,
+          height: 60,
+          color: fallbackBg,
+          child: const Icon(Icons.person, size: 32, color: fallbackIcon),
+        ),
+      );
+    }
+    return Container(
+      width: 60,
+      height: 60,
+      color: fallbackBg,
+      child: const Icon(Icons.person, size: 32, color: fallbackIcon),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,24 +83,14 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                 children: [
                   // Avatar
                   GestureDetector(
-                    onTap: () => _showPhotoSelectBS(context),
+                    onTap: () => Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
                     child: SizedBox(
                       width: 64,
                       height: 64,
                       child: Stack(
                         children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFEADCC6),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              size: 32,
-                              color: Color(0xFFFE8800),
-                            ),
+                          ClipOval(
+                            child: _buildAvatar(vm),
                           ),
                           Positioned(
                             right: 0,
@@ -245,42 +229,3 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
   }
 }
 
-class _BSOption extends StatelessWidget {
-  const _BSOption({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(vertical: 8),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.primaryColor.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: AppColors.primaryColor, size: 24),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF1B1B1B),
-        ),
-      ),
-      trailing: Icon(
-        Icons.chevron_right_rounded,
-        color: AppColors.primaryColor,
-      ),
-    );
-  }
-}

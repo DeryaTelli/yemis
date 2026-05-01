@@ -255,10 +255,7 @@ class AddressesView extends StatelessWidget {
                 final result = await Navigator.pushNamed(
                   context,
                   AppRoutes.location,
-                  arguments: {
-                    'returnToSender': true,
-                    'moduleType': moduleType,
-                  },
+                  arguments: {'returnToSender': true, 'moduleType': moduleType},
                 );
                 // Eğer konum seçildiyse listeyi yenile
                 if (context.mounted) {
@@ -398,11 +395,6 @@ class _AddressCard extends StatelessWidget {
               fontSize: 15,
               color: Colors.black87,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            phone.isEmpty ? 'Telefon eklenmemiş' : phone,
-            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(

@@ -133,6 +133,29 @@ class MockAuthService implements IAuthService {
     return const AuthResponse(success: true, message: 'Logout successful');
   }
 
+  @override
+  Future<UserModel?> getProfile() async {
+    await _simulateDelay();
+    return const UserModel(
+      id: 'usr_001',
+      name: 'Test Kullanıcı',
+      email: _testEmail,
+      userType: UserType.food,
+    );
+  }
+
+  @override
+  Future<AuthResponse> updateProfile(int userId, Map<String, dynamic> data) async {
+    await _simulateDelay();
+    return const AuthResponse(success: true, message: 'Profile updated');
+  }
+
+  @override
+  Future<AuthResponse> deleteAccount() async {
+    await _simulateDelay();
+    return const AuthResponse(success: true, message: 'Account deleted');
+  }
+
   Future<void> _simulateDelay() =>
       Future.delayed(const Duration(milliseconds: 1200));
 }

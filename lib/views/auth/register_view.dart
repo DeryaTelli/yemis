@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
 import '../../utils/locale_keys.dart';
@@ -8,7 +9,6 @@ import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/auth/register_viewmodel.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
-import '../../widgets/common/error_banner.dart';
 
 import '../../widgets/common/error_dialog_custom.dart';
 import '../../widgets/common/loading_overlay.dart';
@@ -24,6 +24,12 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
   late RegisterViewModel _viewModel;
+
+  final _phoneMaskFormatter = MaskTextInputFormatter(
+    mask: '(###) ### ## ##',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
 
   @override
   void didChangeDependencies() {
@@ -64,7 +70,6 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                       const SizedBox(height: 12),
 
-
                       // İsim
                       CustomTextField(
                         controller: vm.nameController,
@@ -98,6 +103,27 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                       const SizedBox(height: 12),
 
+                      // Telefon Numarası
+                      CustomTextField(
+                        controller: vm.phoneController,
+                        hintText: '(5XX) XXX XX XX',
+                        labelText: LocaleKeys.auth_fields_phone.tr(),
+                        prefixText: '+90 ',
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                        inputFormatters: [_phoneMaskFormatter],
+                        validator: (v) {
+                          if (v == null || v.trim().isEmpty) {
+                            return LocaleKeys.auth_validation_phoneEmpty.tr();
+                          }
+                          if (v.length < 15) {
+                            return LocaleKeys.auth_validation_phoneInvalid.tr();
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+
                       // Şifre
                       CustomTextField(
                         controller: vm.passwordController,
@@ -115,7 +141,8 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         validator: (v) {
                           if (v == null || v.isEmpty) {
-                            return LocaleKeys.auth_validation_passwordEmpty.tr();
+                            return LocaleKeys.auth_validation_passwordEmpty
+                                .tr();
                           }
                           if (v.length < 6) {
                             return LocaleKeys.auth_validation_passwordMinLength
@@ -123,27 +150,6 @@ class _RegisterViewState extends State<RegisterView> {
                           }
                           return null;
                         },
-                      ),
-                      const SizedBox(height: 16),
-
-                      // KVKK checkbox
-                      GestureDetector(
-                        onTap: vm.toggleKvkk,
-                        child: Row(
-                          children: [
-                            Checkbox(
-                              value: vm.kvkkAccepted,
-                              onChanged: (_) => vm.toggleKvkk(),
-                              activeColor: const Color(0xFFFE8800),
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            Text(
-                              LocaleKeys.auth_register_kvkk.tr(),
-                              style: CustomTextStyles.regular14Black,
-                            ),
-                          ],
-                        ),
                       ),
                       const SizedBox(height: 32),
                       CustomButton(

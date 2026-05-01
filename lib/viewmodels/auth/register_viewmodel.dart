@@ -11,6 +11,7 @@ class RegisterViewModel extends ChangeNotifier {
   // --- Controllers ---
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   // --- State ---
@@ -19,9 +20,6 @@ class RegisterViewModel extends ChangeNotifier {
 
   bool _passwordVisible = false;
   bool get passwordVisible => _passwordVisible;
-
-  bool _kvkkAccepted = false;
-  bool get kvkkAccepted => _kvkkAccepted;
 
   /// Locale key döner — View .tr() ile çevirir
   String? _errorKey;
@@ -38,11 +36,6 @@ class RegisterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleKvkk() {
-    _kvkkAccepted = !_kvkkAccepted;
-    notifyListeners();
-  }
-
   void clearError() {
     _errorKey = null;
     _errorMessage = null;
@@ -52,8 +45,8 @@ class RegisterViewModel extends ChangeNotifier {
   void clearFields() {
     nameController.clear();
     emailController.clear();
+    phoneController.clear();
     passwordController.clear();
-    _kvkkAccepted = false;
     _errorKey = null;
     _errorMessage = null;
   }
@@ -64,10 +57,9 @@ class RegisterViewModel extends ChangeNotifier {
     required void Function(String email) onSuccess,
     Function(String)? onError,
   }) async {
-    if (!formKey.currentState!.validate()) return;
-    if (!_kvkkAccepted) {
-      _errorKey = LocaleKeys.auth_validation_kvkkRequired;
-      notifyListeners();
+    debugPrint('--- [DEBUG] Register Attempt Started ---');
+    if (!formKey.currentState!.validate()) {
+      debugPrint('--- [DEBUG] Form Validation Failed ---');
       return;
     }
 
@@ -82,8 +74,15 @@ class RegisterViewModel extends ChangeNotifier {
           name: nameController.text.trim(),
           email: emailController.text.trim(),
           password: passwordController.text,
+          phone: phoneController.text.trim(),
         ),
       );
+
+      debugPrint('--- [DEBUG] Register Response ---');
+      debugPrint('Success: ${response.success}');
+      debugPrint('Message: ${response.message}');
+      debugPrint('ErrorKey: ${response.errorKey}');
+      debugPrint('---------------------------------');
 
       if (response.success) {
         onSuccess(emailController.text.trim());
@@ -112,6 +111,7 @@ class RegisterViewModel extends ChangeNotifier {
   void dispose() {
     nameController.dispose();
     emailController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
     super.dispose();
   }

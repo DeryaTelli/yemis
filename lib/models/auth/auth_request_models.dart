@@ -24,6 +24,9 @@ class RegisterRequest {
   final String name;
   final String email;
   final String password;
+  final String? phone;
+  final String address;
+  final String imageUrl;
 
   /// Kullanıcı tipi: [UserType.food] veya [UserType.business]
   final UserType userType;
@@ -32,15 +35,20 @@ class RegisterRequest {
     required this.name,
     required this.email,
     required this.password,
+    this.phone,
     this.userType = UserType.food,
+    this.address = '',
+    this.imageUrl = '',
   });
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'email': email,
         'password': password,
-        'role': 'food',
-        'is_volunteer': true,
+        'phone': phone,
+        'address': address,
+        'image_url': imageUrl,
+        'is_business': userType == UserType.business,
       };
 }
 

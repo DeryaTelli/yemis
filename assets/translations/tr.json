@@ -31,9 +31,10 @@
     "fields": {
       "email": "Email",
       "password": "Şifre",
-      "name": "İsim",
+      "name": "İsim ve Soyisim",
       "newPassword": "Yeni Şifre",
-      "confirmPassword": "Şifre Tekrar"
+      "confirmPassword": "Şifre Tekrar",
+      "phone": "Telefon Numarası"
     },
     "validation": {
       "emailEmpty": "E-posta adresi boş olamaz.",
@@ -43,7 +44,9 @@
       "nameEmpty": "İsim boş olamaz.",
       "kvkkRequired": "Lütfen KVKK metnini onaylayın.",
       "codeIncomplete": "Lütfen 4 haneli kodu eksiksiz girin.",
-      "passwordsNotMatch": "Şifreler eşleşmiyor."
+      "passwordsNotMatch": "Şifreler eşleşmiyor.",
+      "phoneEmpty": "Telefon numarası boş olamaz.",
+      "phoneInvalid": "Geçerli bir telefon numarası girin."
     },
     "errors": {
       "invalidCredentials": "E-posta veya şifre hatalı.",

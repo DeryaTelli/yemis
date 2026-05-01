@@ -37,6 +37,7 @@ abstract class LocaleKeys {
   static const auth_fields_name = 'auth.fields.name';
   static const auth_fields_newPassword = 'auth.fields.newPassword';
   static const auth_fields_confirmPassword = 'auth.fields.confirmPassword';
+  static const auth_fields_phone = 'auth.fields.phone';
 
   // auth.validation
   static const auth_validation_emailEmpty = 'auth.validation.emailEmpty';
@@ -46,6 +47,8 @@ abstract class LocaleKeys {
       'auth.validation.passwordMinLength';
   static const auth_validation_nameEmpty = 'auth.validation.nameEmpty';
   static const auth_validation_kvkkRequired = 'auth.validation.kvkkRequired';
+  static const auth_validation_phoneEmpty = 'auth.validation.phoneEmpty';
+  static const auth_validation_phoneInvalid = 'auth.validation.phoneInvalid';
   static const auth_validation_codeIncomplete =
       'auth.validation.codeIncomplete';
   static const auth_validation_passwordsNotMatch =

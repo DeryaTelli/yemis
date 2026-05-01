@@ -1,3 +1,5 @@
+import 'package:yemis/models/auth/user_model.dart';
+
 import '../../models/auth/address_model.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../models/auth/auth_response_models.dart';
@@ -37,4 +39,13 @@ abstract class IAuthService {
 
   /// Adresi siler.
   Future<bool> deleteAddress(int id);
+
+  /// Mevcut kullanıcının profil bilgilerini getirir.
+  Future<UserModel?> getProfile();
+
+  /// Profil bilgilerini günceller.
+  Future<AuthResponse> updateProfile(int userId, Map<String, dynamic> data);
+
+  /// Hesabı siler.
+  Future<AuthResponse> deleteAccount();
 }

@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../models/auth/auth_response_models.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
@@ -16,6 +20,13 @@ class FoodProfileViewModel extends ChangeNotifier {
   String _email = '2002derya2002@gmail.com';
   String _phoneNumber = '';
   bool _isEditing = false;
+
+  // ─── Profil Fotoğrafı ─────────────────────────────────
+  File? _selectedImageFile;   // Kullanıcının yerel seçtiği dosya
+  String? _remoteImageUrl;    // API'den gelen mevcut fotoğraf URL'i
+
+  File? get selectedImageFile => _selectedImageFile;
+  String? get remoteImageUrl => _remoteImageUrl;
 
   String get name => _name;
   String get surname => _surname;
@@ -35,6 +46,7 @@ class FoodProfileViewModel extends ChangeNotifier {
         : _surname;
     _email = _userSession.currentUser?.email ?? _email;
     _phoneNumber = _userSession.currentUser?.phoneNumber ?? '';
+    _remoteImageUrl = _userSession.currentUser?.imageUrl;
 
     // Düzenleme ekranı için +90 veya 0 kısmını temizle
     String displayPhone = _phoneNumber;
@@ -79,13 +91,75 @@ class FoodProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAccount() {
-    _name = nameController.text;
-    _surname = surnameController.text;
-    _email = emailController.text;
-    _phoneNumber = phoneController.text;
-    // Burada API çağrısı yapılabilir.
-    notifyListeners();
+  // ─── Fotoğraf Seçme ──────────────────────────────────
+  Future<void> pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final XFile? picked = await picker.pickImage(
+      source: source,
+      imageQuality: 80,
+      maxWidth: 800,
+    );
+    if (picked != null) {
+      _selectedImageFile = File(picked.path);
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateAccount(BuildContext context) async {
+    final currentUser = _userSession.currentUser;
+    if (currentUser == null) return;
+
+    final int? userId = int.tryParse(currentUser.id);
+    if (userId == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Kullanıcı ID geçersiz.')),
+        );
+      }
+      return;
+    }
+
+    // Seçilen fotoğrafı base64'e çevir
+    String? imageUrl = _remoteImageUrl; // Mevcut URL'i koru (değişmemişse)
+    if (_selectedImageFile != null) {
+      try {
+        final bytes = await _selectedImageFile!.readAsBytes();
+        final base64Str = 'data:image/jpeg;base64,${base64Encode(bytes)}';
+        imageUrl = base64Str;
+        debugPrint('--- [DEBUG] Image encoded, size: ${bytes.length} bytes ---');
+      } catch (e) {
+        debugPrint('--- [DEBUG] Image encoding failed: $e ---');
+      }
+    }
+
+    final Map<String, dynamic> updateData = {
+      'name': '${nameController.text} ${surnameController.text}'.trim(),
+      'email': emailController.text.trim(),
+      'phone': phoneController.text.trim(),
+      if (imageUrl != null) 'image_url': imageUrl,
+    };
+
+    final response = await _authService.updateProfile(userId, updateData);
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(response.message)),
+      );
+      if (response.success) {
+        // API'den dönen güncel kullanıcıyı session'a yaz
+        if (response.user != null) {
+          _userSession.setUser(response.user!);
+          _remoteImageUrl = response.user!.imageUrl;
+        }
+
+        _name = nameController.text;
+        _surname = surnameController.text;
+        _email = emailController.text;
+        _phoneNumber = phoneController.text;
+        notifyListeners();
+        Navigator.pop(context);
+      }
+    }
   }
 
   void onTabSelected(int index) {
@@ -98,6 +172,7 @@ class FoodProfileViewModel extends ChangeNotifier {
     // API çağrısını arka planda başlatıyoruz, cevabı beklemiyoruz
     _authService.logout().catchError((e) {
       debugPrint('Logout API error: $e');
+      return AuthResponse(success: false, message: e.toString());
     });
 
     // Yerel verileri anında temizliyoruz

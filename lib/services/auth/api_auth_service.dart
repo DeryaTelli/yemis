@@ -209,8 +209,8 @@ class ApiAuthService implements IAuthService {
   }
 
   @override
-  Future<AuthResponse> updateProfile(Map<String, dynamic> data) async {
-    return _patch(ApiConstants.profile, data);
+  Future<AuthResponse> updateProfile(int userId, Map<String, dynamic> data) async {
+    return _put('/api/users/$userId', data);
   }
 
   @override
@@ -331,8 +331,20 @@ class ApiAuthService implements IAuthService {
       final data = jsonDecode(response.body);
       if (data is Map<String, dynamic>) {
         if (!data.containsKey('success')) {
-          // API doğrudan nesne döndü (örn. address objesi), 2xx ise başarılı say
-          return const AuthResponse(success: true, message: 'İşlem başarılı.');
+          // API doğrudan nesne döndü (örn. user veya address objesi), 2xx ise başarılı say
+          // Eğer bu bir kullanıcı objesi ise AuthResponse içine gömelim
+          UserModel? user;
+          if (data.containsKey('id') && (data.containsKey('email') || data.containsKey('role'))) {
+             try {
+               user = UserModel.fromJson(data);
+             } catch (_) {}
+          }
+
+          return AuthResponse(
+            success: true, 
+            message: 'İşlem başarılı.',
+            user: user,
+          );
         }
         return AuthResponse.fromJson(data);
       }

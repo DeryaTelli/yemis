@@ -31,9 +31,10 @@
         "fields": {
             "email": "Email",
             "password": "Password",
-            "name": "Name",
+            "name": "Name and Surname",
             "newPassword": "New Password",
-            "confirmPassword": "Confirm Password"
+            "confirmPassword": "Confirm Password",
+            "phone": "Phone Number"
         },
         "validation": {
             "emailEmpty": "Email address cannot be empty.",
@@ -43,7 +44,9 @@
             "nameEmpty": "Name cannot be empty.",
             "kvkkRequired": "Please approve the KVKK terms.",
             "codeIncomplete": "Please enter the complete 4-digit code.",
-            "passwordsNotMatch": "Passwords do not match."
+            "passwordsNotMatch": "Passwords do not match.",
+            "phoneEmpty": "Phone number cannot be empty.",
+            "phoneInvalid": "Please enter a valid phone number."
         },
         "errors": {
             "invalidCredentials": "Invalid email or password.",
