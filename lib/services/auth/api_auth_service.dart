@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/foundation.dart';
@@ -216,6 +217,60 @@ class ApiAuthService implements IAuthService {
   @override
   Future<AuthResponse> deleteAccount() async {
     return _delete(ApiConstants.profile);
+  }
+  
+  @override
+  Future<String?> uploadImage(String filePath) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.uploadImage}');
+
+    if (kDebugMode) {
+      print('--- IMAGE UPLOAD REQUEST ---');
+      print('URL: $url');
+      print('FilePath: $filePath');
+      print('----------------------------');
+    }
+
+    try {
+      final request = http.MultipartRequest('POST', url);
+      
+      // Token ekle
+      if (_authToken != null) {
+        request.headers['Authorization'] = 'Bearer $_authToken';
+      }
+
+      // Dosyayı ekle (Backend 'file' anahtarı bekliyor)
+      // Dosya türünü belirle (Backend application/octet-stream kabul etmiyor)
+      final extension = filePath.split('.').last.toLowerCase();
+      String mimeType = 'image/jpeg';
+      if (extension == 'png') mimeType = 'image/png';
+      else if (extension == 'webp') mimeType = 'image/webp';
+      else if (extension == 'gif') mimeType = 'image/gif';
+
+      request.files.add(await http.MultipartFile.fromPath(
+        'file',
+        filePath,
+        contentType: MediaType.parse(mimeType),
+      ));
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (kDebugMode) {
+        print('--- IMAGE UPLOAD RESPONSE ---');
+        print('Status Code: ${response.statusCode}');
+        print('Body: ${response.body}');
+        print('-----------------------------');
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final data = jsonDecode(response.body);
+        // API genelde {"url": "..."} veya {"image_url": "..."} döner.
+        return data['url'] ?? data['image_url'] ?? data['path'];
+      }
+    } catch (e) {
+      if (kDebugMode) print('Image upload error: $e');
+    }
+    return null;
   }
 
   /// Ortak PATCH isteği metodu.

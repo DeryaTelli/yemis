@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
+import '../../models/auth/address_model.dart';
+import '../../services/auth/i_auth_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
 
 /// Volunteer ilan ekleme ekranının ViewModel'i.
 class VolunteerAddListingViewModel extends ChangeNotifier {
-  VolunteerAddListingViewModel();
+  final IAuthService _authService;
+
+  VolunteerAddListingViewModel(this._authService);
+
+  // ─── Kayıtlı Adresler ─────────────────────────────────
+  List<AddressModel> _savedAddresses = [];
+  List<AddressModel> get savedAddresses => _savedAddresses;
+
+  Future<void> fetchAddresses() async {
+    _savedAddresses = await _authService.getAddresses();
+    notifyListeners();
+  }
+
+  void selectAddress(AddressModel address) {
+    _selectedLatLng = LatLng(address.latitude, address.longitude);
+    _locationAddress = address.addressLine;
+    // Eğer etiket varsa onu da ekleyebiliriz (Figma'daki gibi)
+    if (address.label.isNotEmpty) {
+      _locationAddress = '${address.label}: ${address.addressLine}';
+    }
+    notifyListeners();
+  }
 
   // ─── Nav State ────────────────────────────────────────
 

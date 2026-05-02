@@ -20,7 +20,8 @@ class ProfileMenuTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isDestructive ? const Color(0xFFE53935) : (iconColor ?? const Color(0xFFFE8800));
+    final themeColor = Theme.of(context).primaryColor;
+    final color = isDestructive ? const Color(0xFFE53935) : (iconColor ?? themeColor);
     final textColor = isDestructive ? const Color(0xFFE53935) : const Color(0xFF555555);
 
     return InkWell(
@@ -49,7 +50,7 @@ class ProfileMenuTile extends StatelessWidget {
               Icon(
                 Icons.chevron_right_rounded,
                 size: 24,
-                color: iconColor ?? const Color(0xFFFE8800),
+                color: iconColor ?? themeColor,
               ),
           ],
         ),

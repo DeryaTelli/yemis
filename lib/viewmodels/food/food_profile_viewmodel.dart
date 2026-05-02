@@ -28,10 +28,10 @@ class FoodProfileViewModel extends ChangeNotifier {
   File? get selectedImageFile => _selectedImageFile;
   String? get remoteImageUrl => _remoteImageUrl;
 
-  String get name => _name;
-  String get surname => _surname;
-  String get email => _email;
-  String get phoneNumber => _phoneNumber;
+  String get name => _isEditing ? nameController.text : (_userSession.currentUser?.name.split(' ').first ?? _name);
+  String get surname => _isEditing ? surnameController.text : ((_userSession.currentUser?.name.contains(' ') ?? false) ? _userSession.currentUser!.name.split(' ').last : _surname);
+  String get email => _isEditing ? emailController.text : (_userSession.currentUser?.email ?? _email);
+  String get phoneNumber => _isEditing ? phoneController.text : (_userSession.currentUser?.phoneNumber ?? _phoneNumber);
   bool get isEditing => _isEditing;
 
   late final TextEditingController nameController;
@@ -40,6 +40,15 @@ class FoodProfileViewModel extends ChangeNotifier {
   late final TextEditingController phoneController;
 
   FoodProfileViewModel(this._authService, this._userSession) {
+    _initData();
+    nameController = TextEditingController(text: _name);
+    surnameController = TextEditingController(text: _surname);
+    emailController = TextEditingController(text: _email);
+    phoneController = TextEditingController(text: _phoneNumber);
+    _resetControllers();
+  }
+
+  void _initData() {
     _name = _userSession.currentUser?.name.split(' ').first ?? _name;
     _surname = (_userSession.currentUser?.name.contains(' ') ?? false)
         ? _userSession.currentUser!.name.split(' ').last
@@ -47,7 +56,14 @@ class FoodProfileViewModel extends ChangeNotifier {
     _email = _userSession.currentUser?.email ?? _email;
     _phoneNumber = _userSession.currentUser?.phoneNumber ?? '';
     _remoteImageUrl = _userSession.currentUser?.imageUrl;
+  }
 
+  void _resetControllers() {
+    _initData();
+    nameController.text = _name;
+    surnameController.text = _surname;
+    emailController.text = _email;
+    
     // Düzenleme ekranı için +90 veya 0 kısmını temizle
     String displayPhone = _phoneNumber;
     if (displayPhone.startsWith('+90')) {
@@ -55,11 +71,7 @@ class FoodProfileViewModel extends ChangeNotifier {
     } else if (displayPhone.startsWith('0')) {
       displayPhone = displayPhone.substring(1).trim();
     }
-
-    nameController = TextEditingController(text: _name);
-    surnameController = TextEditingController(text: _surname);
-    emailController = TextEditingController(text: _email);
-    phoneController = TextEditingController(text: displayPhone);
+    phoneController.text = displayPhone;
   }
 
   @override
@@ -74,10 +86,7 @@ class FoodProfileViewModel extends ChangeNotifier {
   void toggleEditing() {
     _isEditing = !_isEditing;
     if (_isEditing) {
-      nameController.text = _name;
-      surnameController.text = _surname;
-      emailController.text = _email;
-      phoneController.text = _phoneNumber;
+      _resetControllers();
     }
     notifyListeners();
   }
@@ -119,16 +128,17 @@ class FoodProfileViewModel extends ChangeNotifier {
       return;
     }
 
-    // Seçilen fotoğrafı base64'e çevir
-    String? imageUrl = _remoteImageUrl; // Mevcut URL'i koru (değişmemişse)
+    // Seçilen fotoğrafı önce yükle (Base64 yerine API upload endpoint'i kullanıyoruz)
+    String? imageUrl = _userSession.currentUser?.imageUrl; // Mevcut URL'i koru
     if (_selectedImageFile != null) {
-      try {
-        final bytes = await _selectedImageFile!.readAsBytes();
-        final base64Str = 'data:image/jpeg;base64,${base64Encode(bytes)}';
-        imageUrl = base64Str;
-        debugPrint('--- [DEBUG] Image encoded, size: ${bytes.length} bytes ---');
-      } catch (e) {
-        debugPrint('--- [DEBUG] Image encoding failed: $e ---');
+      debugPrint('--- [DEBUG] New image selected, uploading to server... ---');
+      final uploadedUrl = await _authService.uploadImage(_selectedImageFile!.path);
+      
+      if (uploadedUrl != null) {
+        imageUrl = uploadedUrl;
+        debugPrint('--- [DEBUG] Image upload success: $imageUrl ---');
+      } else {
+        debugPrint('--- [DEBUG] Image upload failed, continuing with old image or no image ---');
       }
     }
 
@@ -152,10 +162,9 @@ class FoodProfileViewModel extends ChangeNotifier {
           _remoteImageUrl = response.user!.imageUrl;
         }
 
-        _name = nameController.text;
-        _surname = surnameController.text;
-        _email = emailController.text;
-        _phoneNumber = phoneController.text;
+        _selectedImageFile = null; // Yükleme bittiği için temizle
+        _isEditing = false;
+        _resetControllers();
         notifyListeners();
         Navigator.pop(context);
       }

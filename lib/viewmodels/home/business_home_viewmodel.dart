@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
 
 class BusinessHomeViewModel extends ChangeNotifier {
+  BusinessHomeViewModel({required UserSession userSession}) : _userSession = userSession {
+    _userSession.addListener(_onUserSessionChanged);
+  }
+
+  final UserSession _userSession;
+
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
 
-  String get appBarTitle => 'Karabük, Merkez';
+  String get appBarTitle {
+    final addr = _userSession.currentAddress;
+    if (addr != null && addr.isNotEmpty) return addr;
+    return 'Konum Seçiniz';
+  }
+
   Color get appBarColor => const Color(0xFFFE8800);
 
   /// Mock haftalık satış verileri (Pzt → Paz)
@@ -13,6 +25,10 @@ class BusinessHomeViewModel extends ChangeNotifier {
 
   /// Satılan siparişler sayesinde önlenen CO₂ oranı (0.0 – 1.0)
   double get co2SavedPercent => 0.80;
+
+  void _onUserSessionChanged() {
+    notifyListeners();
+  }
 
   void onTabSelected(int index) {
     if (_selectedIndex == index) return;
@@ -37,5 +53,11 @@ class BusinessHomeViewModel extends ChangeNotifier {
       default:
         return null;
     }
+  }
+
+  @override
+  void dispose() {
+    _userSession.removeListener(_onUserSessionChanged);
+    super.dispose();
   }
 }

@@ -10,7 +10,7 @@ class FoodListingCard extends StatelessWidget {
     required this.onFavoriteTap,
     this.onTap,
     this.width,
-    this.imageHeight = 110, // Default'u biraz küçülttük (130 -> 110)
+    this.imageHeight = 110,
   });
 
   final FoodListing listing;
@@ -50,18 +50,17 @@ class FoodListingCard extends StatelessWidget {
                     child: SizedBox(
                       height: imageHeight,
                       width: double.infinity,
-                      child: Image.asset(
-                        listing.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
-                          color: const Color(0xFFFFE0B2),
-                          child: const Icon(
-                            Icons.restaurant_rounded,
-                            color: AppColors.primaryColor,
-                            size: 32,
-                          ),
-                        ),
-                      ),
+                      child: listing.isNetworkImage
+                          ? Image.network(
+                              listing.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _errorPlaceholder(),
+                            )
+                          : Image.asset(
+                              listing.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _errorPlaceholder(),
+                            ),
                     ),
                   ),
 
@@ -124,13 +123,13 @@ class FoodListingCard extends StatelessWidget {
                     ),
                   ),
 
-                  // Business Logo (sol-alt) - YENİ
+                  // Business Logo (sol-alt)
                   Positioned(
                     bottom: 8,
-                    left: 1,
+                    left: 4,
                     child: Container(
-                      width: 44,
-                      height: 44,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
@@ -147,24 +146,20 @@ class FoodListingCard extends StatelessWidget {
                         child:
                             listing.shopLogoUrl != null &&
                                 listing.shopLogoUrl!.isNotEmpty
-                            ? Image.asset(
-                                listing.shopLogoUrl!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.storefront_rounded,
-                                  color: AppColors.primaryColor,
-                                  size: 20,
-                                ),
-                              )
-                            : Image.asset(
-                                'assets/images/placeholder_shop.png',
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.storefront_rounded,
-                                  color: AppColors.primaryColor,
-                                  size: 20,
-                                ),
-                              ),
+                            ? (listing.shopLogoUrl!.startsWith('http')
+                                  ? Image.network(
+                                      listing.shopLogoUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) =>
+                                          _shopPlaceholder(),
+                                    )
+                                  : Image.asset(
+                                      listing.shopLogoUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) =>
+                                          _shopPlaceholder(),
+                                    ))
+                            : _shopPlaceholder(),
                       ),
                     ),
                   ),
@@ -220,16 +215,36 @@ class FoodListingCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    // Fiyat
+                    // Fiyatlar
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        '${listing.price.toInt()} TL',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.primaryTextColor,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (listing.originalPrice != null &&
+                              listing.originalPrice! > listing.price)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Text(
+                                '${listing.originalPrice!.toInt()} TL',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.hintTextColor,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: AppColors.hintTextColor,
+                                ),
+                              ),
+                            ),
+                          Text(
+                            '${listing.price.toInt()} TL',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primaryTextColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -238,6 +253,29 @@ class FoodListingCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _errorPlaceholder() {
+    return Container(
+      color: const Color(0xFFFFE0B2),
+      child: const Icon(
+        Icons.restaurant_rounded,
+        color: AppColors.primaryColor,
+        size: 32,
+      ),
+    );
+  }
+
+  Widget _shopPlaceholder() {
+    return Image.asset(
+      'assets/images/placeholder_shop.png',
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => const Icon(
+        Icons.storefront_rounded,
+        color: AppColors.primaryColor,
+        size: 20,
       ),
     );
   }

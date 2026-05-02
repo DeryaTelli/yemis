@@ -11,7 +11,7 @@ class MockVolunteerService implements IVolunteerService {
   @override
   Future<String> getUserLocationName() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    return 'Karabük, Merkez';
+    return '';
   }
 
   @override

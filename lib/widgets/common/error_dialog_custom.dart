@@ -81,7 +81,7 @@ class ErrorDialogCustom extends StatelessWidget {
                 height: 120,
                 repeat: false,
               ),
-              const SizedBox(width: 28),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(title, style: CustomTextStyles.orelegaOne32Primary),
               ),

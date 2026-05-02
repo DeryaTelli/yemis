@@ -202,6 +202,9 @@
         "shareButton": "Share",
         "successMessage": "Your order has been shared successfully!",
         "errorNoLocation": "Please select a location.",
+        "titleLabel": "Listing Title",
+        "descriptionLabel": "Listing Description",
+        "allergensLabel": "Allergens Information",
         "pickFromCamera": "Take from Camera",
         "pickFromGallery": "Choose from Gallery"
     },
@@ -225,5 +228,9 @@
         "successMessage": "Reservation placed for {title}!",
         "googlePay": "Pay with Google Pay",
         "applePay": "Pay with Apple Pay"
+    },
+    "addresses": {
+        "title": "My Addresses",
+        "addAddress": "Add New Address"
     }
 }

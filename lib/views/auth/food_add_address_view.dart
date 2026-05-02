@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/theme/app_theme.dart';
 import '../../utils/theme/text_styles_custom.dart';
+
 import '../../viewmodels/auth/food_add_address_viewmodel.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/location/i_location_data_service.dart';
@@ -26,17 +28,24 @@ class FoodAddAddressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userSession = context.read<UserSession>();
-    final themeColor = moduleType == AppModuleType.food
+    final themeColor = (moduleType == AppModuleType.food || moduleType == AppModuleType.business)
         ? AppColors.primaryColor
         : AppColors.volunteerColor;
 
-    return ChangeNotifierProvider(
-      create: (_) => FoodAddAddressViewModel(
-        authService: context.read<IAuthService>(),
-        locationService: context.read<ILocationDataService>(),
-        initialAddress: address,
+    final section = (moduleType == AppModuleType.food || moduleType == AppModuleType.business)
+        ? AppSection.food
+        : AppSection.volunteer;
+
+    return Theme(
+      data: AppTheme.themeFor(section),
+      child: ChangeNotifierProvider(
+        create: (_) => FoodAddAddressViewModel(
+          authService: context.read<IAuthService>(),
+          locationService: context.read<ILocationDataService>(),
+          initialAddress: address,
+        ),
+        child: _FoodAddAddressBody(themeColor: themeColor),
       ),
-      child: _FoodAddAddressBody(themeColor: themeColor),
     );
   }
 }
@@ -84,15 +93,11 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
           : AppModuleType.food,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: themeColor,
+          title: Text(vm.isEditMode ? 'Adresi Düzenle' : 'Adres Ekle'),
           leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () => Navigator.pop(context),
           ),
-          title: Text(vm.isEditMode ? 'Adresi Düzenle' : 'Adres Ekle'),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(20),

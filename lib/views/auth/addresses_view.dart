@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/auth/addresses_viewmodel.dart';
@@ -9,6 +10,7 @@ import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
+import '../../utils/theme/app_theme.dart';
 
 class AddressesView extends StatelessWidget {
   final AppModuleType moduleType;
@@ -16,7 +18,9 @@ class AddressesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeColor = moduleType == AppModuleType.food
+    final themeColor =
+        (moduleType == AppModuleType.food ||
+            moduleType == AppModuleType.business)
         ? AppColors.primaryColor
         : AppColors.volunteerColor;
 
@@ -27,151 +31,164 @@ class AddressesView extends StatelessWidget {
       )..init(),
       child: Consumer<AddressesViewModel>(
         builder: (context, vm, child) {
-          return LoadingOverlay(
-            isLoading: vm.isLoading,
-            moduleType: moduleType,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text('Adreslerim'),
-                backgroundColor: themeColor,
-                centerTitle: true,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
+          final section =
+              (moduleType == AppModuleType.food ||
+                  moduleType == AppModuleType.business)
+              ? AppSection.food
+              : AppSection.volunteer;
+
+          return Theme(
+            data: AppTheme.themeFor(section),
+            child: LoadingOverlay(
+              isLoading: vm.isLoading,
+              moduleType: moduleType,
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  title: Text(LocaleKeys.addresses_title.tr()),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  onPressed: () => Navigator.pop(context),
                 ),
-              ),
-              body: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _buildAddAddressHeader(context, themeColor),
-                  const SizedBox(height: 16),
-                  if (vm.addresses.isEmpty && !vm.isLoading)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.location_off_outlined,
-                              size: 48,
-                              color: Colors.grey[300],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Henüz kayıtlı bir adresiniz bulunmuyor.',
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+                body: ListView(
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    _buildAddAddressHeader(context, themeColor),
+                    const SizedBox(height: 16),
+                    if (vm.addresses.isEmpty && !vm.isLoading)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.location_off_outlined,
+                                size: 48,
+                                color: Colors.grey[300],
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 12),
+                              Text(
+                                'Henüz kayıtlı bir adresiniz bulunmuyor.',
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  else
-                    ...vm.addresses.map(
-                      (address) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        child: Dismissible(
-                          key: ValueKey('dismiss_${address.id}'),
-                          direction: DismissDirection.endToStart,
-                          confirmDismiss: (direction) async {
-                            final confirmed = await showDialog<bool>(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                title: const Text(
-                                  'Adresi Sil',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                content: const Text(
-                                  'Bu adresi silmek istediğinizden emin misiniz?',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(ctx, false),
-                                    child: const Text(
-                                      'Vazgeç',
-                                      style: TextStyle(color: Colors.grey),
+                      )
+                    else
+                      ...vm.addresses.map(
+                        (address) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Dismissible(
+                            key: ValueKey('dismiss_${address.id}'),
+                            direction: DismissDirection.endToStart,
+                            confirmDismiss: (direction) async {
+                              final confirmed = await showDialog<bool>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  title: const Text(
+                                    'Adresi Sil',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(ctx, true),
-                                    child: const Text(
-                                      'Sil',
-                                      style: TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
+                                  content: const Text(
+                                    'Bu adresi silmek istediğinizden emin misiniz?',
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(ctx, false),
+                                      child: const Text(
+                                        'Vazgeç',
+                                        style: TextStyle(color: Colors.grey),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                            return confirmed;
-                          },
-                          onDismissed: (direction) {
-                            vm.deleteAddress(address.id);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Adres silindi'),
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(
-                              Icons.delete_outline_rounded,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                          ),
-                          child: _AddressCard(
-                            key: ValueKey(address.id),
-                            label: address.label.isEmpty ? 'Ev' : address.label,
-                            name:
-                                context.read<UserSession>().currentUser?.name ??
-                                '',
-                            phone:
-                                context
-                                    .read<UserSession>()
-                                    .currentUser
-                                    ?.phoneNumber ??
-                                '',
-                            addressLine: address.addressLine,
-                            themeColor: themeColor,
-                            onEdit: () async {
-                              final result = await Navigator.pushNamed(
-                                context,
-                                AppRoutes.foodAddAddress,
-                                arguments: {
-                                  'address': address,
-                                  'moduleType': moduleType,
-                                },
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(ctx, true),
+                                      child: const Text(
+                                        'Sil',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               );
-                              if (result == true && context.mounted) {
-                                context
-                                    .read<AddressesViewModel>()
-                                    .fetchAddresses();
-                              }
+                              return confirmed;
                             },
+                            onDismissed: (direction) {
+                              vm.deleteAddress(address.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Adres silindi'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.only(right: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.redAccent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.delete_outline_rounded,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                            ),
+                            child: _AddressCard(
+                              key: ValueKey(address.id),
+                              label: address.label.isEmpty
+                                  ? 'Ev'
+                                  : address.label,
+                              name:
+                                  context
+                                      .read<UserSession>()
+                                      .currentUser
+                                      ?.name ??
+                                  '',
+                              phone:
+                                  context
+                                      .read<UserSession>()
+                                      .currentUser
+                                      ?.phoneNumber ??
+                                  '',
+                              addressLine: address.addressLine,
+                              themeColor: themeColor,
+                              onEdit: () async {
+                                final result = await Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.foodAddAddress,
+                                  arguments: {
+                                    'address': address,
+                                    'moduleType': moduleType,
+                                  },
+                                );
+                                if (result == true && context.mounted) {
+                                  context
+                                      .read<AddressesViewModel>()
+                                      .fetchAddresses();
+                                }
+                              },
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

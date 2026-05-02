@@ -11,21 +11,15 @@ class VolunteerProfileViewModel extends ChangeNotifier {
   int get selectedIndex => _selectedIndex;
 
   // ─── Profile Data ──────────────────────────────────
-  String _name = 'Derya';
-  String _surname = 'Telli';
-  String _email = '2002derya2002@gmail.com';
+  String get name => _userSession.currentUser?.name.split(' ').first ?? 'Derya';
+  String get surname => (_userSession.currentUser?.name.contains(' ') ?? false)
+      ? _userSession.currentUser!.name.split(' ').last
+      : 'Telli';
+  String get email =>
+      _userSession.currentUser?.email ?? '2002derya2002@gmail.com';
+  String? get remoteImageUrl => _userSession.currentUser?.imageUrl;
 
-  String get name => _name;
-  String get surname => _surname;
-  String get email => _email;
-
-  VolunteerProfileViewModel(this._authService, this._userSession) {
-    _name = _userSession.currentUser?.name.split(' ').first ?? _name;
-    _surname = (_userSession.currentUser?.name.contains(' ') ?? false)
-        ? _userSession.currentUser!.name.split(' ').last
-        : _surname;
-    _email = _userSession.currentUser?.email ?? _email;
-  }
+  VolunteerProfileViewModel(this._authService, this._userSession);
 
   void onTabSelected(int index) {
     if (_selectedIndex == index) return;

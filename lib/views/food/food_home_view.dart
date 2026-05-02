@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/food/food_listing.dart';
 import '../../services/auth/user_session.dart';
-import '../../services/food/mock_food_service.dart';
+import '../../services/food/api_food_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_home_viewmodel.dart';
 import '../../widgets/food/food_filter_chips.dart';
@@ -24,7 +24,7 @@ class FoodHomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => FoodHomeViewModel(
-        service: MockFoodService(),
+        service: ApiFoodService()..setToken(userSession.token ?? ''),
         userSession: userSession,
       )..init(),
       child: const _FoodHomeBody(),
@@ -74,7 +74,7 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
+              //const SizedBox(height: 16),
 
               // ── Arama Barı ─────────────────────────────
               FoodSearchBar(
@@ -125,7 +125,11 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
             if (route != null) {
               if (index == 2) {
                 if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    route,
+                    (r) => false,
+                  );
                 }
               } else if (ModalRoute.of(context)?.settings.name != route) {
                 Navigator.pushReplacementNamed(context, route);

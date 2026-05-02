@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/viewmodels/volunteer/volunteer_listings_viewmodel.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../utils/theme/text_styles_custom.dart';
-import '../../viewmodels/volunteer/volunteer_listings_viewmodel.dart';
 import '../../viewmodels/volunteer/volunteer_profile_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/food/profile_menu_tile.dart';
@@ -32,46 +32,29 @@ class _VolunteerProfileBody extends StatefulWidget {
 }
 
 class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
-  void _showPhotoSelectBS(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              _BSOption(
-                icon: Icons.camera_alt_rounded,
-                title: 'Take from Camera',
-                onTap: () => Navigator.pop(context),
-              ),
-              const Divider(height: 1),
-              _BSOption(
-                icon: Icons.photo_library_rounded,
-                title: 'Choose from Gallery',
-                onTap: () => Navigator.pop(context),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
+  Widget _buildAvatar(VolunteerProfileViewModel vm) {
+    const Color fallbackBg = Color(0xFFD1F1DB);
+    const Color fallbackIcon = AppColors.volunteerColor;
+
+    if (vm.remoteImageUrl != null && vm.remoteImageUrl!.isNotEmpty) {
+      return Image.network(
+        vm.remoteImageUrl!,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          width: 60,
+          height: 60,
+          color: fallbackBg,
+          child: const Icon(Icons.person, size: 32, color: fallbackIcon),
+        ),
+      );
+    }
+    return Container(
+      width: 60,
+      height: 60,
+      color: fallbackBg,
+      child: const Icon(Icons.person, size: 32, color: fallbackIcon),
     );
   }
 
@@ -81,9 +64,7 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(LocaleKeys.volunteerProfile_title.tr()),
-      ),
+      appBar: AppBar(title: Text(LocaleKeys.volunteerProfile_title.tr())),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
@@ -99,25 +80,17 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                 children: [
                   // Avatar
                   GestureDetector(
-                    onTap: () => _showPhotoSelectBS(context),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.foodProfileEdit,
+                      arguments: AppSection.volunteer,
+                    ),
                     child: SizedBox(
                       width: 64,
                       height: 64,
                       child: Stack(
                         children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: AppColors.volunteerColor.withValues(alpha: 0.3),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.person,
-                              size: 32,
-                              color: AppColors.volunteerColor,
-                            ),
-                          ),
+                          ClipOval(child: _buildAvatar(vm)),
                           Positioned(
                             right: 0,
                             bottom: 0,
@@ -149,10 +122,7 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                           style: CustomTextStyles.orelegaOne18DarkGrey,
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          vm.email,
-                          style: CustomTextStyles.italic14Grey,
-                        ),
+                        Text(vm.email, style: CustomTextStyles.italic14Grey),
                       ],
                     ),
                   ),
@@ -283,7 +253,11 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
   void _handleNavigation(BuildContext context, int index) {
     if (index == 2) {
       if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          AppRoutes.home,
+          (route) => false,
+        );
       }
       return;
     }
@@ -309,45 +283,5 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
     if (ModalRoute.of(context)?.settings.name != route) {
       Navigator.pushReplacementNamed(context, route);
     }
-  }
-}
-
-class _BSOption extends StatelessWidget {
-  const _BSOption({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(vertical: 8),
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.volunteerColor.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: AppColors.volunteerColor, size: 24),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF1B1B1B),
-        ),
-      ),
-      trailing: const Icon(
-        Icons.chevron_right_rounded,
-        color: AppColors.volunteerColor,
-      ),
-    );
   }
 }

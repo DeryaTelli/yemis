@@ -22,7 +22,7 @@ class MockFoodService implements IFoodService {
   @override
   Future<String> getUserLocationName() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    return _userSession?.currentAddress ?? 'Karabük, Merkez';
+    return _userSession?.currentAddress ?? '';
   }
 
   @override

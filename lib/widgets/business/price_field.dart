@@ -6,9 +6,11 @@ class PriceField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onChanged,
+    this.hintText,
   });
   final TextEditingController controller;
   final void Function(String) onChanged;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,8 @@ class PriceField extends StatelessWidget {
           color: AppColors.primaryTextColor,
         ),
         decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w400),
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           suffix: const Text(
@@ -38,7 +42,7 @@ class PriceField extends StatelessWidget {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
+            borderSide: BorderSide(color: AppColors.primaryColor.withValues(alpha: 0.3)),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),

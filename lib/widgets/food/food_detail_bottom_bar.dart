@@ -35,13 +35,30 @@ class FoodDetailBottomBar extends StatelessWidget {
       child: Row(
         children: [
           // Fiyat
-          Text(
-            '${listing.price.toInt()} TL',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: AppColors.primaryTextColor,
-            ),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (listing.originalPrice != null && listing.originalPrice! > listing.price)
+                Text(
+                  '${listing.originalPrice!.toInt()} TL',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.hintTextColor,
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor: AppColors.hintTextColor,
+                  ),
+                ),
+              Text(
+                '${listing.price.toInt()} TL',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.primaryTextColor,
+                ),
+              ),
+            ],
           ),
           const Spacer(),
 

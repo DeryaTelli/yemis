@@ -22,18 +22,17 @@ class FoodDetailHeroImage extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           // Arka plan resim
-          Image.asset(
-            listing.imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stack) => Container(
-              color: const Color(0xFFFFE0B2),
-              child: const Icon(
-                Icons.restaurant_rounded,
-                color: AppColors.primaryColor,
-                size: 64,
-              ),
-            ),
-          ),
+          listing.isNetworkImage
+              ? Image.network(
+                  listing.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stack) => _errorPlaceholder(),
+                )
+              : Image.asset(
+                  listing.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stack) => _errorPlaceholder(),
+                ),
 
           // Gradient overlay (alt kısımda solma)
           Positioned(
@@ -75,22 +74,19 @@ class FoodDetailHeroImage extends StatelessWidget {
                 border: Border.all(color: Colors.white, width: 2),
               ),
               child: ClipOval(
-                child: listing.shopLogoUrl != null &&
-                        listing.shopLogoUrl!.isNotEmpty
-                    ? Image.asset(
-                        listing.shopLogoUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.storefront_rounded,
-                          color: AppColors.primaryColor,
-                          size: 24,
-                        ),
-                      )
-                    : const Icon(
-                        Icons.storefront_rounded,
-                        color: AppColors.primaryColor,
-                        size: 24,
-                      ),
+                child: listing.shopLogoUrl != null && listing.shopLogoUrl!.isNotEmpty
+                    ? (listing.shopLogoUrl!.startsWith('http')
+                        ? Image.network(
+                            listing.shopLogoUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => _shopPlaceholder(),
+                          )
+                        : Image.asset(
+                            listing.shopLogoUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => _shopPlaceholder(),
+                          ))
+                    : _shopPlaceholder(),
               ),
             ),
           ),
@@ -146,15 +142,36 @@ class FoodDetailHeroImage extends StatelessWidget {
                   vm.listing?.isFavorite == true
                       ? Icons.favorite_rounded
                       : Icons.favorite_border_rounded,
-                  color: vm.listing?.isFavorite == true
-                      ? Colors.red
-                      : const Color(0xFFFFC107),
+                  color: vm.listing?.isFavorite == true ? Colors.red : const Color(0xFFFFC107),
                   size: 20,
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _errorPlaceholder() {
+    return Container(
+      color: const Color(0xFFFFE0B2),
+      child: const Icon(
+        Icons.restaurant_rounded,
+        color: AppColors.primaryColor,
+        size: 64,
+      ),
+    );
+  }
+
+  Widget _shopPlaceholder() {
+    return Image.asset(
+      'assets/images/placeholder_shop.png',
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => const Icon(
+        Icons.storefront_rounded,
+        color: AppColors.primaryColor,
+        size: 24,
       ),
     );
   }

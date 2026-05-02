@@ -5,8 +5,9 @@ import '../../utils/locale_keys.dart';
 import '../../viewmodels/business/business_add_order_viewmodel.dart';
 
 class ShareButton extends StatelessWidget {
-  const ShareButton({super.key, required this.vm});
+  const ShareButton({super.key, required this.vm, this.onSuccess});
   final BusinessAddOrderViewModel vm;
+  final VoidCallback? onSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +17,20 @@ class ShareButton extends StatelessWidget {
           : () async {
               final ok = await vm.submit();
               if (ok && context.mounted) {
+                if (onSuccess != null) onSuccess!();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      LocaleKeys.businessAddOrder_successMessage.tr(),
+                    content: Row(
+                      children: [
+                        const Icon(Icons.check_circle_outline, color: Colors.white),
+                        const SizedBox(width: 12),
+                        Text(LocaleKeys.businessAddOrder_successMessage.tr()),
+                      ],
                     ),
-                    backgroundColor: AppColors.primaryColor,
+                    backgroundColor: Colors.green,
                     behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 2),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    duration: const Duration(seconds: 3),
                   ),
                 );
               }

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/services/auth/user_session.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/locale_keys.dart';
 import '../../viewmodels/home/volunteer_home_viewmodel.dart';
@@ -22,7 +23,8 @@ class VolunteerHomeView extends StatelessWidget {
     return Theme(
       data: AppTheme.themeFor(AppSection.volunteer),
       child: ChangeNotifierProvider(
-        create: (_) => VolunteerHomeViewModel(),
+        create: (ctx) =>
+            VolunteerHomeViewModel(userSession: ctx.read<UserSession>()),
         child: const _VolunteerHomeBody(),
       ),
     );

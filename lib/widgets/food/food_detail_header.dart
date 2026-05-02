@@ -18,7 +18,7 @@ class FoodDetailHeader extends StatelessWidget {
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
             child: Column(
@@ -38,8 +38,11 @@ class FoodDetailHeader extends StatelessWidget {
                 // Saat aralığı (Dinamik: Bugün Al vb.)
                 Row(
                   children: [
-                    const Icon(Icons.access_time_rounded,
-                        color: AppColors.primaryColor, size: 14),
+                    const Icon(
+                      Icons.access_time_rounded,
+                      color: AppColors.primaryColor,
+                      size: 14,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       vm.deliveryText,
@@ -55,8 +58,11 @@ class FoodDetailHeader extends StatelessWidget {
                 // Mesafe + Mağaza (Dinamik mesafe)
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined,
-                        color: AppColors.primaryColor, size: 14),
+                    const Icon(
+                      Icons.location_on_outlined,
+                      color: AppColors.primaryColor,
+                      size: 14,
+                    ),
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
@@ -88,6 +94,18 @@ class FoodDetailHeader extends StatelessWidget {
             constraints: const BoxConstraints(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _shopPlaceholder() {
+    return Image.asset(
+      'assets/images/placeholder_shop.png',
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => const Icon(
+        Icons.storefront_rounded,
+        color: AppColors.primaryColor,
+        size: 24,
       ),
     );
   }

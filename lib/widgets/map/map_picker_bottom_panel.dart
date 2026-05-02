@@ -92,7 +92,7 @@ class MapPickerBottomPanel extends StatelessWidget {
                       ),
                 onChanged: vm.onSearchChanged,
                 fillColor: const Color(0xFFF5F5F5),
-                borderColor: const Color(0xFFE0E0E0),
+                borderColor: (accentColor ?? AppColors.primaryColor).withValues(alpha: 0.5),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),

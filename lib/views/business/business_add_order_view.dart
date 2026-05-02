@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/widgets/business/location_button.dart';
+import 'package:yemis/widgets/common/custom_text_field.dart';
+import '../../services/auth/i_auth_service.dart';
+import '../../services/business/i_business_service.dart';
 import 'package:yemis/widgets/business/photo_box.dart';
 import 'package:yemis/widgets/business/price_field.dart';
 import 'package:yemis/widgets/business/quantity_row.dart';
@@ -24,7 +27,10 @@ class BusinessAddOrderView extends StatelessWidget {
     return Theme(
       data: AppTheme.themeFor(AppSection.food),
       child: ChangeNotifierProvider(
-        create: (_) => BusinessAddOrderViewModel(),
+        create: (ctx) => BusinessAddOrderViewModel(
+          authService: ctx.read<IAuthService>(),
+          businessService: ctx.read<IBusinessService>(),
+        ),
         child: const _Body(),
       ),
     );
@@ -38,17 +44,25 @@ class _Body extends StatefulWidget {
 }
 
 class _BodyState extends State<_Body> {
-  late final TextEditingController _priceController;
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _discountPriceController =
+      TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _allergensController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _priceController = TextEditingController(text: '100');
   }
 
   @override
   void dispose() {
+    _titleController.dispose();
     _priceController.dispose();
+    _discountPriceController.dispose();
+    _descriptionController.dispose();
+    _allergensController.dispose();
     super.dispose();
   }
 
@@ -70,6 +84,17 @@ class _BodyState extends State<_Body> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ── Başlık ────────────────────────────────────────
+              _label(LocaleKeys.businessAddOrder_titleLabel.tr()),
+              const SizedBox(height: 8),
+              CustomTextField(
+                controller: _titleController,
+                hintText: 'Örn: Sürpriz Kahvaltı Kutusu',
+                onChanged: vm.onTitleChanged,
+                borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
+              ),
+              const SizedBox(height: 16),
+
               // ── Fotoğraf ──────────────────────────────────────
               _label(LocaleKeys.businessAddOrder_photoLabel.tr()),
               const SizedBox(height: 8),
@@ -108,21 +133,47 @@ class _BodyState extends State<_Body> {
                   _label(LocaleKeys.businessAddOrder_priceLabel.tr()),
                   PriceField(
                     controller: _priceController,
+                    hintText: '0',
                     onChanged: vm.onPriceChanged,
                   ),
                 ],
               ),
               const SizedBox(height: 16),
+
               // ── İndirim Fiyatı ───────────────────────────────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _label(LocaleKeys.businessAddOrder_discountPriceLabel.tr()),
                   PriceField(
-                    controller: _priceController,
-                    onChanged: vm.onPriceChanged,
+                    controller: _discountPriceController,
+                    hintText: '0',
+                    onChanged: vm.onDiscountPriceChanged,
                   ),
                 ],
+              ),
+              const SizedBox(height: 24),
+
+              // ── Açıklama ──────────────────────────────────────
+              _label(LocaleKeys.businessAddOrder_descriptionLabel.tr()),
+              const SizedBox(height: 8),
+              CustomTextField(
+                controller: _descriptionController,
+                hintText: 'İlanınızla ilgili detaylı bilgi giriniz...',
+                maxLines: 3,
+                onChanged: vm.onDescriptionChanged,
+                borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
+              ),
+              const SizedBox(height: 16),
+
+              // ── Alerjenler ────────────────────────────────────
+              _label(LocaleKeys.businessAddOrder_allergensLabel.tr()),
+              const SizedBox(height: 8),
+              CustomTextField(
+                controller: _allergensController,
+                hintText: 'Örn: Glüten, Süt, Yumurta içerir...',
+                onChanged: vm.onAllergensChanged,
+                borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
               ),
               const SizedBox(height: 28),
 
@@ -131,13 +182,24 @@ class _BodyState extends State<_Body> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
-                    LocaleKeys.businessAddOrder_errorNoLocation.tr(),
+                    vm.errorMessage == 'errorNoLocation'
+                        ? LocaleKeys.businessAddOrder_errorNoLocation.tr()
+                        : vm.errorMessage!,
                     style: const TextStyle(color: Colors.red, fontSize: 13),
                   ),
                 ),
 
               // ── Paylaş ────────────────────────────────────────
-              ShareButton(vm: vm),
+              ShareButton(
+                vm: vm,
+                onSuccess: () {
+                  _titleController.clear();
+                  _priceController.clear();
+                  _discountPriceController.clear();
+                  _descriptionController.clear();
+                  _allergensController.clear();
+                },
+              ),
             ],
           ),
         ),
@@ -151,13 +213,13 @@ class _BodyState extends State<_Body> {
   }
 
   Widget _label(String text) => Text(
-    text,
-    style: const TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: AppColors.primaryTextColor,
-    ),
-  );
+        text,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primaryTextColor,
+        ),
+      );
 
   void _showImagePickerSheet(
     BuildContext context,

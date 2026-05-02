@@ -33,4 +33,8 @@ class AppRoutes {
   static const String volunteerAllListings = '/volunteer-all-listings';
   static const String addresses = '/addresses';
   static const String foodAddAddress = '/food-add-address';
+  static const String businessProfileEdit = '/business-profile-edit';
+  static const String businessListings = '/business/listings';
+  static const String businessEditOrder = '/business/edit-order';
+  static const String businessListingDetail = '/business/listing-detail';
 }

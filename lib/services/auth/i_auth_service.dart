@@ -48,4 +48,7 @@ abstract class IAuthService {
 
   /// Hesabı siler.
   Future<AuthResponse> deleteAccount();
+
+  /// Görsel yükler ve URL döner.
+  Future<String?> uploadImage(String filePath);
 }

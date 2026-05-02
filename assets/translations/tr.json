@@ -166,7 +166,7 @@
   },
   "businessHome": {
     "weeklySalesTitle": "Haftalık Satış Özeti",
-    "addedOrders": "Eklenen\nSiparişler",
+    "addedOrders": "Eklenen\nİlanlar",
     "soldOrders": "Satılan\nSiparişler",
     "reportsTitle": "Raporlar",
     "reportsDescription": "Sipariş performansını, yapılan rezervasyonları ve atık düşüşünü tek bir yerden takip edin. İşletmenizin günlük-aylık özetleri kolayca görüntüleyin.",
@@ -202,6 +202,9 @@
     "shareButton": "Paylaş",
     "successMessage": "Siparişiniz başarıyla paylaşıldı!",
     "errorNoLocation": "Lütfen bir konum seçin.",
+    "titleLabel": "İlan Başlığı",
+    "descriptionLabel": "İlan Açıklaması",
+    "allergensLabel": "Alerjen Bilgisi",
     "pickFromCamera": "Kameradan Çek",
     "pickFromGallery": "Galeriden Seç"
   },
@@ -225,5 +228,9 @@
     "successMessage": "{title} için rezervasyon alındı!",
     "googlePay": "Google Pay ile öde",
     "applePay": "Apple Pay ile öde"
+  },
+  "addresses": {
+    "title": "Adreslerim",
+    "addAddress": "Yeni Adres Ekle"
   }
 }

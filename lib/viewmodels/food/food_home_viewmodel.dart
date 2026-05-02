@@ -39,9 +39,9 @@ class FoodHomeViewModel extends ChangeNotifier {
   int get selectedIndex => _selectedIndex;
 
   String get appBarTitle {
-    if (_userSession.currentAddress != null)
-      return _userSession.currentAddress!;
-    return _locationName.isEmpty ? 'Konum yükleniyor…' : _locationName;
+    final addr = _userSession.currentAddress;
+    if (addr != null && addr.isNotEmpty) return addr;
+    return 'Konum Seçiniz';
   }
 
   Color get appBarColor => const Color(0xFFFE8800);

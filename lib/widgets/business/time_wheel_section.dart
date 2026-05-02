@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../viewmodels/business/business_add_order_viewmodel.dart';
 import 'wheel_column.dart';
 
 class TimeWheelSection extends StatelessWidget {
   const TimeWheelSection({super.key, required this.vm});
-  final BusinessAddOrderViewModel vm;
+  
+  /// Hem BusinessAddOrderViewModel hem de BusinessEditOrderViewModel destekler.
+  final dynamic vm;
 
   @override
   Widget build(BuildContext context) {

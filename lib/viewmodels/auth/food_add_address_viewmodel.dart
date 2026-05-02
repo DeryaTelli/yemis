@@ -9,6 +9,8 @@ class FoodAddAddressViewModel extends ChangeNotifier {
   final ILocationDataService _locationService;
   final AddressModel? initialAddress;
 
+  bool _isDisposed = false;
+
   FoodAddAddressViewModel({
     required IAuthService authService,
     required ILocationDataService locationService,
@@ -70,10 +72,10 @@ class FoodAddAddressViewModel extends ChangeNotifier {
       }
     }
 
-    // 4. Serbest adres metnini doldur (İl/İlçe/Mahalle dışındaki kısım)
+    // 4. Serbest adres metnini doldur
     final parts = addressLine.split(' / ');
-    final remainder = parts.length > 3 ? parts.sublist(3).join(' / ') : '';
-    adresController.text = remainder;
+    final remainder = parts.length >= 3 ? parts.sublist(parts.length > 3 ? 3 : 0).join(' / ') : addressLine;
+    adresController.text = remainder.isEmpty ? addressLine : remainder;
 
     debugPrint('✅ [FoodAddressVM] Form dolduruldu:');
     debugPrint('   İl=$city | İlçe=$district | Mahalle=$neighborhood');
@@ -129,7 +131,7 @@ class FoodAddAddressViewModel extends ChangeNotifier {
         }
       }
       
-      adresController.text = remainder.isEmpty ? '' : remainder;
+      adresController.text = remainder.isEmpty ? addressLine : remainder;
     } else {
       // Format tutmuyorsa direkt açık adrese yaz
       adresController.text = addressLine;
@@ -269,8 +271,16 @@ class FoodAddAddressViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     adresController.dispose();
     baslikController.dispose();
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_isDisposed) {
+      super.notifyListeners();
+    }
   }
 }

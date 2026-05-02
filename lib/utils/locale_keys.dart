@@ -243,6 +243,11 @@ abstract class LocaleKeys {
       'businessAddOrder.successMessage';
   static const businessAddOrder_errorNoLocation =
       'businessAddOrder.errorNoLocation';
+  static const businessAddOrder_titleLabel = 'businessAddOrder.titleLabel';
+  static const businessAddOrder_descriptionLabel =
+      'businessAddOrder.descriptionLabel';
+  static const businessAddOrder_allergensLabel =
+      'businessAddOrder.allergensLabel';
   static const businessAddOrder_pickFromCamera =
       'businessAddOrder.pickFromCamera';
   static const businessAddOrder_pickFromGallery =
@@ -270,4 +275,8 @@ abstract class LocaleKeys {
   static const foodReserve_successMessage = 'foodReserve.successMessage';
   static const foodReserve_googlePay = 'foodReserve.googlePay';
   static const foodReserve_applePay = 'foodReserve.applePay';
+
+  // addresses
+  static const addresses_title = 'addresses.title';
+  static const addresses_addAddress = 'addresses.addAddress';
 }

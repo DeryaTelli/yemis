@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/constants/api_constants.dart';
+
 /// Uygulamadaki iki kullanıcı tipi.
 ///
 /// - [food]     → Normal kullanıcı. Yemek satın alabilir, Gönüllü modülüne erişebilir.
@@ -47,11 +49,22 @@ class UserModel {
       detectedType = UserType.business;
     }
 
+    // Image URL işleme: Eğer relative path ise tam URL'e çevir
+    String? rawImageUrl = json['image_url']?.toString() ?? json['imageUrl']?.toString();
+    String? processedImageUrl;
+    if (rawImageUrl != null && rawImageUrl.isNotEmpty) {
+      if (rawImageUrl.startsWith('http')) {
+        processedImageUrl = rawImageUrl;
+      } else {
+        final cleanPath = rawImageUrl.startsWith('/') ? rawImageUrl : '/$rawImageUrl';
+        processedImageUrl = '${ApiConstants.baseUrl}$cleanPath';
+      }
+    }
+
     debugPrint('--- [DEBUG] UserModel.fromJson ---');
     debugPrint('ID: ${json['id']}');
     debugPrint('Raw Role: $rawRole');
-    debugPrint('Is Business (bool): $rawIsBusiness');
-    debugPrint('Detected UserType: $detectedType');
+    debugPrint('Processed Image URL: $processedImageUrl');
     debugPrint('----------------------------------');
 
     return UserModel(
@@ -60,7 +73,7 @@ class UserModel {
       email: (json['email'] ?? '').toString(),
       phoneNumber: json['phoneNumber']?.toString() ?? json['phone']?.toString(),
       address: json['address']?.toString(),
-      imageUrl: json['image_url']?.toString() ?? json['imageUrl']?.toString(),
+      imageUrl: processedImageUrl,
       isVerified: json['is_verified'] ?? false,
       isVolunteer: json['is_volunteer'] ?? false,
       userType: detectedType,

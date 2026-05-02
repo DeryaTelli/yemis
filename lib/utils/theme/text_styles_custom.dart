@@ -50,6 +50,8 @@ class CustomTextStyles {
 
   static TextStyle get orelegaOne18DarkGrey => GoogleFonts.orelegaOne(fontSize: 18, fontWeight: FontWeight.w400, color: const Color(0xFF4F4F4F));
   static TextStyle get orelegaOne32White => GoogleFonts.orelegaOne(fontSize: 32, fontWeight: FontWeight.w400, color: Colors.white);
+  static TextStyle get orelegaOne32Grey => GoogleFonts.orelegaOne(fontSize: 32, fontWeight: FontWeight.w400, color: Color(0xFF838383));
+  
   static TextStyle get orelegaOne32Primary => GoogleFonts.orelegaOne(fontSize: 32, fontWeight: FontWeight.w400, color: const Color(0xFFFE8800), height: 1.2);
   static TextStyle get orelegaOne30Primary => GoogleFonts.orelegaOne(fontSize: 30, fontWeight: FontWeight.w400, color: const Color(0xFFFE8800), height: 1.2);
 

@@ -204,12 +204,26 @@ class LocationViewModel extends ChangeNotifier {
   Future<void> onLocationPicked(
     double lat,
     double lng,
-    VoidCallback onDone,
-  ) async {
+    VoidCallback onDone, {
+    String? address,
+    String? city,
+    String? district,
+    String? neighborhood,
+  }) async {
     _isLoading = true;
     notifyListeners();
     try {
-      final geo = await _reverseGeocode(lat, lng);
+      final _GeoResult geo;
+      if (address != null) {
+        geo = _GeoResult(
+          addressLine: address,
+          city: city ?? '',
+          district: district ?? '',
+          neighborhood: neighborhood ?? '',
+        );
+      } else {
+        geo = await _reverseGeocode(lat, lng);
+      }
       await _saveLocation(geo, lat, lng);
       await _markShown();
       onDone();
@@ -267,9 +281,7 @@ class LocationViewModel extends ChangeNotifier {
             if (details.isNotEmpty) details,
           ];
 
-          final addressLine = parts.length >= 3
-              ? parts.join(' / ')
-              : (data['display_name'] ?? 'Bilinmeyen Konum') as String;
+          final addressLine = (data['display_name'] ?? '').toString();
 
           debugPrint(
             '📍 [ReverseGeocode] city=$province | district=$districtClean | neighborhood=$neighborhoodClean',
@@ -293,9 +305,9 @@ class LocationViewModel extends ChangeNotifier {
       }
     } catch (_) {}
     return const _GeoResult(
-      addressLine: 'Karabük / Merkez / Bilinmeyen Mahalle',
-      city: 'Karabük',
-      district: 'Merkez',
+      addressLine: '',
+      city: '',
+      district: '',
       neighborhood: '',
     );
   }

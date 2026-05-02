@@ -54,10 +54,15 @@ class AppTheme {
 
       // AppBar teması
       appBarTheme: AppBarTheme(
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: primaryColor,
         centerTitle: true,
-        titleTextStyle: CustomTextStyles.orelegaOne32White,
+        elevation: 3,
+        shadowColor: Colors.black.withOpacity(0.4),
+        surfaceTintColor: Colors.white,
+        titleTextStyle: CustomTextStyles.orelegaOne32Primary.copyWith(
+          color: primaryColor,
+        ),
       ),
 
       // Metin teması

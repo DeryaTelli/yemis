@@ -13,6 +13,7 @@ class FoodListing {
     required this.section,
     this.shopLogoUrl,
     this.isFavorite = false,
+    this.isNetworkImage = false,
     // ─── Detay alanları (opsiyonel) ───────────────────────
     this.description,
     this.ingredients,
@@ -21,6 +22,7 @@ class FoodListing {
     this.longitude,
     this.deliveryStartTime,
     this.deliveryEndTime,
+    this.originalPrice,
   });
 
   final String id;
@@ -35,6 +37,7 @@ class FoodListing {
   final FoodSection section;
   final String? shopLogoUrl;
   final bool isFavorite;
+  final bool isNetworkImage;
 
   // Detay ekranında kullanılır
   final String? description;
@@ -44,9 +47,11 @@ class FoodListing {
   final double? longitude;
   final DateTime? deliveryStartTime;
   final DateTime? deliveryEndTime;
+  final double? originalPrice;
 
   FoodListing copyWith({
     bool? isFavorite,
+    bool? isNetworkImage,
     String? description,
     String? ingredients,
     String? allergens,
@@ -54,6 +59,7 @@ class FoodListing {
     double? longitude,
     DateTime? deliveryStartTime,
     DateTime? deliveryEndTime,
+    double? originalPrice,
   }) {
     return FoodListing(
       id: id,
@@ -66,7 +72,9 @@ class FoodListing {
       price: price,
       rating: rating,
       section: section,
+      shopLogoUrl: shopLogoUrl,
       isFavorite: isFavorite ?? this.isFavorite,
+      isNetworkImage: isNetworkImage ?? this.isNetworkImage,
       description: description ?? this.description,
       ingredients: ingredients ?? this.ingredients,
       allergens: allergens ?? this.allergens,
@@ -74,13 +82,14 @@ class FoodListing {
       longitude: longitude ?? this.longitude,
       deliveryStartTime: deliveryStartTime ?? this.deliveryStartTime,
       deliveryEndTime: deliveryEndTime ?? this.deliveryEndTime,
+      originalPrice: originalPrice ?? this.originalPrice,
     );
   }
 }
 
 /// Hangi bölümde gösterileceğini belirtir.
 enum FoodSection {
-  surpriseBox,   // Sürpriz Kutu
-  buyNow,        // Şimdi Al
-  todayPopular,  // Bugün Popüler
+  surpriseBox, // Sürpriz Kutu
+  buyNow, // Şimdi Al
+  todayPopular, // Bugün Popüler
 }

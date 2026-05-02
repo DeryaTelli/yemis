@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
+import '../../services/auth/user_session.dart';
 import '../../viewmodels/home/volunteer_home_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 
@@ -10,7 +11,8 @@ class VolunteerHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => VolunteerHomeViewModel(),
+      create: (ctx) =>
+          VolunteerHomeViewModel(userSession: ctx.read<UserSession>()),
       child: Consumer<VolunteerHomeViewModel>(
         builder: (context, vm, child) {
           return Scaffold(

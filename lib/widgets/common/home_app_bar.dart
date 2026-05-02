@@ -23,7 +23,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.white,
       foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: false,
@@ -67,7 +67,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Flexible(
                   child: Text(
                     title.split('/').first.trim(),
-                    style: CustomTextStyles.semiBold16White,
+                    style: CustomTextStyles.semiBold16Grey,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),

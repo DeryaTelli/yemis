@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/services/auth/user_session.dart';
 import 'package:yemis/widgets/business/co2_card.dart';
 import 'package:yemis/widgets/business/info_card.dart';
 import 'package:yemis/widgets/business/order_button.dart';
@@ -13,6 +14,7 @@ import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/home_app_bar.dart';
 import '../../utils/routes/app_routes.dart';
+
 /// İşletme ana sayfası
 class BusinessHomeView extends StatelessWidget {
   const BusinessHomeView({super.key});
@@ -20,7 +22,8 @@ class BusinessHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => BusinessHomeViewModel(),
+      create: (ctx) =>
+          BusinessHomeViewModel(userSession: ctx.read<UserSession>()),
       child: Consumer<BusinessHomeViewModel>(
         builder: (context, vm, child) {
           return Scaffold(
@@ -31,7 +34,7 @@ class BusinessHomeView extends StatelessWidget {
               isLocationTitle: true,
             ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -65,7 +68,8 @@ class BusinessHomeView extends StatelessWidget {
                   InfoCard(
                     imagePath: 'assets/businessIcon/rapor.png',
                     title: LocaleKeys.businessHome_reportsTitle.tr(),
-                    description: LocaleKeys.businessHome_reportsDescription.tr(),
+                    description: LocaleKeys.businessHome_reportsDescription
+                        .tr(),
                     onTap: () {},
                   ),
                   const SizedBox(height: 16),
@@ -138,5 +142,3 @@ class BusinessHomeView extends StatelessWidget {
     );
   }
 }
-
-

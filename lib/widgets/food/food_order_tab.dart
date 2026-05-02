@@ -19,23 +19,41 @@ class FoodOrderTab extends StatelessWidget {
     if (listing == null) return const SizedBox();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 100),
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Ürün Başlığı ──────────────────────────────
-          Text(
-            listing.title,
-            style: const TextStyle(
+          // ── Sürpriz Kutu Detayı (Genel) ──────────────────
+          const Text(
+            'Sürpriz Kutu Detayı',
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
+          const Text(
+            'Bu paket, gün sonunda satılamayan ama hâlâ taze olan çeşitli yiyeceklerden oluşur. Ne çıkacağı tamamen sürprizdir.',
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.hintTextColor,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
 
-          // ── Açıklama ──────────────────────────────────
-          if (listing.description != null)
+          // ── İlan Detayı (Varsa) ──────────────────────────
+          if (listing.description != null && listing.description!.isNotEmpty) ...[
+            const Text(
+              'İlan Detayı',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: AppColors.primaryTextColor,
+              ),
+            ),
+            const SizedBox(height: 8),
             Text(
               listing.description!,
               style: const TextStyle(
@@ -44,7 +62,8 @@ class FoodOrderTab extends StatelessWidget {
                 height: 1.5,
               ),
             ),
-          const SizedBox(height: 16),
+            const SizedBox(height: 16),
+          ],
 
           // ── Harita ──────────────────────────────────
           if (vm.businessLatLng != null)
@@ -183,30 +202,55 @@ class _ExpandableDetail extends StatelessWidget {
                 children: [
                   const Divider(height: 1, color: Color(0xFFEEEEEE)),
                   const SizedBox(height: 12),
-                  Text(
-                    LocaleKeys.foodDetail_ingredients.tr(),
-                    style: const TextStyle(
+                  const Text(
+                    'İçerikler & Alerjenler',
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  if (listing.ingredients != null)
-                    Text(
-                      listing.ingredients!,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.hintTextColor,
-                        height: 1.5,
+                  const Text(
+                    'Paketin içeriğini kesin olarak söyleyemiyoruz çünkü sürpriz. Mekân, satılmamış ürünlerden bir seçim koyuyor. Alerjen veya içerik sorularınız varsa lütfen doğrudan mekâna sorunuz.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.hintTextColor,
+                      height: 1.5,
+                    ),
+                  ),
+                  if (listing.allergens != null && listing.allergens!.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.orange.shade100),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 18),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Alerjenler: ${listing.allergens}',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.primaryTextColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
+                  ],
                 ],
               ),
             ),
-            crossFadeState: vm.isDetailExpanded
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
+            crossFadeState: vm.isDetailExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             duration: const Duration(milliseconds: 250),
           ),
         ],

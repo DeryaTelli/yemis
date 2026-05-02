@@ -13,9 +13,9 @@ import '../utils/theme/text_styles_custom.dart';
 import '../viewmodels/location_viewmodel.dart';
 import '../widgets/common/custom_button.dart';
 import '../widgets/common/error_banner.dart';
-
 import '../widgets/common/loading_overlay.dart';
 import '../models/app_module_type.dart';
+import '../utils/theme/app_theme.dart';
 
 class LocationView extends StatelessWidget {
   final bool returnToSender;
@@ -30,7 +30,7 @@ class LocationView extends StatelessWidget {
   Widget build(BuildContext context) {
     final userSession = context.read<UserSession>();
     final authService = context.read<IAuthService>();
-    final themeColor = moduleType == AppModuleType.food
+    final themeColor = (moduleType == AppModuleType.food || moduleType == AppModuleType.business)
         ? AppColors.primaryColor
         : AppColors.volunteerColor;
 
@@ -47,9 +47,6 @@ class LocationView extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// WidgetsBindingObserver: Kullanıcı ayarlardan döndüğünde onAppResumed tetiklenir
-// ─────────────────────────────────────────────────────────────────────────────
 class _LocationBody extends StatefulWidget {
   final bool returnToSender;
   final AppModuleType moduleType;
@@ -96,7 +93,19 @@ class _LocationBodyState extends State<_LocationBody>
       },
       onPickNavigate: () async {
         if (!mounted) return;
-        final result = await Navigator.pushNamed(context, AppRoutes.mapPicker);
+        final section = (widget.moduleType == AppModuleType.food || widget.moduleType == AppModuleType.business)
+            ? AppSection.food
+            : AppSection.volunteer;
+        final result = await Navigator.pushNamed(
+          context,
+          AppRoutes.mapPicker,
+          arguments: {
+            'accentColor': widget.themeColor,
+            'accentGradient': (widget.moduleType == AppModuleType.food || widget.moduleType == AppModuleType.business)
+                ? AppColors.primaryButtonGradient
+                : AppColors.volunteerBackgroundGradient,
+          },
+        );
         if (!mounted) return;
         if (result is Map<String, dynamic>) {
           final latLng = result['latLng'] as LatLng?;
@@ -112,6 +121,10 @@ class _LocationBodyState extends State<_LocationBody>
                   Navigator.pushReplacementNamed(context, AppRoutes.home);
                 }
               },
+              address: result['address'] as String?,
+              city: result['city'] as String?,
+              district: result['district'] as String?,
+              neighborhood: result['neighborhood'] as String?,
             );
           }
         }
@@ -122,137 +135,153 @@ class _LocationBodyState extends State<_LocationBody>
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<LocationViewModel>();
+    final section = (widget.moduleType == AppModuleType.food || widget.moduleType == AppModuleType.business)
+        ? AppSection.food
+        : AppSection.volunteer;
 
-    return LoadingOverlay(
-      isLoading: vm.isLoading,
-      moduleType: widget.moduleType,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(LocaleKeys.location_title.tr()),
-          backgroundColor: widget.themeColor,
-          automaticallyImplyLeading: false,
-          leading: widget.returnToSender
-              ? IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                )
-              : null,
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Column(
-              children: [
-                // ── İllüstrasyon ──
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Lottie.asset(
-                          'assets/lottie/location.json',
-                          height: 360,
-                          fit: BoxFit.contain,
-                        ),
-                        if (!vm.hasPermission &&
-                            vm.permissionState !=
-                                LocationPermissionState.unknown) ...[
-                          const SizedBox(height: 16),
+    return Theme(
+      data: AppTheme.themeFor(section),
+      child: LoadingOverlay(
+        isLoading: vm.isLoading,
+        moduleType: widget.moduleType,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text(LocaleKeys.location_title.tr()),
+            leading: widget.returnToSender
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                : null,
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
+                children: [
+                  // ── İllüstrasyon ──
+                  Expanded(
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Lottie.asset(
+                            'assets/lottie/location.json',
+                            height: 360,
+                            fit: BoxFit.contain,
+                          ),
+                          if (!vm.hasPermission &&
+                              vm.permissionState !=
+                                  LocationPermissionState.unknown) ...[
+                            const SizedBox(height: 16),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
-                ),
 
-                // ── Hata banner'ı ──
-                if (vm.errorKey != null) ...[
-                  ErrorBanner(
-                    message: vm.errorKey!.tr(),
-                    onDismiss: vm.clearError,
+                  // ── Hata banner'ı ──
+                  if (vm.errorKey != null) ...[
+                    ErrorBanner(
+                      message: vm.errorKey!.tr(),
+                      onDismiss: vm.clearError,
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+
+                  // ── Başlık & Açıklama ──
+                  Text(
+                    LocaleKeys.location_shareTitle.tr(),
+                    style: CustomTextStyles.semiBold16Primary.copyWith(
+                      color: widget.themeColor,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
-                ],
-
-                // ── Başlık & Açıklama ──
-                Text(
-                  LocaleKeys.location_shareTitle.tr(),
-                  style: CustomTextStyles.semiBold16Primary.copyWith(
-                    color: widget.themeColor,
+                  Text(
+                    LocaleKeys.location_shareDescription.tr(),
+                    style: CustomTextStyles.regular14Grey,
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  LocaleKeys.location_shareDescription.tr(),
-                  style: CustomTextStyles.regular14Grey,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
+                  const SizedBox(height: 32),
 
-                // ── "Paylaş" butonu ──
-                CustomButton(
-                  text: LocaleKeys.location_buttonShare.tr(),
-                  width: double.infinity,
-                  backgroundColor: widget.themeColor,
-                  height: 52,
-                  onPressed: () => vm.shareLocation(
-                    onOpenSettings: openAppSettings,
-                    onSuccess: (lat, lng) {
-                      if (!mounted) return;
-                      if (widget.returnToSender) {
-                        Navigator.pop(context, true);
-                      } else {
-                        Navigator.pushReplacementNamed(context, AppRoutes.home);
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // ── "Konum Seç" butonu ──
-                CustomButton(
-                  text: LocaleKeys.location_buttonPick.tr(),
-                  isOutlined: true,
-                  width: double.infinity,
-                  backgroundColor: widget.themeColor,
-                  height: 52,
-                  onPressed: () => vm.pickOnMap(
-                    onOpenSettings: openAppSettings,
-                    onNavigate: () async {
-                      if (!mounted) return;
-                      final result = await Navigator.pushNamed(
-                        context,
-                        AppRoutes.mapPicker,
-                      );
-                      if (!mounted) return;
-                      if (result is Map<String, dynamic>) {
-                        final latLng = result['latLng'] as LatLng?;
-                        if (latLng != null) {
-                          await vm.onLocationPicked(
-                            latLng.latitude,
-                            latLng.longitude,
-                            () {
-                              if (!mounted) return;
-                              if (widget.returnToSender) {
-                                Navigator.pop(context, true);
-                              } else {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  AppRoutes.home,
-                                );
-                              }
-                            },
+                  // ── "Paylaş" butonu ──
+                  CustomButton(
+                    text: LocaleKeys.location_buttonShare.tr(),
+                    width: double.infinity,
+                    backgroundColor: widget.themeColor,
+                    height: 52,
+                    onPressed: () => vm.shareLocation(
+                      onOpenSettings: openAppSettings,
+                      onSuccess: (lat, lng) {
+                        if (!mounted) return;
+                        if (widget.returnToSender) {
+                          Navigator.pop(context, true);
+                        } else {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            AppRoutes.home,
                           );
                         }
-                      }
-                    },
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(height: 24),
-              ],
+                  const SizedBox(height: 12),
+
+                  // ── "Konum Seç" butonu ──
+                  CustomButton(
+                    text: LocaleKeys.location_buttonPick.tr(),
+                    isOutlined: true,
+                    width: double.infinity,
+                    backgroundColor: widget.themeColor,
+                    height: 52,
+                    onPressed: () => vm.pickOnMap(
+                      onOpenSettings: openAppSettings,
+                      onNavigate: () async {
+                        if (!mounted) return;
+                        final result = await Navigator.pushNamed(
+                          context,
+                          AppRoutes.mapPicker,
+                          arguments: {
+                            'accentColor': widget.themeColor,
+                            'accentGradient':
+                                (widget.moduleType == AppModuleType.food || widget.moduleType == AppModuleType.business)
+                                ? AppColors.primaryButtonGradient
+                                : AppColors.volunteerBackgroundGradient,
+                          },
+                        );
+                        if (!mounted) return;
+                        if (result is Map<String, dynamic>) {
+                          final latLng = result['latLng'] as LatLng?;
+                          if (latLng != null) {
+                            await vm.onLocationPicked(
+                              latLng.latitude,
+                              latLng.longitude,
+                              () {
+                                if (!mounted) return;
+                                if (widget.returnToSender) {
+                                  Navigator.pop(context, true);
+                                } else {
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    AppRoutes.home,
+                                  );
+                                }
+                              },
+                              address: result['address'] as String?,
+                              city: result['city'] as String?,
+                              district: result['district'] as String?,
+                              neighborhood: result['neighborhood'] as String?,
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         ),

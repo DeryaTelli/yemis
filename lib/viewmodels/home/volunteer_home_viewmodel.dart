@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import '../../models/volunteer/volunteer_listing.dart';
+import '../../services/auth/user_session.dart';
 import '../../services/volunteer/mock_volunteer_service.dart';
 import '../../utils/routes/app_routes.dart';
 
 /// VolunteerHome ekranının ViewModel'i.
 class VolunteerHomeViewModel extends ChangeNotifier {
-  VolunteerHomeViewModel() {
+  VolunteerHomeViewModel({required UserSession userSession}) : _userSession = userSession {
+    _userSession.addListener(_onUserSessionChanged);
     init();
   }
 
   final MockVolunteerService _service = MockVolunteerService();
+  final UserSession _userSession;
 
   // ─── State ────────────────────────────────────────────
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-
-  String _locationName = '';
-  String get locationName => _locationName;
 
   String _searchQuery = '';
   String get searchQuery => _searchQuery;
@@ -28,7 +28,12 @@ class VolunteerHomeViewModel extends ChangeNotifier {
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
 
-  String get appBarTitle => _locationName.isEmpty ? 'Konum yükleniyor…' : _locationName;
+  String get appBarTitle {
+    final addr = _userSession.currentAddress;
+    if (addr != null && addr.isNotEmpty) return addr;
+    return 'Konum Seçiniz';
+  }
+
   Color get appBarColor => const Color(0xFF22B05A); // AppColors.volunteerColor
 
   // ─── Init ─────────────────────────────────────────────
@@ -38,14 +43,16 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
 
     final results = await Future.wait([
-      _service.getUserLocationName(),
       _service.getFeaturedListings(),
     ]);
 
-    _locationName = results[0] as String;
-    _allListings = results[1] as List<VolunteerListing>;
+    _allListings = results[0] as List<VolunteerListing>;
 
     _isLoading = false;
+    notifyListeners();
+  }
+
+  void _onUserSessionChanged() {
     notifyListeners();
   }
 
@@ -61,7 +68,6 @@ class VolunteerHomeViewModel extends ChangeNotifier {
   List<VolunteerListing> get filteredListings {
     var list = _allListings;
 
-    // Metin filtresi
     if (_searchQuery.isNotEmpty) {
       final q = _searchQuery.toLowerCase();
       list = list.where((l) {
@@ -98,5 +104,11 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       default:
         return null;
     }
+  }
+
+  @override
+  void dispose() {
+    _userSession.removeListener(_onUserSessionChanged);
+    super.dispose();
   }
 }

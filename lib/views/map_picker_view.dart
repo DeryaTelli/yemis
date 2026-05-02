@@ -9,6 +9,7 @@ import '../utils/locale_keys.dart';
 import '../utils/theme/text_styles_custom.dart';
 import '../viewmodels/map_picker_viewmodel.dart';
 import '../widgets/map/map_picker_bottom_panel.dart';
+import '../utils/theme/app_theme.dart';
 
 class MapPickerView extends StatelessWidget {
   const MapPickerView({super.key});
@@ -19,12 +20,16 @@ class MapPickerView extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final accentColor = args?['accentColor'] as Color?;
     final accentGradient = args?['accentGradient'] as LinearGradient?;
+    final section = accentColor == AppColors.volunteerColor ? AppSection.volunteer : AppSection.food;
 
     return ChangeNotifierProvider(
       create: (_) => MapPickerViewModel()..init(),
-      child: _MapPickerBody(
-        accentGradient: accentGradient,
-        accentColor: accentColor,
+      child: Theme(
+        data: AppTheme.themeFor(section),
+        child: _MapPickerBody(
+          accentGradient: accentGradient,
+          accentColor: accentColor,
+        ),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/services/auth/user_session.dart';
 import '../../models/food/food_listing.dart';
-import '../../services/food/mock_food_service.dart';
+import '../../services/food/api_food_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_detail_viewmodel.dart';
 import '../../widgets/food/food_detail_bottom_bar.dart';
@@ -22,10 +23,12 @@ class FoodDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userSession = context.read<UserSession>();
     return ChangeNotifierProvider(
-      create: (_) =>
-          FoodDetailViewModel(service: MockFoodService(), listingId: listing.id)
-            ..init(),
+      create: (_) => FoodDetailViewModel(
+        service: ApiFoodService()..setToken(userSession.token ?? ''),
+        listingId: listing.id,
+      )..init(),
       child: _FoodDetailBody(listing: listing),
     );
   }

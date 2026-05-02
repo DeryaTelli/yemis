@@ -156,6 +156,12 @@ class MockAuthService implements IAuthService {
     return const AuthResponse(success: true, message: 'Account deleted');
   }
 
+  @override
+  Future<String?> uploadImage(String filePath) async {
+    await _simulateDelay();
+    return "https://i.pravatar.cc/300"; // Mock URL
+  }
+
   Future<void> _simulateDelay() =>
       Future.delayed(const Duration(milliseconds: 1200));
 }

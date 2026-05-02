@@ -20,6 +20,9 @@ class FoodSearchBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.3),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
@@ -34,7 +37,10 @@ class FoodSearchBar extends StatelessWidget {
         style: const TextStyle(fontSize: 14, color: AppColors.primaryTextColor),
         decoration: InputDecoration(
           hintText: 'Ara',
-          hintStyle: CustomTextStyles.semiBold16Grey,
+          hintStyle: const TextStyle(
+            color: AppColors.hintTextColor,
+            fontSize: 14,
+          ),
           prefixIcon: const Icon(
             Icons.search_rounded,
             color: AppColors.primaryColor,

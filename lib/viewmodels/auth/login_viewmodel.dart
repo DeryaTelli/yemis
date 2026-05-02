@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yemis/services/auth/api_auth_service.dart';
+import 'package:yemis/services/business/api_business_service.dart';
+import 'package:yemis/services/business/i_business_service.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
@@ -9,12 +11,13 @@ import '../../utils/routes/app_routes.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final IAuthService _authService;
+  final IBusinessService _businessService;
   final UserSession _userSession;
 
   /// SharedPreferences anahtarı — LocationViewModel ile ortak
   static const String locationOnboardingKey = 'location_onboarding_done';
 
-  LoginViewModel(this._authService, this._userSession);
+  LoginViewModel(this._authService, this._businessService, this._userSession);
 
   // --- Controllers ---
   final TextEditingController emailController = TextEditingController();
@@ -100,13 +103,16 @@ class LoginViewModel extends ChangeNotifier {
         if (_authService is ApiAuthService) {
           (_authService as ApiAuthService).setToken(response.token);
         }
+        if (_businessService is ApiBusinessService) {
+          (_businessService as ApiBusinessService).setToken(response.token);
+        }
 
         // Token'ı kalıcı kaydet
         if (response.token != null) {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('auth_token', response.token!);
         }
-        
+
         onSuccess();
       } else {
         _errorKey = response.errorKey;
@@ -136,9 +142,16 @@ class LoginViewModel extends ChangeNotifier {
         return AppRoutes.location;
       } else {
         // İlk adresi veya varsayılan adresi seçip oturuma ekle
-        final def = addresses.firstWhere((a) => a.isDefault, orElse: () => addresses.first);
-        _userSession.updateLocation(def.addressLine, lat: def.latitude, lng: def.longitude);
-        
+        final def = addresses.firstWhere(
+          (a) => a.isDefault,
+          orElse: () => addresses.first,
+        );
+        _userSession.updateLocation(
+          def.addressLine,
+          lat: def.latitude,
+          lng: def.longitude,
+        );
+
         // Yerel belleğe de işaret koy (onboarding tamamlandı gibi)
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool(locationOnboardingKey, true);

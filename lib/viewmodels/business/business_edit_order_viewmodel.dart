@@ -2,22 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import '../../models/auth/address_model.dart';
+import '../../models/business/business_listing_model.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/business/i_business_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../models/app_module_type.dart';
 
-/// Business sipariş ekleme ekranının ViewModel'i.
-class BusinessAddOrderViewModel extends ChangeNotifier {
+class BusinessEditOrderViewModel extends ChangeNotifier {
   final IAuthService? _authService;
   final IBusinessService? _businessService;
+  final BusinessListingModel initialListing;
 
-  BusinessAddOrderViewModel({
+  BusinessEditOrderViewModel({
     IAuthService? authService,
     IBusinessService? businessService,
-  })  : _authService = authService,
-        _businessService = businessService;
+    required this.initialListing,
+  }) : _authService = authService,
+       _businessService = businessService {
+    _initFromInitial();
+  }
+
+  void _initFromInitial() {
+    _title = initialListing.title;
+    _description = initialListing.description ?? '';
+    _price = initialListing.originalPrice.toString();
+    _discountPrice = initialListing.discountedPrice.toString();
+    _quantity = initialListing.totalQuantity;
+    _allergens = initialListing.allergens ?? '';
+    _locationAddress = initialListing.address ?? '';
+    _selectedAddressId = initialListing.addressId;
+
+    // Zamanları ayır
+    if (initialListing.pickupEndTime != null) {
+      final endTime = initialListing.pickupEndTime!;
+      _selectedHour = endTime.hour > 12
+          ? endTime.hour - 12
+          : (endTime.hour == 0 ? 12 : endTime.hour);
+      _selectedMinute = endTime.minute;
+      _isAm = endTime.hour < 12;
+    }
+
+    notifyListeners();
+  }
 
   // ─── Kayıtlı Adresler ─────────────────────────────────
   List<AddressModel> _savedAddresses = [];
@@ -49,20 +76,11 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ─── Nav ──────────────────────────────────────────────
-  int _selectedIndex = 3;
-  int get selectedIndex => _selectedIndex;
-
-  void onTabSelected(int index) {
-    if (_selectedIndex == index) return;
-    _selectedIndex = index;
-    notifyListeners();
-  }
-
   // ─── Fotoğraf ─────────────────────────────────────────
   XFile? _selectedImage;
   XFile? get selectedImage => _selectedImage;
-  bool get hasImage => _selectedImage != null;
+  bool get hasImage =>
+      _selectedImage != null || initialListing.imageUrl != null;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -103,10 +121,8 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   // ─── Bitiş Saati ──────────────────────────────────────
   int _selectedHour = 5;
   int get selectedHour => _selectedHour;
-
   int _selectedMinute = 41;
   int get selectedMinute => _selectedMinute;
-
   bool _isAm = true;
   bool get isAm => _isAm;
 
@@ -131,11 +147,12 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   // ─── Konum ────────────────────────────────────────────
   LatLng? _selectedLatLng;
   LatLng? get selectedLatLng => _selectedLatLng;
-
   String _locationAddress = '';
   String get locationAddress => _locationAddress;
-
-  bool get hasLocation => _selectedLatLng != null || _selectedAddressId != null;
+  bool get hasLocation =>
+      _selectedLatLng != null ||
+      _selectedAddressId != null ||
+      _locationAddress.isNotEmpty;
 
   Future<void> pickLocation(BuildContext context) async {
     final result = await Navigator.pushNamed(
@@ -151,8 +168,9 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
       final address = result['address'] as String?;
       if (latLng != null) {
         _selectedLatLng = latLng;
-        _selectedAddressId = null; // Manuel seçimde addressId null olur (veya yeni adres oluşturulmalı)
-        _locationAddress = address ??
+        _selectedAddressId = null;
+        _locationAddress =
+            address ??
             '${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
         notifyListeners();
       }
@@ -173,7 +191,6 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   // ─── İlan Sayısı ──────────────────────────────────────
   int _quantity = 1;
   int get quantity => _quantity;
-
   void incrementQuantity() {
     _quantity++;
     notifyListeners();
@@ -189,43 +206,35 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   // ─── Fiyat ────────────────────────────────────────────
   String _price = '';
   String get price => _price;
-
   void onPriceChanged(String value) {
     _price = value;
     notifyListeners();
   }
 
-  // ─── İndirim Fiyatı ───────────────────────────────────
   String _discountPrice = '';
   String get discountPrice => _discountPrice;
-
   void onDiscountPriceChanged(String value) {
     _discountPrice = value;
     notifyListeners();
   }
 
-  // ─── Başlık ───────────────────────────────────────────
+  // ─── Başlık/Detay ─────────────────────────────────────
   String _title = '';
   String get title => _title;
-
   void onTitleChanged(String value) {
     _title = value;
     notifyListeners();
   }
 
-  // ─── Alerjenler ───────────────────────────────────────
   String _allergens = '';
   String get allergens => _allergens;
-
   void onAllergensChanged(String value) {
     _allergens = value;
     notifyListeners();
   }
 
-  // ─── Açıklama ─────────────────────────────────────────
   String _description = '';
   String get description => _description;
-
   void onDescriptionChanged(String value) {
     _description = value;
     notifyListeners();
@@ -234,57 +243,49 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   // ─── Gönderme ─────────────────────────────────────────
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
-
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
   Future<bool> submit() async {
     _errorMessage = null;
-    
     if (_title.trim().isEmpty) {
       _errorMessage = 'Lütfen bir başlık girin.';
       notifyListeners();
       return false;
     }
-
     if (!hasLocation) {
-      _errorMessage = 'errorNoLocation';
+      _errorMessage = 'Lütfen konum seçin.';
       notifyListeners();
       return false;
     }
 
-    if (_businessService == null || _authService == null) {
-      _errorMessage = 'Servis bağlantısı kurulamadı.';
-      notifyListeners();
-      return false;
-    }
-    
     _isSubmitting = true;
     notifyListeners();
 
     try {
-      // 1. Fotoğraf varsa yükle
-      String? imageUrl;
+      String? imageUrl = initialListing.imageUrl;
       if (_selectedImage != null) {
         imageUrl = await _authService!.uploadImage(_selectedImage!.path);
       }
 
-      // 2. Zamanları ayarla
       final now = DateTime.now();
-      final pickupStartTime = now.toIso8601String();
-      
-      // Bitiş saati için bugünün tarihini ve seçilen saati kullan
-      int hour = _isAm ? (_selectedHour == 12 ? 0 : _selectedHour) : (_selectedHour == 12 ? 12 : _selectedHour + 12);
-      final pickupEndTime = DateTime(now.year, now.month, now.day, hour, _selectedMinute).toIso8601String();
+      int hour = _isAm
+          ? (_selectedHour == 12 ? 0 : _selectedHour)
+          : (_selectedHour == 12 ? 12 : _selectedHour + 12);
+      final pickupEndTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        hour,
+        _selectedMinute,
+      ).toIso8601String();
 
-      // 3. Veriyi hazırla
       final bagData = {
         'title': _title,
         'description': _description,
-        'address_id': _selectedAddressId, // Not: Manuel seçilmişse backend yeni adres veya id bekleyebilir
+        'address_id': _selectedAddressId,
         'original_price': double.tryParse(_price) ?? 0.0,
         'discounted_price': double.tryParse(_discountPrice) ?? 0.0,
-        'pickup_start_time': pickupStartTime,
         'pickup_end_time': pickupEndTime,
         'total_quantity': _quantity,
         'available_quantity': _quantity,
@@ -292,41 +293,22 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
         'allergens': _allergens,
       };
 
-      // 4. API isteği
-      final success = await _businessService!.createBag(bagData);
-      
+      final success = await _businessService!.updateBag(
+        initialListing.id,
+        bagData,
+      );
       if (success) {
-        debugPrint('✅ [BusinessAddOrder] Sipariş başarıyla yüklendi!');
-        clearForm();
         _isSubmitting = false;
         notifyListeners();
         return true;
       } else {
-        _errorMessage = 'Sipariş eklenirken bir hata oluştu.';
+        _errorMessage = 'Güncelleme sırasında hata oluştu.';
       }
     } catch (e) {
-      _errorMessage = 'Beklenmedik bir hata oluştu: $e';
+      _errorMessage = 'Hata: $e';
     }
-    
     _isSubmitting = false;
     notifyListeners();
     return false;
-  }
-
-  void clearForm() {
-    _title = '';
-    _selectedImage = null;
-    _selectedHour = 5;
-    _selectedMinute = 41;
-    _isAm = true;
-    _selectedLatLng = null;
-    _selectedAddressId = null;
-    _locationAddress = '';
-    _quantity = 1;
-    _price = '';
-    _discountPrice = '';
-    _description = '';
-    _allergens = '';
-    _errorMessage = null;
   }
 }
