@@ -46,6 +46,7 @@ class FoodListingSection extends StatelessWidget {
                 arguments: {
                   'title': title,
                   'listings': listings,
+                  'vm': vm,
                 },
               ),
               style: TextButton.styleFrom(

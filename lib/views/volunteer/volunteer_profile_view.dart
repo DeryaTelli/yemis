@@ -216,7 +216,11 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                     icon: Icons.lock_outline_rounded,
                     title: 'Şifre Değiştir',
                     iconColor: AppColors.volunteerColor,
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.changePassword,
+                      arguments: AppModuleType.volunteer,
+                    ),
                   ),
                   ProfileMenuTile(
                     icon: Icons.public,

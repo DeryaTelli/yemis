@@ -69,8 +69,23 @@ class ApiBusinessService implements IBusinessService {
       }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((e) => BusinessListingModel.fromJson(e)).toList();
+        final decoded = jsonDecode(response.body);
+        List<dynamic> data = [];
+        
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'] as List;
+        } else if (decoded is Map && decoded.containsKey('bags')) {
+          data = decoded['bags'] as List;
+        }
+
+        return data.map((e) {
+          if (e is Map<String, dynamic>) {
+            return BusinessListingModel.fromJson(e);
+          }
+          return null;
+        }).whereType<BusinessListingModel>().toList();
       }
     } catch (e) {
       if (kDebugMode) print('Error fetching bags: $e');

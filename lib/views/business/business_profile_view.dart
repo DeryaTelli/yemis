@@ -184,7 +184,11 @@ class BusinessProfileView extends StatelessWidget {
                         ProfileMenuTile(
                           icon: Icons.lock_outline_rounded,
                           title: LocaleKeys.businessProfile_changePassword.tr(),
-                          onTap: () {},
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.changePassword,
+                            arguments: AppModuleType.business,
+                          ),
                         ),
                         ProfileMenuTile(
                           icon: Icons.public,

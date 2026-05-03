@@ -12,6 +12,7 @@ class ApiConstants {
   static const String resetPassword = '/api/auth/reset-password';
   static const String logout = '/api/auth/logout';
   static const String profile = '/api/users/me';
+  static const String changePassword = '/api/auth/change-password';
   static const String uploadImage = '/api/upload/image';
 
   // --- Reviews ---
@@ -30,4 +31,9 @@ class ApiConstants {
   static const String bags = '/api/bags';
   static const String myBags = '/api/bags/my';
   static String bagById(int id) => '/api/bags/$id';
+
+  // --- Favourites ---
+  static const String favorites = '/api/favourites';
+  static const String myFavorites = '/api/favourites/my';
+  static String favoriteById(int id) => '/api/favourites/$id';
 }

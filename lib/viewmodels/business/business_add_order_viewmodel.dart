@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import '../../models/auth/address_model.dart';
@@ -262,6 +264,33 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
     _isSubmitting = true;
     notifyListeners();
 
+    // --- Geocode Fallback ---
+    // Eğer koordinatlar yoksa veya (0,0) ise adresten bulmaya çalış
+    if (_selectedLatLng == null || (_selectedLatLng!.latitude == 0 && _selectedLatLng!.longitude == 0)) {
+      try {
+        debugPrint('🔍 [BusinessAddOrder] Koordinat eksik, geocode deneniyor: $_locationAddress');
+        final uri = Uri.https('nominatim.openstreetmap.org', '/search', {
+          'q': _locationAddress,
+          'format': 'json',
+          'limit': '1',
+          'accept-language': 'tr',
+        });
+        final res = await http.get(uri, headers: {'User-Agent': 'YemisApp/1.0'});
+        if (res.statusCode == 200) {
+          final List<dynamic> data = jsonDecode(res.body);
+          if (data.isNotEmpty) {
+            _selectedLatLng = LatLng(
+              double.parse(data[0]['lat']),
+              double.parse(data[0]['lon']),
+            );
+            debugPrint('✅ [BusinessAddOrder] Geocode başarılı: $_selectedLatLng');
+          }
+        }
+      } catch (e) {
+        debugPrint('⚠️ [BusinessAddOrder] Geocode hatası: $e');
+      }
+    }
+
     try {
       // 1. Fotoğraf varsa yükle
       String? imageUrl;
@@ -281,7 +310,10 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
       final bagData = {
         'title': _title,
         'description': _description,
-        'address_id': _selectedAddressId, // Not: Manuel seçilmişse backend yeni adres veya id bekleyebilir
+        'address_id': _selectedAddressId,
+        'address': _locationAddress,
+        'latitude': _selectedLatLng?.latitude,
+        'longitude': _selectedLatLng?.longitude,
         'original_price': double.tryParse(_price) ?? 0.0,
         'discounted_price': double.tryParse(_discountPrice) ?? 0.0,
         'pickup_start_time': pickupStartTime,

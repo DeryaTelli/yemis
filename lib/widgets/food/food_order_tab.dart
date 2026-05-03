@@ -65,6 +65,25 @@ class FoodOrderTab extends StatelessWidget {
             const SizedBox(height: 16),
           ],
 
+          // ── Mesafe Bilgisi ──────────────────────────────
+          if (vm.businessLatLng != null && vm.userLatLng != null) ...[
+            Row(
+              children: [
+                const Icon(Icons.directions_walk_rounded, size: 18, color: AppColors.primaryColor),
+                const SizedBox(width: 8),
+                Text(
+                  'İşletme size ${vm.distanceText} uzaklıkta',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryTextColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+          ],
+
           // ── Harita ──────────────────────────────────
           if (vm.businessLatLng != null)
             OrderLocationMap(
@@ -73,11 +92,28 @@ class FoodOrderTab extends StatelessWidget {
               height: 180,
             )
           else
-            SizedBox(
+            Container(
               height: 180,
-              child: Center(child: Text(LocaleKeys.foodDetail_noLocation.tr())),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.location_off_rounded, color: Colors.grey.shade400, size: 40),
+                    const SizedBox(height: 8),
+                    Text(
+                      LocaleKeys.foodDetail_noLocation.tr(),
+                      style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
 
           // ── Lokasyona Git Butonu ───────────────────────
           _GoToLocationButton(listing: listing),
@@ -110,7 +146,7 @@ class _GoToLocationButton extends StatelessWidget {
               latitude: listing.latitude ?? 41.0082,
               longitude: listing.longitude ?? 28.9784,
               businessName: listing.shopName,
-              address: listing.location,
+              address: listing.fullAddress ?? listing.location,
             ),
           ),
         );

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../services/food/api_food_service.dart';
+import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/food/food_favorites_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
@@ -12,10 +14,7 @@ class FoodFavoritesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => FoodFavoritesViewModel(),
-      child: const _FoodFavoritesBody(),
-    );
+    return const _FoodFavoritesBody();
   }
 }
 
@@ -32,9 +31,9 @@ class _FoodFavoritesBody extends StatefulWidget {
 class _FoodFavoritesBodyState extends State<_FoodFavoritesBody>
     with RouteAware {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Sayfaya her dönüldüğünde listeyi güncelle
+  void initState() {
+    super.initState();
+    // Sayfaya ilk gelindiğinde listeyi güncelle
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<FoodFavoritesViewModel>().refresh();
@@ -55,24 +54,24 @@ class _FoodFavoritesBodyState extends State<_FoodFavoritesBody>
       // ─── Body ─────────────────────────────────────────
       body: favorites.isEmpty
           ? _EmptyFavoritesState()
-          : GridView.builder(
+          : ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                mainAxisExtent: 240,
-              ),
               itemCount: favorites.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final item = favorites[index];
-                return FoodListingCard(
-                  listing: item,
-                  onFavoriteTap: () => vm.toggleFavorite(item.id),
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    AppRoutes.foodDetail,
-                    arguments: item,
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: FoodListingCard(
+                    listing: item,
+                    width: double.infinity,
+                    imageHeight: 140,
+                    onFavoriteTap: () => vm.toggleFavorite(item.id),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.foodDetail,
+                      arguments: item,
+                    ),
                   ),
                 );
               },
@@ -87,11 +86,7 @@ class _FoodFavoritesBodyState extends State<_FoodFavoritesBody>
           if (route != null) {
             if (index == 2) {
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  route,
-                  (r) => false,
-                );
+                Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
               }
             } else if (ModalRoute.of(context)?.settings.name != route) {
               Navigator.pushReplacementNamed(context, route);

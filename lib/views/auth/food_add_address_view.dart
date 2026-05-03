@@ -28,11 +28,15 @@ class FoodAddAddressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userSession = context.read<UserSession>();
-    final themeColor = (moduleType == AppModuleType.food || moduleType == AppModuleType.business)
+    final themeColor =
+        (moduleType == AppModuleType.food ||
+            moduleType == AppModuleType.business)
         ? AppColors.primaryColor
         : AppColors.volunteerColor;
 
-    final section = (moduleType == AppModuleType.food || moduleType == AppModuleType.business)
+    final section =
+        (moduleType == AppModuleType.food ||
+            moduleType == AppModuleType.business)
         ? AppSection.food
         : AppSection.volunteer;
 
@@ -168,6 +172,32 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
                 borderColor: const Color(0xFFE0E0E0),
                 fillColor: const Color(0xFFF9F9F9),
               ),
+              const SizedBox(height: 16),
+              // ── Haritadan Seç ──
+              _MapPickerButton(
+                themeColor: themeColor,
+                hasCoordinates: vm.hasCoordinates,
+                onTap: () async {
+                  final result = await Navigator.pushNamed(
+                    context,
+                    '/map-picker',
+                    arguments: {'accentColor': themeColor},
+                  );
+                  if (result is Map<String, dynamic>) {
+                    final latLng = result['latLng'];
+                    if (latLng != null) {
+                      vm.updateFromMap(
+                        lat: latLng.latitude,
+                        lng: latLng.longitude,
+                        address: result['address'],
+                        city: result['city'],
+                        district: result['district'],
+                        neighborhood: result['neighborhood'],
+                      );
+                    }
+                  }
+                },
+              ),
               const SizedBox(height: 32),
               CustomButton(
                 text: 'Kaydet',
@@ -269,6 +299,65 @@ class _SelectionField extends StatelessWidget {
                   : Colors.grey,
               size: 22,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MapPickerButton extends StatelessWidget {
+  final Color themeColor;
+  final bool hasCoordinates;
+  final VoidCallback onTap;
+
+  const _MapPickerButton({
+    required this.themeColor,
+    required this.hasCoordinates,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: hasCoordinates
+              ? themeColor.withOpacity(0.05)
+              : Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: hasCoordinates
+                ? themeColor.withOpacity(0.3)
+                : Colors.grey.shade300,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              hasCoordinates ? Icons.location_on : Icons.map_outlined,
+              color: hasCoordinates ? themeColor : Colors.grey,
+              size: 20,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                hasCoordinates
+                    ? 'Konum Haritadan İşaretlendi'
+                    : 'Haritadan Konum Seç',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: hasCoordinates ? themeColor : Colors.grey.shade700,
+                ),
+              ),
+            ),
+            if (hasCoordinates)
+              Icon(Icons.check_circle, color: themeColor, size: 18)
+            else
+              const Icon(Icons.chevron_right, color: Colors.grey, size: 18),
           ],
         ),
       ),

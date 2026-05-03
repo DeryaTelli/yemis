@@ -23,8 +23,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: false,
       automaticallyImplyLeading: false,
@@ -61,7 +59,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 Text(
                   'Lokasyon Seç',
-                  style: CustomTextStyles.extraBold16DarkGrey,
+                  style: CustomTextStyles.bold16DarkGreyCompact,
                 ),
                 const SizedBox(width: 8),
                 Flexible(
@@ -78,7 +76,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           const SizedBox(width: 4),
           const Icon(
             Icons.keyboard_arrow_down_rounded,
-            color: Color(0xFF4F4F4F),
+            color: Colors.white,
             size: 24,
           ),
         ],

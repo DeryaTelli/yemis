@@ -53,7 +53,6 @@ class _BusinessListingDetailBody extends StatelessWidget {
             SliverAppBar(
               expandedHeight: 350,
               pinned: true,
-              backgroundColor: AppColors.primaryColor,
               leading: IconButton(
                 icon: Container(
                   padding: const EdgeInsets.all(8),

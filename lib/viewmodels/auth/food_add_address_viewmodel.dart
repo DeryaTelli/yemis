@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../../models/auth/address_model.dart';
 import '../../models/location/location_model.dart';
 import '../../services/auth/i_auth_service.dart';
@@ -40,6 +42,10 @@ class FoodAddAddressViewModel extends ChangeNotifier {
         // Geriye dönük uyumluluk: addressLine'ı parçala
         await _parseAndSetAddress(initialAddress!.addressLine);
       }
+    }
+    if (initialAddress != null) {
+      _latitude = initialAddress!.latitude;
+      _longitude = initialAddress!.longitude;
     }
     notifyListeners();
   }
@@ -141,6 +147,14 @@ class FoodAddAddressViewModel extends ChangeNotifier {
   final TextEditingController adresController = TextEditingController();
   final TextEditingController baslikController = TextEditingController();
 
+  double _latitude = 0;
+  double _longitude = 0;
+
+  double get latitude => _latitude;
+  double get longitude => _longitude;
+
+  bool get hasCoordinates => _latitude != 0 && _longitude != 0;
+
   String? selectedIl;
   String? selectedIlce;
   String? selectedMahalle;
@@ -216,6 +230,71 @@ class FoodAddAddressViewModel extends ChangeNotifier {
     return parts.join(' / ');
   }
 
+  void setCoordinates(double lat, double lng) {
+    _latitude = lat;
+    _longitude = lng;
+    notifyListeners();
+  }
+
+  void updateFromMap({
+    required double lat,
+    required double lng,
+    String? address,
+    String? city,
+    String? district,
+    String? neighborhood,
+  }) async {
+    _latitude = lat;
+    _longitude = lng;
+
+    if (city != null) await selectIl(city);
+    if (district != null) {
+      final matched = _findInList(ilceler, district);
+      if (matched.isNotEmpty) await selectIlce(matched);
+    }
+    if (neighborhood != null) {
+      final matched = _findInList(mahalleler, neighborhood);
+      if (matched.isNotEmpty) selectMahalle(matched);
+    }
+
+    if (address != null) {
+      // Sadece sokak/numara kısmını almaya çalış
+      final parts = address.split(',');
+      if (parts.isNotEmpty) {
+        adresController.text = parts[0].trim();
+      } else {
+        adresController.text = address;
+      }
+    }
+    notifyListeners();
+  }
+
+  Future<void> _geocodeAddress() async {
+    final query = formattedAddress;
+    if (query.isEmpty) return;
+
+    try {
+      debugPrint('🔍 [FoodAddAddressVM] Adres geocode ediliyor: $query');
+      final uri = Uri.https('nominatim.openstreetmap.org', '/search', {
+        'q': query,
+        'format': 'json',
+        'limit': '1',
+        'accept-language': 'tr',
+      });
+      final res = await http.get(uri, headers: {'User-Agent': 'YemisApp/1.0'});
+      if (res.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(res.body);
+        if (data.isNotEmpty) {
+          _latitude = double.parse(data[0]['lat']);
+          _longitude = double.parse(data[0]['lon']);
+          debugPrint('✅ [FoodAddAddressVM] Koordinatlar bulundu: $_latitude, $_longitude');
+        }
+      }
+    } catch (e) {
+      debugPrint('⚠️ [FoodAddAddressVM] Geocode hatası: $e');
+    }
+  }
+
   Future<bool> saveAddress() async {
     if (adresController.text.isEmpty) {
       debugPrint('⚠️ [FoodAddAddressViewModel] Kayıt başarısız: Eksik alanlar var.');
@@ -224,6 +303,11 @@ class FoodAddAddressViewModel extends ChangeNotifier {
 
     _isLoading = true;
     notifyListeners();
+
+    // Eğer koordinat seçilmemişse geocode etmeye çalış
+    if (!hasCoordinates) {
+      await _geocodeAddress();
+    }
 
     try {
       final addressData = AddressModel(
@@ -234,8 +318,8 @@ class FoodAddAddressViewModel extends ChangeNotifier {
         city: selectedIl,
         district: selectedIlce,
         neighborhood: selectedMahalle,
-        latitude: initialAddress?.latitude ?? 0,
-        longitude: initialAddress?.longitude ?? 0,
+        latitude: _latitude,
+        longitude: _longitude,
         isDefault: initialAddress?.isDefault ?? true,
       );
 

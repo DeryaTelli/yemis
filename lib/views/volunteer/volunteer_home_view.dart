@@ -73,8 +73,6 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-
               // ── Arama Barı ─────────────────────────────
               VolunteerSearchBar(
                 controller: _searchController,
@@ -113,7 +111,11 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
             if (route != null) {
               if (index == 2) {
                 if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(context, route, (r) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    route,
+                    (r) => false,
+                  );
                 }
               } else if (ModalRoute.of(context)?.settings.name != route) {
                 Navigator.pushReplacementNamed(context, route);

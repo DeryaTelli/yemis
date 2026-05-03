@@ -18,8 +18,8 @@ abstract class IFoodService {
   Future<List<FoodReview>> getFoodReviews(String id);
 
   /// Favori durumunu değiştirir.
-  void toggleFavorite(String id);
+  Future<void> toggleFavorite(String id);
 
   /// Favori olan ilanları döner.
-  List<FoodListing> getFavorites();
+  Future<List<FoodListing>> getFavorites();
 }

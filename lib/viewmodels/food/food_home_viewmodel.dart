@@ -12,12 +12,16 @@ class FoodHomeViewModel extends ChangeNotifier {
     required UserSession userSession,
   }) : _service = service,
        _userSession = userSession {
-    // UserSession dinle -> konum değişince başlığı güncelle
     _userSession.addListener(_onUserSessionChanged);
   }
 
   final IFoodService _service;
   final UserSession _userSession;
+  bool _isDisposed = false;
+
+  void _safeNotify() {
+    if (!_isDisposed) notifyListeners();
+  }
 
   // ─── State ────────────────────────────────────────────
 
@@ -49,14 +53,14 @@ class FoodHomeViewModel extends ChangeNotifier {
   void _onUserSessionChanged() {
     if (_userSession.currentAddress != null) {
       _locationName = _userSession.currentAddress!;
-      notifyListeners();
+      _safeNotify();
     }
   }
 
   void onTabSelected(int index) {
     if (_selectedIndex == index) return;
     _selectedIndex = index;
-    notifyListeners();
+    _safeNotify();
   }
 
   String? getBottomNavRoute(int index) {
@@ -79,26 +83,41 @@ class FoodHomeViewModel extends ChangeNotifier {
   // ─── Init ─────────────────────────────────────────────
 
   Future<void> init() async {
+    debugPrint('🚀 [FoodHomeVM] Başlatılıyor...');
     _isLoading = true;
-    notifyListeners();
+    _safeNotify();
 
-    final results = await Future.wait([
-      _service.getUserLocationName(),
-      _service.getFeaturedListings(),
-    ]);
+    try {
+      final results = await Future.wait([
+        _service.getUserLocationName(),
+        _service.getFeaturedListings(),
+        _service.getFavorites(), // Favorileri de çek
+      ]);
 
-    _locationName = results[0] as String;
-    _allListings = results[1] as List<FoodListing>;
+      _locationName = results[0] as String;
+      final listings = results[1] as List<FoodListing>;
+      final favorites = results[2] as List<FoodListing>;
+
+      // Favori olanların isFavorite flag'ini güncelle
+      final favoriteIds = favorites.map((f) => f.id).toSet();
+
+      _allListings = listings.map((l) {
+        final isFav = favoriteIds.contains(l.id);
+        return l.copyWith(isFavorite: isFav);
+      }).toList();
+    } catch (e) {
+      debugPrint('❌ [FoodHomeVM] Hata: $e');
+    }
 
     _isLoading = false;
-    notifyListeners();
+    _safeNotify();
   }
 
   // ─── Arama ────────────────────────────────────────────
 
   void onSearchChanged(String query) {
     _searchQuery = query;
-    notifyListeners();
+    _safeNotify();
   }
 
   // ─── Filtre ───────────────────────────────────────────
@@ -106,7 +125,7 @@ class FoodHomeViewModel extends ChangeNotifier {
   void onFilterChanged(FoodFilter filter) {
     if (_selectedFilter == filter) return;
     _selectedFilter = filter;
-    notifyListeners();
+    _safeNotify();
   }
 
   // ─── Filtrelenmiş İlanlar ─────────────────────────────
@@ -146,20 +165,61 @@ class FoodHomeViewModel extends ChangeNotifier {
 
   // ─── Favori Toggle ───────────────────────────────────
 
-  void toggleFavorite(String id) {
-    _service.toggleFavorite(id);
+  Future<void> toggleFavorite(String id) async {
+    // UI'da hemen tepki ver (Optimistic UI)
     final index = _allListings.indexWhere((l) => l.id == id);
     if (index != -1) {
       _allListings = List.of(_allListings)
         ..[index] = _allListings[index].copyWith(
           isFavorite: !_allListings[index].isFavorite,
         );
+      _safeNotify();
     }
-    notifyListeners();
+
+    // API'ye gönder
+    try {
+      await _service.toggleFavorite(id);
+    } catch (e) {
+      // Hata olursa geri al (Rollback)
+      if (index != -1) {
+        _allListings = List.of(_allListings)
+          ..[index] = _allListings[index].copyWith(
+            isFavorite: !_allListings[index].isFavorite,
+          );
+        _safeNotify();
+      }
+      debugPrint('❌ [FoodHomeVM] Favori toggle hatası: $e');
+    }
+  }
+
+  /// Sadece favori durumlarını günceller (Sayfa geri gelindiğinde vs.)
+  Future<void> refreshFavorites() async {
+    try {
+      final favorites = await _service.getFavorites();
+      final favoriteIds = favorites.map((f) => f.id).toSet();
+
+      bool changed = false;
+      final newListings = _allListings.map((l) {
+        final isFav = favoriteIds.contains(l.id);
+        if (l.isFavorite != isFav) {
+          changed = true;
+          return l.copyWith(isFavorite: isFav);
+        }
+        return l;
+      }).toList();
+
+      if (changed) {
+        _allListings = newListings;
+        _safeNotify();
+      }
+    } catch (e) {
+      debugPrint('❌ [FoodHomeVM] Favori yenileme hatası: $e');
+    }
   }
 
   @override
   void dispose() {
+    _isDisposed = true;
     _userSession.removeListener(_onUserSessionChanged);
     super.dispose();
   }

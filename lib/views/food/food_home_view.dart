@@ -22,13 +22,7 @@ class FoodHomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => FoodHomeViewModel(
-        service: ApiFoodService()..setToken(userSession.token ?? ''),
-        userSession: userSession,
-      )..init(),
-      child: const _FoodHomeBody(),
-    );
+    return const _FoodHomeBody();
   }
 }
 
@@ -44,6 +38,23 @@ class _FoodHomeBody extends StatefulWidget {
 
 class _FoodHomeBodyState extends State<_FoodHomeBody> {
   final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      if (mounted) {
+        context.read<FoodHomeViewModel>().onSearchChanged(_searchController.text);
+      }
+    });
+
+    // Sayfaya gelindiğinde favorileri güncelle
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<FoodHomeViewModel>().refreshFavorites();
+      }
+    });
+  }
 
   @override
   void dispose() {

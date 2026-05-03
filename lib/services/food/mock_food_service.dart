@@ -48,7 +48,9 @@ class MockFoodService implements IFoodService {
 
   /// Favori durumunu senkron olarak değiştirir.
   /// ViewModel'ler bunu çağırır, ardından [getFeaturedListings] ile güncel listeyi alır.
-  void toggleFavorite(String id) {
+  @override
+  Future<void> toggleFavorite(String id) async {
+    await Future<void>.delayed(const Duration(milliseconds: 200));
     final index = _listings.indexWhere((l) => l.id == id);
     if (index == -1) return;
     _listings[index] = _listings[index].copyWith(
@@ -57,7 +59,9 @@ class MockFoodService implements IFoodService {
   }
 
   /// Sadece favori olan ilanları döner.
-  List<FoodListing> getFavorites() {
+  @override
+  Future<List<FoodListing>> getFavorites() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
     return _listings.where((l) => l.isFavorite).toList();
   }
 

@@ -181,7 +181,11 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.lock_outline_rounded,
                     title: 'Şifre Değiştir',
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.changePassword,
+                      arguments: AppModuleType.food,
+                    ),
                   ),
                   ProfileMenuTile(
                     icon: Icons.public,

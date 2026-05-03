@@ -23,6 +23,7 @@ class FoodListing {
     this.deliveryStartTime,
     this.deliveryEndTime,
     this.originalPrice,
+    this.fullAddress,
   });
 
   final String id;
@@ -48,8 +49,20 @@ class FoodListing {
   final DateTime? deliveryStartTime;
   final DateTime? deliveryEndTime;
   final double? originalPrice;
+  final String? fullAddress;
 
   FoodListing copyWith({
+    String? id,
+    String? title,
+    String? shopName,
+    String? location,
+    String? category,
+    String? timeRange,
+    String? imageUrl,
+    double? price,
+    double? rating,
+    FoodSection? section,
+    String? shopLogoUrl,
     bool? isFavorite,
     bool? isNetworkImage,
     String? description,
@@ -60,19 +73,20 @@ class FoodListing {
     DateTime? deliveryStartTime,
     DateTime? deliveryEndTime,
     double? originalPrice,
+    String? fullAddress,
   }) {
     return FoodListing(
-      id: id,
-      title: title,
-      shopName: shopName,
-      location: location,
-      category: category,
-      timeRange: timeRange,
-      imageUrl: imageUrl,
-      price: price,
-      rating: rating,
-      section: section,
-      shopLogoUrl: shopLogoUrl,
+      id: id ?? this.id,
+      title: title ?? this.title,
+      shopName: shopName ?? this.shopName,
+      location: location ?? this.location,
+      category: category ?? this.category,
+      timeRange: timeRange ?? this.timeRange,
+      imageUrl: imageUrl ?? this.imageUrl,
+      price: price ?? this.price,
+      rating: rating ?? this.rating,
+      section: section ?? this.section,
+      shopLogoUrl: shopLogoUrl ?? this.shopLogoUrl,
       isFavorite: isFavorite ?? this.isFavorite,
       isNetworkImage: isNetworkImage ?? this.isNetworkImage,
       description: description ?? this.description,
@@ -83,6 +97,7 @@ class FoodListing {
       deliveryStartTime: deliveryStartTime ?? this.deliveryStartTime,
       deliveryEndTime: deliveryEndTime ?? this.deliveryEndTime,
       originalPrice: originalPrice ?? this.originalPrice,
+      fullAddress: fullAddress ?? this.fullAddress,
     );
   }
 }

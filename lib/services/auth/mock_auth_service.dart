@@ -102,7 +102,10 @@ class MockAuthService implements IAuthService {
   @override
   Future<AuthResponse> resetPassword(ResetPasswordRequest request) async {
     await _simulateDelay();
-    return const AuthResponse(success: true, message: 'Password reset successful');
+    return const AuthResponse(
+      success: true,
+      message: 'Password reset successful',
+    );
   }
 
   @override
@@ -145,7 +148,10 @@ class MockAuthService implements IAuthService {
   }
 
   @override
-  Future<AuthResponse> updateProfile(int userId, Map<String, dynamic> data) async {
+  Future<AuthResponse> updateProfile(
+    int userId,
+    Map<String, dynamic> data,
+  ) async {
     await _simulateDelay();
     return const AuthResponse(success: true, message: 'Profile updated');
   }
@@ -160,6 +166,15 @@ class MockAuthService implements IAuthService {
   Future<String?> uploadImage(String filePath) async {
     await _simulateDelay();
     return "https://i.pravatar.cc/300"; // Mock URL
+  }
+
+  @override
+  Future<AuthResponse> changePassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
+    await _simulateDelay();
+    return const AuthResponse(success: true, message: 'Password changed');
   }
 
   Future<void> _simulateDelay() =>

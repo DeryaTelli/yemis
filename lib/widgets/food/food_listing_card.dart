@@ -26,7 +26,7 @@ class FoodListingCard extends StatelessWidget {
       child: Container(
         width: width ?? 200,
         decoration: BoxDecoration(
-          color: Colors.white70,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
@@ -66,23 +66,32 @@ class FoodListingCard extends StatelessWidget {
 
                   // Favori butonu (sol-üst)
                   Positioned(
-                    top: 4,
+                    top: 8,
                     left: 8,
                     child: GestureDetector(
                       onTap: onFavoriteTap,
                       child: Container(
-                        width: 28,
-                        height: 28,
-                        decoration: const BoxDecoration(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.15),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: Icon(
                           listing.isFavorite
                               ? Icons.favorite_rounded
                               : Icons.favorite_border_rounded,
-                          color: listing.isFavorite ? Colors.red : Colors.grey,
-                          size: 20,
+                          color: listing.isFavorite
+                              ? Colors.red
+                              : Colors.grey.shade400,
+                          size: 22,
                         ),
                       ),
                     ),
@@ -94,12 +103,12 @@ class FoodListingCard extends StatelessWidget {
                     right: 8,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 3,
+                        horizontal: 8,
+                        vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.black.withValues(alpha: 0.65),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -107,15 +116,15 @@ class FoodListingCard extends StatelessWidget {
                           const Icon(
                             Icons.star_rounded,
                             color: Color(0xFFFFC107),
-                            size: 10,
+                            size: 14,
                           ),
-                          const SizedBox(width: 2),
+                          const SizedBox(width: 3),
                           Text(
                             listing.rating.toString(),
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
@@ -126,17 +135,17 @@ class FoodListingCard extends StatelessWidget {
                   // Business Logo (sol-alt)
                   Positioned(
                     bottom: 8,
-                    left: 4,
+                    left: 6,
                     child: Container(
-                      width: 40,
-                      height: 40,
+                      width: 42,
+                      height: 42,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4,
+                            color: Colors.black.withValues(alpha: 0.15),
+                            blurRadius: 5,
                             offset: const Offset(0, 2),
                           ),
                         ],
@@ -233,6 +242,7 @@ class FoodListingCard extends StatelessWidget {
                                   color: AppColors.hintTextColor,
                                   decoration: TextDecoration.lineThrough,
                                   decorationColor: AppColors.hintTextColor,
+                                  decorationThickness: 1.5,
                                 ),
                               ),
                             ),

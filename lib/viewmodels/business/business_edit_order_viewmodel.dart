@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import '../../models/auth/address_model.dart';
@@ -262,6 +264,35 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
     _isSubmitting = true;
     notifyListeners();
 
+    // --- Geocode Fallback ---
+    // Eğer koordinatlar yoksa veya (0,0) ise adresten bulmaya çalış
+    bool needsGeocode = _selectedLatLng == null || (_selectedLatLng!.latitude == 0 && _selectedLatLng!.longitude == 0);
+    // Eğer başlangıç koordinatları da (0,0) ise geocode yap
+    if (needsGeocode && (initialListing.latitude == null || initialListing.latitude == 0)) {
+      try {
+        debugPrint('🔍 [BusinessEditOrder] Koordinat eksik, geocode deneniyor: $_locationAddress');
+        final uri = Uri.https('nominatim.openstreetmap.org', '/search', {
+          'q': _locationAddress,
+          'format': 'json',
+          'limit': '1',
+          'accept-language': 'tr',
+        });
+        final res = await http.get(uri, headers: {'User-Agent': 'YemisApp/1.0'});
+        if (res.statusCode == 200) {
+          final List<dynamic> data = jsonDecode(res.body);
+          if (data.isNotEmpty) {
+            _selectedLatLng = LatLng(
+              double.parse(data[0]['lat']),
+              double.parse(data[0]['lon']),
+            );
+            debugPrint('✅ [BusinessEditOrder] Geocode başarılı: $_selectedLatLng');
+          }
+        }
+      } catch (e) {
+        debugPrint('⚠️ [BusinessEditOrder] Geocode hatası: $e');
+      }
+    }
+
     try {
       String? imageUrl = initialListing.imageUrl;
       if (_selectedImage != null) {
@@ -284,6 +315,9 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
         'title': _title,
         'description': _description,
         'address_id': _selectedAddressId,
+        'address': _locationAddress,
+        'latitude': _selectedLatLng?.latitude ?? initialListing.latitude,
+        'longitude': _selectedLatLng?.longitude ?? initialListing.longitude,
         'original_price': double.tryParse(_price) ?? 0.0,
         'discounted_price': double.tryParse(_discountPrice) ?? 0.0,
         'pickup_end_time': pickupEndTime,

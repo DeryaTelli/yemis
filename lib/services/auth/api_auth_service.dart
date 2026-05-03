@@ -218,6 +218,17 @@ class ApiAuthService implements IAuthService {
   Future<AuthResponse> deleteAccount() async {
     return _delete(ApiConstants.profile);
   }
+
+  @override
+  Future<AuthResponse> changePassword(
+    String oldPassword,
+    String newPassword,
+  ) async {
+    return _post(ApiConstants.changePassword, {
+      'old_password': oldPassword,
+      'new_password': newPassword,
+    });
+  }
   
   @override
   Future<String?> uploadImage(String filePath) async {

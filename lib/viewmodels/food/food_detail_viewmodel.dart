@@ -17,13 +17,26 @@ class FoodDetailViewModel extends ChangeNotifier {
   FoodDetailViewModel({
     required IFoodService service,
     required String listingId,
+    FoodListing? initialListing,
   }) : _service = service,
        _listingId = listingId,
+       _listing = initialListing,
        _locationService = LocationService();
 
   final IFoodService _service;
   final String _listingId;
   final LocationService _locationService;
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  void _safeNotify() {
+    if (!_isDisposed) notifyListeners();
+  }
 
   // ─── State ──────────────────────────────────────────────
 
@@ -82,7 +95,8 @@ class FoodDetailViewModel extends ChangeNotifier {
       : null;
 
   LatLng? get businessLatLng =>
-      _listing?.latitude != null && _listing?.longitude != null
+      _listing?.latitude != null && _listing?.latitude != 0 &&
+      _listing?.longitude != null && _listing?.longitude != 0
       ? LatLng(_listing!.latitude!, _listing!.longitude!)
       : null;
 
@@ -90,20 +104,30 @@ class FoodDetailViewModel extends ChangeNotifier {
 
   Future<void> init() async {
     _isLoading = true;
-    notifyListeners();
+    _safeNotify();
 
     final results = await Future.wait([
       _service.getFoodDetail(_listingId),
       _service.getFoodReviews(_listingId),
     ]);
 
-    _listing = results[0] as FoodListing;
+    final fetchedListing = results[0] as FoodListing;
     _reviews = results[1] as List<FoodReview>;
+
+    // API'den gelen veride koordinatlar eksikse, başlangıçtaki koordinatları koru
+    if (fetchedListing.latitude == null || fetchedListing.longitude == null) {
+      _listing = fetchedListing.copyWith(
+        latitude: _listing?.latitude,
+        longitude: _listing?.longitude,
+      );
+    } else {
+      _listing = fetchedListing;
+    }
 
     await _fetchUserLocation();
 
     _isLoading = false;
-    notifyListeners();
+    _safeNotify();
   }
 
   Future<void> _fetchUserLocation() async {
@@ -136,22 +160,35 @@ class FoodDetailViewModel extends ChangeNotifier {
   void onTabChanged(int index) {
     if (_selectedTab == index) return;
     _selectedTab = index;
-    notifyListeners();
+    _safeNotify();
   }
 
   // ─── Genişletme ──────────────────────────────────────────
 
   void toggleDetailExpanded() {
     _isDetailExpanded = !_isDetailExpanded;
-    notifyListeners();
+    _safeNotify();
   }
 
   // ─── Favori ──────────────────────────────────────────────
 
-  void toggleFavorite() {
+  Future<void> toggleFavorite() async {
     if (_listing == null) return;
-    _listing = _listing!.copyWith(isFavorite: !_listing!.isFavorite);
-    notifyListeners();
+    
+    // UI'da hemen tepki ver (Optimistic UI)
+    final oldState = _listing!.isFavorite;
+    _listing = _listing!.copyWith(isFavorite: !oldState);
+    _safeNotify();
+
+    // API'ye gönder
+    try {
+      await _service.toggleFavorite(_listingId);
+    } catch (e) {
+      // Hata olursa geri al
+      _listing = _listing!.copyWith(isFavorite: oldState);
+      _safeNotify();
+      debugPrint('❌ [FoodDetailVM] Favori toggle hatası: $e');
+    }
   }
 
   // ─── Rezervasyon ─────────────────────────────────────────

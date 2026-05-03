@@ -15,27 +15,69 @@ class ApiFoodService implements IFoodService {
     _token = token;
   }
 
-  Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_token != null) 'Authorization': 'Bearer $_token',
-      };
+  Map<String, String> get _headers {
+    final headers = {
+      'Content-Type': 'application/json',
+      if (_token != null) 'Authorization': 'Bearer $_token',
+    };
+    debugPrint('🔑 [ApiFoodService] Headers: $headers');
+    return headers;
+  }
 
   @override
   Future<List<FoodListing>> getFeaturedListings() async {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.bags}');
+      debugPrint('📡 [ApiFoodService] GET Request: $url');
+
       final response = await _client.get(url, headers: _headers);
+      debugPrint('📥 [ApiFoodService] Response Status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.map((json) {
-          final businessModel = BusinessListingModel.fromJson(json);
-          return businessModel.toFoodListing();
-        }).toList();
+        final decoded = jsonDecode(response.body);
+        List<dynamic> data = [];
+
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'] as List;
+        } else if (decoded is Map && decoded.containsKey('bags')) {
+          data = decoded['bags'] as List;
+        } else {
+          debugPrint('⚠️ [ApiFoodService] Beklenmeyen yanıt formatı: $decoded');
+          return [];
+        }
+
+        debugPrint('📦 [ApiFoodService] İşlenecek ilan sayısı: ${data.length}');
+
+        final List<FoodListing> listings = [];
+        for (var item in data) {
+          try {
+            if (item is Map<String, dynamic>) {
+              final businessModel = BusinessListingModel.fromJson(item);
+              listings.add(businessModel.toFoodListing());
+            } else {
+              debugPrint('⚠️ [ApiFoodService] Öğe bir Map değil: $item');
+            }
+          } catch (itemError) {
+            debugPrint(
+              '❌ [ApiFoodService] Öğe işleme hatası: $itemError | Item: $item',
+            );
+          }
+        }
+
+        debugPrint(
+          '✅ [ApiFoodService] Toplam başarıyla işlenen ilan: ${listings.length}',
+        );
+        return listings;
+      } else {
+        debugPrint(
+          '❌ [ApiFoodService] API Hatası (${response.statusCode}): ${response.body}',
+        );
+        return [];
       }
-      return [];
     } catch (e) {
-      if (kDebugMode) print('Error fetching featured listings: $e');
+      debugPrint('🚨 [ApiFoodService] Genel Hata: $e');
       return [];
     }
   }
@@ -43,13 +85,30 @@ class ApiFoodService implements IFoodService {
   @override
   Future<FoodListing> getFoodDetail(String id) async {
     try {
-      final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.bagById(int.parse(id))}');
+      final url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.bagById(int.parse(id))}',
+      );
       final response = await _client.get(url, headers: _headers);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        final businessModel = BusinessListingModel.fromJson(data);
-        return businessModel.toFoodListing();
+        final decoded = jsonDecode(response.body);
+        Map<String, dynamic>? data;
+
+        if (decoded is Map<String, dynamic>) {
+          data = decoded;
+        } else if (decoded is List && decoded.isNotEmpty) {
+          data = decoded.first as Map<String, dynamic>;
+        }
+
+        if (data != null) {
+          if (kDebugMode) {
+            print('--- API RESPONSE (FOOD DETAIL) ---');
+            print('Data: $data');
+            print('----------------------------------');
+          }
+          final businessModel = BusinessListingModel.fromJson(data);
+          return businessModel.toFoodListing();
+        }
       }
       throw Exception('Failed to load food detail');
     } catch (e) {
@@ -70,12 +129,130 @@ class ApiFoodService implements IFoodService {
   }
 
   @override
-  void toggleFavorite(String id) {
-    // Favori API entegrasyonu buraya gelecek
+  Future<void> toggleFavorite(String id) async {
+    try {
+      final bagId = int.tryParse(id);
+      if (bagId == null) return;
+
+      // Önce mevcut favorileri kontrol et (SİL mi EKLE mi?)
+      // Direkt API'den ham veriyi çekip kontrol edelim, daha sağlam olur.
+      final url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.myFavorites}',
+      );
+      final response = await _client.get(url, headers: _headers);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        final favItem = data.firstWhere(
+          (item) =>
+              item['bag_id']?.toString() == id ||
+              (item['bag'] != null && item['bag']['id']?.toString() == id),
+          orElse: () => null,
+        );
+
+        if (favItem != null) {
+          // Zaten favori -> SİL (DELETE)
+          final favId = int.tryParse(favItem['id']?.toString() ?? '');
+          if (favId != null) {
+            await removeFavorite(favId);
+          }
+        } else {
+          // Favori değil -> EKLE (POST)
+          final postUrl = Uri.parse(
+            '${ApiConstants.baseUrl}${ApiConstants.favorites}',
+          );
+          final postResponse = await _client.post(
+            postUrl,
+            headers: _headers,
+            body: jsonEncode({'bag_id': bagId}),
+          );
+
+          if (postResponse.statusCode == 201 ||
+              postResponse.statusCode == 200) {
+            debugPrint('✅ [ApiFoodService] Favori eklendi: $id');
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] toggleFavorite hatası: $e');
+    }
+  }
+
+  /// Favori silme işlemi için özel metod
+  Future<void> removeFavorite(int favoriteId) async {
+    try {
+      final url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.favoriteById(favoriteId)}',
+      );
+      final response = await _client.delete(url, headers: _headers);
+
+      if (response.statusCode == 200) {
+        debugPrint('✅ [ApiFoodService] Favori silindi: $favoriteId');
+      } else {
+        debugPrint('❌ [ApiFoodService] Favori silme hatası: ${response.body}');
+      }
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] removeFavorite hatası: $e');
+    }
   }
 
   @override
-  List<FoodListing> getFavorites() {
-    return [];
+  Future<List<FoodListing>> getFavorites() async {
+    try {
+      final url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.myFavorites}',
+      );
+      final response = await _client.get(url, headers: _headers);
+      debugPrint(
+        '📥 [ApiFoodService] getFavorites Status: ${response.statusCode}',
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+
+        List<dynamic> data = [];
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'];
+        }
+
+        final List<String> bagIds = [];
+        for (var item in data) {
+          if (item is Map<String, dynamic>) {
+            final id = (item['bag_id'] ??
+                    (item['bag'] != null ? item['bag']['id'] : null))
+                ?.toString();
+            if (id != null) bagIds.add(id);
+          }
+        }
+
+        debugPrint('🔍 [ApiFoodService] Favori Bag IDleri: $bagIds');
+
+        // Her bir ID için detayları çek
+        final List<FoodListing> listings = [];
+        final results = await Future.wait(
+          bagIds.map((id) => getFoodDetail(id).catchError((e) {
+                debugPrint('❌ [ApiFoodService] Detay çekme hatası ($id): $e');
+                return null;
+              })),
+        );
+
+        for (var res in results) {
+          if (res != null) {
+            listings.add(res.copyWith(isFavorite: true));
+          }
+        }
+
+        debugPrint(
+          '✅ [ApiFoodService] Toplam başarıyla işlenen favori: ${listings.length}',
+        );
+        return listings;
+      }
+      return [];
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] getFavorites hatası: $e');
+      return [];
+    }
   }
 }

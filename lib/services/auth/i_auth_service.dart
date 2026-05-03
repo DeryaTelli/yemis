@@ -51,4 +51,7 @@ abstract class IAuthService {
 
   /// Görsel yükler ve URL döner.
   Future<String?> uploadImage(String filePath);
+
+  /// Şifre değiştirir.
+  Future<AuthResponse> changePassword(String oldPassword, String newPassword);
 }

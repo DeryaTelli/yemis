@@ -28,6 +28,7 @@ class FoodDetailView extends StatelessWidget {
       create: (_) => FoodDetailViewModel(
         service: ApiFoodService()..setToken(userSession.token ?? ''),
         listingId: listing.id,
+        initialListing: listing,
       )..init(),
       child: _FoodDetailBody(listing: listing),
     );

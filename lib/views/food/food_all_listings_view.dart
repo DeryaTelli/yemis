@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/theme/text_styles_custom.dart';
@@ -32,10 +33,17 @@ class FoodAllListingsView extends StatelessWidget {
             width: double.infinity,
             imageHeight: 160,
             onFavoriteTap: () {
-              // Not: Burada ViewModel'e erişim gerekebilir eğer favori işlemi yapılacaksa
+              try {
+                context.read<FoodHomeViewModel>().toggleFavorite(item.id);
+              } catch (_) {
+                debugPrint('⚠️ [FoodAllListingsView] ViewModel bulunamadı.');
+              }
             },
-            onTap: () =>
-                Navigator.pushNamed(context, '/food-detail', arguments: item),
+            onTap: () => Navigator.pushNamed(
+              context,
+              AppRoutes.foodDetail,
+              arguments: item,
+            ),
           );
         },
       ),

@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/models/app_module_type.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../viewmodels/business/business_add_order_viewmodel.dart';
@@ -9,127 +11,31 @@ class LocationButton extends StatelessWidget {
   const LocationButton({super.key, required this.vm});
   final BusinessAddOrderViewModel vm;
 
-  void _showLocationPickerSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Container(
-            width: double.infinity,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const Text(
-                  'Adres Seçiniz',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 20),
-                ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.bookmark_border_rounded,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  title: const Text(
-                    'Kayıtlı Adreslerimden Seç',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                  ),
-                  trailing: const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.primaryColor,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _showSavedAddressesSheet(context);
-                  },
-                ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.map_outlined,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  title: const Text(
-                    'Haritadan Seç',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                  ),
-                  trailing: const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.primaryColor,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    vm.pickLocation(context);
-                  },
-                ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.add_location_alt_outlined,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  title: const Text(
-                    'Yeni Adres Ekle',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                  ),
-                  trailing: const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.primaryColor,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    vm.addNewAddress(context);
-                  },
-                ),
-                const SizedBox(height: 12),
-              ],
-            ),
+  Future<void> _handleTap(BuildContext context) async {
+    await vm.fetchAddresses();
+
+    if (context.mounted) {
+      if (vm.savedAddresses.isEmpty) {
+        // Kayıtlı adres yoksa yönlendir
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Lütfen önce bir işletme adresi ekleyin.'),
+            backgroundColor: AppColors.primaryColor,
           ),
-        ),
-      ),
-    );
+        );
+        Navigator.pushNamed(
+          context,
+          AppRoutes.addresses,
+          arguments: AppModuleType.business,
+        );
+      } else {
+        // Kayıtlı adresleri göster
+        _showSavedAddressesSheet(context);
+      }
+    }
   }
 
   void _showSavedAddressesSheet(BuildContext context) {
-    vm.fetchAddresses();
-
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.white,
@@ -273,7 +179,7 @@ class LocationButton extends StatelessWidget {
     final bool hasData = vm.locationAddress.isNotEmpty;
 
     return GestureDetector(
-      onTap: () => _showLocationPickerSheet(context),
+      onTap: () => _handleTap(context),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

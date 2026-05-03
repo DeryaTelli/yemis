@@ -5,10 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:yemis/models/business/business_listing_model.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/viewmodels/business/business_profile_viewmodel.dart';
+import 'package:yemis/viewmodels/food/food_home_viewmodel.dart';
 import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_add_listing_viewmodel.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_profile_viewmodel.dart';
+import 'package:yemis/viewmodels/food/food_favorites_viewmodel.dart';
+import 'package:yemis/views/auth/change_password_view.dart';
 import 'package:yemis/views/volunteer/volunteer_add_address_view.dart';
+import 'services/food/api_food_service.dart';
 import 'services/food/mock_food_service.dart';
 import 'services/auth/api_auth_service.dart';
 import 'services/auth/i_auth_service.dart';
@@ -72,12 +76,15 @@ void main() async {
 
   final businessService = ApiBusinessService();
 
+  final foodService = ApiFoodService();
+
   // Kayıtlı token'ı yükle
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('auth_token');
   if (token != null) {
     authService.setToken(token);
     businessService.setToken(token);
+    foodService.setToken(token);
   }
 
   MockFoodService().setUserSession(userSession);
@@ -92,6 +99,7 @@ void main() async {
         userSession: userSession,
         locationDataService: locationDataService,
         businessService: businessService,
+        foodService: foodService,
       ),
     ),
   );
@@ -102,6 +110,7 @@ class MyApp extends StatelessWidget {
   final UserSession userSession;
   final ApiLocationDataService locationDataService;
   final ApiBusinessService businessService;
+  final ApiFoodService foodService;
 
   const MyApp({
     super.key,
@@ -109,6 +118,7 @@ class MyApp extends StatelessWidget {
     required this.userSession,
     required this.locationDataService,
     required this.businessService,
+    required this.foodService,
   });
 
   @override
@@ -120,7 +130,8 @@ class MyApp extends StatelessWidget {
         Provider<ILocationDataService>.value(value: locationDataService),
         Provider<IBusinessService>.value(value: businessService),
         ChangeNotifierProvider(
-          create: (_) => LoginViewModel(authService, businessService, userSession),
+          create: (_) =>
+              LoginViewModel(authService, businessService, userSession),
         ),
         ChangeNotifierProvider(create: (_) => RegisterViewModel(authService)),
         ChangeNotifierProvider(
@@ -134,6 +145,14 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => BusinessProfileViewModel(authService, userSession),
+        ),
+        ChangeNotifierProvider(
+          create: (_) =>
+              FoodHomeViewModel(service: foodService, userSession: userSession)
+                ..init(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FoodFavoritesViewModel(foodService),
         ),
         // VerificationViewModel route-level'da inject edilir (email argümanı gerektirir)
       ],
@@ -239,10 +258,19 @@ class MyApp extends StatelessWidget {
             case AppRoutes.foodAllListings:
               final args = settings.arguments as Map<String, dynamic>;
               return MaterialPageRoute(
-                builder: (_) => FoodAllListingsView(
-                  title: args['title'] as String,
-                  listings: args['listings'] as List<FoodListing>,
-                ),
+                builder: (_) {
+                  final view = FoodAllListingsView(
+                    title: args['title'] as String,
+                    listings: args['listings'] as List<FoodListing>,
+                  );
+                  if (args.containsKey('vm')) {
+                    return ChangeNotifierProvider.value(
+                      value: args['vm'] as FoodHomeViewModel,
+                      child: view,
+                    );
+                  }
+                  return view;
+                },
                 settings: settings,
               );
             case AppRoutes.volunteerAllListings:
@@ -394,6 +422,13 @@ class MyApp extends StatelessWidget {
               final listing = settings.arguments as BusinessListingModel;
               return MaterialPageRoute(
                 builder: (_) => BusinessListingDetailView(listing: listing),
+                settings: settings,
+              );
+            case AppRoutes.changePassword:
+              final moduleType =
+                  settings.arguments as AppModuleType? ?? AppModuleType.food;
+              return MaterialPageRoute(
+                builder: (_) => ChangePasswordView(moduleType: moduleType),
                 settings: settings,
               );
             default:

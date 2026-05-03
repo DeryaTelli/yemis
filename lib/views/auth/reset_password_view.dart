@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/theme/text_styles_custom.dart';
@@ -61,7 +62,15 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Lottie.asset(
+                          'assets/lottie/forgot_password.json',
+                          height: 250,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
 
                       Text(
                         'Lütfen yeni şifrenizi girin.',

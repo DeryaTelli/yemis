@@ -39,7 +39,8 @@ class FoodDetailBottomBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (listing.originalPrice != null && listing.originalPrice! > listing.price)
+              if (listing.originalPrice != null &&
+                  listing.originalPrice! > listing.price)
                 Text(
                   '${listing.originalPrice!.toInt()} TL',
                   style: const TextStyle(
@@ -47,7 +48,8 @@ class FoodDetailBottomBar extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: AppColors.hintTextColor,
                     decoration: TextDecoration.lineThrough,
-                    decorationColor: AppColors.hintTextColor,
+                    decorationColor: AppColors.primaryTextColor,
+                    decorationThickness: 1.5,
                   ),
                 ),
               Text(

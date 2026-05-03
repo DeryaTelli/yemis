@@ -48,31 +48,37 @@ class BusinessListingModel {
 
   factory BusinessListingModel.fromJson(Map<String, dynamic> json) {
     return BusinessListingModel(
-      id: json['id'],
-      userId: json['user_id'],
-      businessName: json['business_name'],
+      id: json['bag_id'] != null 
+          ? (json['bag_id'] is int ? json['bag_id'] : int.tryParse(json['bag_id'].toString()) ?? 0)
+          : (json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0),
+      userId: json['user_id'] is int ? json['user_id'] : int.tryParse(json['user_id'].toString()) ?? 0,
+      businessName: json['business_name']?.toString() ?? json['shop_name']?.toString(),
       ownerImageUrl: json['owner_image_url'],
-      businessLogoUrl: json['business_logo_url'],
-      title: json['title'] ?? '',
-      description: json['description'],
-      addressId: json['address_id'],
-      address: json['address'],
-      originalPrice: (json['original_price'] as num?)?.toDouble() ?? 0.0,
-      discountedPrice: (json['discounted_price'] as num?)?.toDouble() ?? 0.0,
+      businessLogoUrl: json['business_logo_url']?.toString() ?? json['shop_logo_url']?.toString(),
+      title: json['title']?.toString() ?? json['bag_title']?.toString() ?? '',
+      description: json['description']?.toString(),
+      addressId: json['address_id'] is int ? json['address_id'] : int.tryParse(json['address_id'].toString()),
+      address: json['address']?.toString() ?? json['full_address']?.toString(),
+      originalPrice: (json['original_price'] as num?)?.toDouble() ?? (json['price'] as num?)?.toDouble() ?? 0.0,
+      discountedPrice: (json['discounted_price'] as num?)?.toDouble() ?? (json['price'] as num?)?.toDouble() ?? 0.0,
       pickupStartTime: json['pickup_start_time'] != null
-          ? DateTime.parse(json['pickup_start_time'])
-          : null,
+          ? DateTime.tryParse(json['pickup_start_time'].toString())
+          : (json['delivery_start_time'] != null ? DateTime.tryParse(json['delivery_start_time'].toString()) : null),
       pickupEndTime: json['pickup_end_time'] != null
-          ? DateTime.parse(json['pickup_end_time'])
-          : null,
-      totalQuantity: json['total_quantity'] ?? 0,
-      availableQuantity: json['available_quantity'] ?? 0,
-      imageUrl: json['image_url'],
-      allergens: json['allergens'],
-      latitude: (json['latitude'] as num?)?.toDouble(),
-      longitude: (json['longitude'] as num?)?.toDouble(),
+          ? DateTime.tryParse(json['pickup_end_time'].toString())
+          : (json['delivery_end_time'] != null ? DateTime.tryParse(json['delivery_end_time'].toString()) : null),
+      totalQuantity: (json['total_quantity'] as num?)?.toInt() ?? 0,
+      availableQuantity: (json['available_quantity'] as num?)?.toInt() ?? 0,
+      imageUrl: json['image_url']?.toString() ?? json['bag_image_url']?.toString(),
+      allergens: json['allergens']?.toString(),
+      latitude: json['latitude'] != null 
+          ? (json['latitude'] as num).toDouble() 
+          : (json['lat'] != null ? (json['lat'] as num).toDouble() : null),
+      longitude: json['longitude'] != null 
+          ? (json['longitude'] as num).toDouble() 
+          : (json['lng'] != null ? (json['lng'] as num).toDouble() : null),
       createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+          ? DateTime.tryParse(json['created_at'].toString())
           : null,
     );
   }
@@ -105,11 +111,21 @@ class BusinessListingModel {
       formattedTime = 'Belirtilmedi';
     }
 
+    String shortLocation = '';
+    if (address != null) {
+      final parts = address!.split('/').map((e) => e.trim()).toList();
+      if (parts.length >= 2) {
+        shortLocation = '${parts[1]}, ${parts[0]}'; // "Merkez, Kastamonu"
+      } else if (parts.isNotEmpty) {
+        shortLocation = parts[0];
+      }
+    }
+
     return FoodListing(
       id: id.toString(),
       title: title,
       shopName: businessName ?? 'İşletme',
-      location: address?.split('/').first.trim() ?? '',
+      location: shortLocation,
       category: 'Sürpriz Kutu',
       timeRange: formattedTime,
       imageUrl: imageUrl ?? '',
@@ -125,6 +141,7 @@ class BusinessListingModel {
       deliveryStartTime: pickupStartTime,
       deliveryEndTime: pickupEndTime,
       originalPrice: originalPrice,
+      fullAddress: address,
     );
   }
 }

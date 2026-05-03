@@ -109,9 +109,13 @@ class BusinessListingCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
                       const SizedBox(width: 4),
-                      Text(
-                        listing.address ?? 'Konum Belirtilmedi',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      Expanded(
+                        child: Text(
+                          listing.address ?? 'Konum Belirtilmedi',
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),
@@ -141,6 +145,7 @@ class BusinessListingCard extends StatelessWidget {
                             fontSize: 13,
                             color: Colors.grey,
                             decoration: TextDecoration.lineThrough,
+                            decorationThickness: 1.5,
                           ),
                         ),
                     ],
