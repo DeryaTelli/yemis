@@ -9,6 +9,7 @@ import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/otp_box.dart';
 
+import '../../widgets/common/success_dialog_custom.dart';
 import '../../widgets/common/error_dialog_custom.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
@@ -133,13 +134,13 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                           formKey: _formKey,
                           onSuccess: () {
                             vm.clearFields();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(LocaleKeys
-                                      .auth_forgotPassword_success
-                                      .tr())),
+                            SuccessDialogCustom.show(
+                              context,
+                              message: LocaleKeys.auth_forgotPassword_success.tr(),
+                              onConfirm: () {
+                                Navigator.popUntil(context, (route) => route.isFirst);
+                              },
                             );
-                            Navigator.popUntil(context, (route) => route.isFirst);
                           },
                           onError: (msg) {
                             ErrorDialogCustom.show(context, message: msg);

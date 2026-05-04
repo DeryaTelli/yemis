@@ -64,7 +64,10 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text(LocaleKeys.volunteerProfile_title.tr())),
+      appBar: AppBar(
+        title: Text(LocaleKeys.volunteerProfile_title.tr()),
+        automaticallyImplyLeading: false,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
@@ -151,7 +154,11 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                     icon: Icons.notifications_none_rounded,
                     title: LocaleKeys.volunteerProfile_notifications.tr(),
                     iconColor: AppColors.volunteerColor,
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.notification,
+                      arguments: AppModuleType.volunteer,
+                    ),
                   ),
                   ProfileMenuTile(
                     icon: Icons.history_rounded,

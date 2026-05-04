@@ -1,4 +1,4 @@
-package com.example.yemis
+package com.yemis.app
 
 import io.flutter.embedding.android.FlutterActivity
 

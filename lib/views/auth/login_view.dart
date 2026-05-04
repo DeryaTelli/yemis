@@ -44,7 +44,10 @@ class _LoginViewState extends State<LoginView> {
           isLoading: vm.isLoading,
           moduleType: AppModuleType.food,
           child: Scaffold(
-            appBar: AppBar(title: Text(LocaleKeys.auth_login_title.tr())),
+            appBar: AppBar(
+              title: Text(LocaleKeys.auth_login_title.tr()),
+              automaticallyImplyLeading: false,
+            ),
             body: SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -62,7 +65,6 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       ),
                       const SizedBox(height: 12),
-
 
                       // Email
                       CustomTextField(

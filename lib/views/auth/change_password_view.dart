@@ -9,6 +9,9 @@ import '../../viewmodels/auth/change_password_viewmodel.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../../widgets/common/loading_overlay.dart';
 
+import '../../widgets/common/error_dialog_custom.dart';
+import '../../widgets/common/success_dialog_custom.dart';
+
 class ChangePasswordView extends StatelessWidget {
   final AppModuleType moduleType;
   const ChangePasswordView({super.key, this.moduleType = AppModuleType.food});
@@ -149,14 +152,17 @@ class _BodyState extends State<_Body> {
                 child: ElevatedButton(
                   onPressed: () async {
                     final success = await vm.submit();
-                    if (success && mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Şifreniz başarıyla değiştirildi.'),
-                          backgroundColor: Colors.green,
-                        ),
+                    if (success && context.mounted) {
+                      SuccessDialogCustom.show(
+                        context,
+                        message: 'Şifreniz başarıyla değiştirildi.',
+                        onConfirm: () => Navigator.pop(context),
                       );
-                      Navigator.pop(context);
+                    } else if (vm.errorMessage != null && context.mounted) {
+                      ErrorDialogCustom.show(
+                        context,
+                        message: vm.errorMessage!,
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(

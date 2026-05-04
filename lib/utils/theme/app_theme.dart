@@ -65,6 +65,14 @@ class AppTheme {
         ),
       ),
 
+      // Özel Geri Dönüş Butonu İkonu
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (context) => const Icon(
+          Icons.arrow_back_ios_new_rounded,
+          size: 20,
+        ),
+      ),
+
       // Metin teması
       textTheme: GoogleFonts.nunitoTextTheme().apply(
         bodyColor: AppColors.primaryTextColor,

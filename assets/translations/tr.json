@@ -92,6 +92,17 @@
     "todayPopular": "Bugün Popüler Olanlar",
     "locationLoading": "Konum yükleniyor…"
   },
+  "foodProfile": {
+    "title": "Profil",
+    "notifications": "Bildirimler",
+    "history": "Geçmiş Rezervasyonlarım",
+    "addresses": "Kayıtlı Adreslerim",
+    "cards": "Kayıtlı Kartlarım",
+    "updateProfile": "Profil Güncelle",
+    "changePassword": "Şifre Değiştir",
+    "changeLanguage": "Dil Değiştir",
+    "logout": "Çıkış Yap"
+  },
   "volunteer": {
     "becomeButton": "Gönüllü Ol",
     "free": "Ücretsiz"

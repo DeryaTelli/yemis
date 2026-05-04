@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'dart:io'; // Required for Image.file() which takes dart:io.File
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
@@ -7,6 +8,7 @@ import '../../models/app_module_type.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 import '../../viewmodels/food/food_profile_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/food/profile_menu_tile.dart';
@@ -62,14 +64,16 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<FoodProfileViewModel>();
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text('Profil')),
+      appBar: AppBar(
+        title: const Text('Profil'),
+        automaticallyImplyLeading: false,
+      ),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -83,15 +87,14 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                 children: [
                   // Avatar
                   GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
+                    onTap: () =>
+                        Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
                     child: SizedBox(
                       width: 64,
                       height: 64,
                       child: Stack(
                         children: [
-                          ClipOval(
-                            child: _buildAvatar(vm),
-                          ),
+                          ClipOval(child: _buildAvatar(vm)),
                           Positioned(
                             right: 0,
                             bottom: 0,
@@ -150,17 +153,21 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                 children: [
                   ProfileMenuTile(
                     icon: Icons.notifications_none_rounded,
-                    title: 'Bildirimler',
-                    onTap: () {},
+                    title: LocaleKeys.foodProfile_notifications.tr(),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.notification,
+                      arguments: AppModuleType.food,
+                    ),
                   ),
                   ProfileMenuTile(
                     icon: Icons.history_rounded,
-                    title: 'Geçmiş Rezervasyonlarım',
+                    title: LocaleKeys.foodProfile_history.tr(),
                     onTap: () {},
                   ),
                   ProfileMenuTile(
                     icon: Icons.location_on_outlined,
-                    title: 'Kayıtlı Adreslerim',
+                    title: LocaleKeys.foodProfile_addresses.tr(),
                     onTap: () => Navigator.pushNamed(
                       context,
                       AppRoutes.addresses,
@@ -169,18 +176,18 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ),
                   ProfileMenuTile(
                     icon: Icons.credit_card_rounded,
-                    title: 'Kayıtlı Kartlarım',
+                    title: LocaleKeys.foodProfile_cards.tr(),
                     onTap: () {},
                   ),
                   ProfileMenuTile(
                     icon: Icons.person_outline_rounded,
-                    title: 'Profil Güncelle',
+                    title: LocaleKeys.foodProfile_updateProfile.tr(),
                     onTap: () =>
                         Navigator.pushNamed(context, AppRoutes.foodProfileEdit),
                   ),
                   ProfileMenuTile(
                     icon: Icons.lock_outline_rounded,
-                    title: 'Şifre Değiştir',
+                    title: LocaleKeys.foodProfile_changePassword.tr(),
                     onTap: () => Navigator.pushNamed(
                       context,
                       AppRoutes.changePassword,
@@ -189,7 +196,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ),
                   ProfileMenuTile(
                     icon: Icons.public,
-                    title: 'Dil Değiştir',
+                    title: LocaleKeys.foodProfile_changeLanguage.tr(),
                     onTap: () {
                       Navigator.pushNamed(
                         context,
@@ -200,7 +207,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ),
                   ProfileMenuTile(
                     icon: Icons.logout_rounded,
-                    title: 'Çıkış Yap',
+                    title: LocaleKeys.foodProfile_logout.tr(),
                     isDestructive: false,
                     onTap: () => vm.logout(context),
                   ),
@@ -232,4 +239,3 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
     );
   }
 }
-

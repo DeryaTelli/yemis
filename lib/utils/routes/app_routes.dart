@@ -38,4 +38,5 @@ class AppRoutes {
   static const String businessEditOrder = '/business/edit-order';
   static const String businessListingDetail = '/business/listing-detail';
   static const String changePassword = '/change-password';
+  static const String notification = '/notification';
 }

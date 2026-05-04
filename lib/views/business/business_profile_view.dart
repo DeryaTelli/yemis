@@ -23,7 +23,10 @@ class BusinessProfileView extends StatelessWidget {
           data: AppTheme.themeFor(AppSection.food),
           child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(title: Text(LocaleKeys.businessProfile_title.tr())),
+            appBar: AppBar(
+              title: Text(LocaleKeys.businessProfile_title.tr()),
+              automaticallyImplyLeading: false,
+            ),
             body: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
               child: Column(
@@ -132,7 +135,11 @@ class BusinessProfileView extends StatelessWidget {
                         ProfileMenuTile(
                           icon: Icons.notifications_none_rounded,
                           title: LocaleKeys.businessProfile_notifications.tr(),
-                          onTap: () {},
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.notification,
+                            arguments: AppModuleType.business,
+                          ),
                         ),
                         ProfileMenuTile(
                           icon: Icons.bar_chart_rounded,

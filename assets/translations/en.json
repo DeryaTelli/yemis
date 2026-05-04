@@ -92,6 +92,17 @@
         "todayPopular": "Today's Popular",
         "locationLoading": "Loading location…"
     },
+    "foodProfile": {
+        "title": "Profile",
+        "notifications": "Notifications",
+        "history": "My Past Reservations",
+        "addresses": "My Saved Addresses",
+        "cards": "My Saved Cards",
+        "updateProfile": "Update Profile",
+        "changePassword": "Change Password",
+        "changeLanguage": "Change Language",
+        "logout": "Log Out"
+    },
     "volunteer": {
         "becomeButton": "Be Volunteer",
         "free": "Free"

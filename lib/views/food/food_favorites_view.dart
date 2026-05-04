@@ -50,7 +50,10 @@ class _FoodFavoritesBodyState extends State<_FoodFavoritesBody>
       backgroundColor: const Color(0xFFF5F5F5),
 
       // ─── AppBar ───────────────────────────────────────
-      appBar: AppBar(title: const Text('Favori')),
+      appBar: AppBar(
+        title: const Text('Favori'),
+        automaticallyImplyLeading: false,
+      ),
       // ─── Body ─────────────────────────────────────────
       body: favorites.isEmpty
           ? _EmptyFavoritesState()

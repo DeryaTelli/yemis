@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/services/common/notification_service.dart';
 import 'package:yemis/models/business/business_listing_model.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/viewmodels/business/business_profile_viewmodel.dart';
@@ -65,10 +67,18 @@ import 'views/business/business_approvals_view.dart';
 import 'views/business/business_listings_view.dart';
 import 'views/business/business_edit_order_view.dart';
 import 'views/business/business_listing_detail_view.dart';
+import 'views/common/notification_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+
+  try {
+    await Firebase.initializeApp();
+    await NotificationService().initialize();
+  } catch (e) {
+    debugPrint('Firebase initialization failed: $e');
+  }
 
   final authService = ApiAuthService();
   final userSession = UserSession();
@@ -429,6 +439,13 @@ class MyApp extends StatelessWidget {
                   settings.arguments as AppModuleType? ?? AppModuleType.food;
               return MaterialPageRoute(
                 builder: (_) => ChangePasswordView(moduleType: moduleType),
+                settings: settings,
+              );
+            case AppRoutes.notification:
+              final moduleType =
+                  settings.arguments as AppModuleType? ?? AppModuleType.food;
+              return MaterialPageRoute(
+                builder: (_) => NotificationView(moduleType: moduleType),
                 settings: settings,
               );
             default:

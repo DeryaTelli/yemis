@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "285884252779",
+    "project_id": "yemis-f0cec",
+    "storage_bucket": "yemis-f0cec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285884252779:android:f15cb11dfcb758def5e72e",
+        "android_client_info": {
+          "package_name": "com.yemis.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBw3JYH1zeIEuo87D_JZKaTvfxFslyjNa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

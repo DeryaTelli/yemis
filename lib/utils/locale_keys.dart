@@ -98,6 +98,17 @@ abstract class LocaleKeys {
   static const home_buyNow = 'home.buyNow';
   static const home_todayPopular = 'home.todayPopular';
   static const home_locationLoading = 'home.locationLoading';
+  
+  // foodProfile
+  static const foodProfile_title = 'foodProfile.title';
+  static const foodProfile_notifications = 'foodProfile.notifications';
+  static const foodProfile_history = 'foodProfile.history';
+  static const foodProfile_addresses = 'foodProfile.addresses';
+  static const foodProfile_cards = 'foodProfile.cards';
+  static const foodProfile_updateProfile = 'foodProfile.updateProfile';
+  static const foodProfile_changePassword = 'foodProfile.changePassword';
+  static const foodProfile_changeLanguage = 'foodProfile.changeLanguage';
+  static const foodProfile_logout = 'foodProfile.logout';
 
   // volunteer
   static const volunteer_becomeButton = 'volunteer.becomeButton';

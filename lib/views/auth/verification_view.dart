@@ -11,6 +11,7 @@ import '../../viewmodels/auth/verification_viewmodel.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/otp_box.dart';
 
+import '../../widgets/common/success_dialog_custom.dart';
 import '../../widgets/common/error_dialog_custom.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
@@ -144,17 +145,16 @@ class _VerificationViewState extends State<VerificationView> {
                             );
                           } else {
                             vm.clearFields();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Hesap doğrulandı! Lütfen giriş yapın.',
-                                ),
-                              ),
-                            );
-                            Navigator.pushNamedAndRemoveUntil(
+                            SuccessDialogCustom.show(
                               context,
-                              AppRoutes.login,
-                              (route) => false,
+                              message: 'Hesap doğrulandı! Lütfen giriş yapın.',
+                              onConfirm: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  AppRoutes.login,
+                                  (route) => false,
+                                );
+                              },
                             );
                           }
                         },
