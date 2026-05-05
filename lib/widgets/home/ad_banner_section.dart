@@ -13,11 +13,14 @@ class AdBannerSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<HomeViewModel>();
 
-    return Column(
+    final screenHeight = MediaQuery.of(context).size.height;
+    final bannerHeight = screenHeight * 0.32;
+
+    return Stack(
       children: [
         // ── Slider ───────────────────────────────────────
         SizedBox(
-          height: 260,
+          height: bannerHeight,
           child: PageView.builder(
             controller: vm.bannerController,
             onPageChanged: vm.onBannerPageChanged,
@@ -26,26 +29,46 @@ class AdBannerSection extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 14),
+        // ── Dot İndikatörler (Banner Üzerinde, Sağ Alt) ──
+        Positioned(
+          right: 24,
+          bottom: 0.1, // Metnin hemen altında veya hizasında
+          child: AnimatedBuilder(
+            animation: vm.bannerController,
+            builder: (context, _) {
+              double page = 0;
+              if (vm.bannerController.hasClients) {
+                page = vm.bannerController.page ?? 0;
+              } else {
+                page = vm.currentBannerIndex.toDouble();
+              }
 
-        // ── Dot İndikatörler ────────────────────────────
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(vm.banners.length, (index) {
-            final isActive = index == vm.currentBannerIndex;
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: isActive ? 20 : 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: isActive
-                    ? AppColors.primaryColor
-                    : AppColors.primaryColor.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(4),
-              ),
-            );
-          }),
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(vm.banners.length, (index) {
+                  // Mevcut sayfaya olan uzaklık
+                  final distance = (page - index).abs();
+                  // 0.0 (tam üstünde) -> 1.0 (bir sayfa uzak)
+                  // Boyut ve opaklığı mesafeye göre ayarla
+                  final double scale = (1.0 - (distance * 0.5)).clamp(0.5, 1.0);
+                  final double opacity = (1.0 - (distance * 0.7)).clamp(
+                    0.3,
+                    1.0,
+                  );
+
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: 12 * scale + (index == page.round() ? 4 : 0),
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withValues(alpha: opacity),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  );
+                }),
+              );
+            },
+          ),
         ),
       ],
     );

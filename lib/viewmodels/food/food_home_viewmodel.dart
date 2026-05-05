@@ -98,6 +98,8 @@ class FoodHomeViewModel extends ChangeNotifier {
       final listings = results[1] as List<FoodListing>;
       final favorites = results[2] as List<FoodListing>;
 
+      debugPrint('📊 [FoodHomeVM] Çekilen Toplam İlan: ${listings.length}');
+
       // Favori olanların isFavorite flag'ini güncelle
       final favoriteIds = favorites.map((f) => f.id).toSet();
 
@@ -105,6 +107,8 @@ class FoodHomeViewModel extends ChangeNotifier {
         final isFav = favoriteIds.contains(l.id);
         return l.copyWith(isFavorite: isFav);
       }).toList();
+      
+      debugPrint('✨ [FoodHomeVM] İlanlar başarıyla yüklendi ve favoriler eşleşti.');
     } catch (e) {
       debugPrint('❌ [FoodHomeVM] Hata: $e');
     }
@@ -136,11 +140,11 @@ class FoodHomeViewModel extends ChangeNotifier {
       list = list.where((l) {
         switch (_selectedFilter) {
           case FoodFilter.food:
-            return l.category == 'Yemek';
+            return l.category.toLowerCase() == 'yemek';
           case FoodFilter.breadPastry:
-            return l.category == 'Ekmek & Pasta' || l.category == 'Pasta';
+            return l.category.toLowerCase() == 'patiseri';
           case FoodFilter.market:
-            return l.category == 'Market';
+            return l.category.toLowerCase() == 'market';
           case FoodFilter.buyNow:
             return l.section == FoodSection.buyNow;
           case FoodFilter.all:
@@ -160,7 +164,48 @@ class FoodHomeViewModel extends ChangeNotifier {
   }
 
   List<FoodListing> sectionListings(FoodSection section) {
-    return filteredListings.where((l) => l.section == section).toList();
+    final list = List<FoodListing>.from(filteredListings);
+    
+    switch (section) {
+      case FoodSection.nearYou:
+        // Kullanıcı konumuna göre sırala (En yakın en üstte)
+        final userLat = _userSession.currentLat;
+        final userLng = _userSession.currentLng;
+        
+        if (userLat != null && userLng != null) {
+          list.sort((a, b) {
+            final distA = _calculateDistance(userLat, userLng, a.latitude, a.longitude);
+            final distB = _calculateDistance(userLat, userLng, b.latitude, b.longitude);
+            return distA.compareTo(distB);
+          });
+        }
+        return list;
+
+      case FoodSection.buyNow:
+        // Süresi az kalanları göster (Şimdi Al)
+        // Bitiş saatine göre sırala (En yakın biten en üstte)
+        final now = DateTime.now();
+        final buyNowList = list.where((l) {
+          if (l.deliveryEndTime == null) return false;
+          // Sadece henüz bitmemiş olanları al
+          return l.deliveryEndTime!.isAfter(now);
+        }).toList();
+        
+        buyNowList.sort((a, b) => a.deliveryEndTime!.compareTo(b.deliveryEndTime!));
+        return buyNowList;
+
+      case FoodSection.todayPopular:
+        // Şimdilik hepsi (Gelecekte popülerlik puanına göre sıralanacak)
+        return list.reversed.toList();
+    }
+  }
+
+  double _calculateDistance(double lat1, double lon1, double? lat2, double? lon2) {
+    if (lat2 == null || lon2 == null) return 999999.0; // Konum yoksa en sona at
+    // Basit bir mesafe yaklaşımı (daha doğru sonuç için haversine kullanılabilir)
+    final dLat = lat1 - lat2;
+    final dLon = lon1 - lon2;
+    return dLat * dLat + dLon * dLon;
   }
 
   // ─── Favori Toggle ───────────────────────────────────

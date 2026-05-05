@@ -72,7 +72,9 @@ class SuccessDialogCustom extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: CustomTextStyles.orelegaOne32Primary
+                  style: CustomTextStyles.orelegaOne32Primary.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
               ),
             ],
@@ -96,7 +98,9 @@ class SuccessDialogCustom extends StatelessWidget {
               },
               child: Text(
                 'Tamam',
-                style: CustomTextStyles.semiBold16Primary
+                style: CustomTextStyles.semiBold16Primary.copyWith(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
             ),
           ),

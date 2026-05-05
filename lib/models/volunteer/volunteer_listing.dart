@@ -18,6 +18,8 @@ class VolunteerListing {
     required this.section,
     this.latitude,
     this.longitude,
+    this.isNetworkImage = false,
+    this.shopLogoUrl,
     // ── Detay Alanları (Opsiyonel) ──
     this.description,
     this.ingredients,
@@ -41,6 +43,8 @@ class VolunteerListing {
   // Harita için opsiyonel koordinatlar
   final double? latitude;
   final double? longitude;
+  final bool isNetworkImage;
+  final String? shopLogoUrl;
 
   // Detay ekranı için opsiyonel alanlar
   final String? description;
@@ -56,6 +60,7 @@ class VolunteerListing {
     double? longitude,
     String? shelterName,
     String? shelterAddress,
+    VolunteerSection? section,
   }) {
     // ignore: unnecessary_this
     return VolunteerListing(
@@ -66,7 +71,7 @@ class VolunteerListing {
       timeRange: timeRange,
       imageUrl: imageUrl,
       rating: rating,
-      section: section,
+      section: section ?? this.section,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       description: description,

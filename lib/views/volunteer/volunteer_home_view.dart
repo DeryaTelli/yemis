@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/services/auth/user_session.dart';
-import '../../models/app_module_type.dart';
-import '../../utils/locale_keys.dart';
-import '../../viewmodels/home/volunteer_home_viewmodel.dart';
-import '../../utils/theme/app_theme.dart';
-import '../../widgets/common/app_bottom_nav_bar.dart';
-import '../../widgets/common/home_app_bar.dart';
-import '../../widgets/volunteer/volunteer_listing_section.dart';
-import '../../widgets/volunteer/volunteer_map_section.dart';
-import '../../widgets/volunteer/volunteer_search_bar.dart';
-import '../../widgets/common/loading_overlay.dart';
+import 'package:yemis/services/volunteer/i_volunteer_service.dart';
+import 'package:yemis/models/app_module_type.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:yemis/viewmodels/home/volunteer_home_viewmodel.dart';
+import 'package:yemis/utils/theme/app_theme.dart';
+import 'package:yemis/widgets/common/app_bottom_nav_bar.dart';
+import 'package:yemis/widgets/common/home_app_bar.dart';
+import 'package:yemis/widgets/volunteer/volunteer_listing_section.dart';
+import 'package:yemis/widgets/volunteer/volunteer_map_section.dart';
+import 'package:yemis/widgets/volunteer/volunteer_search_bar.dart';
+import 'package:yemis/widgets/common/loading_overlay.dart';
 
-/// Gönüllü ana sayfası — tam MVVM ile uygulanmıştır.
+/// Gönüllü ana sayfası — API entegrasyonu ile ilanları çeker.
 class VolunteerHomeView extends StatelessWidget {
   const VolunteerHomeView({super.key});
 
@@ -23,17 +24,16 @@ class VolunteerHomeView extends StatelessWidget {
     return Theme(
       data: AppTheme.themeFor(AppSection.volunteer),
       child: ChangeNotifierProvider(
-        create: (ctx) =>
-            VolunteerHomeViewModel(userSession: ctx.read<UserSession>()),
+        create: (ctx) => VolunteerHomeViewModel(
+          userSession: ctx.read<UserSession>(),
+          volunteerService: ctx.read<IVolunteerService>(),
+        ),
         child: const _VolunteerHomeBody(),
       ),
     );
   }
 }
 
-// ─────────────────────────────────────────────
-// Body
-// ─────────────────────────────────────────────
 class _VolunteerHomeBody extends StatefulWidget {
   const _VolunteerHomeBody();
 
@@ -58,49 +58,69 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
       isLoading: vm.isLoading,
       moduleType: AppModuleType.volunteer,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
-        // ─── AppBar ──────────────────────────────────
+        backgroundColor: const Color(0xFFF8F9FA),
         appBar: HomeAppBar(
           title: vm.appBarTitle,
           backgroundColor: vm.appBarColor,
           isLocationTitle: true,
           moduleType: AppModuleType.volunteer,
         ),
+        body: RefreshIndicator(
+          onRefresh: vm.init,
+          color: vm.appBarColor,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                // ── Arama Barı ─────────────────────────────
+                VolunteerSearchBar(
+                  controller: _searchController,
+                  onChanged: vm.onSearchChanged,
+                ),
+                const SizedBox(height: 20),
 
-        // ─── Body ────────────────────────────────────
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── Arama Barı ─────────────────────────────
-              VolunteerSearchBar(
-                controller: _searchController,
-                onChanged: vm.onSearchChanged,
-              ),
-              const SizedBox(height: 16),
+                // ── Harita Alanı ────────────────────────────
+                if (vm.filteredListings.isNotEmpty) ...[
+                  VolunteerMapSection(listings: vm.filteredListings),
+                  const SizedBox(height: 24),
+                ],
 
-              // ── Açık Yeşil/Yeşil Degrade Çizgi (Opsiyonel görsel şıklık için)
-              // Tasarımda arama ile harita arası boşluk var
+                // ── Sana Yakın Yerler ───────────────────────
+                VolunteerListingSection(
+                  title: LocaleKeys.volunteerHome_nearbyPlaces.tr(),
+                  section: VolunteerSection.nearYou,
+                ),
+                const SizedBox(height: 24),
 
-              // ── Harita Alanı ────────────────────────────
-              VolunteerMapSection(listings: vm.filteredListings),
-              const SizedBox(height: 20),
-
-              // ── Sana Yakın Yerler ───────────────────────
-              VolunteerListingSection(
-                title: LocaleKeys.volunteerHome_nearbyPlaces.tr(),
-                section: VolunteerSection.nearYou,
-              ),
-              const SizedBox(height: 24),
-
-              // ── Bugün Popüler Olanlar ───────────────────
-              VolunteerListingSection(
-                title: LocaleKeys.volunteerHome_todayPopular.tr(),
-                section: VolunteerSection.todayPopular,
-              ),
-              const SizedBox(height: 32),
-            ],
+                // ── Bugün Popüler Olanlar ───────────────────
+                VolunteerListingSection(
+                  title: LocaleKeys.volunteerHome_todayPopular.tr(),
+                  section: VolunteerSection.todayPopular,
+                ),
+                const SizedBox(height: 32),
+                
+                // Boş Durum Kontrolü
+                if (!vm.isLoading && vm.listings.isEmpty)
+                   Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: Column(
+                        children: [
+                          Icon(Icons.volunteer_activism_outlined, size: 64, color: Colors.grey[300]),
+                          const SizedBox(height: 16),
+                          Text(
+                            "Henüz ilan bulunmuyor.",
+                            style: TextStyle(color: Colors.grey[500], fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: AppBottomNavBar(
@@ -130,3 +150,4 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
     );
   }
 }
+

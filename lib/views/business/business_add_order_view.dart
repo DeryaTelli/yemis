@@ -95,6 +95,57 @@ class _BodyState extends State<_Body> {
               ),
               const SizedBox(height: 16),
 
+              // ── Kategori ──────────────────────────────────────
+              _label(LocaleKeys.businessAddOrder_categoryLabel.tr()),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () => _showCategoryPickerSheet(context, vm),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.primaryColor.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.grid_view_rounded,
+                            color: AppColors.primaryColor,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            vm.selectedCategory != null
+                                ? (vm.selectedCategory!.toLowerCase() == 'patiseri'
+                                    ? 'Ekmek & Pasta'
+                                    : vm.selectedCategory!.substring(0, 1).toUpperCase() +
+                                        vm.selectedCategory!.substring(1))
+                                : LocaleKeys.businessAddOrder_categoryPlaceholder.tr(),
+                            style: TextStyle(
+                              color: vm.selectedCategory != null
+                                  ? AppColors.primaryTextColor
+                                  : Colors.grey,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
               // ── Fotoğraf ──────────────────────────────────────
               _label(LocaleKeys.businessAddOrder_photoLabel.tr()),
               const SizedBox(height: 8),
@@ -306,6 +357,72 @@ class _BodyState extends State<_Body> {
                 },
               ),
               const SizedBox(height: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCategoryPickerSheet(
+    BuildContext context,
+    BusinessAddOrderViewModel vm,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  LocaleKeys.businessAddOrder_categoryLabel.tr(),
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryTextColor,
+                  ),
+                ),
+              ),
+              const Divider(height: 1),
+              ...vm.categories.map((cat) {
+                final isSelected = vm.selectedCategory == cat;
+                return ListTile(
+                  title: Text(
+                    cat.toLowerCase() == 'patiseri'
+                        ? 'Ekmek & Pasta'
+                        : cat.substring(0, 1).toUpperCase() + cat.substring(1),
+                    style: TextStyle(
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: isSelected ? AppColors.primaryColor : AppColors.primaryTextColor,
+                    ),
+                  ),
+                  trailing: isSelected
+                      ? const Icon(Icons.check_circle, color: AppColors.primaryColor)
+                      : null,
+                  onTap: () {
+                    vm.onCategoryChanged(cat);
+                    Navigator.pop(context);
+                  },
+                );
+              }),
+              const SizedBox(height: 12),
             ],
           ),
         ),

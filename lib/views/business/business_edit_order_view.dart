@@ -16,6 +16,7 @@ import '../../utils/locale_keys.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/business/business_edit_order_viewmodel.dart';
 import '../../widgets/common/loading_overlay.dart';
+import '../../widgets/common/success_dialog_custom.dart';
 
 class BusinessEditOrderView extends StatelessWidget {
   final BusinessListingModel listing;
@@ -32,14 +33,15 @@ class BusinessEditOrderView extends StatelessWidget {
           businessService: ctx.read<IBusinessService>(),
           initialListing: listing,
         ),
-        child: const _Body(),
+        child: _Body(listing: listing),
       ),
     );
   }
 }
 
 class _Body extends StatefulWidget {
-  const _Body();
+  final BusinessListingModel listing;
+  const _Body({required this.listing});
   @override
   State<_Body> createState() => _BodyState();
 }
@@ -54,12 +56,19 @@ class _BodyState extends State<_Body> {
   @override
   void initState() {
     super.initState();
-    final vm = context.read<BusinessEditOrderViewModel>();
-    _titleController = TextEditingController(text: vm.title);
-    _priceController = TextEditingController(text: vm.price);
-    _discountPriceController = TextEditingController(text: vm.discountPrice);
-    _descriptionController = TextEditingController(text: vm.description);
-    _allergensController = TextEditingController(text: vm.allergens);
+    _titleController = TextEditingController(text: widget.listing.title);
+    _priceController = TextEditingController(
+      text: widget.listing.originalPrice.toString(),
+    );
+    _discountPriceController = TextEditingController(
+      text: widget.listing.discountedPrice.toString(),
+    );
+    _descriptionController = TextEditingController(
+      text: widget.listing.description ?? '',
+    );
+    _allergensController = TextEditingController(
+      text: widget.listing.allergens ?? '',
+    );
   }
 
   @override
@@ -100,6 +109,61 @@ class _BodyState extends State<_Body> {
                 hintText: 'Örn: Sürpriz Kahvaltı Kutusu',
                 onChanged: vm.onTitleChanged,
                 borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
+              ),
+              const SizedBox(height: 16),
+
+              _label(LocaleKeys.businessAddOrder_categoryLabel.tr()),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () => _showCategoryPickerSheet(context, vm),
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 15,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppColors.primaryColor.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.grid_view_rounded,
+                            color: AppColors.primaryColor,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            vm.selectedCategory != null
+                                ? (vm.selectedCategory!.toLowerCase() == 'patiseri'
+                                    ? 'Ekmek & Pasta'
+                                    : vm.selectedCategory!
+                                              .substring(0, 1)
+                                              .toUpperCase() +
+                                          vm.selectedCategory!.substring(1))
+                                : 'Kategori Seçin',
+                            style: TextStyle(
+                              color: vm.selectedCategory != null
+                                  ? AppColors.primaryTextColor
+                                  : Colors.grey,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -184,7 +248,9 @@ class _BodyState extends State<_Body> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
-                    vm.errorMessage!,
+                    vm.errorMessage == 'errorNoLocation'
+                        ? LocaleKeys.businessAddOrder_errorNoLocation.tr()
+                        : vm.errorMessage!,
                     style: const TextStyle(color: Colors.red, fontSize: 13),
                   ),
                 ),
@@ -201,7 +267,14 @@ class _BodyState extends State<_Body> {
                     onPressed: () async {
                       final success = await vm.submit();
                       if (success && mounted) {
-                        Navigator.pop(context, true);
+                        SuccessDialogCustom.show(
+                          context,
+                          title: 'Başarılı',
+                          message: 'İlan başarıyla güncellendi.',
+                          onConfirm: () {
+                            Navigator.pop(context, true);
+                          },
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -347,6 +420,79 @@ class _BodyState extends State<_Body> {
               },
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _showCategoryPickerSheet(
+    BuildContext context,
+    BusinessEditOrderViewModel vm,
+  ) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  LocaleKeys.businessAddOrder_categoryLabel.tr(),
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryTextColor,
+                  ),
+                ),
+              ),
+              const Divider(height: 1),
+              ...vm.categories.map((cat) {
+                final isSelected = vm.selectedCategory == cat;
+                return ListTile(
+                  title: Text(
+                    cat.toLowerCase() == 'patiseri'
+                        ? 'Ekmek & Pasta'
+                        : cat.substring(0, 1).toUpperCase() + cat.substring(1),
+                    style: TextStyle(
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? AppColors.primaryColor
+                          : AppColors.primaryTextColor,
+                    ),
+                  ),
+                  trailing: isSelected
+                      ? const Icon(
+                          Icons.check_circle,
+                          color: AppColors.primaryColor,
+                        )
+                      : null,
+                  onTap: () {
+                    vm.onCategoryChanged(cat);
+                    Navigator.pop(context);
+                  },
+                );
+              }),
+              const SizedBox(height: 12),
+            ],
+          ),
         ),
       ),
     );

@@ -8,22 +8,24 @@ class SearchMapView extends StatelessWidget {
   final List<dynamic> listings; // FoodListing veya VolunteerListing
   final Color accentColor;
   final void Function(dynamic) onMarkerTap;
+  final LatLng? initialCenter;
 
   const SearchMapView({
     super.key,
     required this.listings,
     required this.accentColor,
     required this.onMarkerTap,
+    this.initialCenter,
   });
 
   @override
   Widget build(BuildContext context) {
     // Tüm ilanların ortalamasını alarak haritayı konumlandır (veya default bi yer seç)
-    LatLng initialCenter = const LatLng(41.2048, 32.6218); // Karabük Merkez focus
+    final LatLng center = initialCenter ?? const LatLng(41.2048, 32.6218); // Karabük Merkez focus
     
     return FlutterMap(
       options: MapOptions(
-        initialCenter: initialCenter,
+        initialCenter: center,
         initialZoom: 13,
       ),
       children: [

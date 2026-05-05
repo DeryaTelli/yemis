@@ -21,6 +21,8 @@ class AppRoutes {
   static const String volunteerDetail = '/volunteer/detail';
   static const String volunteerAddListing = '/volunteer/add-listing';
   static const String volunteerListings = '/volunteer/listings';
+  static const String volunteerListingDetail = '/volunteer/listing-detail';
+  static const String volunteerEditListing = '/volunteer-edit-listing';
   static const String businessHome = '/business-home';
   static const String businessProfile = '/business-profile';
   static const String businessApprovals = '/business-approvals';

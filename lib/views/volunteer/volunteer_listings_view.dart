@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
+import '../../services/volunteer/i_volunteer_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
@@ -9,6 +10,7 @@ import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/volunteer/volunteer_listings_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/volunteer/volunteer_listing_card.dart';
+import '../../widgets/volunteer/volunteer_my_listing_card.dart';
 
 class VolunteerListingsView extends StatelessWidget {
   const VolunteerListingsView({super.key});
@@ -22,7 +24,10 @@ class VolunteerListingsView extends StatelessWidget {
     return Theme(
       data: AppTheme.themeFor(AppSection.volunteer),
       child: ChangeNotifierProvider(
-        create: (_) => VolunteerListingsViewModel(type: type)..fetchListings(),
+        create: (ctx) => VolunteerListingsViewModel(
+          type: type,
+          volunteerService: ctx.read<IVolunteerService>(),
+        )..fetchListings(),
         child: const _VolunteerListingsBody(),
       ),
     );
@@ -86,20 +91,69 @@ class _VolunteerListingsBody extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final listing = vm.listings[index];
                         final isPast = vm.type == VolunteerListingType.past;
+                        final isActive = vm.type == VolunteerListingType.active;
 
-                        return Opacity(
-                          opacity: isPast ? 0.6 : 1.0,
-                          child: VolunteerListingCard(
+                        Widget card = VolunteerListingCard(
+                          listing: listing,
+                          width: double.infinity,
+                          onTap: () {
+                            final route = isActive
+                                ? AppRoutes.volunteerListingDetail
+                                : AppRoutes.volunteerDetail;
+                            Navigator.pushNamed(
+                              context,
+                              route,
+                              arguments: listing,
+                            );
+                          },
+                        );
+
+                        if (isActive) {
+                          card = VolunteerMyListingCard(
                             listing: listing,
-                            width: double.infinity,
+                            onEdit: () => vm.editListing(context, listing),
                             onTap: () {
                               Navigator.pushNamed(
                                 context,
-                                AppRoutes.volunteerDetail,
+                                AppRoutes.volunteerListingDetail,
                                 arguments: listing,
                               );
                             },
-                          ),
+                          );
+
+                          return Dismissible(
+                            key: Key('volunteer_listing_${listing.id}'),
+                            direction: DismissDirection.endToStart,
+                            confirmDismiss: (direction) async {
+                              final confirmed = await _showDeleteConfirmation(context);
+                              if (confirmed == true) {
+                                final success = await vm.deleteListing(listing.id);
+                                if (!success && context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('İlan silinirken bir hata oluştu.')),
+                                  );
+                                }
+                                return success;
+                              }
+                              return false;
+                            },
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.red[400],
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Icon(Icons.delete_outline_rounded,
+                                  color: Colors.white, size: 28),
+                            ),
+                            child: card,
+                          );
+                        }
+
+                        return Opacity(
+                          opacity: isPast ? 0.6 : 1.0,
+                          child: card,
                         );
                       },
                     ),
@@ -139,5 +193,28 @@ class _VolunteerListingsBody extends StatelessWidget {
     }
 
     Navigator.pushReplacementNamed(context, route);
+  }
+
+  Future<bool?> _showDeleteConfirmation(BuildContext context) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('İlanı Sil'),
+        content: const Text('Bu ilanı silmek istediğinizden emin misiniz?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Vazgeç', style: TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Sil',
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
   }
 }

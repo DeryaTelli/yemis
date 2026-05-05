@@ -44,6 +44,7 @@ class _LoginViewState extends State<LoginView> {
           isLoading: vm.isLoading,
           moduleType: AppModuleType.food,
           child: Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
               title: Text(LocaleKeys.auth_login_title.tr()),
               automaticallyImplyLeading: false,

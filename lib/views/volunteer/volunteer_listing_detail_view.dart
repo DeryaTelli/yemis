@@ -2,51 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import '../../models/business/business_listing_model.dart';
-import '../../services/business/i_business_service.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
+import '../../models/volunteer/volunteer_listing.dart';
+import '../../services/volunteer/i_volunteer_service.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../viewmodels/business/business_listing_detail_viewmodel.dart';
+import '../../viewmodels/volunteer/volunteer_listing_detail_viewmodel.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
 import '../../widgets/food/order_location_map.dart';
-import '../location/navigation_view.dart';
 
-class BusinessListingDetailView extends StatelessWidget {
-  final BusinessListingModel listing;
+class VolunteerListingDetailView extends StatelessWidget {
+  final VolunteerListing listing;
+  final bool isEditable;
 
-  const BusinessListingDetailView({super.key, required this.listing});
+  const VolunteerListingDetailView({
+    super.key,
+    required this.listing,
+    this.isEditable = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => BusinessListingDetailViewModel(
-        businessService: ctx.read<IBusinessService>(),
+      create: (ctx) => VolunteerListingDetailViewModel(
+        volunteerService: ctx.read<IVolunteerService>(),
         listing: listing,
       ),
-      child: const _BusinessListingDetailBody(),
+      child: _VolunteerListingDetailBody(isEditable: isEditable),
     );
   }
 }
 
-class _BusinessListingDetailBody extends StatelessWidget {
-  const _BusinessListingDetailBody();
+class _VolunteerListingDetailBody extends StatelessWidget {
+  final bool isEditable;
+  const _VolunteerListingDetailBody({required this.isEditable});
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<BusinessListingDetailViewModel>();
+    final vm = context.watch<VolunteerListingDetailViewModel>();
     final item = vm.listing;
     final theme = Theme.of(context);
 
     final LatLng displayLocation =
         (item.latitude != null && item.longitude != null)
         ? LatLng(item.latitude!, item.longitude!)
-        : const LatLng(41.0082, 28.9784);
+        : const LatLng(41.2048, 32.6218);
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: LoadingOverlay(
         isLoading: vm.isLoading,
-        moduleType: AppModuleType.business,
+        moduleType: AppModuleType.volunteer,
         child: CustomScrollView(
           slivers: [
             // ── AppBar & Hero Image ────────────────
@@ -68,14 +74,53 @@ class _BusinessListingDetailBody extends StatelessWidget {
                 ),
                 onPressed: () => Navigator.pop(context),
               ),
+              actions: [
+                if (isEditable)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: IconButton(
+                      icon: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.edit_rounded,
+                          color: AppColors.volunteerColor,
+                          size: 20,
+                        ),
+                      ),
+                      onPressed: () async {
+                        final result =
+                            await Navigator.of(
+                              context,
+                              rootNavigator: true,
+                            ).pushNamed(
+                              AppRoutes.volunteerEditListing,
+                              arguments: item,
+                            );
+                        if (result == true && context.mounted) {
+                          // Detay sayfasını kapatıp listeyi yeniletelim
+                          Navigator.pop(context, true);
+                        }
+                      },
+                    ),
+                  ),
+              ],
               flexibleSpace: FlexibleSpaceBar(
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
                     Hero(
                       tag: 'listing_${item.id}',
-                      child: item.imageUrl != null
-                          ? Image.network(item.imageUrl!, fit: BoxFit.cover)
+                      child: item.imageUrl.isNotEmpty
+                          ? (item.imageUrl.startsWith('http')
+                                ? Image.network(
+                                    item.imageUrl,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(item.imageUrl, fit: BoxFit.cover))
                           : Container(
                               color: Colors.grey[200],
                               child: const Icon(
@@ -112,14 +157,14 @@ class _BusinessListingDetailBody extends StatelessWidget {
                             ),
                             child: CircleAvatar(
                               radius: 28,
-                              backgroundColor: Colors.grey[100],
-                              backgroundImage: item.businessLogoUrl != null
-                                  ? NetworkImage(item.businessLogoUrl!)
+                              backgroundColor: const Color(0xFFD1F1DB),
+                              backgroundImage: item.userLogoUrl != null
+                                  ? NetworkImage(item.userLogoUrl!)
                                   : null,
-                              child: item.businessLogoUrl == null
+                              child: item.userLogoUrl == null
                                   ? const Icon(
-                                      Icons.storefront_rounded,
-                                      color: AppColors.primaryColor,
+                                      Icons.person,
+                                      color: AppColors.volunteerColor,
                                     )
                                   : null,
                             ),
@@ -131,7 +176,7 @@ class _BusinessListingDetailBody extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  item.businessName ?? 'İşletme Adı',
+                                  item.userName,
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w800,
@@ -151,12 +196,13 @@ class _BusinessListingDetailBody extends StatelessWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primaryBorderColor
-                                        .withOpacity(0.9),
+                                    color: AppColors.volunteerColor.withOpacity(
+                                      0.9,
+                                    ),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: const Text(
-                                    'ONAYLI İŞLETME',
+                                    'AKTİF İLAN',
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: Colors.white,
@@ -196,52 +242,31 @@ class _BusinessListingDetailBody extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '${item.discountedPrice.toStringAsFixed(0)} TL',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900,
-                                color: AppColors.primaryColor,
-                              ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.volunteerColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            'ÜCRETSİZ',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.volunteerColor,
                             ),
-                            if (item.originalPrice > item.discountedPrice)
-                              Text(
-                                '${item.originalPrice.toStringAsFixed(0)} TL',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                  decoration: TextDecoration.lineThrough,
-                                ),
-                              ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
                     _buildInfoRow(
-                      Icons.calendar_today_outlined,
-                      'Oluşturulma:',
-                      _formatDate(item.createdAt),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(
                       Icons.timer_outlined,
-                      'Son Alım Saati:',
-                      _formatDate(item.pickupEndTime),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildInfoRow(
-                      Icons.grid_view_rounded,
-                      'Kategori:',
-                      item.category != null
-                          ? (item.category!.toLowerCase() == 'patiseri'
-                              ? 'Ekmek & Pasta'
-                              : item.category!.substring(0, 1).toUpperCase() +
-                                  item.category!.substring(1))
-                          : 'Belirtilmedi',
+                      'Teslimat Aralığı:',
+                      item.timeRange,
                     ),
                     const SizedBox(height: 24),
                     _sectionTitle('Konum'),
@@ -250,7 +275,9 @@ class _BusinessListingDetailBody extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: AppColors.primaryColor.withValues(alpha: 0.25),
+                          color: AppColors.volunteerColor.withValues(
+                            alpha: 0.25,
+                          ),
                           width: 2,
                         ),
                         boxShadow: [
@@ -273,19 +300,15 @@ class _BusinessListingDetailBody extends StatelessWidget {
                     _buildInfoRow(
                       Icons.location_on_outlined,
                       'Adres:',
-                      item.address ?? 'Konum Belirtilmedi',
+                      item.location,
                     ),
                     const SizedBox(height: 16),
-                    _sectionTitle('İçerik'),
+                    _sectionTitle('Açıklama'),
                     const SizedBox(height: 8),
                     _contentBox(
                       item.description ??
                           'Bu ilan için henüz bir içerik detayı girilmemiş.',
                     ),
-                    const SizedBox(height: 20),
-                    _sectionTitle('Alerjenler'),
-                    const SizedBox(height: 8),
-                    _contentBox(item.allergens ?? 'Belirtilmemiş'),
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -294,14 +317,13 @@ class _BusinessListingDetailBody extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomBar(item),
     );
   }
 
   Widget _buildInfoRow(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppColors.primaryColor),
+        Icon(icon, size: 18, color: AppColors.volunteerColor),
         const SizedBox(width: 8),
         Text(
           label,
@@ -343,10 +365,10 @@ class _BusinessListingDetailBody extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor.withValues(alpha: 0.05),
+        color: AppColors.volunteerColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.primaryColor.withValues(alpha: 0.3),
+          color: AppColors.volunteerColor.withValues(alpha: 0.3),
         ),
       ),
       child: Text(
@@ -358,75 +380,5 @@ class _BusinessListingDetailBody extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildBottomBar(BusinessListingModel item) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Sol Taraf: Stok Durumu (Yeni Yer)
-          const Row(
-            children: [
-              Icon(
-                Icons.inventory_2_outlined,
-                color: AppColors.primaryColor,
-                size: 22,
-              ),
-              SizedBox(width: 8),
-              Text(
-                'Stok Durumu',
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-          // Sağ Taraf: Kalan Adet (Yeni Yer)
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Text(
-                'Kalan Adet',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${item.availableQuantity} / ${item.totalQuantity}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _formatDate(DateTime? date) {
-    if (date == null) return 'Belirtilmedi';
-    return DateFormat('dd.MM.yyyy HH:mm').format(date);
   }
 }

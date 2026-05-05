@@ -233,6 +233,18 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ─── Kategori ─────────────────────────────────────────
+  final List<String> _categories = ['yemek', 'patiseri', 'market'];
+  List<String> get categories => _categories;
+
+  String? _selectedCategory;
+  String? get selectedCategory => _selectedCategory;
+
+  void onCategoryChanged(String? value) {
+    _selectedCategory = value;
+    notifyListeners();
+  }
+
   // ─── Gönderme ─────────────────────────────────────────
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
@@ -245,6 +257,12 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
     
     if (_title.trim().isEmpty) {
       _errorMessage = 'Lütfen bir başlık girin.';
+      notifyListeners();
+      return false;
+    }
+
+    if (_selectedCategory == null) {
+      _errorMessage = 'Lütfen bir kategori seçin.';
       notifyListeners();
       return false;
     }
@@ -322,6 +340,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
         'available_quantity': _quantity,
         'image_url': imageUrl ?? '',
         'allergens': _allergens,
+        'category': _selectedCategory,
       };
 
       // 4. API isteği
@@ -359,6 +378,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
     _discountPrice = '';
     _description = '';
     _allergens = '';
+    _selectedCategory = null;
     _errorMessage = null;
   }
 }

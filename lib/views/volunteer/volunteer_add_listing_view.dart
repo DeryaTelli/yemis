@@ -12,6 +12,8 @@ import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/volunteer/volunteer_add_listing_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
+import '../../widgets/common/error_dialog_custom.dart';
+import '../../widgets/common/success_dialog_custom.dart';
 
 /// Gönüllü ilan ekleme ekranı — Figma tasarımına uygun.
 class VolunteerAddListingView extends StatelessWidget {
@@ -23,8 +25,23 @@ class VolunteerAddListingView extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _Body extends StatefulWidget {
   const _Body();
+
+  @override
+  State<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<_Body> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +58,33 @@ class _Body extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Başlık ────────────────────────────────────────
+            _label('İlan Başlığı'),
+            const SizedBox(height: 8),
+            _InputField(
+              controller: _titleController,
+              hint: 'Örn: Sokak Hayvanları İçin Yemek',
+              onChanged: vm.onTitleChanged,
+            ),
+            const SizedBox(height: 20),
+
             // ── Fotoğraf ──────────────────────────────────────
             _label(LocaleKeys.volunteerAddListing_photoLabel.tr()),
             const SizedBox(height: 8),
             _PhotoBox(
               imagePath: vm.selectedImage?.path,
               onTap: () => _showImagePickerSheet(context, vm),
+            ),
+            const SizedBox(height: 24),
+
+            // ── Açıklama ──────────────────────────────────────
+            _label('Açıklama'),
+            const SizedBox(height: 8),
+            _InputField(
+              controller: _descriptionController,
+              hint: 'İlan içeriği hakkında bilgi veriniz...',
+              maxLines: 3,
+              onChanged: vm.onDescriptionChanged,
             ),
             const SizedBox(height: 24),
 
@@ -77,13 +115,21 @@ class _Body extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Text(
-                  LocaleKeys.volunteerAddListing_errorNoLocation.tr(),
+                  vm.errorMessage == 'errorNoLocation'
+                      ? LocaleKeys.volunteerAddListing_errorNoLocation.tr()
+                      : vm.errorMessage!,
                   style: const TextStyle(color: Colors.red, fontSize: 13),
                 ),
               ),
 
             // ── Paylaş ────────────────────────────────────────
-            _ShareButton(vm: vm),
+            _ShareButton(
+              vm: vm,
+              onSuccess: () {
+                _titleController.clear();
+                _descriptionController.clear();
+              },
+            ),
           ],
         ),
       ),
@@ -96,13 +142,13 @@ class _Body extends StatelessWidget {
   }
 
   Widget _label(String text) => Text(
-    text,
-    style: const TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: AppColors.primaryTextColor,
-    ),
-  );
+        text,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primaryTextColor,
+        ),
+      );
 
   void _showImagePickerSheet(
     BuildContext context,
@@ -392,128 +438,9 @@ class _WheelColumn extends StatelessWidget {
   }
 }
 
-// ─── Konum Butonu ─────────────────────────────────────────────────────────────
 class _LocationButton extends StatelessWidget {
   const _LocationButton({required this.vm});
   final VolunteerAddListingViewModel vm;
-
-  void _showLocationPickerSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Container(
-            width: double.infinity,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const Text(
-                  'Adres Seçiniz',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 20),
-                ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.volunteerColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.bookmark_border_rounded,
-                      color: AppColors.volunteerColor,
-                    ),
-                  ),
-                  title: const Text(
-                    'Kayıtlı Adreslerimden Seç',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                  ),
-                  trailing: const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.volunteerColor,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    _showSavedAddressesSheet(context);
-                  },
-                ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.volunteerColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.map_outlined,
-                      color: AppColors.volunteerColor,
-                    ),
-                  ),
-                  title: const Text(
-                    'Haritadan Seç',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                  ),
-                  trailing: const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.volunteerColor,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    vm.pickLocation(context);
-                  },
-                ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                ListTile(
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AppColors.volunteerColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.add_location_alt_outlined,
-                      color: AppColors.volunteerColor,
-                    ),
-                  ),
-                  title: const Text(
-                    'Yeni Adres Ekle',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-                  ),
-                  trailing: const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.volunteerColor,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    vm.addNewAddress(context);
-                  },
-                ),
-                const SizedBox(height: 12),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   void _showSavedAddressesSheet(BuildContext context) {
     // Adresleri yükle
@@ -561,9 +488,31 @@ class _LocationButton extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     if (vm.savedAddresses.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: Text('Kayıtlı adres bulunamadı.'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Column(
+                          children: [
+                            const Text(
+                              'Kayıtlı adres bulunamadı.',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton.icon(
+                              onPressed: () {
+                                Navigator.pop(context); // Sheet'i kapat
+                                Navigator.pushNamed(context, AppRoutes.addresses);
+                              },
+                              icon: const Icon(Icons.add_location_alt_outlined),
+                              label: const Text('Yeni Adres Ekle'),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppColors.volunteerColor,
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     else
                       Flexible(
@@ -662,7 +611,7 @@ class _LocationButton extends StatelessWidget {
     final bool hasData = vm.locationAddress.isNotEmpty;
 
     return GestureDetector(
-      onTap: () => _showLocationPickerSheet(context),
+      onTap: () => _showSavedAddressesSheet(context),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -735,8 +684,9 @@ class _FreeChip extends StatelessWidget {
 
 // ─── Paylaş Butonu ────────────────────────────────────────────────────────────
 class _ShareButton extends StatelessWidget {
-  const _ShareButton({required this.vm});
+  const _ShareButton({required this.vm, this.onSuccess});
   final VolunteerAddListingViewModel vm;
+  final VoidCallback? onSuccess;
 
   @override
   Widget build(BuildContext context) {
@@ -746,17 +696,22 @@ class _ShareButton extends StatelessWidget {
           : () async {
               final ok = await vm.submit();
               if (ok && context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      LocaleKeys.volunteerAddListing_successMessage.tr(),
-                    ),
-                    backgroundColor: AppColors.volunteerColor,
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 2),
-                  ),
+                onSuccess?.call();
+                SuccessDialogCustom.show(
+                  context,
+                  title: 'Başarılı',
+                  message: LocaleKeys.volunteerAddListing_successMessage.tr(),
+                  onConfirm: () {
+                    vm.resetSuccess();
+                  },
                 );
-                vm.resetSuccess();
+              } else if (context.mounted && vm.errorMessage != null) {
+                ErrorDialogCustom.show(
+                  context,
+                  message: vm.errorMessage == 'errorNoLocation'
+                      ? LocaleKeys.volunteerAddListing_errorNoLocation.tr()
+                      : vm.errorMessage!,
+                );
               }
             },
       child: Container(
@@ -792,6 +747,59 @@ class _ShareButton extends StatelessWidget {
                   letterSpacing: 0.3,
                 ),
               ),
+      ),
+    );
+  }
+}
+
+// ─── Input Alanı ──────────────────────────────────────────────────────────────
+class _InputField extends StatelessWidget {
+  const _InputField({
+    required this.hint,
+    required this.onChanged,
+    this.controller,
+    this.maxLines = 1,
+  });
+
+  final String hint;
+  final ValueChanged<String> onChanged;
+  final TextEditingController? controller;
+  final int maxLines;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      onChanged: onChanged,
+      maxLines: maxLines,
+      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(
+          color: AppColors.hintTextColor,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: AppColors.volunteerColor.withValues(alpha: 0.2),
+            width: 1.5,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: AppColors.volunteerColor,
+            width: 1.5,
+          ),
+        ),
       ),
     );
   }

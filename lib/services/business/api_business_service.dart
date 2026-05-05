@@ -50,22 +50,36 @@ class ApiBusinessService implements IBusinessService {
 
   @override
   Future<List<BusinessListingModel>> getMyBags() async {
-    final url = Uri.parse('${ApiConstants.baseUrl}/api/bags/my');
+    return _fetchBagsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myBags}');
+  }
+
+  @override
+  Future<List<BusinessListingModel>> getMyUnsoldBags() async {
+    return _fetchBagsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myUnsoldBags}');
+  }
+
+  @override
+  Future<List<BusinessListingModel>> getMySoldBags() async {
+    return _fetchBagsFromUrl('${ApiConstants.baseUrl}${ApiConstants.mySoldBags}');
+  }
+
+  Future<List<BusinessListingModel>> _fetchBagsFromUrl(String urlString) async {
+    final url = Uri.parse(urlString);
 
     if (kDebugMode) {
-      print('--- API REQUEST (GET MY BAGS) ---');
+      print('--- API REQUEST (GET BAGS) ---');
       print('URL: $url');
-      print('---------------------------------');
+      print('------------------------------');
     }
 
     try {
       final response = await _client.get(url, headers: _headers);
       
       if (kDebugMode) {
-        print('--- API RESPONSE (GET MY BAGS) ---');
+        print('--- API RESPONSE (GET BAGS) ---');
         print('Status Code: ${response.statusCode}');
         print('Body: ${response.body}');
-        print('----------------------------------');
+        print('-------------------------------');
       }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -88,7 +102,7 @@ class ApiBusinessService implements IBusinessService {
         }).whereType<BusinessListingModel>().toList();
       }
     } catch (e) {
-      if (kDebugMode) print('Error fetching bags: $e');
+      if (kDebugMode) print('Error fetching bags from $urlString: $e');
     }
     return [];
   }

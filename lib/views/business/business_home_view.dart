@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/services/auth/user_session.dart';
+import 'package:yemis/viewmodels/business/business_listings_viewmodel.dart';
 import 'package:yemis/widgets/business/co2_card.dart';
 import 'package:yemis/widgets/business/info_card.dart';
 import 'package:yemis/widgets/business/order_button.dart';
@@ -49,7 +50,11 @@ class BusinessHomeView extends StatelessWidget {
                         child: OrderButton(
                           label: LocaleKeys.businessHome_addedOrders.tr(),
                           imagePath: 'assets/businessIcon/addOrder.png',
-                          onTap: () {},
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.businessListings,
+                            arguments: ListingType.active,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -57,7 +62,11 @@ class BusinessHomeView extends StatelessWidget {
                         child: OrderButton(
                           label: LocaleKeys.businessHome_soldOrders.tr(),
                           imagePath: 'assets/businessIcon/sellOrder.png',
-                          onTap: () {},
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.businessListings,
+                            arguments: ListingType.sold,
+                          ),
                         ),
                       ),
                     ],

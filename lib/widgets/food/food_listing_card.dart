@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 
@@ -71,8 +72,8 @@ class FoodListingCard extends StatelessWidget {
                     child: GestureDetector(
                       onTap: onFavoriteTap,
                       child: Container(
-                        width: 34,
-                        height: 34,
+                        width: 28,
+                        height: 28,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           shape: BoxShape.circle,
@@ -91,7 +92,7 @@ class FoodListingCard extends StatelessWidget {
                           color: listing.isFavorite
                               ? Colors.red
                               : Colors.grey.shade400,
-                          size: 22,
+                          size: 20,
                         ),
                       ),
                     ),
@@ -209,12 +210,8 @@ class FoodListingCard extends StatelessWidget {
                     // Zaman
                     Text(
                       listing.timeRange,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: AppColors.hintTextColor,
-                      ),
+                      style: CustomTextStyles.regular14Grey,
                     ),
-
                     const SizedBox(height: 8),
 
                     // Ayırıcı çizgi (kesikli)

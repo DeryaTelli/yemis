@@ -3,16 +3,39 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import '../../models/auth/address_model.dart';
+import '../../models/volunteer/volunteer_listing.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
 
-/// Volunteer ilan ekleme ekranının ViewModel'i.
-class VolunteerAddListingViewModel extends ChangeNotifier {
+/// Volunteer ilan düzenleme ekranının ViewModel'i.
+class VolunteerEditListingViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final IVolunteerService _volunteerService;
+  final VolunteerListing initialListing;
 
-  VolunteerAddListingViewModel(this._authService, this._volunteerService);
+  VolunteerEditListingViewModel(
+    this._authService,
+    this._volunteerService,
+    this.initialListing,
+  ) {
+    _initData();
+  }
+
+  void _initData() {
+    _title = initialListing.title;
+    _description = initialListing.description ?? '';
+    _locationAddress = initialListing.location;
+    if (initialListing.latitude != null && initialListing.longitude != null) {
+      _selectedLatLng = LatLng(initialListing.latitude!, initialListing.longitude!);
+    }
+    _existingImageUrl = initialListing.imageUrl;
+
+    // Zaman ayarları (Basitçe parse edelim veya varsayılan bırakalım)
+    // initialListing.timeRange: "Bugün Al 15.30-19.00" gibi gelebiliyor mockta.
+    // Gerçek API'da ISO string gelirse daha kolay olur.
+    // Şimdilik varsayılan bırakalım veya basit bir kontrol yapalım.
+  }
 
   // ─── İlan Bilgileri ───────────────────────────────────
   String _title = '';
@@ -20,6 +43,9 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
 
   String _description = '';
   String get description => _description;
+
+  String? _existingImageUrl;
+  String? get existingImageUrl => _existingImageUrl;
 
   void onTitleChanged(String value) {
     _title = value;
@@ -47,21 +73,9 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
     _selectedAddressId = address.id;
     _selectedLatLng = LatLng(address.latitude, address.longitude);
     _locationAddress = address.addressLine;
-    // Eğer etiket varsa onu da ekleyebiliriz (Figma'daki gibi)
     if (address.label.isNotEmpty) {
       _locationAddress = '${address.label}: ${address.addressLine}';
     }
-    notifyListeners();
-  }
-
-  // ─── Nav State ────────────────────────────────────────
-
-  int _selectedIndex = 3;
-  int get selectedIndex => _selectedIndex;
-
-  void onTabSelected(int index) {
-    if (_selectedIndex == index) return;
-    _selectedIndex = index;
     notifyListeners();
   }
 
@@ -69,11 +83,10 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
 
   XFile? _selectedImage;
   XFile? get selectedImage => _selectedImage;
-  bool get hasImage => _selectedImage != null;
+  bool get hasNewImage => _selectedImage != null;
 
   final ImagePicker _picker = ImagePicker();
 
-  /// Kameradan fotoğraf çeker.
   Future<void> pickFromCamera() async {
     try {
       final image = await _picker.pickImage(
@@ -84,6 +97,7 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
       );
       if (image != null) {
         _selectedImage = image;
+        _existingImageUrl = null;
         notifyListeners();
       }
     } catch (e) {
@@ -91,7 +105,6 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
     }
   }
 
-  /// Galeriden fotoğraf seçer.
   Future<void> pickFromGallery() async {
     try {
       final image = await _picker.pickImage(
@@ -102,6 +115,7 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
       );
       if (image != null) {
         _selectedImage = image;
+        _existingImageUrl = null;
         notifyListeners();
       }
     } catch (e) {
@@ -117,7 +131,7 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
   int _selectedMinute = 41;
   int get selectedMinute => _selectedMinute;
 
-  bool _isAm = true;
+  bool _isAm = false;
   bool get isAm => _isAm;
 
   void onHourChanged(int index) {
@@ -150,8 +164,7 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
 
   void setLocationAddress(String address) {
     _locationAddress = address;
-    _selectedLatLng =
-        null; // Manuel adres girildiyse koordinatı sıfırla (veya sonradan ekle)
+    _selectedLatLng = null;
     notifyListeners();
   }
 
@@ -169,27 +182,12 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
       final address = result['address'] as String?;
       if (latLng != null) {
         _selectedLatLng = latLng;
-        _locationAddress =
-            address ??
+        _locationAddress = address ??
             '${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
         notifyListeners();
       }
     }
   }
-
-  Future<void> addNewAddress(BuildContext context) async {
-    final result = await Navigator.pushNamed(
-      context,
-      AppRoutes.volunteerAddAddress,
-    );
-    if (result != null && result is String) {
-      setLocationAddress(result);
-    }
-  }
-
-  // ─── Fiyat ────────────────────────────────────────────
-
-  final bool isFree = true;
 
   // ─── Gönderme ─────────────────────────────────────────
 
@@ -202,15 +200,10 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
   bool _isSuccess = false;
   bool get isSuccess => _isSuccess;
 
-  Future<bool> submit() async {
+  Future<bool> update() async {
     _errorMessage = null;
     if (_title.isEmpty || _description.isEmpty) {
       _errorMessage = 'Lütfen başlık ve açıklama giriniz.';
-      notifyListeners();
-      return false;
-    }
-    if (!hasLocation) {
-      _errorMessage = 'errorNoLocation';
       notifyListeners();
       return false;
     }
@@ -218,29 +211,17 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // 1. Resim varsa yükle
-      String? imageUrl;
+      String? imageUrl = _existingImageUrl;
       if (_selectedImage != null) {
-        debugPrint('Uploading image: ${_selectedImage!.path}');
         imageUrl = await _authService.uploadImage(_selectedImage!.path);
-        debugPrint('Image uploaded: $imageUrl');
       }
 
-      // Saat hesaplama
       int hour = _selectedHour;
       if (!_isAm && hour < 12) hour += 12;
       if (_isAm && hour == 12) hour = 0;
 
       final now = DateTime.now();
-      final pickupEndTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        hour,
-        _selectedMinute,
-      );
-
-      // Eğer seçilen saat şu andan önceyse yarına ayarla
+      final pickupEndTime = DateTime(now.year, now.month, now.day, hour, _selectedMinute);
       final finalPickupEndTime = pickupEndTime.isBefore(now)
           ? pickupEndTime.add(const Duration(days: 1))
           : pickupEndTime;
@@ -256,43 +237,22 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
         'pickup_start_time': now.toIso8601String(),
         'pickup_end_time': finalPickupEndTime.toIso8601String(),
         'is_available': true,
-        'delivery_status': 'active', // Varsayılan durum
+        'delivery_status': 'active',
       };
 
-      debugPrint('--- SUBMITTING VOLUNTEER LISTING ---');
-      debugPrint('Payload: $data');
-
-      final success = await _volunteerService.createMeal(data);
+      final success = await _volunteerService.updateMeal(int.parse(initialListing.id), data);
 
       if (success) {
         _isSuccess = true;
-        resetFields();
       } else {
-        _errorMessage =
-            'İlan oluşturulurken bir hata oluştu. Lütfen bilgileri kontrol edip tekrar deneyin.';
-        debugPrint('Submit failed: createMeal returned false');
+        _errorMessage = 'İlan güncellenirken bir hata oluştu.';
       }
     } catch (e) {
       _errorMessage = 'Sistemsel bir hata oluştu: $e';
-      debugPrint('Submit error: $e');
     } finally {
       _isSubmitting = false;
       notifyListeners();
     }
     return _isSuccess;
-  }
-
-  void resetFields() {
-    _title = '';
-    _description = '';
-    _selectedImage = null;
-    _locationAddress = '';
-    _selectedLatLng = null;
-    notifyListeners();
-  }
-
-  void resetSuccess() {
-    _isSuccess = false;
-    notifyListeners();
   }
 }

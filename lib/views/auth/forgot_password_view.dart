@@ -45,6 +45,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           isLoading: vm.isLoading,
           moduleType: AppModuleType.food,
           child: Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(title: Text(LocaleKeys.auth_forgotPassword_title.tr())),
             body: SafeArea(
               child: SingleChildScrollView(

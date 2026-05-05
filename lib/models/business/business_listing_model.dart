@@ -19,6 +19,7 @@ class BusinessListingModel {
   final int availableQuantity;
   final String? imageUrl;
   final String? allergens;
+  final String? category;
   final double? latitude;
   final double? longitude;
   final DateTime? createdAt;
@@ -41,6 +42,7 @@ class BusinessListingModel {
     required this.availableQuantity,
     this.imageUrl,
     this.allergens,
+    this.category,
     this.latitude,
     this.longitude,
     this.createdAt,
@@ -52,13 +54,13 @@ class BusinessListingModel {
           ? (json['bag_id'] is int ? json['bag_id'] : int.tryParse(json['bag_id'].toString()) ?? 0)
           : (json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0),
       userId: json['user_id'] is int ? json['user_id'] : int.tryParse(json['user_id'].toString()) ?? 0,
-      businessName: json['business_name']?.toString() ?? json['shop_name']?.toString(),
-      ownerImageUrl: json['owner_image_url'],
-      businessLogoUrl: json['business_logo_url']?.toString() ?? json['shop_logo_url']?.toString(),
-      title: json['title']?.toString() ?? json['bag_title']?.toString() ?? '',
-      description: json['description']?.toString(),
+      businessName: json['business_name']?.toString() ?? json['shop_name']?.toString() ?? json['business']?['name']?.toString(),
+      ownerImageUrl: json['owner_image_url'] ?? json['business']?['image_url'],
+      businessLogoUrl: json['business_logo_url']?.toString() ?? json['shop_logo_url']?.toString() ?? json['business']?['logo_url']?.toString(),
+      title: json['title']?.toString() ?? json['bag_title']?.toString() ?? json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? json['content']?.toString(),
       addressId: json['address_id'] is int ? json['address_id'] : int.tryParse(json['address_id'].toString()),
-      address: json['address']?.toString() ?? json['full_address']?.toString(),
+      address: json['address']?.toString() ?? json['full_address']?.toString() ?? json['location_address']?.toString(),
       originalPrice: (json['original_price'] as num?)?.toDouble() ?? (json['price'] as num?)?.toDouble() ?? 0.0,
       discountedPrice: (json['discounted_price'] as num?)?.toDouble() ?? (json['price'] as num?)?.toDouble() ?? 0.0,
       pickupStartTime: json['pickup_start_time'] != null
@@ -67,10 +69,11 @@ class BusinessListingModel {
       pickupEndTime: json['pickup_end_time'] != null
           ? DateTime.tryParse(json['pickup_end_time'].toString())
           : (json['delivery_end_time'] != null ? DateTime.tryParse(json['delivery_end_time'].toString()) : null),
-      totalQuantity: (json['total_quantity'] as num?)?.toInt() ?? 0,
-      availableQuantity: (json['available_quantity'] as num?)?.toInt() ?? 0,
-      imageUrl: json['image_url']?.toString() ?? json['bag_image_url']?.toString(),
+      totalQuantity: (json['total_quantity'] as num?)?.toInt() ?? (json['quantity'] as num?)?.toInt() ?? 0,
+      availableQuantity: (json['available_quantity'] as num?)?.toInt() ?? (json['quantity'] as num?)?.toInt() ?? 0,
+      imageUrl: json['image_url']?.toString() ?? json['bag_image_url']?.toString() ?? json['image']?.toString(),
       allergens: json['allergens']?.toString(),
+      category: json['category']?.toString(),
       latitude: json['latitude'] != null 
           ? (json['latitude'] as num).toDouble() 
           : (json['lat'] != null ? (json['lat'] as num).toDouble() : null),
@@ -82,6 +85,15 @@ class BusinessListingModel {
           : null,
     );
   }
+
+  bool get isSold => availableQuantity == 0;
+  
+  bool get isExpired {
+    if (pickupEndTime == null) return false;
+    return DateTime.now().isAfter(pickupEndTime!);
+  }
+
+  bool get isActive => !isSold && !isExpired;
 
   Map<String, dynamic> toJson() {
     return {
@@ -96,6 +108,7 @@ class BusinessListingModel {
       'available_quantity': availableQuantity,
       'image_url': imageUrl,
       'allergens': allergens,
+      'category': category,
       'latitude': latitude,
       'longitude': longitude,
     };
@@ -126,12 +139,12 @@ class BusinessListingModel {
       title: title,
       shopName: businessName ?? 'İşletme',
       location: shortLocation,
-      category: 'Sürpriz Kutu',
+      category: category ?? 'Sürpriz Kutu',
       timeRange: formattedTime,
       imageUrl: imageUrl ?? '',
       price: discountedPrice,
       rating: 4.8,
-      section: FoodSection.surpriseBox,
+      section: FoodSection.nearYou,
       isNetworkImage: imageUrl != null && imageUrl!.startsWith('http'),
       shopLogoUrl: businessLogoUrl,
       description: description,

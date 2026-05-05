@@ -54,8 +54,16 @@ class ApiFoodService implements IFoodService {
         for (var item in data) {
           try {
             if (item is Map<String, dynamic>) {
+              // Detaylı log bastırma
+              debugPrint('--- 📦 İlan Detayı (Ham Veri) ---');
+              debugPrint(const JsonEncoder.withIndent('  ').convert(item));
+              
               final businessModel = BusinessListingModel.fromJson(item);
-              listings.add(businessModel.toFoodListing());
+              final foodListing = businessModel.toFoodListing();
+              listings.add(foodListing);
+              
+              debugPrint('✅ İşlenen Model: ${foodListing.title} | Kat: ${foodListing.category} | Fiyat: ${foodListing.price}');
+              debugPrint('---------------------------------');
             } else {
               debugPrint('⚠️ [ApiFoodService] Öğe bir Map değil: $item');
             }

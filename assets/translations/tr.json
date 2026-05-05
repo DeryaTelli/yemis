@@ -217,7 +217,9 @@
     "descriptionLabel": "İlan Açıklaması",
     "allergensLabel": "Alerjen Bilgisi",
     "pickFromCamera": "Kameradan Çek",
-    "pickFromGallery": "Galeriden Seç"
+    "pickFromGallery": "Galeriden Seç",
+    "categoryLabel": "Kategori",
+    "categoryPlaceholder": "Bir kategori seçin"
   },
   "businessApprovals": {
     "title": "Rezervasyon Onayla",

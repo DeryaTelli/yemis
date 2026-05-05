@@ -7,6 +7,12 @@ abstract class IBusinessService {
   /// İşletmenin tüm ilanlarını getirir.
   Future<List<BusinessListingModel>> getMyBags();
 
+  /// İşletmenin satılmamış (aktif) ilanlarını getirir.
+  Future<List<BusinessListingModel>> getMyUnsoldBags();
+
+  /// İşletmenin satılmış veya süresi dolmuş ilanlarını getirir.
+  Future<List<BusinessListingModel>> getMySoldBags();
+
   /// Belirli bir ilanı siler.
   Future<bool> deleteBag(int id);
 

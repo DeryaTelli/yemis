@@ -30,10 +30,17 @@ class ApiConstants {
   // --- Bags (Listings) ---
   static const String bags = '/api/bags';
   static const String myBags = '/api/bags/my';
+  static const String myUnsoldBags = '/api/bags/my/unsold';
+  static const String mySoldBags = '/api/bags/my/sold';
   static String bagById(int id) => '/api/bags/$id';
 
   // --- Favourites ---
   static const String favorites = '/api/favourites';
   static const String myFavorites = '/api/favourites/my';
   static String favoriteById(int id) => '/api/favourites/$id';
+
+  // --- Meals (Volunteer Listings) ---
+  static const String meals = '/api/meals';
+  static const String myMeals = '/api/meals/my';
+  static String mealById(int id) => '/api/meals/$id';
 }

@@ -27,8 +27,8 @@ class FoodReservationConfirmView extends StatelessWidget {
   Widget build(BuildContext context) {
     final LatLng? businessLatLng =
         listing.latitude != null && listing.longitude != null
-            ? LatLng(listing.latitude!, listing.longitude!)
-            : null;
+        ? LatLng(listing.latitude!, listing.longitude!)
+        : null;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -62,10 +62,7 @@ class FoodReservationConfirmView extends StatelessWidget {
 
             // ── Harita ─────────────────────────────────────
             if (businessLatLng != null)
-              OrderLocationMap(
-                businessLocation: businessLatLng,
-                height: 160,
-              ),
+              OrderLocationMap(businessLocation: businessLatLng, height: 160),
             const SizedBox(height: 12),
 
             // ── Lokasyona Git ───────────────────────────────
@@ -224,21 +221,33 @@ class _ReservationCard extends StatelessWidget {
     if (listing.deliveryStartTime == null) return listing.timeRange;
     final now = DateTime.now();
     final start = listing.deliveryStartTime!;
-    final isToday = now.year == start.year &&
+    final isToday =
+        now.year == start.year &&
         now.month == start.month &&
         now.day == start.day;
     if (isToday) return 'Bugün Al  ${listing.timeRange}';
     const months = [
-      '', 'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-      'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+      '',
+      'Ocak',
+      'Şubat',
+      'Mart',
+      'Nisan',
+      'Mayıs',
+      'Haziran',
+      'Temmuz',
+      'Ağustos',
+      'Eylül',
+      'Ekim',
+      'Kasım',
+      'Aralık',
     ];
     return '${start.day} ${months[start.month]}  ${listing.timeRange}';
   }
 
   String get _sectionLabel {
     switch (listing.section) {
-      case FoodSection.surpriseBox:
-        return 'Sürpriz Kutu';
+      case FoodSection.nearYou:
+        return 'Sana Yakın Yerler';
       case FoodSection.buyNow:
         return 'Şimdi Al';
       case FoodSection.todayPopular:
@@ -272,23 +281,20 @@ class _ReservationCard extends StatelessWidget {
               // Ürün resmi
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  listing.imageUrl,
+                child: SizedBox(
                   width: 60,
                   height: 60,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF5ECD7),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.fastfood_rounded,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
+                  child: listing.isNetworkImage
+                      ? Image.network(
+                          listing.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _errorPlaceholder(),
+                        )
+                      : Image.asset(
+                          listing.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => _errorPlaceholder(),
+                        ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -364,6 +370,18 @@ class _ReservationCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _errorPlaceholder() {
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5ECD7),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: const Icon(Icons.fastfood_rounded, color: AppColors.primaryColor),
     );
   }
 }

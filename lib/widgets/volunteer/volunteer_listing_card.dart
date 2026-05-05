@@ -54,20 +54,17 @@ class VolunteerListingCard extends StatelessWidget {
                     child: SizedBox(
                       height: imageHeight,
                       width: double.infinity,
-                      child: Image.asset(
-                        listing.imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
-                          color: AppColors.volunteerColor.withValues(
-                            alpha: 0.1,
-                          ),
-                          child: const Icon(
-                            Icons.volunteer_activism_rounded,
-                            color: AppColors.volunteerColor,
-                            size: 32,
-                          ),
-                        ),
-                      ),
+                      child: listing.isNetworkImage
+                          ? Image.network(
+                              listing.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _errorIcon(),
+                            )
+                          : Image.asset(
+                              listing.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _errorIcon(),
+                            ),
                     ),
                   ),
 
@@ -233,6 +230,17 @@ class VolunteerListingCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _errorIcon() {
+    return Container(
+      color: AppColors.volunteerColor.withValues(alpha: 0.1),
+      child: const Icon(
+        Icons.volunteer_activism_rounded,
+        color: AppColors.volunteerColor,
+        size: 32,
       ),
     );
   }

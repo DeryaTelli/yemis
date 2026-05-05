@@ -7,30 +7,38 @@ import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
 
 class BusinessListingsView extends StatelessWidget {
-  const BusinessListingsView({super.key});
+  final ListingType type;
+  const BusinessListingsView({super.key, this.type = ListingType.all});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (ctx) => BusinessListingsViewModel(
         businessService: ctx.read<IBusinessService>(),
+        type: type,
       )..fetchListings(),
-      child: const _BusinessListingsBody(),
+      child: _BusinessListingsBody(type: type),
     );
   }
 }
 
 class _BusinessListingsBody extends StatelessWidget {
-  const _BusinessListingsBody();
+  final ListingType type;
+  const _BusinessListingsBody({required this.type});
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<BusinessListingsViewModel>();
 
+    String title = 'İlanlarım';
+    if (type == ListingType.sold) title = 'Satılan Siparişler';
+    if (type == ListingType.active) title = 'Eklenen İlanlar';
+    if (type == ListingType.expired) title = 'Süresi Dolan İlanlar';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
       appBar: AppBar(
-        title: const Text('İlanlarım'),
+        title: Text(title),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Navigator.pop(context),
@@ -40,7 +48,7 @@ class _BusinessListingsBody extends StatelessWidget {
         isLoading: vm.isLoading,
         moduleType: AppModuleType.business,
         child: vm.listings.isEmpty && !vm.isLoading
-            ? _buildEmptyState()
+            ? _buildEmptyState(type)
             : RefreshIndicator(
                 onRefresh: vm.fetchListings,
                 child: ListView.separated(
@@ -91,16 +99,21 @@ class _BusinessListingsBody extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(ListingType type) {
+    String message = 'Henüz bir ilanınız bulunmuyor.';
+    if (type == ListingType.sold) message = 'Henüz satılmış bir siparişiniz bulunmuyor.';
+    if (type == ListingType.active) message = 'Henüz eklenmiş bir ilanınız bulunmuyor.';
+    if (type == ListingType.expired) message = 'Henüz süresi dolmuş bir ilanınız bulunmuyor.';
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.list_alt_rounded, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 16),
-          const Text(
-            'Henüz bir ilanınız bulunmuyor.',
-            style: TextStyle(
+          Text(
+            message,
+            style: const TextStyle(
                 fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
           ),
         ],

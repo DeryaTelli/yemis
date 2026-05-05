@@ -217,7 +217,9 @@
         "descriptionLabel": "Listing Description",
         "allergensLabel": "Allergens Information",
         "pickFromCamera": "Take from Camera",
-        "pickFromGallery": "Choose from Gallery"
+        "pickFromGallery": "Choose from Gallery",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Choose a category"
     },
     "businessApprovals": {
         "title": "Approve Reservation",

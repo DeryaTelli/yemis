@@ -8,6 +8,7 @@ import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/business/business_profile_viewmodel.dart';
+import '../../viewmodels/business/business_listings_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/food/profile_menu_tile.dart';
 import '../../utils/theme/app_theme.dart';
@@ -126,7 +127,7 @@ class BusinessProfileView extends StatelessWidget {
                   // ─── Menü Container ────────────────────────────────
                   Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF5E4CA),
+                      color: AppColors.primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -148,21 +149,30 @@ class BusinessProfileView extends StatelessWidget {
                         ),
                         ProfileMenuTile(
                           icon: Icons.list_alt_rounded,
-                          title: 'Aktif İlanlarım',
+                          title: 'Eklenen İlanlar',
                           onTap: () => Navigator.pushNamed(
                             context,
                             AppRoutes.businessListings,
+                            arguments: ListingType.active,
                           ),
                         ),
                         ProfileMenuTile(
                           icon: Icons.check_circle_outline_rounded,
-                          title: LocaleKeys.businessProfile_soldListings.tr(),
-                          onTap: () {},
+                          title: 'Satılan Siparişler',
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.businessListings,
+                            arguments: ListingType.sold,
+                          ),
                         ),
                         ProfileMenuTile(
                           icon: Icons.unpublished_outlined,
-                          title: LocaleKeys.businessProfile_unsoldListings.tr(),
-                          onTap: () {},
+                          title: 'Süresi Dolan İlanlar',
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.businessListings,
+                            arguments: ListingType.expired,
+                          ),
                         ),
                         ProfileMenuTile(
                           icon: Icons.credit_card_rounded,

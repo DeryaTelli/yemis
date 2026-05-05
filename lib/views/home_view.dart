@@ -54,43 +54,48 @@ class _HomeBodyState extends State<_HomeBody> {
       moduleType: AppModuleType.food,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // ── Banner Slider ─────────────────────────────
-              const AdBannerSection(),
+        body: SingleChildScrollView(
+          child: SafeArea(
+            top: false,
+            child: Column(
+              children: [
+                // ── Banner Slider ─────────────────────────────
+                const AdBannerSection(),
 
-              const SizedBox(height: 60),
+                const SizedBox(height: 96),
 
-              // ── Navigasyon Kartları ───────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: vm.cards.asMap().entries.map((entry) {
-                    final i = entry.key;
-                    final card = entry.value;
+                // ── Navigasyon Kartları ───────────────────────
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: vm.cards.asMap().entries.map((entry) {
+                      final i = entry.key;
+                      final card = entry.value;
 
-                    return Padding(
-                      padding: EdgeInsets.only(top: i == 0 ? 0 : 16),
-                      child: SizedBox(
-                        height: 140,
-                        child: HomeCard(
-                          item: card,
-                          onTap: () {
-                            vm.setLoading(true);
-                            Navigator.pushNamed(context, card.route).then((_) {
-                              if (mounted) vm.setLoading(false);
-                            });
-                          },
+                      return Padding(
+                        padding: EdgeInsets.only(top: i == 0 ? 0 : 80),
+                        child: SizedBox(
+                          height: 140,
+                          child: HomeCard(
+                            item: card,
+                            onTap: () {
+                              vm.setLoading(true);
+                              Navigator.pushNamed(context, card.route).then((
+                                _,
+                              ) {
+                                if (mounted) vm.setLoading(false);
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  }).toList(),
+                      );
+                    }).toList(),
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
-            ],
+                const SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),

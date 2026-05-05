@@ -34,6 +34,7 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
     _allergens = initialListing.allergens ?? '';
     _locationAddress = initialListing.address ?? '';
     _selectedAddressId = initialListing.addressId;
+    _selectedCategory = initialListing.category;
 
     // Zamanları ayır
     if (initialListing.pickupEndTime != null) {
@@ -43,6 +44,10 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
           : (endTime.hour == 0 ? 12 : endTime.hour);
       _selectedMinute = endTime.minute;
       _isAm = endTime.hour < 12;
+    }
+
+    if (initialListing.latitude != null && initialListing.longitude != null) {
+      _selectedLatLng = LatLng(initialListing.latitude!, initialListing.longitude!);
     }
 
     notifyListeners();
@@ -242,6 +247,18 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ─── Kategori ─────────────────────────────────────────
+  final List<String> _categories = ['yemek', 'patiseri', 'market'];
+  List<String> get categories => _categories;
+
+  String? _selectedCategory;
+  String? get selectedCategory => _selectedCategory;
+
+  void onCategoryChanged(String? value) {
+    _selectedCategory = value;
+    notifyListeners();
+  }
+
   // ─── Gönderme ─────────────────────────────────────────
   bool _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
@@ -320,11 +337,13 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
         'longitude': _selectedLatLng?.longitude ?? initialListing.longitude,
         'original_price': double.tryParse(_price) ?? 0.0,
         'discounted_price': double.tryParse(_discountPrice) ?? 0.0,
+        'pickup_start_time': initialListing.pickupStartTime?.toIso8601String() ?? now.toIso8601String(),
         'pickup_end_time': pickupEndTime,
         'total_quantity': _quantity,
         'available_quantity': _quantity,
         'image_url': imageUrl ?? '',
         'allergens': _allergens,
+        'category': _selectedCategory,
       };
 
       final success = await _businessService!.updateBag(

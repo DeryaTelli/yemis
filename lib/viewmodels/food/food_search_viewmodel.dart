@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_sort_type.dart';
 import '../../services/food/i_food_service.dart';
+import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
 
 /// Food Arama sayfası için ViewModel.
 class FoodSearchViewModel extends ChangeNotifier {
-  FoodSearchViewModel({required IFoodService service}) : _service = service;
+  FoodSearchViewModel({
+    required IFoodService service,
+    required UserSession userSession,
+  }) : _service = service,
+       _userSession = userSession;
 
   final IFoodService _service;
+  final UserSession _userSession;
 
   // ─── State ────────────────────────────────────────────
 
@@ -23,6 +30,13 @@ class FoodSearchViewModel extends ChangeNotifier {
 
   String _searchQuery = '';
   String get searchQuery => _searchQuery;
+
+  LatLng? get userLocation {
+    if (_userSession.currentLat != null && _userSession.currentLng != null) {
+      return LatLng(_userSession.currentLat!, _userSession.currentLng!);
+    }
+    return null;
+  }
 
   FoodSortType _activeSortType = FoodSortType.none;
   FoodSortType get activeSortType => _activeSortType;
@@ -83,17 +97,42 @@ class FoodSearchViewModel extends ChangeNotifier {
     // 2. Sıralama
     switch (_activeSortType) {
       case FoodSortType.ratingAsc:
+        // Derecelendirme: Düşükten yükseğe
         result.sort((a, b) => a.rating.compareTo(b.rating));
         break;
       case FoodSortType.priceAsc:
+        // Fiyat: Düşükten yükseğe
         result.sort((a, b) => a.price.compareTo(b.price));
         break;
       case FoodSortType.distanceAsc:
-        result.sort((a, b) {
-          final da = _parseDistanceMeters(a.location);
-          final db = _parseDistanceMeters(b.location);
-          return da.compareTo(db);
-        });
+        // Mesafe: Yakından uzağa
+        final userLat = _userSession.currentLat;
+        final userLng = _userSession.currentLng;
+
+        if (userLat != null && userLng != null) {
+          result.sort((a, b) {
+            final da = _calculateDistance(
+              userLat,
+              userLng,
+              a.latitude,
+              a.longitude,
+            );
+            final db = _calculateDistance(
+              userLat,
+              userLng,
+              b.latitude,
+              b.longitude,
+            );
+            return da.compareTo(db);
+          });
+        } else {
+          // Konum yoksa fallback: location string'inden parse et
+          result.sort((a, b) {
+            final da = _parseDistanceMeters(a.location);
+            final db = _parseDistanceMeters(b.location);
+            return da.compareTo(db);
+          });
+        }
         break;
       case FoodSortType.none:
         break;
@@ -103,9 +142,19 @@ class FoodSearchViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Konum metninden mesafeyi metreye çevirir.
-  /// Örnek: "679m | Murat Pastanesi" → 679
-  ///         "1.2km | Bodrum Fırın"  → 1200
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double? lat2,
+    double? lon2,
+  ) {
+    if (lat2 == null || lon2 == null) return 999999.0;
+    final dLat = lat1 - lat2;
+    final dLon = lon1 - lon2;
+    return dLat * dLat + dLon * dLon;
+  }
+
+  /// Konum metninden mesafeyi metreye çevirir (Fallback için).
   double _parseDistanceMeters(String location) {
     final lower = location.toLowerCase();
     final kmMatch = RegExp(r'([\d.]+)\s*km').firstMatch(lower);
@@ -116,7 +165,7 @@ class FoodSearchViewModel extends ChangeNotifier {
     if (mMatch != null) {
       return double.tryParse(mMatch.group(1) ?? '0') ?? 0;
     }
-    return double.maxFinite; // Bilinmeyen → sona koy
+    return double.maxFinite;
   }
 
   void onTabSelected(int index) {
@@ -139,7 +188,6 @@ class FoodSearchViewModel extends ChangeNotifier {
     }
   }
 
-  /// MVVM: Alt navigasyon rotalarını ViewModel sağlar
   String? getBottomNavRoute(int index) {
     switch (index) {
       case 0:

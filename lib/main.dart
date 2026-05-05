@@ -6,39 +6,43 @@ import 'package:provider/provider.dart';
 import 'package:yemis/services/common/notification_service.dart';
 import 'package:yemis/models/business/business_listing_model.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/services/food/i_food_service.dart';
 import 'package:yemis/viewmodels/business/business_profile_viewmodel.dart';
 import 'package:yemis/viewmodels/food/food_home_viewmodel.dart';
 import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_add_listing_viewmodel.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_profile_viewmodel.dart';
 import 'package:yemis/viewmodels/food/food_favorites_viewmodel.dart';
+import 'package:yemis/viewmodels/business/business_listings_viewmodel.dart';
 import 'package:yemis/views/auth/change_password_view.dart';
 import 'package:yemis/views/volunteer/volunteer_add_address_view.dart';
-import 'services/food/api_food_service.dart';
-import 'services/food/mock_food_service.dart';
-import 'services/auth/api_auth_service.dart';
-import 'services/auth/i_auth_service.dart';
-import 'services/auth/user_session.dart';
-import 'services/location/api_location_data_service.dart';
-import 'services/location/i_location_data_service.dart';
-import 'services/business/i_business_service.dart';
-import 'services/business/api_business_service.dart';
-import 'models/auth/address_model.dart';
-import 'models/app_module_type.dart';
-import 'models/food/food_listing.dart';
-import 'utils/routes/app_routes.dart';
-import 'utils/theme/app_theme.dart';
-import 'viewmodels/auth/forgot_password_viewmodel.dart';
-import 'viewmodels/auth/login_viewmodel.dart';
-import 'viewmodels/auth/register_viewmodel.dart';
-import 'viewmodels/auth/verification_viewmodel.dart';
-import 'views/auth/forgot_password_view.dart';
-import 'views/auth/login_view.dart';
-import 'views/auth/register_view.dart';
-import 'views/auth/verification_view.dart';
-import 'views/auth/reset_password_view.dart';
-import 'viewmodels/auth/reset_password_viewmodel.dart';
-import 'views/business/business_home_view.dart';
+import 'package:yemis/services/food/api_food_service.dart';
+import 'package:yemis/services/food/mock_food_service.dart';
+import 'package:yemis/services/auth/api_auth_service.dart';
+import 'package:yemis/services/auth/i_auth_service.dart';
+import 'package:yemis/services/auth/user_session.dart';
+import 'package:yemis/services/location/api_location_data_service.dart';
+import 'package:yemis/services/location/i_location_data_service.dart';
+import 'package:yemis/services/business/i_business_service.dart';
+import 'package:yemis/services/business/api_business_service.dart';
+import 'package:yemis/services/volunteer/i_volunteer_service.dart';
+import 'package:yemis/services/volunteer/api_volunteer_service.dart';
+import 'package:yemis/models/auth/address_model.dart';
+import 'package:yemis/models/app_module_type.dart';
+import 'package:yemis/models/food/food_listing.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
+import 'package:yemis/utils/theme/app_theme.dart';
+import 'package:yemis/viewmodels/auth/forgot_password_viewmodel.dart';
+import 'package:yemis/viewmodels/auth/login_viewmodel.dart';
+import 'package:yemis/viewmodels/auth/register_viewmodel.dart';
+import 'package:yemis/viewmodels/auth/verification_viewmodel.dart';
+import 'package:yemis/views/auth/forgot_password_view.dart';
+import 'package:yemis/views/auth/login_view.dart';
+import 'package:yemis/views/auth/register_view.dart';
+import 'package:yemis/views/auth/verification_view.dart';
+import 'package:yemis/views/auth/reset_password_view.dart';
+import 'package:yemis/viewmodels/auth/reset_password_viewmodel.dart';
+import 'package:yemis/views/business/business_home_view.dart';
 import 'views/food/food_detail_view.dart';
 import 'views/food/food_favorites_view.dart';
 import 'views/food/food_home_view.dart';
@@ -57,6 +61,8 @@ import 'views/volunteer/volunteer_listings_view.dart';
 import 'views/volunteer/volunteer_profile_view.dart';
 import 'views/volunteer/volunteer_search_view.dart';
 import 'views/volunteer/volunteer_detail_view.dart';
+import 'views/volunteer/volunteer_edit_listing_view.dart';
+import 'views/volunteer/volunteer_listing_detail_view.dart';
 import 'views/auth/addresses_view.dart';
 import 'views/auth/food_add_address_view.dart';
 import 'views/common/language_select_view.dart';
@@ -87,6 +93,7 @@ void main() async {
   final businessService = ApiBusinessService();
 
   final foodService = ApiFoodService();
+  final volunteerService = ApiVolunteerService();
 
   // Kayıtlı token'ı yükle
   final prefs = await SharedPreferences.getInstance();
@@ -95,6 +102,7 @@ void main() async {
     authService.setToken(token);
     businessService.setToken(token);
     foodService.setToken(token);
+    volunteerService.setToken(token);
   }
 
   MockFoodService().setUserSession(userSession);
@@ -110,6 +118,7 @@ void main() async {
         locationDataService: locationDataService,
         businessService: businessService,
         foodService: foodService,
+        volunteerService: volunteerService,
       ),
     ),
   );
@@ -121,6 +130,7 @@ class MyApp extends StatelessWidget {
   final ApiLocationDataService locationDataService;
   final ApiBusinessService businessService;
   final ApiFoodService foodService;
+  final ApiVolunteerService volunteerService;
 
   const MyApp({
     super.key,
@@ -129,6 +139,7 @@ class MyApp extends StatelessWidget {
     required this.locationDataService,
     required this.businessService,
     required this.foodService,
+    required this.volunteerService,
   });
 
   @override
@@ -139,6 +150,10 @@ class MyApp extends StatelessWidget {
         Provider<IAuthService>.value(value: authService),
         Provider<ILocationDataService>.value(value: locationDataService),
         Provider<IBusinessService>.value(value: businessService),
+        Provider<IFoodService>.value(value: foodService),
+        Provider<ApiFoodService>.value(value: foodService),
+        Provider<IVolunteerService>.value(value: volunteerService),
+        Provider<ApiVolunteerService>.value(value: volunteerService),
         ChangeNotifierProvider(
           create: (_) =>
               LoginViewModel(authService, businessService, userSession),
@@ -346,8 +361,8 @@ class MyApp extends StatelessWidget {
                 builder: (ctx) => Theme(
                   data: AppTheme.themeFor(AppSection.volunteer),
                   child: ChangeNotifierProvider(
-                    create: (_) =>
-                        VolunteerAddListingViewModel(ctx.read<IAuthService>()),
+                    create: (ctx) =>
+                        VolunteerAddListingViewModel(ctx.read<IAuthService>(), ctx.read<IVolunteerService>()),
                     child: const VolunteerAddListingView(),
                   ),
                 ),
@@ -362,6 +377,21 @@ class MyApp extends StatelessWidget {
               final volunteerListing = settings.arguments as VolunteerListing;
               return MaterialPageRoute(
                 builder: (_) => VolunteerDetailView(listing: volunteerListing),
+                settings: settings,
+              );
+            case AppRoutes.volunteerListingDetail:
+              final volunteerListing = settings.arguments as VolunteerListing;
+              return MaterialPageRoute(
+                builder: (_) => VolunteerListingDetailView(
+                  listing: volunteerListing,
+                  isEditable: true,
+                ),
+                settings: settings,
+              );
+            case AppRoutes.volunteerEditListing:
+              final listing = settings.arguments as VolunteerListing;
+              return MaterialPageRoute(
+                builder: (_) => VolunteerEditListingView(listing: listing),
                 settings: settings,
               );
             case AppRoutes.businessHome:
@@ -418,8 +448,9 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case AppRoutes.businessListings:
+              final type = settings.arguments as ListingType? ?? ListingType.all;
               return MaterialPageRoute(
-                builder: (_) => const BusinessListingsView(),
+                builder: (_) => BusinessListingsView(type: type),
                 settings: settings,
               );
             case AppRoutes.businessEditOrder:

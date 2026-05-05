@@ -23,19 +23,21 @@ class FoodOrderTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Sürpriz Kutu Detayı (Genel) ──────────────────
-          const Text(
-            'Sürpriz Kutu Detayı',
-            style: TextStyle(
+          // ── Kategori Detayı ──────────────────────────────
+          Text(
+            '${listing.category.toLowerCase() == 'patiseri' ? 'Ekmek & Pasta' : listing.category.substring(0, 1).toUpperCase() + listing.category.substring(1)} Detayı',
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Bu paket, gün sonunda satılamayan ama hâlâ taze olan çeşitli yiyeceklerden oluşur. Ne çıkacağı tamamen sürprizdir.',
-            style: TextStyle(
+          Text(
+            listing.category == 'Sürpriz Kutu'
+                ? 'Bu paket, gün sonunda satılamayan ama hâlâ taze olan çeşitli yiyeceklerden oluşur. Ne çıkacağı tamamen sürprizdir.'
+                : 'Bu paket, işletmenin ${listing.category.toLowerCase()} kategorisindeki taze ürünlerinden oluşur.',
+            style: const TextStyle(
               fontSize: 13,
               color: AppColors.hintTextColor,
               height: 1.5,
@@ -236,7 +238,8 @@ class _ExpandableDetail extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Divider(height: 1, color: Color(0xFFEEEEEE)),
+                  const SizedBox(height: 12),
+                  _buildDetailRow(Icons.grid_view_rounded, 'Kategori', listing.category),
                   const SizedBox(height: 12),
                   const Text(
                     'İçerikler & Alerjenler',
@@ -291,6 +294,33 @@ class _ExpandableDetail extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: AppColors.primaryColor),
+        const SizedBox(width: 8),
+        Text(
+          '$label:',
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryTextColor,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          listing.category.toLowerCase() == 'patiseri'
+              ? 'Ekmek & Pasta'
+              : value.substring(0, 1).toUpperCase() + value.substring(1),
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.hintTextColor,
+          ),
+        ),
+      ],
     );
   }
 }

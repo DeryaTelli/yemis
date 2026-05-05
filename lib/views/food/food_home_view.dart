@@ -105,10 +105,10 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
               ),
               const SizedBox(height: 20),
 
-              // ── Sürpriz Kutu ────────────────────────────
+              // ── Sana Yakın Yerler ──────────────────────────
               const FoodListingSection(
-                title: 'Sürpriz Kutu',
-                section: FoodSection.surpriseBox,
+                title: 'Sana Yakın Yerler',
+                section: FoodSection.nearYou,
               ),
               const SizedBox(height: 24),
 

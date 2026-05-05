@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
-import '../../models/volunteer/volunteer_listing.dart';
-import '../../services/auth/user_session.dart';
-import '../../services/volunteer/mock_volunteer_service.dart';
-import '../../utils/routes/app_routes.dart';
+import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/services/auth/user_session.dart';
+import 'package:yemis/services/volunteer/i_volunteer_service.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
 
 /// VolunteerHome ekranının ViewModel'i.
 class VolunteerHomeViewModel extends ChangeNotifier {
-  VolunteerHomeViewModel({required UserSession userSession}) : _userSession = userSession {
+  VolunteerHomeViewModel({
+    required UserSession userSession,
+    required IVolunteerService volunteerService,
+  })  : _userSession = userSession,
+        _service = volunteerService {
     _userSession.addListener(_onUserSessionChanged);
     init();
   }
 
-  final MockVolunteerService _service = MockVolunteerService();
+  final IVolunteerService _service;
   final UserSession _userSession;
 
   // ─── State ────────────────────────────────────────────
@@ -42,18 +46,51 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final results = await Future.wait([
-      _service.getFeaturedListings(),
-    ]);
+    try {
+      final results = await _service.getFeaturedListings(
+        lat: _userSession.currentLat,
+        lng: _userSession.currentLng,
+        radius: 10000,
+      );
 
-    _allListings = results[0] as List<VolunteerListing>;
+      var sortedListings = List<VolunteerListing>.from(results);
+
+      // Konuma göre sırala (Eğer kullanıcı konumu varsa)
+      if (_userSession.currentLat != null && _userSession.currentLng != null) {
+        sortedListings.sort((a, b) {
+          if (a.latitude == null || a.longitude == null) return 1;
+          if (b.latitude == null || b.longitude == null) return -1;
+
+          final distA = (a.latitude! - _userSession.currentLat!) * (a.latitude! - _userSession.currentLat!) +
+                        (a.longitude! - _userSession.currentLng!) * (a.longitude! - _userSession.currentLng!);
+          final distB = (b.latitude! - _userSession.currentLat!) * (b.latitude! - _userSession.currentLat!) +
+                        (b.longitude! - _userSession.currentLng!) * (b.longitude! - _userSession.currentLng!);
+          return distA.compareTo(distB);
+        });
+      }
+
+      // İlanlara bölüm ataması yapalım
+      _allListings = sortedListings.asMap().entries.map((entry) {
+        final index = entry.key;
+        final listing = entry.value;
+        
+        // İlk 2 ilan yakında, kalanlar popüler
+        return listing.copyWith(
+          section: index < 2 ? VolunteerSection.nearYou : VolunteerSection.todayPopular,
+        );
+      }).toList();
+
+    } catch (e) {
+      debugPrint('Error fetching home listings: $e');
+    }
 
     _isLoading = false;
     notifyListeners();
   }
 
   void _onUserSessionChanged() {
-    notifyListeners();
+    // Konum değiştiyse yeniden çek
+    init();
   }
 
   // ─── Arama ────────────────────────────────────────────
@@ -112,3 +149,4 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     super.dispose();
   }
 }
+

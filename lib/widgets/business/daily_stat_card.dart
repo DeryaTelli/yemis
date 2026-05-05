@@ -18,7 +18,7 @@ class DailyStatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF3E0),
+        color: AppColors.primaryColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.primaryColor.withValues(alpha: 0.25),

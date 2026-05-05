@@ -263,6 +263,10 @@ abstract class LocaleKeys {
       'businessAddOrder.pickFromCamera';
   static const businessAddOrder_pickFromGallery =
       'businessAddOrder.pickFromGallery';
+  static const businessAddOrder_categoryLabel =
+      'businessAddOrder.categoryLabel';
+  static const businessAddOrder_categoryPlaceholder =
+      'businessAddOrder.categoryPlaceholder';
 
   // businessApprovals
   static const businessApprovals_title = 'businessApprovals.title';

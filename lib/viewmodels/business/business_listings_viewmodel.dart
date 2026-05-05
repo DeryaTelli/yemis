@@ -3,12 +3,17 @@ import '../../models/business/business_listing_model.dart';
 import '../../services/business/i_business_service.dart';
 import '../../utils/routes/app_routes.dart';
 
+enum ListingType { all, sold, active, expired }
+
 class BusinessListingsViewModel extends ChangeNotifier {
   final IBusinessService? _businessService;
+  final ListingType type;
   bool _isDisposed = false;
 
-  BusinessListingsViewModel({IBusinessService? businessService})
-      : _businessService = businessService;
+  BusinessListingsViewModel({
+    IBusinessService? businessService,
+    this.type = ListingType.all,
+  }) : _businessService = businessService;
 
   @override
   void dispose() {
@@ -36,7 +41,24 @@ class BusinessListingsViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _listings = await _businessService!.getMyBags();
+      switch (type) {
+        case ListingType.all:
+          _listings = await _businessService!.getMyBags();
+          break;
+        case ListingType.sold:
+          // Sadece stoku bitenler
+          final allSoldOrExpired = await _businessService!.getMySoldBags();
+          _listings = allSoldOrExpired.where((item) => item.isSold).toList();
+          break;
+        case ListingType.active:
+          _listings = await _businessService!.getMyUnsoldBags();
+          break;
+        case ListingType.expired:
+          // Stoku olup süresi dolanlar
+          final allSoldOrExpired = await _businessService!.getMySoldBags();
+          _listings = allSoldOrExpired.where((item) => !item.isSold && item.isExpired).toList();
+          break;
+      }
     } catch (e) {
       debugPrint('Error fetching listings: $e');
     }

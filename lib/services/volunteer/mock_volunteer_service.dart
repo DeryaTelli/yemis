@@ -15,7 +15,7 @@ class MockVolunteerService implements IVolunteerService {
   }
 
   @override
-  Future<List<VolunteerListing>> getFeaturedListings() async {
+  Future<List<VolunteerListing>> getFeaturedListings({double? lat, double? lng, double? radius}) async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
     return List.unmodifiable(_listings);
   }
@@ -48,6 +48,24 @@ class MockVolunteerService implements IVolunteerService {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     // Üçüncü ilanı gönüllü olduğum ilanmış gibi döndürüyoruz (varsa, yoksa ilkini seçecek şekilde güvenli yapalım)
     return _listings.length > 2 ? [_listings[2]] : [_listings.first];
+  }
+
+  @override
+  Future<bool> createMeal(Map<String, dynamic> data) async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    return true;
+  }
+
+  @override
+  Future<bool> deleteMeal(int id) async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    return true;
+  }
+
+  @override
+  Future<bool> updateMeal(int id, Map<String, dynamic> data) async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    return true;
   }
 
   // ─── LİSTELER (mutable) ──────────────────────────────────────────────

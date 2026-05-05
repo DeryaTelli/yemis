@@ -83,7 +83,12 @@ class ErrorDialogCustom extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(title, style: CustomTextStyles.orelegaOne32Primary),
+                child: Text(
+                  title,
+                  style: CustomTextStyles.orelegaOne32Primary.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
               ),
             ],
           ),
@@ -104,7 +109,12 @@ class ErrorDialogCustom extends StatelessWidget {
                 Navigator.pop(context);
                 onConfirm?.call();
               },
-              child: Text('Tamam', style: CustomTextStyles.semiBold16Primary),
+              child: Text(
+                'Tamam',
+                style: CustomTextStyles.semiBold16Primary.copyWith(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
             ),
           ),
         ],

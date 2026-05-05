@@ -104,7 +104,7 @@ class FoodListing {
 
 /// Hangi bölümde gösterileceğini belirtir.
 enum FoodSection {
-  surpriseBox, // Sürpriz Kutu
+  nearYou, // Sana Yakın Yerler
   buyNow, // Şimdi Al
   todayPopular, // Bugün Popüler
 }

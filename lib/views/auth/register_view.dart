@@ -51,6 +51,7 @@ class _RegisterViewState extends State<RegisterView> {
           isLoading: vm.isLoading,
           moduleType: AppModuleType.food,
           child: Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(title: Text(LocaleKeys.auth_register_title.tr())),
             body: SafeArea(
               child: SingleChildScrollView(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
-import '../../services/food/mock_food_service.dart';
+import '../../services/food/i_food_service.dart';
+import '../../services/auth/user_session.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/food/food_search_viewmodel.dart';
@@ -27,7 +28,10 @@ class _FoodSearchViewState extends State<FoodSearchView> {
   @override
   void initState() {
     super.initState();
-    _vm = FoodSearchViewModel(service: MockFoodService())..init();
+    _vm = FoodSearchViewModel(
+      service: context.read<IFoodService>(),
+      userSession: context.read<UserSession>(),
+    )..init();
 
     // Arama çubuğundaki değişiklikler her zaman ViewModel ile senkron kalır.
     _searchController.addListener(() {
@@ -63,6 +67,7 @@ class _FoodSearchViewState extends State<FoodSearchView> {
                   ? SearchMapView(
                       listings: vm.filteredListings,
                       accentColor: AppColors.primaryColor,
+                      initialCenter: vm.userLocation,
                       onMarkerTap: (listing) {
                         Navigator.pushNamed(
                           context,

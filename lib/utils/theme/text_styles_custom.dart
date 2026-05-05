@@ -11,7 +11,7 @@ class CustomTextStyles {
    static TextStyle get extraBold16Black => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w800, color: const Color(0xFF1B1B1B)); // Unified color
 
   // Grey (0xFF838383)
-  static TextStyle get regular14Grey => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w400, color: const Color(0xFF838383));
+  static TextStyle get regular14Grey => GoogleFonts.nunito(fontSize: 12, fontWeight: FontWeight.w400, color: const Color(0xFF838383));
   static TextStyle get italic14Grey => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w400, fontStyle: FontStyle.italic, color: const Color(0xFF838383));
   static TextStyle get regular14GreyHeight => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w400, color: const Color(0xFF838383), height: 24 / 14); // ~1.71
   static TextStyle get regular16Grey => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w400, color: const Color(0xFF838383));

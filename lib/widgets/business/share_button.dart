@@ -4,6 +4,8 @@ import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../viewmodels/business/business_add_order_viewmodel.dart';
 
+import '../../widgets/common/success_dialog_custom.dart';
+
 class ShareButton extends StatelessWidget {
   const ShareButton({super.key, required this.vm, this.onSuccess});
   final BusinessAddOrderViewModel vm;
@@ -18,20 +20,10 @@ class ShareButton extends StatelessWidget {
               final ok = await vm.submit();
               if (ok && context.mounted) {
                 if (onSuccess != null) onSuccess!();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        const Icon(Icons.check_circle_outline, color: Colors.white),
-                        const SizedBox(width: 12),
-                        Text(LocaleKeys.businessAddOrder_successMessage.tr()),
-                      ],
-                    ),
-                    backgroundColor: Colors.green,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    duration: const Duration(seconds: 3),
-                  ),
+                SuccessDialogCustom.show(
+                  context,
+                  title: 'Başarılı',
+                  message: LocaleKeys.businessAddOrder_successMessage.tr(),
                 );
               }
             },

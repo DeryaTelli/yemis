@@ -79,7 +79,7 @@ class MockFoodService implements IFoodService {
       imageUrl: 'assets/foodIcon/foodSide.png',
       price: 100,
       rating: 4.8,
-      section: FoodSection.surpriseBox,
+      section: FoodSection.nearYou,
       shopLogoUrl: null,
       isFavorite: true,
       description:
@@ -105,7 +105,7 @@ class MockFoodService implements IFoodService {
       imageUrl: 'assets/foodIcon/foodSide.png',
       price: 45,
       rating: 4.5,
-      section: FoodSection.surpriseBox,
+      section: FoodSection.nearYou,
       shopLogoUrl: null,
       description:
           'Günün ilk saatlerinde hazırlanan taze simitler ve açma çeşitleri. '
@@ -127,8 +127,9 @@ class MockFoodService implements IFoodService {
       imageUrl: 'assets/foodIcon/foodSide.png',
       price: 70,
       rating: 4.6,
-      section: FoodSection.surpriseBox,
-      description: 'Mevsim sebzeleriyle hazırlanan taze ve sağlıklı salata kutusu.',
+      section: FoodSection.nearYou,
+      description:
+          'Mevsim sebzeleriyle hazırlanan taze ve sağlıklı salata kutusu.',
       ingredients: 'Marul, domates, salatalık, zeytinyağı, limon.',
       allergens: 'Yok',
       latitude: 41.2035,
@@ -168,7 +169,8 @@ class MockFoodService implements IFoodService {
       price: 60,
       rating: 4.3,
       section: FoodSection.buyNow,
-      description: 'Izgara tavuk, domates ve taze çeşitli soslarla hazırlanan lezzetli dürüm.',
+      description:
+          'Izgara tavuk, domates ve taze çeşitli soslarla hazırlanan lezzetli dürüm.',
       ingredients: 'Tavuk, lavaş, domates, mayonez, ketçap, marul.',
       allergens: 'Gluten, Yumurta (mayonez)',
       latitude: 41.2070,
@@ -185,7 +187,8 @@ class MockFoodService implements IFoodService {
       price: 35,
       rating: 4.7,
       section: FoodSection.buyNow,
-      description: 'Peynirli, patatesli ve kıymalı börek seçenekleri. Her gün taze pişirilir.',
+      description:
+          'Peynirli, patatesli ve kıymalı börek seçenekleri. Her gün taze pişirilir.',
       ingredients: 'Yufka, peynir, patates, kıyma, tereyağı.',
       allergens: 'Gluten, Süt',
       latitude: 41.2055,
@@ -224,7 +227,8 @@ class MockFoodService implements IFoodService {
       price: 25,
       rating: 4.4,
       section: FoodSection.todayPopular,
-      description: 'Tam buğday unundan elde edilen sağlıklı ekmek. Katkısız, doğal.',
+      description:
+          'Tam buğday unundan elde edilen sağlıklı ekmek. Katkısız, doğal.',
       ingredients: 'Tam buğday unu, su, tuz, maya.',
       allergens: 'Gluten',
       latitude: 41.2020,
