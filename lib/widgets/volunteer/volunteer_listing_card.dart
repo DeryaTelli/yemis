@@ -54,17 +54,19 @@ class VolunteerListingCard extends StatelessWidget {
                     child: SizedBox(
                       height: imageHeight,
                       width: double.infinity,
-                      child: listing.isNetworkImage
-                          ? Image.network(
-                              listing.imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _errorIcon(),
-                            )
-                          : Image.asset(
-                              listing.imageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _errorIcon(),
-                            ),
+                      child: listing.imageUrl.isEmpty
+                          ? _errorIcon()
+                          : (listing.isNetworkImage
+                              ? Image.network(
+                                  listing.imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => _errorIcon(),
+                                )
+                              : Image.asset(
+                                  listing.imageUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => _errorIcon(),
+                                )),
                     ),
                   ),
 
@@ -122,18 +124,27 @@ class VolunteerListingCard extends StatelessWidget {
                         border: Border.all(color: Colors.white, width: 2),
                       ),
                       child: ClipOval(
-                        child:
-                            listing.userLogoUrl != null &&
+                        child: listing.userLogoUrl != null &&
                                 listing.userLogoUrl!.isNotEmpty
-                            ? Image.asset(
-                                listing.userLogoUrl!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.person_rounded,
-                                  color: AppColors.volunteerColor,
-                                  size: 20,
-                                ),
-                              )
+                            ? (listing.userLogoUrl!.startsWith('http')
+                                ? Image.network(
+                                    listing.userLogoUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => const Icon(
+                                      Icons.person_rounded,
+                                      color: AppColors.volunteerColor,
+                                      size: 20,
+                                    ),
+                                  )
+                                : Image.asset(
+                                    listing.userLogoUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => const Icon(
+                                      Icons.person_rounded,
+                                      color: AppColors.volunteerColor,
+                                      size: 20,
+                                    ),
+                                  ))
                             : const Icon(
                                 Icons.person_rounded,
                                 color: AppColors.volunteerColor,

@@ -24,10 +24,30 @@ class VolunteerOrderTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Ürün Başlığı ──────────────────────────────────
-          Text(
-            listing.title,
-            style: const TextStyle(
+          // ── Gönüllü Bilgilendirmesi ────────────────────────
+          const Text(
+            'Gönüllü İlan Detayı',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              color: AppColors.primaryTextColor,
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.',
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.hintTextColor,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // ── İlan Açıklaması Başlığı ───────────────────────
+          const Text(
+            'İlan Açıklaması',
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
@@ -57,9 +77,9 @@ class VolunteerOrderTab extends StatelessWidget {
           else
             SizedBox(
               height: 180,
-              child: Center(child: Text(
-                LocaleKeys.volunteerDetail_noLocation.tr(),
-              )),
+              child: Center(
+                child: Text(LocaleKeys.volunteerDetail_noLocation.tr()),
+              ),
             ),
           const SizedBox(height: 12),
 
@@ -97,9 +117,9 @@ class VolunteerOrderTab extends StatelessWidget {
           else
             SizedBox(
               height: 180,
-              child: Center(child: Text(
-                LocaleKeys.volunteerDetail_noShelterLocation.tr(),
-              )),
+              child: Center(
+                child: Text(LocaleKeys.volunteerDetail_noShelterLocation.tr()),
+              ),
             ),
           const SizedBox(height: 12),
 
@@ -108,12 +128,12 @@ class VolunteerOrderTab extends StatelessWidget {
             label: LocaleKeys.volunteerDetail_goToShelter.tr(),
             onTap: vm.shelterLatLng != null
                 ? () => _push(
-                      context,
-                      lat: vm.shelterLatLng!.latitude,
-                      lng: vm.shelterLatLng!.longitude,
-                      name: vm.shelterName,
-                      address: vm.shelterAddress,
-                    )
+                    context,
+                    lat: vm.shelterLatLng!.latitude,
+                    lng: vm.shelterLatLng!.longitude,
+                    name: vm.shelterName,
+                    address: vm.shelterAddress,
+                  )
                 : () {},
           ),
           const SizedBox(height: 24),
@@ -202,7 +222,7 @@ class _ExpandableDetail extends StatelessWidget {
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -257,34 +277,32 @@ class _ExpandableDetail extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  if (listing.ingredients != null)
-                    Text(
-                      listing.ingredients!,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.hintTextColor,
-                        height: 1.5,
-                      ),
+                  Text(
+                    'Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.${listing.ingredients != null ? '\n\n${listing.ingredients}' : ''}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.hintTextColor,
+                      height: 1.5,
                     ),
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     LocaleKeys.volunteerDetail_packaging.tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryTextColor,
                     ),
                   ),
                   const SizedBox(height: 6),
-                  if (listing.packageInfo != null)
-                    Text(
-                      listing.packageInfo!,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: AppColors.hintTextColor,
-                        height: 1.5,
-                      ),
+                  Text(
+                    'Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.${listing.packageInfo != null ? '\n\n${listing.packageInfo}' : ''}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.hintTextColor,
+                      height: 1.5,
                     ),
+                  ),
                 ],
               ),
             ),

@@ -25,7 +25,7 @@ class VolunteerDetailHeader extends StatelessWidget {
               children: [
                 // İlan Adı
                 Text(
-                  listing.title,
+                  "${listing.userName} - ${listing.title}",
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,

@@ -1,11 +1,15 @@
 // ignore: unused_import
 import 'dart:io'; // Required for Image.file() which takes dart:io.File
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../models/app_module_type.dart';
+import '../../widgets/common/loading_overlay.dart';
 import '../../widgets/common/custom_text_field.dart';
 
 class FoodProfileEditView extends StatelessWidget {
@@ -25,6 +29,14 @@ class _FoodProfileEditBody extends StatefulWidget {
 }
 
 class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FoodProfileViewModel>().fetchProfile();
+    });
+  }
+
   final _phoneMaskFormatter = MaskTextInputFormatter(
     mask: '(###) ### ## ##',
     filter: {"#": RegExp(r'[0-9]')},
@@ -37,141 +49,140 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
 
     final primaryColor = Theme.of(context).primaryColor;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('Profili Düzenle'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () => Navigator.pop(context),
+    return LoadingOverlay(
+      isLoading: vm.isLoading,
+      moduleType: primaryColor == AppColors.volunteerColor
+          ? AppModuleType.volunteer
+          : AppModuleType.food,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(LocaleKeys.foodProfile_editTitle.tr()),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Column(
-          children: [
-            // ─── Profil Fotoğrafı ──────────────────────
-            Center(
-              child: GestureDetector(
-                onTap: () => _showPhotoSelectBS(context, vm),
-                child: Stack(
-                  children: [
-                    Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: primaryColor.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: ClipOval(
-                        child: _buildAvatar(vm, primaryColor),
-                      ),
-                    ),
-
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: Column(
+            children: [
+              // ─── Profil Fotoğrafı ──────────────────────
+              Center(
+                child: GestureDetector(
+                  onTap: () => _showPhotoSelectBS(context, vm),
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: primaryColor.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          Icons.add_circle_outline,
-                          size: 20,
-                          color: primaryColor,
+                        child: ClipOval(child: _buildAvatar(vm, primaryColor)),
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.add_circle_outline,
+                            size: 20,
+                            color: primaryColor,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-            // ─── Form Alanları ─────────────────────────
-            CustomTextField(
-              controller: vm.nameController,
-              labelText: 'Ad',
-              hintText: 'Adınızı girin',
-            ),
-            const SizedBox(height: 16),
-            CustomTextField(
-              controller: vm.surnameController,
-              labelText: 'Soyad',
-              hintText: 'Soyadınızı girin',
-            ),
-            const SizedBox(height: 16),
-            CustomTextField(
-              controller: vm.emailController,
-              labelText: 'E-posta',
-              hintText: 'E-posta adresinizi girin',
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            CustomTextField(
-              controller: vm.phoneController,
-              labelText: 'Telefon Numarası',
-              hintText: '(5XX) XXX XX XX',
-              prefixText: '+90 ',
-              keyboardType: TextInputType.phone,
-              inputFormatters: [_phoneMaskFormatter],
-            ),
-            const SizedBox(height: 40),
+              // ─── Form Alanları ─────────────────────────
+              CustomTextField(
+                controller: vm.fullNameController,
+                labelText: LocaleKeys.common_fullName.tr(),
+                hintText: LocaleKeys.auth_fields_fullNameHint.tr(),
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: vm.emailController,
+                labelText: LocaleKeys.auth_fields_email.tr(),
+                hintText: LocaleKeys.auth_fields_emailHint.tr(),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: vm.phoneController,
+                labelText: LocaleKeys.auth_fields_phone.tr(),
+                hintText: '(5XX) XXX XX XX',
+                prefixText: '+90 ',
+                keyboardType: TextInputType.phone,
+                inputFormatters: [_phoneMaskFormatter],
+              ),
+              const SizedBox(height: 40),
 
-            // ─── Aksiyon Butonları ─────────────────────
-            SizedBox(
-              width: double.infinity,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: primaryColor == AppColors.volunteerColor
-                      ? AppColors.volunteerBackgroundGradient
-                      : AppColors.primaryButtonGradient,
-                  borderRadius: BorderRadius.circular(12),
+              // ─── Aksiyon Butonları ─────────────────────
+              SizedBox(
+                width: double.infinity,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: primaryColor == AppColors.volunteerColor
+                        ? AppColors.volunteerBackgroundGradient
+                        : AppColors.primaryButtonGradient,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      vm.updateAccount(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      LocaleKeys.foodProfile_updateButton.tr(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
                 ),
-                child: ElevatedButton(
-                  onPressed: () {
-                    vm.updateAccount(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    foregroundColor: Colors.white,
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () => vm.deleteAccount(context),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: primaryColor, width: 1.5),
+                    foregroundColor: primaryColor,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    elevation: 0,
                   ),
-                  child: const Text(
-                    'Hesabı Düzenle',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  child: Text(
+                    LocaleKeys.volunteerProfile_deleteAccount.tr(),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () => vm.deleteAccount(context),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: primaryColor, width: 1.5),
-                  foregroundColor: primaryColor,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Hesabı Sil',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -228,7 +239,7 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
               ),
               _BSOption(
                 icon: Icons.camera_alt_rounded,
-                title: 'Kamera ile Çek',
+                title: LocaleKeys.common_pickFromCamera.tr(),
                 onTap: () async {
                   Navigator.pop(ctx);
                   await vm.pickImage(ImageSource.camera);
@@ -237,7 +248,7 @@ class _FoodProfileEditBodyState extends State<_FoodProfileEditBody> {
               const Divider(height: 1),
               _BSOption(
                 icon: Icons.photo_library_rounded,
-                title: 'Galeriden Seç',
+                title: LocaleKeys.common_pickFromGallery.tr(),
                 onTap: () async {
                   Navigator.pop(ctx);
                   await vm.pickImage(ImageSource.gallery);

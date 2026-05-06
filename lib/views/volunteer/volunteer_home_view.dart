@@ -14,6 +14,7 @@ import 'package:yemis/widgets/volunteer/volunteer_listing_section.dart';
 import 'package:yemis/widgets/volunteer/volunteer_map_section.dart';
 import 'package:yemis/widgets/volunteer/volunteer_search_bar.dart';
 import 'package:yemis/widgets/common/loading_overlay.dart';
+import 'package:yemis/widgets/common/draggable_chat_head.dart';
 
 /// Gönüllü ana sayfası — API entegrasyonu ile ilanları çeker.
 class VolunteerHomeView extends StatelessWidget {
@@ -57,6 +58,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
     return LoadingOverlay(
       isLoading: vm.isLoading,
       moduleType: AppModuleType.volunteer,
+      showChatHead: true,
       child: Scaffold(
         backgroundColor: const Color(0xFFF8F9FA),
         appBar: HomeAppBar(
@@ -74,7 +76,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: 4),
                 // ── Arama Barı ─────────────────────────────
                 VolunteerSearchBar(
                   controller: _searchController,
@@ -101,19 +103,26 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                   section: VolunteerSection.todayPopular,
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Boş Durum Kontrolü
                 if (!vm.isLoading && vm.listings.isEmpty)
-                   Center(
+                  Center(
                     child: Padding(
                       padding: const EdgeInsets.all(40.0),
                       child: Column(
                         children: [
-                          Icon(Icons.volunteer_activism_outlined, size: 64, color: Colors.grey[300]),
+                          Icon(
+                            Icons.volunteer_activism_outlined,
+                            size: 64,
+                            color: Colors.grey[300],
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             "Henüz ilan bulunmuyor.",
-                            style: TextStyle(color: Colors.grey[500], fontSize: 16),
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
@@ -150,4 +159,3 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
     );
   }
 }
-

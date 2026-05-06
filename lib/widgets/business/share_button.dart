@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../viewmodels/business/business_add_order_viewmodel.dart';
@@ -22,7 +23,7 @@ class ShareButton extends StatelessWidget {
                 if (onSuccess != null) onSuccess!();
                 SuccessDialogCustom.show(
                   context,
-                  title: 'Başarılı',
+                  title: LocaleKeys.common_success.tr(),
                   message: LocaleKeys.businessAddOrder_successMessage.tr(),
                 );
               }

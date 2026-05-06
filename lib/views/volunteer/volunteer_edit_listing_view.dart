@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
 import '../../models/volunteer/volunteer_listing.dart';
@@ -15,6 +16,8 @@ import '../../viewmodels/volunteer/volunteer_edit_listing_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/common/error_dialog_custom.dart';
 import '../../widgets/common/success_dialog_custom.dart';
+import '../../widgets/common/custom_text_field.dart';
+import '../../widgets/common/custom_button.dart';
 
 class VolunteerEditListingView extends StatelessWidget {
   final VolunteerListing listing;
@@ -69,7 +72,7 @@ class _BodyState extends State<_Body> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('İlanı Düzenle'),
+        title: Text(LocaleKeys.volunteerEditListing_title.tr()),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Navigator.pop(context),
@@ -184,7 +187,7 @@ class _BodyState extends State<_Body> {
                   ),
                   child: const Icon(Icons.camera_alt_outlined, color: AppColors.volunteerColor),
                 ),
-                title: const Text('Kamera', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                title: Text(LocaleKeys.common_camera.tr(), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                 trailing: const Icon(Icons.chevron_right, color: AppColors.volunteerColor),
                 onTap: () async {
                   Navigator.pop(context);
@@ -202,7 +205,7 @@ class _BodyState extends State<_Body> {
                   ),
                   child: const Icon(Icons.photo_library_outlined, color: AppColors.volunteerColor),
                 ),
-                title: const Text('Galeri', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                title: Text(LocaleKeys.common_gallery.tr(), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                 trailing: const Icon(Icons.chevron_right, color: AppColors.volunteerColor),
                 onTap: () async {
                   Navigator.pop(context);
@@ -332,7 +335,7 @@ class _LocationButton extends StatelessWidget {
           children: [
             Icon(Icons.location_on_rounded, color: AppColors.volunteerColor, size: 22),
             const SizedBox(width: 10),
-            Expanded(child: Text(hasData ? vm.locationAddress : 'Lokasyon Seç', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500))),
+            Expanded(child: Text(hasData ? vm.locationAddress : LocaleKeys.common_selectLocation.tr(), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500))),
             const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.hintTextColor),
           ],
         ),
@@ -347,7 +350,7 @@ class _FreeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), border: Border.all(color: const Color(0xFFDDDDDD))),
-      child: const Text('Ücretsiz', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+      child: Text(LocaleKeys.volunteer_free.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
     );
   }
 }
@@ -364,8 +367,8 @@ class _UpdateButton extends StatelessWidget {
         if (ok && context.mounted) {
           SuccessDialogCustom.show(
             context,
-            title: 'Güncellendi',
-            message: 'İlan başarıyla güncellendi.',
+            title: LocaleKeys.volunteerEditListing_successTitle.tr(),
+            message: LocaleKeys.volunteerEditListing_successMessage.tr(),
             onConfirm: () => Navigator.pop(context, true),
           );
         } else if (context.mounted && vm.errorMessage != null) {
@@ -383,7 +386,7 @@ class _UpdateButton extends StatelessWidget {
         alignment: Alignment.center,
         child: vm.isSubmitting
             ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-            : const Text('Güncelle', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+            : Text(LocaleKeys.common_update.tr(), style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
       ),
     );
   }

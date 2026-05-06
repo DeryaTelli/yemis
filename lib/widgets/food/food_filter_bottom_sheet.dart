@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../models/food/food_sort_type.dart';
 import '../../utils/constants/app_colors.dart';
@@ -18,23 +20,23 @@ class FoodFilterBottomSheet extends StatelessWidget {
 
   // ─── Filtre seçeneklerinin tanımı ───────────────────────────────────────
 
-  static const _sortOptions = [
+  static final _sortOptions = [
     _SortOption(
       type: FoodSortType.ratingAsc,
-      label: 'Derecelendirme',
-      subLabel: 'Düşükten yükseğe',
+      label: LocaleKeys.sorting_rating.tr(),
+      subLabel: LocaleKeys.sorting_lowToHigh.tr(),
       icon: Icons.star_outline_rounded,
     ),
     _SortOption(
       type: FoodSortType.priceAsc,
-      label: 'Fiyat',
-      subLabel: 'Düşükten yükseğe',
+      label: LocaleKeys.sorting_price.tr(),
+      subLabel: LocaleKeys.sorting_lowToHigh.tr(),
       icon: Icons.attach_money_rounded,
     ),
     _SortOption(
       type: FoodSortType.distanceAsc,
-      label: 'Mesafe',
-      subLabel: 'Yakından uzağa',
+      label: LocaleKeys.sorting_distance.tr(),
+      subLabel: LocaleKeys.sorting_nearToFar.tr(),
       icon: Icons.near_me_outlined,
     ),
   ];
@@ -63,9 +65,9 @@ class FoodFilterBottomSheet extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  const Text(
-                    'Sıralama',
-                    style: TextStyle(
+                  Text(
+                    LocaleKeys.common_sorting.tr(),
+                    style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryTextColor,
@@ -78,9 +80,9 @@ class FoodFilterBottomSheet extends StatelessWidget {
                         onSortSelected(currentSort); // toggle → none
                         Navigator.pop(context);
                       },
-                      child: const Text(
-                        'Temizle',
-                        style: TextStyle(
+                      child: Text(
+                        LocaleKeys.common_clear.tr(),
+                        style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primaryColor,

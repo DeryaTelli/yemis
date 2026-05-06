@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../../models/food/food_listing.dart';
 import '../../services/auth/user_session.dart';
@@ -13,6 +15,7 @@ import '../../models/app_module_type.dart';
 import '../../widgets/common/home_app_bar.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/common/loading_overlay.dart';
+import '../../widgets/common/draggable_chat_head.dart';
 
 /// Yemek ana sayfası — tam MVVM ile uygulanmıştır.
 class FoodHomeView extends StatelessWidget {
@@ -69,6 +72,7 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
     return LoadingOverlay(
       isLoading: vm.isLoading,
       moduleType: AppModuleType.food,
+      showChatHead: true,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         // ─── AppBar ──────────────────────────────────
@@ -106,22 +110,22 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
               const SizedBox(height: 20),
 
               // ── Sana Yakın Yerler ──────────────────────────
-              const FoodListingSection(
-                title: 'Sana Yakın Yerler',
+              FoodListingSection(
+                title: LocaleKeys.home_nearbyPlaces.tr(),
                 section: FoodSection.nearYou,
               ),
               const SizedBox(height: 24),
 
               // ── Sekarang Al ────────────────────────────────
-              const FoodListingSection(
-                title: 'Şimdi Al',
+              FoodListingSection(
+                title: LocaleKeys.home_buyNow.tr(),
                 section: FoodSection.buyNow,
               ),
               const SizedBox(height: 24),
 
               // ── Bugün Popüler Olanlar ────────────────────
-              const FoodListingSection(
-                title: 'Bugün Popüler Olanlar',
+              FoodListingSection(
+                title: LocaleKeys.home_todayPopular.tr(),
                 section: FoodSection.todayPopular,
               ),
               const SizedBox(height: 32),

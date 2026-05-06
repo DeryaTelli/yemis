@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../utils/constants/app_colors.dart';
 
@@ -36,7 +38,7 @@ class FoodSearchBar extends StatelessWidget {
         onChanged: onChanged,
         style: const TextStyle(fontSize: 14, color: AppColors.primaryTextColor),
         decoration: InputDecoration(
-          hintText: 'Ara',
+          hintText: LocaleKeys.common_searchHint.tr(),
           hintStyle: const TextStyle(
             color: AppColors.hintTextColor,
             fontSize: 14,

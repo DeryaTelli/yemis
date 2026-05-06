@@ -1,9 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/theme/app_theme.dart';
+import '../../services/auth/i_auth_service.dart';
+import '../../services/auth/user_session.dart';
+import 'package:provider/provider.dart';
 
 class LanguageSelectView extends StatefulWidget {
   final AppSection section;
@@ -16,6 +20,7 @@ class LanguageSelectView extends StatefulWidget {
 
 class _LanguageSelectViewState extends State<LanguageSelectView> {
   late String _selectedLocale;
+  bool _isSaving = false;
 
   Color get _themeColor => widget.section == AppSection.volunteer
       ? AppColors.volunteerColor
@@ -86,9 +91,62 @@ class _LanguageSelectViewState extends State<LanguageSelectView> {
     }
   }
 
-  void _confirm() {
-    context.setLocale(Locale(_selectedLocale));
-    Navigator.of(context).pop();
+  Future<void> _confirm() async {
+    final oldLocale = context.locale.languageCode;
+
+    if (kDebugMode) {
+      print('--- [LANGUAGE CHANGE] ---');
+      print('Old Locale: $oldLocale');
+      print('New Locale: $_selectedLocale');
+    }
+
+    setState(() => _isSaving = true);
+
+    try {
+      // 1. Uygulama dilini yerel olarak değiştir
+      await context.setLocale(Locale(_selectedLocale));
+
+      if (kDebugMode) {
+        print('Local language set to: ${context.locale.languageCode}');
+      }
+
+      // 2. Eğer kullanıcı giriş yapmışsa, tercihi backend'e gönder
+      final authService = context.read<IAuthService>();
+      final userSession = context.read<UserSession>();
+
+      if (userSession.isLoggedIn) {
+        if (kDebugMode)
+          print('User is logged in, syncing language to backend...');
+
+        final response = await authService.updateProfile(
+          int.tryParse(userSession.currentUser!.id) ?? 0,
+          {'preferred_language': _selectedLocale},
+        );
+
+        if (response.success && response.user != null) {
+          userSession.setUser(response.user!);
+          if (kDebugMode) print('UserSession updated with new profile data.');
+        }
+
+        if (kDebugMode) {
+          print(
+            'Backend sync result: ${response.success ? 'SUCCESS' : 'FAILED'}',
+          );
+          if (!response.success) print('Error: ${response.message}');
+        }
+      } else {
+        if (kDebugMode)
+          print('User is not logged in, only local change applied.');
+      }
+
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error during language change: $e');
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
 
   @override
@@ -99,7 +157,7 @@ class _LanguageSelectViewState extends State<LanguageSelectView> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(LocaleKeys.languageSelect_title.tr()),
-          leading: BackButton(color: Colors.white),
+          iconTheme: IconThemeData(color: _themeColor),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
@@ -169,10 +227,10 @@ class _LanguageSelectViewState extends State<LanguageSelectView> {
 
               const Spacer(),
 
-              // Confirm button
               CustomButton(
                 text: LocaleKeys.languageSelect_confirmButton.tr(),
                 onPressed: _confirm,
+                isLoading: _isSaving,
                 width: double.infinity,
                 height: 52,
                 borderRadius: 14,

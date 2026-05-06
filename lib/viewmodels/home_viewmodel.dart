@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../models/auth/user_model.dart';
 import '../models/home/ad_banner.dart';
 import '../models/home/home_card_item.dart';
@@ -23,8 +25,8 @@ class HomeViewModel extends ChangeNotifier {
   /// Business kullanıcısı → İşletme + Gönüllü
   List<HomeCardItem> get cards {
     final volunteerCard = HomeCardItem(
-      title: 'Gönüllü Ol',
-      subtitle: 'Evde kalan yemekleri paylaş!',
+      title: LocaleKeys.volunteer_becomeButton.tr(),
+      subtitle: LocaleKeys.home_volunteerSubtitle.tr(),
       imagePath: 'assets/foodIcon/volunteerSide.png',
       route: AppRoutes.volunteerHome,
       gradient: AppColors.volunteerBackgroundGradient,
@@ -33,9 +35,9 @@ class HomeViewModel extends ChangeNotifier {
 
     if (userType == UserType.food) {
       return [
-        const HomeCardItem(
-          title: 'Yemek',
-          subtitle: 'Uygun fiyata yemek al israfın önüne geç!',
+        HomeCardItem(
+          title: LocaleKeys.home_foodTitle.tr(),
+          subtitle: LocaleKeys.home_foodSubtitle.tr(),
           imagePath: 'assets/foodIcon/foodSide.png',
           route: AppRoutes.foodHome,
           gradient: AppColors.mainAppTransitionBackgroundGradient,
@@ -45,9 +47,9 @@ class HomeViewModel extends ChangeNotifier {
       ];
     } else {
       return [
-        const HomeCardItem(
-          title: 'İşletme',
-          subtitle: 'Menünü yönet, israfı azalt!',
+        HomeCardItem(
+          title: LocaleKeys.home_businessTitle.tr(),
+          subtitle: LocaleKeys.home_businessSubtitle.tr(),
           imagePath: 'assets/foodIcon/foodSide.png',
           route: AppRoutes.businessHome,
           gradient: AppColors.mainAppTransitionBackgroundGradient,
@@ -62,33 +64,33 @@ class HomeViewModel extends ChangeNotifier {
 
   final PageController bannerController = PageController();
 
-  final List<AdBanner> banners = const [
+  final List<AdBanner> banners = [
     AdBanner(
       title: 'Yemis',
-      subtitle: 'Yemis kullanarak dünya yemek israfının önüne geç!',
-      fromColor: Color(0xFFFEC380),
-      toColor: Color(0xFFFE8800),
+      subtitle: LocaleKeys.home_onboarding1Subtitle.tr(),
+      fromColor: const Color(0xFFFEC380),
+      toColor: const Color(0xFFFE8800),
       imagePath: 'assets/foodIcon/yemo.png',
     ),
     AdBanner(
-      title: 'Taze Kal',
-      subtitle: 'İsrafı önle, bütçeni koru ve\ndoğaya katkıda bulun.',
-      fromColor: Color(0xFF81FBB8),
-      toColor: Color(0xFF28C76F),
+      title: LocaleKeys.home_onboarding2Title.tr(),
+      subtitle: LocaleKeys.home_onboarding2Subtitle.tr(),
+      fromColor: const Color(0xFF81FBB8),
+      toColor: const Color(0xFF28C76F),
       imagePath: 'assets/foodIcon/yemo.png',
     ),
     AdBanner(
-      title: 'Paylaş',
-      subtitle: 'Fazla yemeğini paylaşarak\nbir gülümsemeye vesile ol.',
-      fromColor: Color(0xFFABDCFF),
-      toColor: Color(0xFF0396FF),
+      title: LocaleKeys.home_onboarding3Title.tr(),
+      subtitle: LocaleKeys.home_onboarding3Subtitle.tr(),
+      fromColor: const Color(0xFFABDCFF),
+      toColor: const Color(0xFF0396FF),
       imagePath: 'assets/foodIcon/yemo.png',
     ),
     AdBanner(
-      title: 'Keşfet',
-      subtitle: 'Çevrendeki fırsatları gör,\nen uygun fiyatlarla doy!',
-      fromColor: Color(0xFFFEB692),
-      toColor: Color(0xFFEA5455),
+      title: LocaleKeys.home_onboarding4Title.tr(),
+      subtitle: LocaleKeys.home_onboarding4Subtitle.tr(),
+      fromColor: const Color(0xFFFEB692),
+      toColor: const Color(0xFFEA5455),
       imagePath: 'assets/foodIcon/yemo.png',
     ),
   ];

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '../../utils/locale_keys.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/location/navigation_viewmodel.dart';
 
@@ -178,7 +180,7 @@ class _NavigationBody extends StatelessWidget {
             const Icon(Icons.location_off_rounded, color: Colors.red, size: 48),
             const SizedBox(height: 16),
             Text(
-              vm.errorMessage ?? "Konum izni gerekiyor",
+              vm.errorMessage ?? LocaleKeys.navigation_permissionRequired.tr(),
               textAlign: TextAlign.center,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -192,7 +194,7 @@ class _NavigationBody extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text("Ayarları Aç"),
+              child: Text(LocaleKeys.navigation_openSettings.tr()),
             ),
           ],
         ),
@@ -267,13 +269,13 @@ class _NavigationBody extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           _buildActionButton(
-            title: "Konuma Git",
+            title: LocaleKeys.navigation_goToLocation.tr(),
             onTap: vm.moveToDestination,
             isGradient: true,
           ),
           const SizedBox(height: 12),
           _buildActionButton(
-            title: "Yönlendir",
+            title: LocaleKeys.navigation_navigate.tr(),
             onTap: () => _showNavigationOptions(context, vm),
             isGradient: true,
           ),
@@ -323,14 +325,14 @@ class _NavigationBody extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Yol Tarifi Al",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              LocaleKeys.navigation_getDirections.tr(),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
             _buildMapOption(
               icon: Icons.map_outlined,
-              title: "Google Maps ile Aç",
+              title: LocaleKeys.navigation_openGoogleMaps.tr(),
               onTap: () {
                 Navigator.pop(context);
                 vm.launchGoogleMaps();
@@ -338,7 +340,7 @@ class _NavigationBody extends StatelessWidget {
             ),
             _buildMapOption(
               icon: Icons.navigation_outlined,
-              title: "Yandex Navigasyon ile Aç",
+              title: LocaleKeys.navigation_openYandexMaps.tr(),
               onTap: () {
                 Navigator.pop(context);
                 vm.launchYandexMaps();
@@ -347,7 +349,7 @@ class _NavigationBody extends StatelessWidget {
             if (Theme.of(context).platform == TargetPlatform.iOS)
               _buildMapOption(
                 icon: Icons.apple,
-                title: "Apple Maps ile Aç",
+                title: LocaleKeys.navigation_openAppleMaps.tr(),
                 onTap: () {
                   Navigator.pop(context);
                   vm.launchAppleMaps();

@@ -1,7 +1,7 @@
 /// Gönüllü ilanının hangi bölümde gösterileceğini belirtir.
 enum VolunteerSection {
-  nearYou,       // Sana Yakın Yerler
-  todayPopular,  // Bugün Popüler Olanlar
+  nearYou, // Sana Yakın Yerler
+  todayPopular, // Bugün Popüler Olanlar
 }
 
 /// Bir gönüllü ilanını temsil eder.
@@ -56,29 +56,45 @@ class VolunteerListing {
   final String? shelterAddress;
 
   VolunteerListing copyWith({
+    String? title,
+    String? userName,
+    String? userLogoUrl,
+    String? location,
+    String? timeRange,
+    String? imageUrl,
+    double? rating,
+    VolunteerSection? section,
     double? latitude,
     double? longitude,
+    bool? isNetworkImage,
+    String? shopLogoUrl,
+    String? description,
+    String? ingredients,
+    String? packageInfo,
+    double? shelterLatitude,
+    double? shelterLongitude,
     String? shelterName,
     String? shelterAddress,
-    VolunteerSection? section,
   }) {
-    // ignore: unnecessary_this
     return VolunteerListing(
       id: id,
-      title: title,
-      userName: userName,
-      location: location,
-      timeRange: timeRange,
-      imageUrl: imageUrl,
-      rating: rating,
+      title: title ?? this.title,
+      userName: userName ?? this.userName,
+      userLogoUrl: userLogoUrl ?? this.userLogoUrl,
+      location: location ?? this.location,
+      timeRange: timeRange ?? this.timeRange,
+      imageUrl: imageUrl ?? this.imageUrl,
+      rating: rating ?? this.rating,
       section: section ?? this.section,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
-      description: description,
-      ingredients: ingredients,
-      packageInfo: packageInfo,
-      shelterLatitude: shelterLatitude,
-      shelterLongitude: shelterLongitude,
+      isNetworkImage: isNetworkImage ?? this.isNetworkImage,
+      shopLogoUrl: shopLogoUrl ?? this.shopLogoUrl,
+      description: description ?? this.description,
+      ingredients: ingredients ?? this.ingredients,
+      packageInfo: packageInfo ?? this.packageInfo,
+      shelterLatitude: shelterLatitude ?? this.shelterLatitude,
+      shelterLongitude: shelterLongitude ?? this.shelterLongitude,
       shelterName: shelterName ?? this.shelterName,
       shelterAddress: shelterAddress ?? this.shelterAddress,
     );

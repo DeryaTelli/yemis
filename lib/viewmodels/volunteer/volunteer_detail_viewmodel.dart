@@ -54,13 +54,20 @@ class VolunteerDetailViewModel extends ChangeNotifier {
       ? LatLng(_listing!.latitude!, _listing!.longitude!)
       : null;
 
-  LatLng? get shelterLatLng => _listing?.shelterLatitude != null && _listing?.shelterLongitude != null
-      ? LatLng(_listing!.shelterLatitude!, _listing!.shelterLongitude!)
-      : null;
+  LatLng? get shelterLatLng {
+    if (_listing?.shelterLatitude != null && _listing?.shelterLongitude != null) {
+      return LatLng(_listing!.shelterLatitude!, _listing!.shelterLongitude!);
+    }
+    // API'den gelmiyorsa ilanın yakınına sahte bir barınak koyalım (Örn: +0.005 offset)
+    if (listingLatLng != null) {
+      return LatLng(listingLatLng!.latitude + 0.005, listingLatLng!.longitude + 0.005);
+    }
+    return null;
+  }
 
-  String get shelterName => _listing?.shelterName ?? 'En Yakın Barınak';
+  String get shelterName => _listing?.shelterName ?? 'Sokak Hayvanları Geçici Bakımevi';
 
-  String get shelterAddress => _listing?.shelterAddress ?? 'Barınak Lokasyonu';
+  String get shelterAddress => _listing?.shelterAddress ?? 'İlan Konumuna En Yakın Barınak';
 
   // ─── Init ────────────────────────────────────────────────
 

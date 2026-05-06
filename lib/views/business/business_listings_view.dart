@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../../services/business/i_business_service.dart';
 import '../../viewmodels/business/business_listings_viewmodel.dart';
 import '../../widgets/business/business_listing_card.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
+import 'package:lottie/lottie.dart';
+import '../../utils/theme/text_styles_custom.dart';
 
 class BusinessListingsView extends StatelessWidget {
   final ListingType type;
@@ -69,7 +73,7 @@ class _BusinessListingsBody extends StatelessWidget {
                           final success = await vm.deleteListing(item.id);
                           if (!success && context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('İlan silinirken bir hata oluştu.')),
+                              SnackBar(content: Text(LocaleKeys.businessListings_deleteError.tr())),
                             );
                           }
                           return success;
@@ -125,21 +129,71 @@ class _BusinessListingsBody extends StatelessWidget {
     return showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('İlanı Sil'),
-        content: const Text('Bu ilanı silmek istediğinizden emin misiniz?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Vazgeç', style: TextStyle(color: Colors.grey)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Sil',
-                style:
-                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-          ),
-        ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: const Color(0xFFFDF5F2),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Lottie.asset(
+                  'assets/lottie/account_delete.json',
+                  width: 60,
+                  height: 60,
+                  repeat: true,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'İlanı Sil',
+                    style: CustomTextStyles.orelegaOne30Primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Bu ilanı silmek istediğinizden emin misiniz?',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, false),
+                  child: Text(
+                    'Hayır',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, true),
+                  child: const Text(
+                    'Evet',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

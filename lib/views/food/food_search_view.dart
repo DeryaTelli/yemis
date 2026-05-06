@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
@@ -103,10 +105,10 @@ class _FoodSearchViewState extends State<FoodSearchView> {
 
   Widget _buildListView(FoodSearchViewModel vm) {
     if (vm.filteredListings.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          'Sonuç bulunamadı.',
-          style: TextStyle(color: AppColors.hintTextColor, fontSize: 15),
+          LocaleKeys.common_noResults.tr(),
+          style: const TextStyle(color: AppColors.hintTextColor, fontSize: 15),
         ),
       );
     }

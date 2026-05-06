@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../utils/locale_keys.dart';
@@ -50,7 +51,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               preferredSize: const Size.fromHeight(80),
               child: AppBar(
                 toolbarHeight: 80,
-                title: const Text('Şifre Yenileme'),
+                title: Text(LocaleKeys.auth_resetPassword_title.tr()),
                 backgroundColor: const Color(0xFFFE8800),
                 foregroundColor: Colors.white,
                 elevation: 0,

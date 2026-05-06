@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -18,8 +19,8 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   BusinessAddOrderViewModel({
     IAuthService? authService,
     IBusinessService? businessService,
-  })  : _authService = authService,
-        _businessService = businessService;
+  }) : _authService = authService,
+       _businessService = businessService;
 
   // ─── Kayıtlı Adresler ─────────────────────────────────
   List<AddressModel> _savedAddresses = [];
@@ -153,8 +154,10 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
       final address = result['address'] as String?;
       if (latLng != null) {
         _selectedLatLng = latLng;
-        _selectedAddressId = null; // Manuel seçimde addressId null olur (veya yeni adres oluşturulmalı)
-        _locationAddress = address ??
+        _selectedAddressId =
+            null; // Manuel seçimde addressId null olur (veya yeni adres oluşturulmalı)
+        _locationAddress =
+            address ??
             '${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
         notifyListeners();
       }
@@ -254,7 +257,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
 
   Future<bool> submit() async {
     _errorMessage = null;
-    
+
     if (_title.trim().isEmpty) {
       _errorMessage = 'Lütfen bir başlık girin.';
       notifyListeners();
@@ -278,22 +281,28 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-    
+
     _isSubmitting = true;
     notifyListeners();
 
     // --- Geocode Fallback ---
     // Eğer koordinatlar yoksa veya (0,0) ise adresten bulmaya çalış
-    if (_selectedLatLng == null || (_selectedLatLng!.latitude == 0 && _selectedLatLng!.longitude == 0)) {
+    if (_selectedLatLng == null ||
+        (_selectedLatLng!.latitude == 0 && _selectedLatLng!.longitude == 0)) {
       try {
-        debugPrint('🔍 [BusinessAddOrder] Koordinat eksik, geocode deneniyor: $_locationAddress');
+        debugPrint(
+          '🔍 [BusinessAddOrder] Koordinat eksik, geocode deneniyor: $_locationAddress',
+        );
         final uri = Uri.https('nominatim.openstreetmap.org', '/search', {
           'q': _locationAddress,
           'format': 'json',
           'limit': '1',
           'accept-language': 'tr',
         });
-        final res = await http.get(uri, headers: {'User-Agent': 'YemisApp/1.0'});
+        final res = await http.get(
+          uri,
+          headers: {'User-Agent': 'YemisApp/1.0'},
+        );
         if (res.statusCode == 200) {
           final List<dynamic> data = jsonDecode(res.body);
           if (data.isNotEmpty) {
@@ -301,7 +310,9 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
               double.parse(data[0]['lat']),
               double.parse(data[0]['lon']),
             );
-            debugPrint('✅ [BusinessAddOrder] Geocode başarılı: $_selectedLatLng');
+            debugPrint(
+              '✅ [BusinessAddOrder] Geocode başarılı: $_selectedLatLng',
+            );
           }
         }
       } catch (e) {
@@ -318,18 +329,26 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
 
       // 2. Zamanları ayarla
       final now = DateTime.now();
-      final pickupStartTime = now.toIso8601String();
-      
+      final pickupStartTime = now.toUtc().toIso8601String();
+
       // Bitiş saati için bugünün tarihini ve seçilen saati kullan
-      int hour = _isAm ? (_selectedHour == 12 ? 0 : _selectedHour) : (_selectedHour == 12 ? 12 : _selectedHour + 12);
-      final pickupEndTime = DateTime(now.year, now.month, now.day, hour, _selectedMinute).toIso8601String();
+      int hour = _isAm
+          ? (_selectedHour == 12 ? 0 : _selectedHour)
+          : (_selectedHour == 12 ? 12 : _selectedHour + 12);
+      final pickupEndTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        hour,
+        _selectedMinute,
+      ).toUtc().toIso8601String();
 
       // 3. Veriyi hazırla
       final bagData = {
         'title': _title,
         'description': _description,
         'address_id': _selectedAddressId,
-        'address': _locationAddress,
+        'address_line': _locationAddress,
         'latitude': _selectedLatLng?.latitude,
         'longitude': _selectedLatLng?.longitude,
         'original_price': double.tryParse(_price) ?? 0.0,
@@ -338,14 +357,20 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
         'pickup_end_time': pickupEndTime,
         'total_quantity': _quantity,
         'available_quantity': _quantity,
-        'image_url': imageUrl ?? '',
+        if (imageUrl != null) 'image_url': imageUrl,
         'allergens': _allergens,
         'category': _selectedCategory,
       };
 
+      if (kDebugMode) {
+        print('--- [DEBUG] BUSINESS BAG PAYLOAD ---');
+        print(const JsonEncoder.withIndent('  ').convert(bagData));
+        print('------------------------------------');
+      }
+
       // 4. API isteği
       final success = await _businessService!.createBag(bagData);
-      
+
       if (success) {
         debugPrint('✅ [BusinessAddOrder] Sipariş başarıyla yüklendi!');
         clearForm();
@@ -358,7 +383,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
     } catch (e) {
       _errorMessage = 'Beklenmedik bir hata oluştu: $e';
     }
-    
+
     _isSubmitting = false;
     notifyListeners();
     return false;
@@ -380,5 +405,20 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
     _allergens = '';
     _selectedCategory = null;
     _errorMessage = null;
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }

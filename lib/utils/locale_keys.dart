@@ -109,6 +109,8 @@ abstract class LocaleKeys {
   static const foodProfile_changePassword = 'foodProfile.changePassword';
   static const foodProfile_changeLanguage = 'foodProfile.changeLanguage';
   static const foodProfile_logout = 'foodProfile.logout';
+  static const foodProfile_editTitle = 'foodProfile.editTitle';
+  static const foodProfile_updateButton = 'foodProfile.updateButton';
 
   // volunteer
   static const volunteer_becomeButton = 'volunteer.becomeButton';
@@ -197,6 +199,9 @@ abstract class LocaleKeys {
       'volunteerListings.attendedTitle';
   static const volunteerListings_emptyMessage =
       'volunteerListings.emptyMessage';
+  static const volunteerListings_deleteError = 'volunteerListings.deleteError';
+  static const volunteerListings_deleteConfirm = 'volunteerListings.deleteConfirm';
+  static const volunteerListings_deleteTitle = 'volunteerListings.deleteTitle';
 
   // languageSelect
   static const languageSelect_title = 'languageSelect.title';
@@ -267,6 +272,7 @@ abstract class LocaleKeys {
       'businessAddOrder.categoryLabel';
   static const businessAddOrder_categoryPlaceholder =
       'businessAddOrder.categoryPlaceholder';
+  static const businessAddOrder_errorNoAddress = 'businessAddOrder.errorNoAddress';
 
   // businessApprovals
   static const businessApprovals_title = 'businessApprovals.title';
@@ -294,4 +300,107 @@ abstract class LocaleKeys {
   // addresses
   static const addresses_title = 'addresses.title';
   static const addresses_addAddress = 'addresses.addAddress';
+  static const addresses_noAddressFound = 'addresses.noAddressFound';
+  static const addresses_deleted = 'addresses.deleted';
+  static const addresses_city = 'addresses.city';
+  static const addresses_district = 'addresses.district';
+  static const addresses_neighborhood = 'addresses.neighborhood';
+  static const addresses_addressLine = 'addresses.addressLine';
+  static const addresses_addressTitle = 'addresses.addressTitle';
+  static const addresses_select = 'addresses.select';
+  static const addresses_selectCityFirst = 'addresses.selectCityFirst';
+  static const addresses_selectDistrictFirst = 'addresses.selectDistrictFirst';
+  static const addresses_enterAddressInfo = 'addresses.enterAddressInfo';
+  static const addresses_enterAddressTitle = 'addresses.enterAddressTitle';
+
+  // common
+  static const common_edit = 'common.edit';
+  static const common_delete = 'common.delete';
+  static const common_update = 'common.update';
+  static const common_camera = 'common.camera';
+  static const common_gallery = 'common.gallery';
+  static const common_cancel = 'common.cancel';
+  static const common_save = 'common.save';
+  static const common_error = 'common.error';
+  static const common_success = 'common.success';
+  static const common_yes = 'common.yes';
+  static const common_no = 'common.no';
+  static const common_pickFromCamera = 'common.pickFromCamera';
+  static const common_pickFromGallery = 'common.pickFromGallery';
+
+  // volunteerEditListing
+  static const volunteerEditListing_title = 'volunteerEditListing.title';
+
+  // navigation
+  static const navigation_permissionRequired = 'navigation.permissionRequired';
+  static const navigation_openSettings = 'navigation.openSettings';
+  static const navigation_goToLocation = 'navigation.goToLocation';
+  static const navigation_navigate = 'navigation.navigate';
+  static const navigation_getDirections = 'navigation.getDirections';
+  static const navigation_openGoogleMaps = 'navigation.openGoogleMaps';
+  static const navigation_openYandexMaps = 'navigation.openYandexMaps';
+  static const navigation_openAppleMaps = 'navigation.openAppleMaps';
+  static const common_searchHint = 'common.searchHint';
+  static const common_list = 'common.list';
+  static const common_map = 'common.map';
+  static const common_warning = 'common.warning';
+  static const common_profileNoChange = 'common.profileNoChange';
+  static const common_invalidUserId = 'common.invalidUserId';
+  static const common_fullName = 'common.fullName';
+
+  static const auth_resetPassword_title = 'auth.resetPassword.title';
+  static const auth_changePassword_title = 'auth.changePassword.title';
+  static const auth_fields_fullNameHint = 'auth.fields.fullNameHint';
+  static const auth_fields_emailHint = 'auth.fields.emailHint';
+  static const auth_verification_successMessage = 'auth.verification.successMessage';
+
+  static const businessProfile_editTitle = 'businessProfile.editTitle';
+  static const businessProfile_addedListings = 'businessProfile.addedListings';
+  static const businessProfile_soldOrdersTitle = 'businessProfile.soldOrdersTitle';
+  static const businessProfile_expiredListings = 'businessProfile.expiredListings';
+
+  static const businessAddOrder_titleHint = 'businessAddOrder.titleHint';
+  static const businessAddOrder_descriptionHint = 'businessAddOrder.descriptionHint';
+  static const businessAddOrder_allergensHint = 'businessAddOrder.allergensHint';
+
+  static const home_volunteerSubtitle = 'home.volunteerSubtitle';
+  static const home_foodTitle = 'home.foodTitle';
+  static const home_foodSubtitle = 'home.foodSubtitle';
+  static const home_businessTitle = 'home.businessTitle';
+  static const home_businessSubtitle = 'home.businessSubtitle';
+  static const home_onboarding1Subtitle = 'home.onboarding1Subtitle';
+  static const home_onboarding2Title = 'home.onboarding2Title';
+  static const home_onboarding2Subtitle = 'home.onboarding2Subtitle';
+  static const home_onboarding3Title = 'home.onboarding3Title';
+  static const home_onboarding3Subtitle = 'home.onboarding3Subtitle';
+  static const home_onboarding4Title = 'home.onboarding4Title';
+  static const home_onboarding4Subtitle = 'home.onboarding4Subtitle';
+
+  static const foodFavorites_title = 'foodFavorites.title';
+  static const businessListings_deleteError = 'businessListings.deleteError';
+  static const volunteerEditListing_successTitle = 'volunteerEditListing.successTitle';
+  static const volunteerEditListing_successMessage = 'volunteerEditListing.successMessage';
+  static const businessEditOrder_successTitle = 'businessEditOrder.successTitle';
+  static const businessEditOrder_successMessage = 'businessEditOrder.successMessage';
+  static const common_selectLocation = 'common.selectLocation';
+  static const common_selectLocationFromMap = 'common.selectLocationFromMap';
+  static const common_noResults = 'common.noResults';
+  static const common_pickupToday = 'common.pickupToday';
+  static const common_pickupTomorrow = 'common.pickupTomorrow';
+  static const common_sorting = 'common.sorting';
+  static const common_clear = 'common.clear';
+
+  static const sorting_defaultSort = 'sorting.defaultSort';
+  static const sorting_rating = 'sorting.rating';
+  static const sorting_lowToHigh = 'sorting.lowToHigh';
+  static const sorting_highToLow = 'sorting.highToLow';
+  static const sorting_price = 'sorting.price';
+  static const sorting_distance = 'sorting.distance';
+  static const sorting_nearToFar = 'sorting.nearToFar';
+
+  static const filters_all = 'filters.all';
+  static const filters_food = 'filters.food';
+  static const filters_breadPastry = 'filters.breadPastry';
+  static const filters_market = 'filters.market';
+  static const filters_buyNow = 'filters.buyNow';
 }

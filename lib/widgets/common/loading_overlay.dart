@@ -2,18 +2,21 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../models/app_module_type.dart';
+import 'draggable_chat_head.dart';
 
 /// Ekranın üzerine şeffaf bir katman ekleyip Lottie animasyonu gösteren widget.
 class LoadingOverlay extends StatelessWidget {
   final bool isLoading;
   final Widget child;
   final AppModuleType moduleType;
+  final bool showChatHead;
 
   const LoadingOverlay({
     super.key,
     required this.isLoading,
     required this.child,
     this.moduleType = AppModuleType.food,
+    this.showChatHead = false,
   });
 
   @override
@@ -54,6 +57,8 @@ class LoadingOverlay extends StatelessWidget {
                   },
                 ),
               ),
+            if (showChatHead && !isLoading)
+              DraggableChatHead(moduleType: moduleType),
           ],
         ),
       ),

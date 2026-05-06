@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/utils/constants/app_colors.dart';
@@ -58,7 +60,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Lokasyon Seç',
+                  LocaleKeys.common_selectLocation.tr(),
                   style: CustomTextStyles.bold16DarkGreyCompact,
                 ),
                 const SizedBox(width: 8),

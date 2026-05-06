@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/constants/app_colors.dart';
@@ -51,7 +53,7 @@ class _FoodFavoritesBodyState extends State<_FoodFavoritesBody>
 
       // ─── AppBar ───────────────────────────────────────
       appBar: AppBar(
-        title: const Text('Favori'),
+        title: Text(LocaleKeys.foodFavorites_title.tr()),
         automaticallyImplyLeading: false,
       ),
       // ─── Body ─────────────────────────────────────────

@@ -3,6 +3,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yemis/services/auth/api_auth_service.dart';
 import 'package:yemis/services/business/api_business_service.dart';
 import 'package:yemis/services/business/i_business_service.dart';
+import 'package:yemis/services/food/api_food_service.dart';
+import 'package:yemis/services/food/i_food_service.dart';
+import 'package:yemis/services/volunteer/api_volunteer_service.dart';
+import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
@@ -12,12 +16,20 @@ import '../../utils/routes/app_routes.dart';
 class LoginViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final IBusinessService _businessService;
+  final IFoodService _foodService;
+  final IVolunteerService _volunteerService;
   final UserSession _userSession;
 
   /// SharedPreferences anahtarı — LocationViewModel ile ortak
   static const String locationOnboardingKey = 'location_onboarding_done';
 
-  LoginViewModel(this._authService, this._businessService, this._userSession);
+  LoginViewModel(
+    this._authService,
+    this._businessService,
+    this._foodService,
+    this._volunteerService,
+    this._userSession,
+  );
 
   // --- Controllers ---
   final TextEditingController emailController = TextEditingController();
@@ -105,6 +117,12 @@ class LoginViewModel extends ChangeNotifier {
         }
         if (_businessService is ApiBusinessService) {
           (_businessService as ApiBusinessService).setToken(response.token);
+        }
+        if (_foodService is ApiFoodService) {
+          (_foodService as ApiFoodService).setToken(response.token ?? '');
+        }
+        if (_volunteerService is ApiVolunteerService) {
+          (_volunteerService as ApiVolunteerService).setToken(response.token);
         }
 
         // Token'ı kalıcı kaydet

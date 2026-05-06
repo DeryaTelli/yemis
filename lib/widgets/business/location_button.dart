@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +20,8 @@ class LocationButton extends StatelessWidget {
       if (vm.savedAddresses.isEmpty) {
         // Kayıtlı adres yoksa yönlendir
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Lütfen önce bir işletme adresi ekleyin.'),
+          SnackBar(
+            content: Text(LocaleKeys.businessAddOrder_errorNoAddress.tr()),
             backgroundColor: AppColors.primaryColor,
           ),
         );
@@ -78,9 +80,9 @@ class LocationButton extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     if (vm.savedAddresses.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: Text('Kayıtlı adres bulunamadı.'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Text(LocaleKeys.addresses_noAddressFound.tr()),
                       )
                     else
                       Flexible(
@@ -163,6 +165,23 @@ class LocationButton extends StatelessWidget {
                           },
                         ),
                       ),
+                    const SizedBox(height: 16),
+                    TextButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context); // Sheet'i kapat
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.addresses,
+                          arguments: AppModuleType.business,
+                        );
+                      },
+                      icon: const Icon(Icons.add_location_alt_outlined),
+                      label: Text(LocaleKeys.addresses_addAddress.tr()),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primaryColor,
+                        textStyle: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -203,7 +222,7 @@ class LocationButton extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                hasData ? vm.locationAddress : 'Konum Seç',
+                hasData ? vm.locationAddress : LocaleKeys.common_selectLocation.tr(),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: hasData ? FontWeight.w500 : FontWeight.w600,

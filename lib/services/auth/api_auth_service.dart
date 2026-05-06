@@ -211,12 +211,19 @@ class ApiAuthService implements IAuthService {
 
   @override
   Future<AuthResponse> updateProfile(int userId, Map<String, dynamic> data) async {
-    return _put('/api/users/$userId', data);
+    // API dökümanına göre PATCH /api/users/me kullanıyoruz
+    return _patch('/api/users/me', data);
   }
 
   @override
   Future<AuthResponse> deleteAccount() async {
-    return _delete(ApiConstants.profile);
+    final response = await _delete(ApiConstants.profile);
+    if (response.success) {
+      setToken(null);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('auth_token');
+    }
+    return response;
   }
 
   @override
@@ -235,7 +242,7 @@ class ApiAuthService implements IAuthService {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.uploadImage}');
 
     if (kDebugMode) {
-      print('--- IMAGE UPLOAD REQUEST ---');
+      print('--- [DEBUG] IMAGE UPLOAD REQUEST ---');
       print('URL: $url');
       print('FilePath: $filePath');
       print('----------------------------');
@@ -244,13 +251,13 @@ class ApiAuthService implements IAuthService {
     try {
       final request = http.MultipartRequest('POST', url);
       
-      // Token ekle
       if (_authToken != null) {
         request.headers['Authorization'] = 'Bearer $_authToken';
+        if (kDebugMode) {
+          print('--- [DEBUG] Upload Token: ${_authToken!.substring(0, 10)}... ---');
+        }
       }
 
-      // Dosyayı ekle (Backend 'file' anahtarı bekliyor)
-      // Dosya türünü belirle (Backend application/octet-stream kabul etmiyor)
       final extension = filePath.split('.').last.toLowerCase();
       String mimeType = 'image/jpeg';
       if (extension == 'png') mimeType = 'image/png';
@@ -267,19 +274,37 @@ class ApiAuthService implements IAuthService {
       final response = await http.Response.fromStream(streamedResponse);
 
       if (kDebugMode) {
-        print('--- IMAGE UPLOAD RESPONSE ---');
+        print('--- [DEBUG] IMAGE UPLOAD RESPONSE ---');
         print('Status Code: ${response.statusCode}');
         print('Body: ${response.body}');
         print('-----------------------------');
       }
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
-        final data = jsonDecode(response.body);
-        // API genelde {"url": "..."} veya {"image_url": "..."} döner.
-        return data['url'] ?? data['image_url'] ?? data['path'];
+        // Yanıt JSON mı yoksa düz string mi kontrol et
+        try {
+          final data = jsonDecode(response.body);
+          if (data is Map<String, dynamic>) {
+            // Yaygın anahtarları kontrol et
+            final urlResult = data['url'] ?? 
+                             data['image_url'] ?? 
+                             data['imageUrl'] ?? 
+                             data['path'] ?? 
+                             data['data']?['url'];
+            
+            if (urlResult != null) return urlResult.toString();
+          } else if (data is String) {
+            return data;
+          }
+        } catch (_) {
+          // JSON değilse düz string olarak dönmeyi dene (bazı API'lar sadece URL döner)
+          if (response.body.startsWith('http')) {
+            return response.body;
+          }
+        }
       }
     } catch (e) {
-      if (kDebugMode) print('Image upload error: $e');
+      if (kDebugMode) print('--- [DEBUG] Image upload error: $e ---');
     }
     return null;
   }

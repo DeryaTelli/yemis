@@ -70,16 +70,16 @@ class _BodyState extends State<_Body> {
   Widget build(BuildContext context) {
     final vm = context.watch<BusinessAddOrderViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(LocaleKeys.businessAddOrder_title.tr()),
-        automaticallyImplyLeading: false,
-      ),
-      body: LoadingOverlay(
-        isLoading: vm.isSubmitting,
-        moduleType: AppModuleType.business,
-        child: SingleChildScrollView(
+    return LoadingOverlay(
+      isLoading: vm.isSubmitting,
+      moduleType: AppModuleType.business,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(LocaleKeys.businessAddOrder_title.tr()),
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 100),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +102,10 @@ class _BodyState extends State<_Body> {
                 onTap: () => _showCategoryPickerSheet(context, vm),
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 15,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
@@ -122,11 +125,16 @@ class _BodyState extends State<_Body> {
                           const SizedBox(width: 10),
                           Text(
                             vm.selectedCategory != null
-                                ? (vm.selectedCategory!.toLowerCase() == 'patiseri'
-                                    ? 'Ekmek & Pasta'
-                                    : vm.selectedCategory!.substring(0, 1).toUpperCase() +
-                                        vm.selectedCategory!.substring(1))
-                                : LocaleKeys.businessAddOrder_categoryPlaceholder.tr(),
+                                ? (vm.selectedCategory!.toLowerCase() ==
+                                          'patiseri'
+                                      ? 'Ekmek & Pasta'
+                                      : vm.selectedCategory!
+                                                .substring(0, 1)
+                                                .toUpperCase() +
+                                            vm.selectedCategory!.substring(1))
+                                : LocaleKeys
+                                      .businessAddOrder_categoryPlaceholder
+                                      .tr(),
                             style: TextStyle(
                               color: vm.selectedCategory != null
                                   ? AppColors.primaryTextColor
@@ -254,23 +262,23 @@ class _BodyState extends State<_Body> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: AppBottomNavBar(
-        selectedIndex: vm.selectedIndex,
-        onItemSelected: (index) => _navigate(context, index),
-        moduleType: AppModuleType.business,
+        bottomNavigationBar: AppBottomNavBar(
+          selectedIndex: vm.selectedIndex,
+          onItemSelected: (index) => _navigate(context, index),
+          moduleType: AppModuleType.business,
+        ),
       ),
     );
   }
 
   Widget _label(String text) => Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.primaryTextColor,
-        ),
-      );
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.primaryTextColor,
+    ),
+  );
 
   void _showImagePickerSheet(
     BuildContext context,
@@ -409,12 +417,19 @@ class _BodyState extends State<_Body> {
                         ? 'Ekmek & Pasta'
                         : cat.substring(0, 1).toUpperCase() + cat.substring(1),
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected ? AppColors.primaryColor : AppColors.primaryTextColor,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      color: isSelected
+                          ? AppColors.primaryColor
+                          : AppColors.primaryTextColor,
                     ),
                   ),
                   trailing: isSelected
-                      ? const Icon(Icons.check_circle, color: AppColors.primaryColor)
+                      ? const Icon(
+                          Icons.check_circle,
+                          color: AppColors.primaryColor,
+                        )
                       : null,
                   onTap: () {
                     vm.onCategoryChanged(cat);

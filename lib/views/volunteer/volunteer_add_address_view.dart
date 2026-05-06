@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/theme/app_theme.dart';
@@ -36,9 +38,8 @@ class _Body extends StatelessWidget {
     final vm = context.watch<VolunteerAddAddressViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Adres Ekle'),
+        title: Text(LocaleKeys.addresses_addAddress.tr()),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Navigator.pop(context),
@@ -50,20 +51,20 @@ class _Body extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── İl ───────────────────────────────────────────────────────────
-            _fieldLabel('İl'),
+            _fieldLabel(LocaleKeys.addresses_city.tr()),
             _SelectionField(
-              hint: 'Seçiniz',
+              hint: LocaleKeys.addresses_select.tr(),
               value: vm.selectedIl,
               items: vm.iller,
               onTap: (context) =>
-                  _showPicker(context, 'İl Seçiniz', vm.iller, vm.selectIl),
+                  _showPicker(context, '${LocaleKeys.addresses_city.tr()} ${LocaleKeys.addresses_select.tr()}', vm.iller, vm.selectIl),
             ),
             const SizedBox(height: 16),
 
             // ── İlçe ─────────────────────────────────────────────────────────
-            _fieldLabel('İlçe'),
+            _fieldLabel(LocaleKeys.addresses_district.tr()),
             _SelectionField(
-              hint: vm.selectedIl == null ? 'Önce il seçiniz' : 'Seçiniz',
+              hint: vm.selectedIl == null ? LocaleKeys.addresses_selectCityFirst.tr() : LocaleKeys.addresses_select.tr(),
               value: vm.selectedIlce,
               items: vm.ilceler,
               enabled: vm.selectedIl != null,
@@ -71,7 +72,7 @@ class _Body extends StatelessWidget {
                   ? null
                   : (context) => _showPicker(
                       context,
-                      'İlçe Seçiniz',
+                      '${LocaleKeys.addresses_district.tr()} ${LocaleKeys.addresses_select.tr()}',
                       vm.ilceler,
                       vm.selectIlce,
                     ),
@@ -79,9 +80,9 @@ class _Body extends StatelessWidget {
             const SizedBox(height: 16),
 
             // ── Mahalle ───────────────────────────────────────────────────────
-            _fieldLabel('Mahalle'),
+            _fieldLabel(LocaleKeys.addresses_neighborhood.tr()),
             _SelectionField(
-              hint: vm.selectedIlce == null ? 'Önce ilçe seçiniz' : 'Seçiniz',
+              hint: vm.selectedIlce == null ? LocaleKeys.addresses_selectDistrictFirst.tr() : LocaleKeys.addresses_select.tr(),
               value: vm.selectedMahalle,
               items: vm.mahalleler,
               enabled: vm.selectedIlce != null,
@@ -89,7 +90,7 @@ class _Body extends StatelessWidget {
                   ? null
                   : (context) => _showPicker(
                       context,
-                      'Mahalle Seçiniz',
+                      '${LocaleKeys.addresses_neighborhood.tr()} ${LocaleKeys.addresses_select.tr()}',
                       vm.mahalleler,
                       vm.selectMahalle,
                     ),
@@ -97,10 +98,10 @@ class _Body extends StatelessWidget {
             const SizedBox(height: 24),
 
             // ── Açık Adres ────────────────────────────────────────────────────
-            _fieldLabel('Adres'),
+            _fieldLabel(LocaleKeys.addresses_addressLine.tr()),
             CustomTextField(
               controller: vm.adresController,
-              hintText: 'Cadde, mahalle sokak ve diğer bilgileri giriniz.',
+              hintText: LocaleKeys.addresses_enterAddressInfo.tr(),
               maxLines: 3,
               borderColor: const Color(0xFFE0E0E0),
               fillColor: const Color(0xFFF9F9F9),
@@ -108,10 +109,10 @@ class _Body extends StatelessWidget {
             const SizedBox(height: 16),
 
             // ── Adres Başlığı ─────────────────────────────────────────────────
-            _fieldLabel('Adres Başlığı'),
+            _fieldLabel(LocaleKeys.addresses_addressTitle.tr()),
             CustomTextField(
               controller: vm.baslikController,
-              hintText: 'Adres Başlığı Giriniz',
+              hintText: LocaleKeys.addresses_enterAddressTitle.tr(),
               borderColor: const Color(0xFFE0E0E0),
               fillColor: const Color(0xFFF9F9F9),
             ),
@@ -119,7 +120,7 @@ class _Body extends StatelessWidget {
 
             // ── Kaydet Butonu ─────────────────────────────────────────────────
             CustomButton(
-              text: 'Kaydet',
+              text: LocaleKeys.common_save.tr(),
               gradient: AppColors.volunteerBackgroundGradient,
               width: double.infinity,
               height: 54,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:yemis/utils/locale_keys.dart';
@@ -92,37 +93,72 @@ class AddressesView extends StatelessWidget {
                                 context: context,
                                 builder: (ctx) => AlertDialog(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  title: const Text(
-                                    'Adresi Sil',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  content: const Text(
-                                    'Bu adresi silmek istediğinizden emin misiniz?',
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(ctx, false),
-                                      child: const Text(
-                                        'Vazgeç',
-                                        style: TextStyle(color: Colors.grey),
+                                  backgroundColor: const Color(0xFFFDF5F2),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Lottie.asset(
+                                            'assets/lottie/account_delete.json',
+                                            width: 60,
+                                            height: 60,
+                                            repeat: true,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              'Adresi Sil',
+                                              style: CustomTextStyles
+                                                  .orelegaOne30Primary,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(ctx, true),
-                                      child: const Text(
-                                        'Sil',
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Bu adresi silmek istediğinizden emin misiniz?',
+                                        style: CustomTextStyles.semiBold16Grey,
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 24),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(ctx, false),
+                                            child: Text(
+                                              'Hayır',
+                                              style: CustomTextStyles
+                                                  .semiBold16Grey,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(ctx, true),
+                                            child: const Text(
+                                              'Evet',
+                                              style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                               return confirmed;
@@ -130,9 +166,9 @@ class AddressesView extends StatelessWidget {
                             onDismissed: (direction) {
                               vm.deleteAddress(address.id);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Adres silindi'),
-                                  duration: Duration(seconds: 2),
+                                SnackBar(
+                                  content: Text(LocaleKeys.addresses_deleted.tr()),
+                                  duration: const Duration(seconds: 2),
                                 ),
                               );
                             },

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LocationPickerBottomSheet extends StatefulWidget {
   final String title;
@@ -118,7 +120,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Ara...',
+                    hintText: LocaleKeys.common_searchHint.tr(),
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     prefixIcon: Icon(Icons.search, color: widget.themeColor),
                     filled: true,
@@ -137,7 +139,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                 child: _filteredItems.isEmpty
                     ? Center(
                         child: Text(
-                          'Sonuç bulunamadı.',
+                          LocaleKeys.common_noResults.tr(),
                           style: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 16,

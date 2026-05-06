@@ -67,8 +67,9 @@ class AppTheme {
 
       // Özel Geri Dönüş Butonu İkonu
       actionIconTheme: ActionIconThemeData(
-        backButtonIconBuilder: (context) => const Icon(
+        backButtonIconBuilder: (context) => Icon(
           Icons.arrow_back_ios_new_rounded,
+          color: primaryColor,
           size: 20,
         ),
       ),

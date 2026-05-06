@@ -26,7 +26,8 @@
             "description": "Enter the verification code sent to your email to complete account verification",
             "codeSent": "A verification code has been sent to your email.",
             "resend": "Resend",
-            "button": "Verify"
+            "button": "Verify",
+            "successMessage": "Account verified! Please log in."
         },
         "fields": {
             "email": "Email",
@@ -34,7 +35,9 @@
             "name": "Name and Surname",
             "newPassword": "New Password",
             "confirmPassword": "Confirm Password",
-            "phone": "Phone Number"
+            "phone": "Phone Number",
+            "fullNameHint": "Enter your name and surname",
+            "emailHint": "Enter your email address"
         },
         "validation": {
             "emailEmpty": "Email address cannot be empty.",
@@ -57,6 +60,12 @@
             "codeInvalid": "Invalid verification code. Please try again.",
             "registerSuccess": "Registration successful. Please verify your email.",
             "loginSuccess": "Login successful."
+        },
+        "resetPassword": {
+            "title": "Password Reset"
+        },
+        "changePassword": {
+            "title": "Change Password"
         }
     },
     "location": {
@@ -90,7 +99,19 @@
         "surpriseBox": "Surprise Box",
         "buyNow": "Buy Now",
         "todayPopular": "Today's Popular",
-        "locationLoading": "Loading location…"
+        "locationLoading": "Loading location…",
+        "volunteerSubtitle": "Share leftover food at home!",
+        "foodTitle": "Food",
+        "foodSubtitle": "Get food at a good price and prevent waste!",
+        "businessTitle": "Business",
+        "businessSubtitle": "Manage your menu, reduce waste!",
+        "onboarding1Subtitle": "Prevent global food waste using Yemis!",
+        "onboarding2Title": "Stay Fresh",
+        "onboarding2Subtitle": "Prevent waste, protect your budget, and\ncontribute to nature.",
+        "onboarding3Title": "Share",
+        "onboarding3Subtitle": "Share your extra food and\nbring a smile to someone.",
+        "onboarding4Title": "Discover",
+        "onboarding4Subtitle": "See opportunities around you,\neat at the best prices!"
     },
     "foodProfile": {
         "title": "Profile",
@@ -101,7 +122,9 @@
         "updateProfile": "Update Profile",
         "changePassword": "Change Password",
         "changeLanguage": "Change Language",
-        "logout": "Log Out"
+        "logout": "Log Out",
+        "editTitle": "Edit Profile",
+        "updateButton": "Update Account"
     },
     "volunteer": {
         "becomeButton": "Be Volunteer",
@@ -155,7 +178,7 @@
         "comingSoon": "Volunteer profile page coming soon!",
         "notifications": "Notifications",
         "pastListings": "Past Listings",
-        "attendedListings": "Listings I Volunteered For",
+        "attendedListings": "My Volunteer Tasks",
         "activeListings": "Active Listings",
         "savedAddresses": "Saved Addresses",
         "savedCards": "Saved Cards",
@@ -165,8 +188,11 @@
     "volunteerListings": {
         "activeTitle": "Active Listings",
         "pastTitle": "Past Listings",
-        "attendedTitle": "Listings I Volunteered For",
-        "emptyMessage": "You don't have any listings in this category yet."
+        "attendedTitle": "My Volunteer Tasks",
+        "emptyMessage": "You don't have any listings in this category yet.",
+        "deleteError": "An error occurred while deleting the listing.",
+        "deleteConfirm": "Are you sure you want to delete this listing?",
+        "deleteTitle": "Delete Listing"
     },
     "languageSelect": {
         "title": "Select Language",
@@ -199,7 +225,11 @@
         "updateProfile": "Update Profile",
         "changePassword": "Change Password",
         "changeLanguage": "Change Language",
-        "deleteAccount": "Delete Account"
+        "deleteAccount": "Delete Account",
+        "editTitle": "Edit Profile",
+        "addedListings": "Added Listings",
+        "soldOrdersTitle": "Sold Orders",
+        "expiredListings": "Expired Listings"
     },
     "businessAddOrder": {
         "title": "Add Order",
@@ -219,7 +249,11 @@
         "pickFromCamera": "Take from Camera",
         "pickFromGallery": "Choose from Gallery",
         "categoryLabel": "Category",
-        "categoryPlaceholder": "Choose a category"
+        "categoryPlaceholder": "Choose a category",
+        "errorNoAddress": "Please add a business address first.",
+        "titleHint": "e.g., Surprise Breakfast Box",
+        "descriptionHint": "Enter detailed information about your listing...",
+        "allergensHint": "e.g., Contains Gluten, Milk, Egg..."
     },
     "businessApprovals": {
         "title": "Approve Reservation",
@@ -244,6 +278,88 @@
     },
     "addresses": {
         "title": "My Addresses",
-        "addAddress": "Add New Address"
+        "addAddress": "Add New Address",
+        "noAddressFound": "No saved address found.",
+        "deleted": "Address deleted",
+        "city": "City",
+        "district": "District",
+        "neighborhood": "Neighborhood",
+        "addressLine": "Address",
+        "addressTitle": "Address Title",
+        "select": "Select",
+        "selectCityFirst": "Select city first",
+        "selectDistrictFirst": "Select district first",
+        "enterAddressInfo": "Enter street, neighborhood, and other info.",
+        "enterAddressTitle": "Enter Address Title"
+    },
+    "common": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "update": "Update",
+        "camera": "Camera",
+        "gallery": "Gallery",
+        "cancel": "Cancel",
+        "save": "Save",
+        "error": "Error",
+        "success": "Success",
+        "yes": "Yes",
+        "no": "No",
+        "pickFromCamera": "Take with Camera",
+        "pickFromGallery": "Choose from Gallery",
+        "searchHint": "Search",
+        "list": "List",
+        "map": "Map",
+        "warning": "Warning",
+        "profileNoChange": "Please make a change in your profile.",
+        "invalidUserId": "User ID is invalid.",
+        "fullName": "Full Name",
+        "selectLocation": "Select Location",
+        "selectLocationFromMap": "Select Location from Map",
+        "noResults": "No results found.",
+        "pickupToday": "Pickup Today",
+        "pickupTomorrow": "Pickup Tomorrow",
+        "sorting": "Sort",
+        "clear": "Clear"
+    },
+    "volunteerEditListing": {
+        "title": "Edit Listing",
+        "successTitle": "Updated",
+        "successMessage": "Listing successfully updated."
+    },
+    "navigation": {
+        "permissionRequired": "Location permission required",
+        "openSettings": "Open Settings",
+        "goToLocation": "Go to Location",
+        "navigate": "Navigate",
+        "getDirections": "Get Directions",
+        "openGoogleMaps": "Open with Google Maps",
+        "openYandexMaps": "Open with Yandex Maps",
+        "openAppleMaps": "Open with Apple Maps"
+    },
+    "foodFavorites": {
+        "title": "Favorite"
+    },
+    "businessListings": {
+        "deleteError": "An error occurred while deleting the listing."
+    },
+    "businessEditOrder": {
+        "successTitle": "Success",
+        "successMessage": "Listing successfully updated."
+    },
+    "sorting": {
+        "defaultSort": "Default",
+        "rating": "Rating",
+        "lowToHigh": "Low to high",
+        "highToLow": "High to low",
+        "price": "Price",
+        "distance": "Distance",
+        "nearToFar": "Near to far"
+    },
+    "filters": {
+        "all": "All",
+        "food": "Food",
+        "breadPastry": "Bread & Pastry",
+        "market": "Market",
+        "buyNow": "Buy Now"
     }
 }

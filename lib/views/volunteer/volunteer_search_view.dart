@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -97,7 +99,7 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
         child: Text(
           vm.searchQuery.isEmpty
               ? LocaleKeys.volunteerSearch_comingSoon.tr()
-              : "Sonuç bulunamadı.",
+              : LocaleKeys.common_noResults.tr(),
           style: const TextStyle(color: AppColors.hintTextColor, fontSize: 15),
         ),
       );

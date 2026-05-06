@@ -41,4 +41,5 @@ class AppRoutes {
   static const String businessListingDetail = '/business/listing-detail';
   static const String changePassword = '/change-password';
   static const String notification = '/notification';
+  static const String yemoAssistant = '/yemo-assistant';
 }

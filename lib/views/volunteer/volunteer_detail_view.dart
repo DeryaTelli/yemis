@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/volunteer/volunteer_listing.dart';
-import '../../services/volunteer/mock_volunteer_service.dart';
+import '../../services/volunteer/i_volunteer_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/volunteer/volunteer_detail_viewmodel.dart';
 import '../../widgets/volunteer/volunteer_detail_bottom_bar.dart';
@@ -24,7 +24,7 @@ class VolunteerDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => VolunteerDetailViewModel(
-        service: MockVolunteerService(),
+        service: context.read<IVolunteerService>(),
         listingId: listing.id,
       )..init(),
       child: _VolunteerDetailBody(listing: listing),

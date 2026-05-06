@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/widgets/business/location_button.dart';
 import 'package:yemis/widgets/common/custom_text_field.dart';
 import '../../models/business/business_listing_model.dart';
@@ -88,7 +89,7 @@ class _BodyState extends State<_Body> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('İlanı Düzenle'),
+        title: Text(LocaleKeys.volunteerEditListing_title.tr()),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Navigator.pop(context),
@@ -106,7 +107,7 @@ class _BodyState extends State<_Body> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _titleController,
-                hintText: 'Örn: Sürpriz Kahvaltı Kutusu',
+                hintText: LocaleKeys.businessAddOrder_titleHint.tr(),
                 onChanged: vm.onTitleChanged,
                 borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
               ),
@@ -227,7 +228,7 @@ class _BodyState extends State<_Body> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _descriptionController,
-                hintText: 'İlanınızla ilgili detaylı bilgi giriniz...',
+                hintText: LocaleKeys.businessAddOrder_descriptionHint.tr(),
                 maxLines: 3,
                 onChanged: vm.onDescriptionChanged,
                 borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
@@ -238,7 +239,7 @@ class _BodyState extends State<_Body> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _allergensController,
-                hintText: 'Örn: Glüten, Süt, Yumurta içerir...',
+                hintText: LocaleKeys.businessAddOrder_allergensHint.tr(),
                 onChanged: vm.onAllergensChanged,
                 borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
               ),
@@ -269,8 +270,8 @@ class _BodyState extends State<_Body> {
                       if (success && mounted) {
                         SuccessDialogCustom.show(
                           context,
-                          title: 'Başarılı',
-                          message: 'İlan başarıyla güncellendi.',
+                          title: LocaleKeys.businessEditOrder_successTitle.tr(),
+                          message: LocaleKeys.businessEditOrder_successMessage.tr(),
                           onConfirm: () {
                             Navigator.pop(context, true);
                           },
@@ -338,7 +339,7 @@ class _BodyState extends State<_Body> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                vm.locationAddress.isEmpty ? 'Konum Seç' : vm.locationAddress,
+                vm.locationAddress.isEmpty ? LocaleKeys.common_selectLocation.tr() : vm.locationAddress,
                 style: TextStyle(
                   color: vm.locationAddress.isEmpty
                       ? Colors.grey
@@ -402,7 +403,7 @@ class _BodyState extends State<_Body> {
                 Icons.camera_alt_outlined,
                 color: AppColors.primaryColor,
               ),
-              title: const Text('Kameradan Çek'),
+              title: Text(LocaleKeys.common_pickFromCamera.tr()),
               onTap: () {
                 Navigator.pop(context);
                 vm.pickFromCamera();
@@ -413,7 +414,7 @@ class _BodyState extends State<_Body> {
                 Icons.photo_library_outlined,
                 color: AppColors.primaryColor,
               ),
-              title: const Text('Galeriden Seç'),
+              title: Text(LocaleKeys.common_pickFromGallery.tr()),
               onTap: () {
                 Navigator.pop(context);
                 vm.pickFromGallery();

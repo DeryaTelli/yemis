@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
@@ -15,7 +17,7 @@ class BusinessHomeViewModel extends ChangeNotifier {
   String get appBarTitle {
     final addr = _userSession.currentAddress;
     if (addr != null && addr.isNotEmpty) return addr;
-    return 'Konum Seçiniz';
+    return LocaleKeys.common_selectLocation.tr();
   }
 
   Color get appBarColor => const Color(0xFFFE8800);

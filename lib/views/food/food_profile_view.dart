@@ -2,8 +2,10 @@
 import 'dart:io'; // Required for Image.file() which takes dart:io.File
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
+import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
@@ -30,6 +32,14 @@ class _FoodProfileBody extends StatefulWidget {
 }
 
 class _FoodProfileBodyState extends State<_FoodProfileBody> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FoodProfileViewModel>().fetchProfile();
+    });
+  }
+
   Widget _buildAvatar(FoodProfileViewModel vm) {
     const Color fallbackBg = Color(0xFFEADCC6);
     const Color fallbackIcon = Color(0xFFFE8800);
@@ -71,7 +81,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Profil'),
+        title: Text(LocaleKeys.foodProfile_title.tr()),
         automaticallyImplyLeading: false,
       ),
 
@@ -122,7 +132,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${vm.name} ${vm.surname}',
+                          vm.fullName,
                           style: CustomTextStyles.orelegaOne18DarkGrey,
                         ),
                         const SizedBox(height: 4),

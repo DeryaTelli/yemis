@@ -74,6 +74,7 @@ import 'views/business/business_listings_view.dart';
 import 'views/business/business_edit_order_view.dart';
 import 'views/business/business_listing_detail_view.dart';
 import 'views/common/notification_view.dart';
+import 'views/common/yemo_assistant_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -155,8 +156,13 @@ class MyApp extends StatelessWidget {
         Provider<IVolunteerService>.value(value: volunteerService),
         Provider<ApiVolunteerService>.value(value: volunteerService),
         ChangeNotifierProvider(
-          create: (_) =>
-              LoginViewModel(authService, businessService, userSession),
+          create: (_) => LoginViewModel(
+            authService,
+            businessService,
+            foodService,
+            volunteerService,
+            userSession,
+          ),
         ),
         ChangeNotifierProvider(create: (_) => RegisterViewModel(authService)),
         ChangeNotifierProvider(
@@ -477,6 +483,13 @@ class MyApp extends StatelessWidget {
                   settings.arguments as AppModuleType? ?? AppModuleType.food;
               return MaterialPageRoute(
                 builder: (_) => NotificationView(moduleType: moduleType),
+                settings: settings,
+              );
+            case AppRoutes.yemoAssistant:
+              final moduleType =
+                  settings.arguments as AppModuleType? ?? AppModuleType.food;
+              return MaterialPageRoute(
+                builder: (_) => YemoAssistantView(moduleType: moduleType),
                 settings: settings,
               );
             default:

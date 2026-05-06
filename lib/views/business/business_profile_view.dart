@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/widgets/business/daily_stat_card.dart';
 import '../../models/app_module_type.dart';
@@ -13,8 +14,21 @@ import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/food/profile_menu_tile.dart';
 import '../../utils/theme/app_theme.dart';
 
-class BusinessProfileView extends StatelessWidget {
+class BusinessProfileView extends StatefulWidget {
   const BusinessProfileView({super.key});
+
+  @override
+  State<BusinessProfileView> createState() => _BusinessProfileViewState();
+}
+
+class _BusinessProfileViewState extends State<BusinessProfileView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BusinessProfileViewModel>().fetchProfile();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +84,7 @@ class BusinessProfileView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                vm.name,
+                                vm.fullName,
                                 style: CustomTextStyles.orelegaOne18DarkGrey,
                               ),
                               const SizedBox(height: 4),
@@ -149,7 +163,7 @@ class BusinessProfileView extends StatelessWidget {
                         ),
                         ProfileMenuTile(
                           icon: Icons.list_alt_rounded,
-                          title: 'Eklenen İlanlar',
+                          title: LocaleKeys.businessProfile_addedListings.tr(),
                           onTap: () => Navigator.pushNamed(
                             context,
                             AppRoutes.businessListings,
@@ -158,7 +172,7 @@ class BusinessProfileView extends StatelessWidget {
                         ),
                         ProfileMenuTile(
                           icon: Icons.check_circle_outline_rounded,
-                          title: 'Satılan Siparişler',
+                          title: LocaleKeys.businessProfile_soldOrdersTitle.tr(),
                           onTap: () => Navigator.pushNamed(
                             context,
                             AppRoutes.businessListings,
@@ -167,7 +181,7 @@ class BusinessProfileView extends StatelessWidget {
                         ),
                         ProfileMenuTile(
                           icon: Icons.unpublished_outlined,
-                          title: 'Süresi Dolan İlanlar',
+                          title: LocaleKeys.businessProfile_expiredListings.tr(),
                           onTap: () => Navigator.pushNamed(
                             context,
                             AppRoutes.businessListings,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/review/review_model.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'review_star_input.dart';
 
 /// Ortak yorum liste kartı — Food ve Volunteer için kullanılır.
@@ -23,7 +25,7 @@ class ReviewListItem extends StatelessWidget {
   String get _dateStr {
     final now = DateTime.now();
     final diff = now.difference(review.date);
-    if (diff.inMinutes < 60) return '${diff.inMinutes} dk önce';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} dk önce'; // Bu kısım için şimdilik kalsın veya genelleştirilebilir
     if (diff.inHours < 24) return '${diff.inHours} sa önce';
     if (diff.inDays == 1) return 'Dün';
     if (diff.inDays < 7) return '${diff.inDays} gün önce';
@@ -142,18 +144,18 @@ class _OwnerMenu extends StatelessWidget {
               children: [
                 Icon(Icons.edit_outlined, size: 18, color: accentColor),
                 const SizedBox(width: 8),
-                const Text('Düzenle'),
+                Text(LocaleKeys.common_edit.tr()),
               ],
             ),
           ),
         if (onDelete != null)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'delete',
             child: Row(
               children: [
-                Icon(Icons.delete_outline_rounded, size: 18, color: Colors.red),
-                SizedBox(width: 8),
-                Text('Sil', style: TextStyle(color: Colors.red)),
+                const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                const SizedBox(width: 8),
+                Text(LocaleKeys.common_delete.tr(), style: const TextStyle(color: Colors.red)),
               ],
             ),
           ),

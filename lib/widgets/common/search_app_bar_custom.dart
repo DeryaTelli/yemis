@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../utils/constants/app_colors.dart';
 import '../common/custom_text_field.dart';
@@ -55,7 +57,7 @@ class SearchAppBarCustom extends StatelessWidget
                       height: 48,
                       child: CustomTextField(
                         controller: searchController,
-                        hintText: 'Ara',
+                        hintText: LocaleKeys.common_searchHint.tr(),
                         hintStyle: CustomTextStyles.semiBold16Grey,
                         onChanged: onSearchChanged,
                         fillColor: Colors.white,
@@ -120,13 +122,13 @@ class SearchAppBarCustom extends StatelessWidget
     return Row(
       children: [
         _TabItem(
-          title: 'Liste',
+          title: LocaleKeys.common_list.tr(),
           isSelected: !isMapView,
           accentColor: accentColor,
           onTap: () => onViewModeChanged(false),
         ),
         _TabItem(
-          title: 'Harita',
+          title: LocaleKeys.common_map.tr(),
           isSelected: isMapView,
           accentColor: accentColor,
           onTap: () => onViewModeChanged(true),

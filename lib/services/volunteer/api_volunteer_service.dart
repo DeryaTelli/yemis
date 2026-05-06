@@ -46,19 +46,17 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<List<VolunteerListing>> getActiveListings() async {
-    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myMeals}');
+    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}');
   }
 
   @override
   Future<List<VolunteerListing>> getPastListings() async {
-    // API'da ayrılmış mı bilmiyoruz, şimdilik boş dönebilir veya filtreleyebiliriz
-    return [];
+    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myPastMeals}');
   }
 
   @override
   Future<List<VolunteerListing>> getAttendedListings() async {
-    // Katılına ilanlar için ayrı endpoint olabilir, şimdilik boş
-    return [];
+    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.attendedTasks}');
   }
 
   Future<List<VolunteerListing>> _fetchVolunteerListingsFromUrl(String urlString) async {
@@ -88,6 +86,9 @@ class ApiVolunteerService implements IVolunteerService {
           data = decoded;
         } else if (decoded is Map && decoded.containsKey('data')) {
           data = decoded['data'] as List;
+        } else if (decoded is Map) {
+          // Tekil nesne dönmüş olabilir
+          data = [decoded];
         }
 
         return data.map((e) {

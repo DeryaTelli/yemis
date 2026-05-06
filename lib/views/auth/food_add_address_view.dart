@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/constants/app_colors.dart';
@@ -96,6 +98,7 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
           ? AppModuleType.volunteer
           : AppModuleType.food,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(vm.isEditMode ? 'Adresi Düzenle' : 'Adres Ekle'),
           leading: IconButton(
@@ -346,7 +349,7 @@ class _MapPickerButton extends StatelessWidget {
               child: Text(
                 hasCoordinates
                     ? 'Konum Haritadan İşaretlendi'
-                    : 'Haritadan Konum Seç',
+                    : LocaleKeys.common_selectLocationFromMap.tr(),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,

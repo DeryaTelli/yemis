@@ -15,7 +15,11 @@ class MockVolunteerService implements IVolunteerService {
   }
 
   @override
-  Future<List<VolunteerListing>> getFeaturedListings({double? lat, double? lng, double? radius}) async {
+  Future<List<VolunteerListing>> getFeaturedListings({
+    double? lat,
+    double? lng,
+    double? radius,
+  }) async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
     return List.unmodifiable(_listings);
   }

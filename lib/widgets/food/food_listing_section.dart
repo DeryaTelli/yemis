@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
@@ -43,20 +45,16 @@ class FoodListingSection extends StatelessWidget {
               onPressed: () => Navigator.pushNamed(
                 context,
                 AppRoutes.foodAllListings,
-                arguments: {
-                  'title': title,
-                  'listings': listings,
-                  'vm': vm,
-                },
+                arguments: {'title': title, 'listings': listings, 'vm': vm},
               ),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Text(
-                'Tümü',
-                style: TextStyle(
+              child: Text(
+                LocaleKeys.home_seeAll.tr(),
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: AppColors.primaryColor,

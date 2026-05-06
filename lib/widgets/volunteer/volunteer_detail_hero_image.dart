@@ -19,18 +19,17 @@ class VolunteerDetailHeroImage extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           // Arka plan resim
-          Image.asset(
-            listing.imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stack) => Container(
-              color: const Color(0xFFE8F5E9),
-              child: const Icon(
-                Icons.volunteer_activism_rounded,
-                color: AppColors.volunteerColor,
-                size: 64,
-              ),
-            ),
-          ),
+          listing.isNetworkImage
+              ? Image.network(
+                  listing.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stack) => _buildImageError(),
+                )
+              : Image.asset(
+                  listing.imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stack) => _buildImageError(),
+                ),
 
           // Gradient overlay (alt kısımda solma)
           Positioned(
@@ -74,20 +73,18 @@ class VolunteerDetailHeroImage extends StatelessWidget {
               child: ClipOval(
                 child: listing.userLogoUrl != null &&
                         listing.userLogoUrl!.isNotEmpty
-                    ? Image.asset(
-                        listing.userLogoUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.person_rounded,
-                          color: AppColors.volunteerColor,
-                          size: 24,
-                        ),
-                      )
-                    : const Icon(
-                        Icons.person_rounded,
-                        color: AppColors.volunteerColor,
-                        size: 24,
-                      ),
+                    ? (listing.userLogoUrl!.startsWith('http')
+                        ? Image.network(
+                            listing.userLogoUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => _buildUserError(),
+                          )
+                        : Image.asset(
+                            listing.userLogoUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => _buildUserError(),
+                          ))
+                    : _buildUserError(),
               ),
             ),
           ),
@@ -123,4 +120,19 @@ class VolunteerDetailHeroImage extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildImageError() => Container(
+        color: const Color(0xFFE8F5E9),
+        child: const Icon(
+          Icons.volunteer_activism_rounded,
+          color: AppColors.volunteerColor,
+          size: 64,
+        ),
+      );
+
+  Widget _buildUserError() => const Icon(
+        Icons.person_rounded,
+        color: AppColors.volunteerColor,
+        size: 24,
+      );
 }

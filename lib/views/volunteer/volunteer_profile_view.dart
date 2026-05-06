@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_listings_viewmodel.dart';
 import '../../models/app_module_type.dart';
@@ -32,6 +33,14 @@ class _VolunteerProfileBody extends StatefulWidget {
 }
 
 class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<VolunteerProfileViewModel>().fetchProfile();
+    });
+  }
+
   Widget _buildAvatar(VolunteerProfileViewModel vm) {
     const Color fallbackBg = Color(0xFFD1F1DB);
     const Color fallbackIcon = AppColors.volunteerColor;
@@ -121,7 +130,7 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${vm.name} ${vm.surname}',
+                          vm.fullName,
                           style: CustomTextStyles.orelegaOne18DarkGrey,
                         ),
                         const SizedBox(height: 4),
@@ -211,7 +220,7 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
 
                   ProfileMenuTile(
                     icon: Icons.person_outline_rounded,
-                    title: 'Profil Güncelle',
+                    title: LocaleKeys.foodProfile_updateProfile.tr(),
                     iconColor: AppColors.volunteerColor,
                     onTap: () => Navigator.pushNamed(
                       context,
@@ -221,7 +230,7 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                   ),
                   ProfileMenuTile(
                     icon: Icons.lock_outline_rounded,
-                    title: 'Şifre Değiştir',
+                    title: LocaleKeys.foodProfile_changePassword.tr(),
                     iconColor: AppColors.volunteerColor,
                     onTap: () => Navigator.pushNamed(
                       context,
@@ -243,7 +252,7 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                   ),
                   ProfileMenuTile(
                     icon: Icons.logout_rounded,
-                    title: 'Çıkış Yap',
+                    title: LocaleKeys.foodProfile_logout.tr(),
                     iconColor: AppColors.volunteerColor,
                     onTap: () => vm.logout(context),
                   ),

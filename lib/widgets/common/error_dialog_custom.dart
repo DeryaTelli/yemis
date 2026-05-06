@@ -31,19 +31,6 @@ class ErrorDialogCustom extends StatelessWidget {
     );
   }
 
-  String _getReadableMessage(String message) {
-    final lower = message.toLowerCase();
-
-    if (lower.contains('sunucu') ||
-        lower.contains('server') ||
-        lower.contains('general') ||
-        lower.contains('bir hata oluştu')) {
-      return 'Sunucu kaynaklı bir hata oluştu. Lütfen internet bağlantınızı kontrol ederek işlemi tekrar deneyin.';
-    }
-
-    return message;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -78,7 +65,7 @@ class ErrorDialogCustom extends StatelessWidget {
             children: [
               Lottie.asset(
                 'assets/lottie/error.json',
-                height: 120,
+                height: 100,
                 repeat: false,
               ),
               const SizedBox(width: 12),
@@ -86,7 +73,7 @@ class ErrorDialogCustom extends StatelessWidget {
                 child: Text(
                   title,
                   style: CustomTextStyles.orelegaOne32Primary.copyWith(
-                    color: Theme.of(context).primaryColor,
+                    color: Colors.redAccent,
                   ),
                 ),
               ),
@@ -94,14 +81,14 @@ class ErrorDialogCustom extends StatelessWidget {
           ),
 
           Padding(
-            padding: const EdgeInsets.only(left: 16),
+            padding: const EdgeInsets.only(left: 16, right: 16),
             child: Text(
-              _getReadableMessage(message),
+              message,
               style: CustomTextStyles.semiBold16DarkGreyCompact,
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           Align(
             alignment: Alignment.bottomRight,
             child: TextButton(
@@ -112,7 +99,7 @@ class ErrorDialogCustom extends StatelessWidget {
               child: Text(
                 'Tamam',
                 style: CustomTextStyles.semiBold16Primary.copyWith(
-                  color: Theme.of(context).primaryColor,
+                  color: Colors.redAccent,
                 ),
               ),
             ),

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
@@ -221,9 +224,9 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
       // 1. Resim varsa yükle
       String? imageUrl;
       if (_selectedImage != null) {
-        debugPrint('Uploading image: ${_selectedImage!.path}');
+        debugPrint('--- [DEBUG] Uploading image: ${_selectedImage!.path} ---');
         imageUrl = await _authService.uploadImage(_selectedImage!.path);
-        debugPrint('Image uploaded: $imageUrl');
+        debugPrint('--- [DEBUG] Image upload result: $imageUrl ---');
       }
 
       // Saat hesaplama
@@ -252,15 +255,18 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
         'address_line': _locationAddress,
         'latitude': _selectedLatLng?.latitude,
         'longitude': _selectedLatLng?.longitude,
-        'image_url': imageUrl ?? '',
-        'pickup_start_time': now.toIso8601String(),
-        'pickup_end_time': finalPickupEndTime.toIso8601String(),
+        if (imageUrl != null) 'image_url': imageUrl,
+        'pickup_start_time': now.toUtc().toIso8601String(),
+        'pickup_end_time': finalPickupEndTime.toUtc().toIso8601String(),
         'is_available': true,
-        'delivery_status': 'active', // Varsayılan durum
+        'delivery_status': 'active',
       };
 
-      debugPrint('--- SUBMITTING VOLUNTEER LISTING ---');
-      debugPrint('Payload: $data');
+      if (kDebugMode) {
+        print('--- [DEBUG] VOLUNTEER LISTING PAYLOAD ---');
+        print(const JsonEncoder.withIndent('  ').convert(data));
+        print('-----------------------------------------');
+      }
 
       final success = await _volunteerService.createMeal(data);
 
@@ -294,5 +300,19 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
   void resetSuccess() {
     _isSuccess = false;
     notifyListeners();
+  }
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }

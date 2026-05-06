@@ -1,9 +1,16 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
+import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
+import '../../widgets/common/error_dialog_custom.dart';
+import '../../widgets/common/success_dialog_custom.dart';
+import 'package:lottie/lottie.dart';
 
 class BusinessProfileViewModel extends ChangeNotifier {
   final IAuthService _authService;
@@ -19,31 +26,61 @@ class BusinessProfileViewModel extends ChangeNotifier {
   File? get selectedImageFile => _selectedImageFile;
   String? get remoteImageUrl => _remoteImageUrl;
 
-  String get name => _userSession.currentUser?.name ?? 'İşletme Adı';
-  String get email => _userSession.currentUser?.email ?? 'isletme@mail.com';
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  String get fullName => _userSession.currentUser?.name ?? '';
+  String get email => _userSession.currentUser?.email ?? '';
   String? get imageUrl => _userSession.currentUser?.imageUrl;
 
-  final TextEditingController nameController;
+  final TextEditingController fullNameController;
   final TextEditingController emailController;
   final TextEditingController phoneController;
 
   BusinessProfileViewModel(this._authService, this._userSession)
-    : nameController = TextEditingController(),
+    : fullNameController = TextEditingController(),
       emailController = TextEditingController(),
       phoneController = TextEditingController() {
     _remoteImageUrl = _userSession.currentUser?.imageUrl;
     _resetControllers();
+    fetchProfile();
+  }
+
+  Future<void> fetchProfile() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final user = await _authService.getProfile();
+      if (user != null) {
+        _userSession.setUser(user);
+        _resetControllers();
+      }
+    } catch (e) {
+      debugPrint('Fetch profile error: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   void _resetControllers() {
-    nameController.text = name;
+    fullNameController.text = fullName;
     emailController.text = email;
-    phoneController.text = _userSession.currentUser?.phoneNumber ?? '';
+    
+    // Telefon numarasını temizleyerek göster (maske ile uyumlu olması için)
+    String displayPhone = _userSession.currentUser?.phoneNumber ?? '';
+    if (displayPhone.startsWith('+90')) {
+      displayPhone = displayPhone.substring(3).trim();
+    } else if (displayPhone.startsWith('0')) {
+      displayPhone = displayPhone.substring(1).trim();
+    }
+    phoneController.text = displayPhone;
   }
 
   @override
   void dispose() {
-    nameController.dispose();
+    fullNameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     super.dispose();
@@ -77,10 +114,58 @@ class BusinessProfileViewModel extends ChangeNotifier {
     final currentUser = _userSession.currentUser;
     if (currentUser == null) return;
 
+    // --- Değişiklik Kontrolü ---
+    final String newName = fullNameController.text.trim();
+    final String newEmail = emailController.text.trim();
+
+    // Telefonu temizle
+    String cleanPhone = phoneController.text.replaceAll(RegExp(r'\D'), '');
+    if (cleanPhone.isNotEmpty && !cleanPhone.startsWith('90')) {
+      cleanPhone = '90$cleanPhone';
+    }
+    if (cleanPhone.isNotEmpty && !cleanPhone.startsWith('+')) {
+      cleanPhone = '+$cleanPhone';
+    }
+
+    final bool isNameChanged = newName != (currentUser.name ?? '');
+    final bool isEmailChanged = newEmail != (currentUser.email ?? '');
+    
+    // Mevcut telefonu da temizleyerek karşılaştır
+    String currentPhoneClean = (currentUser.phoneNumber ?? '').replaceAll(RegExp(r'\D'), '');
+    if (currentPhoneClean.isNotEmpty && !currentPhoneClean.startsWith('90')) {
+      currentPhoneClean = '90$currentPhoneClean';
+    }
+    if (currentPhoneClean.isNotEmpty && !currentPhoneClean.startsWith('+')) {
+      currentPhoneClean = '+$currentPhoneClean';
+    }
+    
+    final bool isPhoneChanged = cleanPhone != currentPhoneClean;
+    final bool isImageChanged = _selectedImageFile != null;
+
+    if (kDebugMode) {
+      print('--- Profile Change Debug ---');
+      print('Name: "$newName" vs "${currentUser.name}" (Changed: $isNameChanged)');
+      print('Email: "$newEmail" vs "${currentUser.email}" (Changed: $isEmailChanged)');
+      print('Phone: "$cleanPhone" vs "$currentPhoneClean" (Changed: $isPhoneChanged)');
+      print('Image Changed: $isImageChanged');
+      print('----------------------------');
+    }
+
+    if (!isNameChanged && !isEmailChanged && !isPhoneChanged && !isImageChanged) {
+      if (context.mounted) {
+        ErrorDialogCustom.show(
+          context,
+          title: LocaleKeys.common_warning.tr(),
+          message: LocaleKeys.common_profileNoChange.tr(),
+        );
+      }
+      return;
+    }
+
     final int? userId = int.tryParse(currentUser.id);
     if (userId == null) return;
 
-    String? imageUrl = _userSession.currentUser?.imageUrl;
+    String? imageUrl = currentUser.imageUrl;
     if (_selectedImageFile != null) {
       final uploadedUrl = await _authService.uploadImage(
         _selectedImageFile!.path,
@@ -91,27 +176,35 @@ class BusinessProfileViewModel extends ChangeNotifier {
     }
 
     final Map<String, dynamic> updateData = {
-      'name': nameController.text.trim(),
-      'email': emailController.text.trim(),
-      'phone': phoneController.text.trim(),
+      'name': newName,
+      'email': newEmail,
+      'phone': cleanPhone,
       if (imageUrl != null) 'image_url': imageUrl,
     };
 
     final response = await _authService.updateProfile(userId, updateData);
 
     if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(response.message)));
       if (response.success) {
-        if (response.user != null) {
-          _userSession.setUser(response.user!);
-          _remoteImageUrl = response.user!.imageUrl;
-        }
-        _selectedImageFile = null;
-        _resetControllers();
-        notifyListeners();
-        Navigator.pop(context);
+        SuccessDialogCustom.show(
+          context,
+          message: response.message,
+          onConfirm: () {
+            if (response.user != null) {
+              _userSession.setUser(response.user!);
+              _remoteImageUrl = response.user!.imageUrl;
+            }
+            _selectedImageFile = null;
+            _resetControllers();
+            notifyListeners();
+            Navigator.pop(context);
+          },
+        );
+      } else {
+        ErrorDialogCustom.show(
+          context,
+          message: response.message,
+        );
       }
     }
   }
@@ -135,28 +228,102 @@ class BusinessProfileViewModel extends ChangeNotifier {
   void deleteAccount(BuildContext context) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Hesabı Sil'),
-        content: const Text(
-          'Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Lottie.asset(
+                    'assets/lottie/account_delete.json',
+                    width: 50,
+                    height: 50,
+                    repeat: true,
+                  ),
+                  const SizedBox(width: 8),
+                  const Expanded(
+                    child: Text(
+                      'Hesabı Sil',
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600, // Semibold
+                  color: AppColors.primaryTextColor,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text(
+                      'Hayır',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.pop(ctx);
+                      
+                      // API üzerinden hesabı sil
+                      final response = await _authService.deleteAccount();
+                      
+                      if (context.mounted) {
+                        if (response.success) {
+                          SuccessDialogCustom.show(
+                            context,
+                            message: response.message,
+                            onConfirm: () {
+                              _userSession.clear();
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                AppRoutes.login,
+                                (route) => false,
+                              );
+                            },
+                          );
+                        } else {
+                          ErrorDialogCustom.show(
+                            context,
+                            message: response.message,
+                          );
+                        }
+                      }
+                    },
+                    child: const Text(
+                      'Evet',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Hayır', style: TextStyle(color: Colors.grey)),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.login,
-                (route) => false,
-              );
-            },
-            child: const Text('Evet', style: TextStyle(color: Colors.red)),
-          ),
-        ],
       ),
     );
   }

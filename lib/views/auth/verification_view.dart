@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
@@ -148,7 +149,7 @@ class _VerificationViewState extends State<VerificationView> {
                             vm.clearFields();
                             SuccessDialogCustom.show(
                               context,
-                              message: 'Hesap doğrulandı! Lütfen giriş yapın.',
+                              message: LocaleKeys.auth_verification_successMessage.tr(),
                               onConfirm: () {
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,

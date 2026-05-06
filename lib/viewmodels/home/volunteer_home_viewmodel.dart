@@ -1,3 +1,5 @@
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/services/auth/user_session.dart';
@@ -35,7 +37,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
   String get appBarTitle {
     final addr = _userSession.currentAddress;
     if (addr != null && addr.isNotEmpty) return addr;
-    return 'Konum Seçiniz';
+    return LocaleKeys.common_selectLocation.tr();
   }
 
   Color get appBarColor => const Color(0xFF22B05A); // AppColors.volunteerColor
@@ -144,7 +146,17 @@ class VolunteerHomeViewModel extends ChangeNotifier {
   }
 
   @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
+  bool _disposed = false;
+
+  @override
   void dispose() {
+    _disposed = true;
     _userSession.removeListener(_onUserSessionChanged);
     super.dispose();
   }

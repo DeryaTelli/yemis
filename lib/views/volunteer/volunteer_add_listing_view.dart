@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/widgets/common/loading_overlay.dart';
 
 import '../../models/app_module_type.dart';
 import '../../utils/constants/app_colors.dart';
@@ -47,108 +49,112 @@ class _BodyState extends State<_Body> {
   Widget build(BuildContext context) {
     final vm = context.watch<VolunteerAddListingViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(LocaleKeys.volunteerAddListing_title.tr()),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Başlık ────────────────────────────────────────
-            _label('İlan Başlığı'),
-            const SizedBox(height: 8),
-            _InputField(
-              controller: _titleController,
-              hint: 'Örn: Sokak Hayvanları İçin Yemek',
-              onChanged: vm.onTitleChanged,
-            ),
-            const SizedBox(height: 20),
-
-            // ── Fotoğraf ──────────────────────────────────────
-            _label(LocaleKeys.volunteerAddListing_photoLabel.tr()),
-            const SizedBox(height: 8),
-            _PhotoBox(
-              imagePath: vm.selectedImage?.path,
-              onTap: () => _showImagePickerSheet(context, vm),
-            ),
-            const SizedBox(height: 24),
-
-            // ── Açıklama ──────────────────────────────────────
-            _label('Açıklama'),
-            const SizedBox(height: 8),
-            _InputField(
-              controller: _descriptionController,
-              hint: 'İlan içeriği hakkında bilgi veriniz...',
-              maxLines: 3,
-              onChanged: vm.onDescriptionChanged,
-            ),
-            const SizedBox(height: 24),
-
-            // ── Bitiş Saati ───────────────────────────────────
-            _label(LocaleKeys.volunteerAddListing_endTimeLabel.tr()),
-            const SizedBox(height: 8),
-            _TimeWheelSection(vm: vm),
-            const SizedBox(height: 24),
-
-            // ── Konum ─────────────────────────────────────────
-            _label(LocaleKeys.volunteerAddListing_locationLabel.tr()),
-            const SizedBox(height: 8),
-            _LocationButton(vm: vm),
-            const SizedBox(height: 20),
-
-            // ── Fiyat ─────────────────────────────────────────
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _label(LocaleKeys.volunteerAddListing_priceLabel.tr()),
-                _FreeChip(),
-              ],
-            ),
-            const SizedBox(height: 32),
-
-            // ── Hata ──────────────────────────────────────────
-            if (vm.errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Text(
-                  vm.errorMessage == 'errorNoLocation'
-                      ? LocaleKeys.volunteerAddListing_errorNoLocation.tr()
-                      : vm.errorMessage!,
-                  style: const TextStyle(color: Colors.red, fontSize: 13),
-                ),
-              ),
-
-            // ── Paylaş ────────────────────────────────────────
-            _ShareButton(
-              vm: vm,
-              onSuccess: () {
-                _titleController.clear();
-                _descriptionController.clear();
-              },
-            ),
-          ],
+    return LoadingOverlay(
+      isLoading: vm.isSubmitting,
+      moduleType: AppModuleType.volunteer,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(LocaleKeys.volunteerAddListing_title.tr()),
+          automaticallyImplyLeading: false,
         ),
-      ),
-      bottomNavigationBar: AppBottomNavBar(
-        selectedIndex: vm.selectedIndex,
-        onItemSelected: (index) => _navigate(context, index),
-        moduleType: AppModuleType.volunteer,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ── Başlık ────────────────────────────────────────
+              _label('İlan Başlığı'),
+              const SizedBox(height: 8),
+              _InputField(
+                controller: _titleController,
+                hint: 'Örn: Sokak Hayvanları İçin Yemek',
+                onChanged: vm.onTitleChanged,
+              ),
+              const SizedBox(height: 20),
+
+              // ── Fotoğraf ──────────────────────────────────────
+              _label(LocaleKeys.volunteerAddListing_photoLabel.tr()),
+              const SizedBox(height: 8),
+              _PhotoBox(
+                imagePath: vm.selectedImage?.path,
+                onTap: () => _showImagePickerSheet(context, vm),
+              ),
+              const SizedBox(height: 24),
+
+              // ── Açıklama ──────────────────────────────────────
+              _label('Açıklama'),
+              const SizedBox(height: 8),
+              _InputField(
+                controller: _descriptionController,
+                hint: 'İlan içeriği hakkında bilgi veriniz...',
+                maxLines: 3,
+                onChanged: vm.onDescriptionChanged,
+              ),
+              const SizedBox(height: 24),
+
+              // ── Bitiş Saati ───────────────────────────────────
+              _label(LocaleKeys.volunteerAddListing_endTimeLabel.tr()),
+              const SizedBox(height: 8),
+              _TimeWheelSection(vm: vm),
+              const SizedBox(height: 24),
+
+              // ── Konum ─────────────────────────────────────────
+              _label(LocaleKeys.volunteerAddListing_locationLabel.tr()),
+              const SizedBox(height: 8),
+              _LocationButton(vm: vm),
+              const SizedBox(height: 20),
+
+              // ── Fiyat ─────────────────────────────────────────
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _label(LocaleKeys.volunteerAddListing_priceLabel.tr()),
+                  _FreeChip(),
+                ],
+              ),
+              const SizedBox(height: 32),
+
+              // ── Hata ──────────────────────────────────────────
+              if (vm.errorMessage != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    vm.errorMessage == 'errorNoLocation'
+                        ? LocaleKeys.volunteerAddListing_errorNoLocation.tr()
+                        : vm.errorMessage!,
+                    style: const TextStyle(color: Colors.red, fontSize: 13),
+                  ),
+                ),
+
+              // ── Paylaş ────────────────────────────────────────
+              _ShareButton(
+                vm: vm,
+                onSuccess: () {
+                  _titleController.clear();
+                  _descriptionController.clear();
+                },
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: AppBottomNavBar(
+          selectedIndex: vm.selectedIndex,
+          onItemSelected: (index) => _navigate(context, index),
+          moduleType: AppModuleType.volunteer,
+        ),
       ),
     );
   }
 
   Widget _label(String text) => Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.primaryTextColor,
-        ),
-      );
+    text,
+    style: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.primaryTextColor,
+    ),
+  );
 
   void _showImagePickerSheet(
     BuildContext context,
@@ -500,10 +506,14 @@ class _LocationButton extends StatelessWidget {
                             TextButton.icon(
                               onPressed: () {
                                 Navigator.pop(context); // Sheet'i kapat
-                                Navigator.pushNamed(context, AppRoutes.addresses);
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.addresses,
+                                  arguments: AppModuleType.volunteer,
+                                );
                               },
                               icon: const Icon(Icons.add_location_alt_outlined),
-                              label: const Text('Yeni Adres Ekle'),
+                              label: Text(LocaleKeys.addresses_addAddress.tr()),
                               style: TextButton.styleFrom(
                                 foregroundColor: AppColors.volunteerColor,
                                 textStyle: const TextStyle(
@@ -595,7 +605,7 @@ class _LocationButton extends StatelessWidget {
                           },
                         ),
                       ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                   ],
                 ),
               );
@@ -635,7 +645,7 @@ class _LocationButton extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                hasData ? vm.locationAddress : 'Lokasyon Seç',
+                hasData ? vm.locationAddress : LocaleKeys.common_selectLocation.tr(),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: hasData ? FontWeight.w500 : FontWeight.w600,
@@ -699,7 +709,7 @@ class _ShareButton extends StatelessWidget {
                 onSuccess?.call();
                 SuccessDialogCustom.show(
                   context,
-                  title: 'Başarılı',
+                  title: LocaleKeys.common_success.tr(),
                   message: LocaleKeys.volunteerAddListing_successMessage.tr(),
                   onConfirm: () {
                     vm.resetSuccess();
@@ -729,24 +739,15 @@ class _ShareButton extends StatelessWidget {
           ],
         ),
         alignment: Alignment.center,
-        child: vm.isSubmitting
-            ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  color: Colors.white,
-                ),
-              )
-            : Text(
-                LocaleKeys.volunteerAddListing_shareButton.tr(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.3,
-                ),
-              ),
+        child: Text(
+          LocaleKeys.volunteerAddListing_shareButton.tr(),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.3,
+          ),
+        ),
       ),
     );
   }

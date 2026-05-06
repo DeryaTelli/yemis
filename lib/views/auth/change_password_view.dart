@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
@@ -71,7 +73,7 @@ class _BodyState extends State<_Body> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text('Şifre Değiştir'),
+          title: Text(LocaleKeys.auth_changePassword_title.tr()),
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_new_rounded, color: themeColor),
             onPressed: () => Navigator.pop(context),
