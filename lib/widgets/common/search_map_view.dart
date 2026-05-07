@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 import '../../utils/constants/app_colors.dart';
 
 /// Harita üzerinde ilanları gösteren bileşen.
-class SearchMapView extends StatelessWidget {
+class SearchMapView extends StatefulWidget {
   final List<dynamic> listings; // FoodListing veya VolunteerListing
   final Color accentColor;
   final void Function(dynamic) onMarkerTap;
@@ -19,11 +19,34 @@ class SearchMapView extends StatelessWidget {
   });
 
   @override
+  State<SearchMapView> createState() => _SearchMapViewState();
+}
+
+class _SearchMapViewState extends State<SearchMapView> {
+  late final MapController _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    _mapController = MapController();
+  }
+
+  @override
+  void didUpdateWidget(covariant SearchMapView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialCenter != null &&
+        widget.initialCenter != oldWidget.initialCenter) {
+      _mapController.move(widget.initialCenter!, _mapController.camera.zoom);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Tüm ilanların ortalamasını alarak haritayı konumlandır (veya default bi yer seç)
-    final LatLng center = initialCenter ?? const LatLng(41.2048, 32.6218); // Karabük Merkez focus
-    
+    final LatLng center = widget.initialCenter ?? const LatLng(41.2048, 32.6218);
+
     return FlutterMap(
+      mapController: _mapController,
       options: MapOptions(
         initialCenter: center,
         initialZoom: 13,
@@ -34,35 +57,42 @@ class SearchMapView extends StatelessWidget {
           userAgentPackageName: 'com.yemis.app',
         ),
         MarkerLayer(
-          markers: listings.where((l) => l.latitude != null && l.longitude != null).map((listing) {
-            return Marker(
-              point: LatLng(listing.latitude!, listing.longitude!),
-              width: 40,
-              height: 40,
-              child: GestureDetector(
-                onTap: () => onMarkerTap(listing),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: accentColor, width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
+          markers:
+              widget.listings
+                  .where((l) => l.latitude != null && l.longitude != null)
+                  .map((listing) {
+                    return Marker(
+                      point: LatLng(listing.latitude!, listing.longitude!),
+                      width: 40,
+                      height: 40,
+                      child: GestureDetector(
+                        onTap: () => widget.onMarkerTap(listing),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: widget.accentColor,
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.location_on_rounded,
+                            color: widget.accentColor,
+                            size: 24,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.location_on_rounded,
-                    color: accentColor,
-                    size: 24,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
+                    );
+                  })
+                  .toList(),
         ),
       ],
     );

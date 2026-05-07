@@ -46,37 +46,63 @@ class VolunteerDetailBottomBar extends StatelessWidget {
 
           // Gönüllü Ol
           GestureDetector(
-            onTap: () async {
-              await vm.volunteer();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      LocaleKeys.volunteerDetail_volunteerSuccess.tr(
-                        namedArgs: {'title': listing.title},
-                      ),
-                    ),
-                    backgroundColor: AppColors.volunteerColor,
-                    behavior: SnackBarBehavior.floating,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
-            },
-            child: Container(
+            onTap: vm.isVolunteering
+                ? null
+                : () async {
+                    final success = await vm.becomeVolunteer();
+                    if (!context.mounted) return;
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            LocaleKeys.volunteerDetail_volunteerSuccess.tr(
+                              namedArgs: {'title': listing.title},
+                            ),
+                          ),
+                          backgroundColor: AppColors.volunteerColor,
+                          behavior: SnackBarBehavior.floating,
+                          duration: const Duration(seconds: 3),
+                        ),
+                      );
+                    } else if (vm.volunteerError != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(vm.volunteerError!),
+                          backgroundColor: Colors.red,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
               decoration: BoxDecoration(
-                gradient: AppColors.volunteerBackgroundGradient,
+                gradient: vm.isVolunteering
+                    ? null
+                    : AppColors.volunteerBackgroundGradient,
+                color: vm.isVolunteering
+                    ? AppColors.volunteerColor.withValues(alpha: 0.4)
+                    : null,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(
-                LocaleKeys.volunteerDetail_becomeButton.tr(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              child: vm.isVolunteering
+                  ? const SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      LocaleKeys.volunteerDetail_becomeButton.tr(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
             ),
           ),
         ],

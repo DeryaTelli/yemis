@@ -165,4 +165,10 @@ class MockVolunteerService implements IVolunteerService {
       shelterLongitude: 32.6100,
     ),
   ];
+
+  @override
+  Future<bool> becomeVolunteer(int mealId) async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
 }

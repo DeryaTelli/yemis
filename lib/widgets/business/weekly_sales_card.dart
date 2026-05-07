@@ -6,8 +6,13 @@ import 'bar_chart.dart';
 
 class WeeklySalesCard extends StatelessWidget {
   final List<double> salesData;
+  final String? imageUrl;
 
-  const WeeklySalesCard({super.key, required this.salesData});
+  const WeeklySalesCard({
+    super.key,
+    required this.salesData,
+    this.imageUrl,
+  });
 
   static const _days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cts', 'Paz'];
 
@@ -18,6 +23,10 @@ class WeeklySalesCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.2),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -40,7 +49,7 @@ class WeeklySalesCard extends StatelessWidget {
                   color: Color(0xFF1B1B1B),
                 ),
               ),
-              // Mascot character
+              // Mascot character or Business Profile Image
               Container(
                 width: 44,
                 height: 44,
@@ -48,11 +57,24 @@ class WeeklySalesCard extends StatelessWidget {
                   color: AppColors.primaryColor.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.store_rounded,
-                  color: AppColors.primaryColor,
-                  size: 24,
-                ),
+                child: imageUrl != null && imageUrl!.isNotEmpty
+                    ? ClipOval(
+                        child: Image.network(
+                          imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.store_rounded,
+                            color: AppColors.primaryColor,
+                            size: 24,
+                          ),
+                        ),
+                      )
+                    : const Icon(
+                        Icons.store_rounded,
+                        color: AppColors.primaryColor,
+                        size: 24,
+                      ),
               ),
             ],
           ),

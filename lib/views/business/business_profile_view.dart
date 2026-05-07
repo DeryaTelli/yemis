@@ -107,9 +107,9 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                   const SizedBox(height: 20),
 
                   // ─── Günlük Stats ─────────────────────────────────
-                  const Text(
-                    'Günlük',
-                    style: TextStyle(
+                  Text(
+                    LocaleKeys.businessProfile_dailyLabel.tr(),
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: Color(0xFF555555),
@@ -234,7 +234,7 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                         ),
                         ProfileMenuTile(
                           icon: Icons.logout_rounded,
-                          title: 'Çıkış Yap',
+                          title: LocaleKeys.foodProfile_logout.tr(),
                           onTap: () => vm.logout(context),
                         ),
                       ],

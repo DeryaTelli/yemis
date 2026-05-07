@@ -1,4 +1,4 @@
-// Bu dosya çeviri key'lerini sabit olarak tutar.
+﻿// Bu dosya çeviri key'lerini sabit olarak tutar.
 // JSON yapısındaki key hiyerarşisi burada yansıtılır.
 // Kullanım: LocaleKeys.auth_login_title.tr()
 abstract class LocaleKeys {
@@ -403,4 +403,133 @@ abstract class LocaleKeys {
   static const filters_breadPastry = 'filters.breadPastry';
   static const filters_market = 'filters.market';
   static const filters_buyNow = 'filters.buyNow';
+
+  // onboarding
+  static const onboarding_page1_title = 'onboarding.page1.title';
+  static const onboarding_page1_subtitle = 'onboarding.page1.subtitle';
+  static const onboarding_page1_description = 'onboarding.page1.description';
+  static const onboarding_page2_title = 'onboarding.page2.title';
+  static const onboarding_page2_subtitle = 'onboarding.page2.subtitle';
+  static const onboarding_page2_description = 'onboarding.page2.description';
+  static const onboarding_page3_title = 'onboarding.page3.title';
+  static const onboarding_page3_subtitle = 'onboarding.page3.subtitle';
+  static const onboarding_page3_description = 'onboarding.page3.description';
+  static const onboarding_page4_title = 'onboarding.page4.title';
+  static const onboarding_page4_subtitle = 'onboarding.page4.subtitle';
+  static const onboarding_page4_description = 'onboarding.page4.description';
+  static const onboarding_buttons_skip = 'onboarding.buttons.skip';
+  static const onboarding_buttons_next = 'onboarding.buttons.next';
+  static const onboarding_buttons_start = 'onboarding.buttons.start';
+
+  // Additional Keys
+  static const volunteerListingDetail_activeBadge = 'volunteerListingDetail.activeBadge';
+  static const volunteerListingDetail_freeLabel = 'volunteerListingDetail.freeLabel';
+  static const volunteerListingDetail_deliveryRange = 'volunteerListingDetail.deliveryRange';
+  static const volunteerListingDetail_locationSection = 'volunteerListingDetail.locationSection';
+  static const volunteerListingDetail_address = 'volunteerListingDetail.address';
+  static const volunteerListingDetail_descriptionSection = 'volunteerListingDetail.descriptionSection';
+  static const volunteerListingDetail_noContent = 'volunteerListingDetail.noContent';
+
+  static const volunteerListingCard_freeLabel = 'volunteerListingCard.freeLabel';
+
+  static const volunteerOrderTab_detailTitle = 'volunteerOrderTab.detailTitle';
+  static const volunteerOrderTab_detailSubtitle = 'volunteerOrderTab.detailSubtitle';
+  static const volunteerOrderTab_descriptionTitle = 'volunteerOrderTab.descriptionTitle';
+  static const volunteerOrderTab_ingredientsText = 'volunteerOrderTab.ingredientsText';
+  static const volunteerOrderTab_packagingText = 'volunteerOrderTab.packagingText';
+
+  static const volunteerAddListingForm_titleLabel = 'volunteerAddListingForm.titleLabel';
+  static const volunteerAddListingForm_titleHint = 'volunteerAddListingForm.titleHint';
+  static const volunteerAddListingForm_descriptionLabel = 'volunteerAddListingForm.descriptionLabel';
+  static const volunteerAddListingForm_descriptionHint = 'volunteerAddListingForm.descriptionHint';
+  static const volunteerAddListingForm_photoLabel = 'volunteerAddListingForm.photoLabel';
+  static const volunteerAddListingForm_endTimeLabel = 'volunteerAddListingForm.endTimeLabel';
+  static const volunteerAddListingForm_locationLabel = 'volunteerAddListingForm.locationLabel';
+  static const volunteerAddListingForm_priceLabel = 'volunteerAddListingForm.priceLabel';
+  static const volunteerAddListingForm_addressPlaceholder = 'volunteerAddListingForm.addressPlaceholder';
+  static const volunteerAddListingForm_noSavedAddress = 'volunteerAddListingForm.noSavedAddress';
+
+  static const foodFavoritesPage_empty = 'foodFavoritesPage.empty';
+  static const foodFavoritesPage_emptyHint = 'foodFavoritesPage.emptyHint';
+
+  static const foodReservationConfirm_title = 'foodReservationConfirm.title';
+  static const foodReservationConfirm_goToLocation = 'foodReservationConfirm.goToLocation';
+  static const foodReservationConfirm_cancel = 'foodReservationConfirm.cancel';
+  static const foodReservationConfirm_months_jan = 'foodReservationConfirm.months.jan';
+  static const foodReservationConfirm_months_feb = 'foodReservationConfirm.months.feb';
+  static const foodReservationConfirm_months_mar = 'foodReservationConfirm.months.mar';
+  static const foodReservationConfirm_months_apr = 'foodReservationConfirm.months.apr';
+  static const foodReservationConfirm_months_may = 'foodReservationConfirm.months.may';
+  static const foodReservationConfirm_months_jun = 'foodReservationConfirm.months.jun';
+  static const foodReservationConfirm_months_jul = 'foodReservationConfirm.months.jul';
+  static const foodReservationConfirm_months_aug = 'foodReservationConfirm.months.aug';
+  static const foodReservationConfirm_months_sep = 'foodReservationConfirm.months.sep';
+  static const foodReservationConfirm_months_oct = 'foodReservationConfirm.months.oct';
+  static const foodReservationConfirm_months_nov = 'foodReservationConfirm.months.nov';
+  static const foodReservationConfirm_months_dec = 'foodReservationConfirm.months.dec';
+  static const foodReservationConfirm_sectionNearby = 'foodReservationConfirm.sectionNearby';
+  static const foodReservationConfirm_sectionBuyNow = 'foodReservationConfirm.sectionBuyNow';
+  static const foodReservationConfirm_sectionTodayPopular = 'foodReservationConfirm.sectionTodayPopular';
+
+  static const foodOrderTab_categoryBreadPastry = 'foodOrderTab.categoryBreadPastry';
+  static const foodOrderTab_surpriseBoxDesc = 'foodOrderTab.surpriseBoxDesc';
+  static const foodOrderTab_listingDetail = 'foodOrderTab.listingDetail';
+  static const foodOrderTab_distanceText = 'foodOrderTab.distanceText';
+  static const foodOrderTab_category = 'foodOrderTab.category';
+  static const foodOrderTab_ingredientsAllergens = 'foodOrderTab.ingredientsAllergens';
+  static const foodOrderTab_surpriseIngredients = 'foodOrderTab.surpriseIngredients';
+  static const foodOrderTab_allergens = 'foodOrderTab.allergens';
+
+  static const businessListingDetail_approvedBadge = 'businessListingDetail.approvedBadge';
+  static const businessListingDetail_businessNameFallback = 'businessListingDetail.businessNameFallback';
+  static const businessListingDetail_createdAt = 'businessListingDetail.createdAt';
+  static const businessListingDetail_lastPickupTime = 'businessListingDetail.lastPickupTime';
+  static const businessListingDetail_category = 'businessListingDetail.category';
+  static const businessListingDetail_breadPastry = 'businessListingDetail.breadPastry';
+  static const businessListingDetail_notSpecified = 'businessListingDetail.notSpecified';
+  static const businessListingDetail_locationSection = 'businessListingDetail.locationSection';
+  static const businessListingDetail_address = 'businessListingDetail.address';
+  static const businessListingDetail_noAddress = 'businessListingDetail.noAddress';
+  static const businessListingDetail_contentSection = 'businessListingDetail.contentSection';
+  static const businessListingDetail_noContent = 'businessListingDetail.noContent';
+  static const businessListingDetail_allergensSection = 'businessListingDetail.allergensSection';
+  static const businessListingDetail_noAllergens = 'businessListingDetail.noAllergens';
+  static const businessListingDetail_stockStatus = 'businessListingDetail.stockStatus';
+  static const businessListingDetail_remaining = 'businessListingDetail.remaining';
+
+  static const businessListings_allTitle = 'businessListings.allTitle';
+  static const businessListings_soldTitle = 'businessListings.soldTitle';
+  static const businessListings_activeTitle = 'businessListings.activeTitle';
+  static const businessListings_expiredTitle = 'businessListings.expiredTitle';
+  static const businessListings_emptyAll = 'businessListings.emptyAll';
+  static const businessListings_emptySold = 'businessListings.emptySold';
+  static const businessListings_emptyActive = 'businessListings.emptyActive';
+  static const businessListings_emptyExpired = 'businessListings.emptyExpired';
+  static const businessListings_deleteDialogTitle = 'businessListings.deleteDialogTitle';
+  static const businessListings_deleteDialogMessage = 'businessListings.deleteDialogMessage';
+  static const businessListings_soldOut = 'businessListings.soldOut';
+  static const businessListings_expired = 'businessListings.expired';
+  static const businessListings_remaining = 'businessListings.remaining';
+  static const businessListings_noLocation = 'businessListings.noLocation';
+
+  static const businessProfileEdit_fullNameLabel = 'businessProfileEdit.fullNameLabel';
+  static const businessProfileEdit_fullNameHint = 'businessProfileEdit.fullNameHint';
+  static const businessProfileEdit_emailLabel = 'businessProfileEdit.emailLabel';
+  static const businessProfileEdit_emailHint = 'businessProfileEdit.emailHint';
+  static const businessProfileEdit_phoneLabel = 'businessProfileEdit.phoneLabel';
+  static const businessProfileEdit_updateButton = 'businessProfileEdit.updateButton';
+  static const businessProfileEdit_deleteAccountButton = 'businessProfileEdit.deleteAccountButton';
+  static const businessProfileEdit_cameraOption = 'businessProfileEdit.cameraOption';
+  static const businessProfileEdit_galleryOption = 'businessProfileEdit.galleryOption';
+
+  static const businessCard_noLocation = 'businessCard.noLocation';
+  static const businessLocationButton_placeholder = 'businessLocationButton.placeholder';
+
+  static const weeklySales_days_mon = 'weeklySales.days.mon';
+  static const weeklySales_days_tue = 'weeklySales.days.tue';
+  static const weeklySales_days_wed = 'weeklySales.days.wed';
+  static const weeklySales_days_thu = 'weeklySales.days.thu';
+  static const weeklySales_days_fri = 'weeklySales.days.fri';
+  static const weeklySales_days_sat = 'weeklySales.days.sat';
+  static const weeklySales_days_sun = 'weeklySales.days.sun';
 }

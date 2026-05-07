@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_reserve_viewmodel.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Ödeme yöntemi seçim bottom sheet'i.
 class FoodReserveBottomSheet extends StatelessWidget {
@@ -27,7 +29,7 @@ class FoodReserveBottomSheet extends StatelessWidget {
               ),
             ),
             _PaymentTile(
-              label: 'Google Pay ile öde',
+              label: LocaleKeys.foodReserve_googlePay.tr(),
               onTap: () {
                 vm.selectPayment(PaymentMethod.googlePay);
                 Navigator.pop(context);
@@ -35,7 +37,7 @@ class FoodReserveBottomSheet extends StatelessWidget {
             ),
             const Divider(height: 1, indent: 20, endIndent: 20),
             _PaymentTile(
-              label: 'Apple Pay ile öde',
+              label: LocaleKeys.foodReserve_applePay.tr(),
               onTap: () {
                 vm.selectPayment(PaymentMethod.applePay);
                 Navigator.pop(context);

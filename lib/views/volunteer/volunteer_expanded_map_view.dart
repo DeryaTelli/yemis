@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
+import '../../utils/theme/app_theme.dart';
 import '../../widgets/volunteer/volunteer_listing_card.dart';
 
 class VolunteerExpandedMapView extends StatefulWidget {
@@ -20,9 +21,11 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
+    return Theme(
+      data: AppTheme.themeFor(AppSection.volunteer),
+      child: Scaffold(
+        body: Stack(
+          children: [
           // ── Harita Alanı ────────────────────────────
           FlutterMap(
             options: MapOptions(
@@ -129,6 +132,7 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
             ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

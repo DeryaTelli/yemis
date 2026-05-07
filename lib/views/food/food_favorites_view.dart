@@ -131,17 +131,17 @@ class _EmptyFavoritesState extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Henüz favori ilan yok',
-            style: TextStyle(
+          Text(
+            LocaleKeys.foodFavoritesPage_empty.tr(),
+            style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w700,
               color: Color(0xFF333333),
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Beğendiğin ilanlardaki  ♡  ikonuna\ntıklayarak favorilere ekleyebilirsin.',
+          Text(
+            LocaleKeys.foodFavoritesPage_emptyHint.tr(),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,

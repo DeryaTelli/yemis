@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import '../../models/business/business_listing_model.dart';
 import '../../services/business/i_business_service.dart';
 import '../../utils/constants/app_colors.dart';
@@ -131,7 +133,7 @@ class _BusinessListingDetailBody extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  item.businessName ?? 'İşletme Adı',
+                                  item.businessName ?? LocaleKeys.businessListingDetail_businessNameFallback.tr(),
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w800,
@@ -155,9 +157,9 @@ class _BusinessListingDetailBody extends StatelessWidget {
                                         .withOpacity(0.9),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Text(
-                                    'ONAYLI İŞLETME',
-                                    style: TextStyle(
+                                  child: Text(
+                                    LocaleKeys.businessListingDetail_approvedBadge.tr(),
+                                    style: const TextStyle(
                                       fontSize: 10,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -223,28 +225,28 @@ class _BusinessListingDetailBody extends StatelessWidget {
                     const SizedBox(height: 20),
                     _buildInfoRow(
                       Icons.calendar_today_outlined,
-                      'Oluşturulma:',
+                      LocaleKeys.businessListingDetail_createdAt.tr(),
                       _formatDate(item.createdAt),
                     ),
                     const SizedBox(height: 12),
                     _buildInfoRow(
                       Icons.timer_outlined,
-                      'Son Alım Saati:',
+                      LocaleKeys.businessListingDetail_lastPickupTime.tr(),
                       _formatDate(item.pickupEndTime),
                     ),
                     const SizedBox(height: 12),
                     _buildInfoRow(
                       Icons.grid_view_rounded,
-                      'Kategori:',
+                      LocaleKeys.businessListingDetail_category.tr(),
                       item.category != null
                           ? (item.category!.toLowerCase() == 'patiseri'
-                              ? 'Ekmek & Pasta'
+                              ? LocaleKeys.businessListingDetail_breadPastry.tr()
                               : item.category!.substring(0, 1).toUpperCase() +
                                   item.category!.substring(1))
-                          : 'Belirtilmedi',
+                          : LocaleKeys.businessListingDetail_notSpecified.tr(),
                     ),
                     const SizedBox(height: 24),
-                    _sectionTitle('Konum'),
+                    _sectionTitle(LocaleKeys.businessListingDetail_locationSection.tr()),
                     const SizedBox(height: 12),
                     Container(
                       decoration: BoxDecoration(
@@ -272,20 +274,20 @@ class _BusinessListingDetailBody extends StatelessWidget {
                     const SizedBox(height: 12),
                     _buildInfoRow(
                       Icons.location_on_outlined,
-                      'Adres:',
-                      item.address ?? 'Konum Belirtilmedi',
+                      LocaleKeys.businessListingDetail_address.tr(),
+                      item.address ?? LocaleKeys.businessListingDetail_noAddress.tr(),
                     ),
                     const SizedBox(height: 16),
-                    _sectionTitle('İçerik'),
+                    _sectionTitle(LocaleKeys.businessListingDetail_contentSection.tr()),
                     const SizedBox(height: 8),
                     _contentBox(
                       item.description ??
-                          'Bu ilan için henüz bir içerik detayı girilmemiş.',
+                          LocaleKeys.businessListingDetail_noContent.tr(),
                     ),
                     const SizedBox(height: 20),
-                    _sectionTitle('Alerjenler'),
+                    _sectionTitle(LocaleKeys.businessListingDetail_allergensSection.tr()),
                     const SizedBox(height: 8),
-                    _contentBox(item.allergens ?? 'Belirtilmemiş'),
+                    _contentBox(item.allergens ?? LocaleKeys.businessListingDetail_noAllergens.tr()),
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -378,17 +380,17 @@ class _BusinessListingDetailBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Sol Taraf: Stok Durumu (Yeni Yer)
-          const Row(
+          Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.inventory_2_outlined,
                 color: AppColors.primaryColor,
                 size: 22,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
-                'Stok Durumu',
-                style: TextStyle(
+                LocaleKeys.businessListingDetail_stockStatus.tr(),
+                style: const TextStyle(
                   color: AppColors.primaryColor,
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
@@ -401,9 +403,9 @@ class _BusinessListingDetailBody extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Text(
-                'Kalan Adet',
-                style: TextStyle(
+              Text(
+                LocaleKeys.businessListingDetail_remaining.tr(),
+                style: const TextStyle(
                   fontSize: 13,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500,
@@ -426,7 +428,7 @@ class _BusinessListingDetailBody extends StatelessWidget {
   }
 
   String _formatDate(DateTime? date) {
-    if (date == null) return 'Belirtilmedi';
+    if (date == null) return LocaleKeys.businessListingDetail_notSpecified.tr();
     return DateFormat('dd.MM.yyyy HH:mm').format(date);
   }
 }

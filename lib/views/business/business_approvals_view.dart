@@ -10,7 +10,6 @@ import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/business/business_approvals_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 
-
 class BusinessApprovalsView extends StatelessWidget {
   const BusinessApprovalsView({super.key});
 
@@ -21,22 +20,15 @@ class BusinessApprovalsView extends StatelessWidget {
       child: Consumer<BusinessApprovalsViewModel>(
         builder: (context, vm, _) {
           return Scaffold(
-            backgroundColor: const Color(0xFFF5F5F5),
+            backgroundColor: Colors.white,
             appBar: AppBar(
               title: Text(LocaleKeys.businessApprovals_title.tr()),
-              backgroundColor: AppColors.primaryColor,
-              foregroundColor: Colors.white,
-              automaticallyImplyLeading: false,
-              elevation: 0,
             ),
             body: vm.reservations.isEmpty
                 ? Center(
                     child: Text(
                       LocaleKeys.businessApprovals_noPending.tr(),
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF888888),
-                      ),
+                      style: TextStyle(fontSize: 15, color: Color(0xFF888888)),
                     ),
                   )
                 : ListView.builder(
@@ -81,5 +73,3 @@ class BusinessApprovalsView extends StatelessWidget {
     );
   }
 }
-
-

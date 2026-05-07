@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../../models/food/food_listing.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Ödeme yöntemi seçenekleri.
 enum PaymentMethod {
@@ -11,9 +13,9 @@ extension PaymentMethodLabel on PaymentMethod {
   String get label {
     switch (this) {
       case PaymentMethod.googlePay:
-        return 'Google Pay ile öde';
+        return LocaleKeys.foodReserve_googlePay.tr();
       case PaymentMethod.applePay:
-        return 'Apple Pay ile öde';
+        return LocaleKeys.foodReserve_applePay.tr();
     }
   }
 }
@@ -49,22 +51,22 @@ class FoodReserveViewModel extends ChangeNotifier {
         now.month == start.month &&
         now.day == start.day;
     if (isToday) {
-      return 'Bugün Al  ${listing.timeRange}';
+      return '${LocaleKeys.common_pickupToday.tr()}  ${listing.timeRange}';
     } else {
-      const months = [
+      final months = [
         '',
-        'Ocak',
-        'Şubat',
-        'Mart',
-        'Nisan',
-        'Mayıs',
-        'Haziran',
-        'Temmuz',
-        'Ağustos',
-        'Eylül',
-        'Ekim',
-        'Kasım',
-        'Aralık'
+        LocaleKeys.foodReservationConfirm_months_jan.tr(),
+        LocaleKeys.foodReservationConfirm_months_feb.tr(),
+        LocaleKeys.foodReservationConfirm_months_mar.tr(),
+        LocaleKeys.foodReservationConfirm_months_apr.tr(),
+        LocaleKeys.foodReservationConfirm_months_may.tr(),
+        LocaleKeys.foodReservationConfirm_months_jun.tr(),
+        LocaleKeys.foodReservationConfirm_months_jul.tr(),
+        LocaleKeys.foodReservationConfirm_months_aug.tr(),
+        LocaleKeys.foodReservationConfirm_months_sep.tr(),
+        LocaleKeys.foodReservationConfirm_months_oct.tr(),
+        LocaleKeys.foodReservationConfirm_months_nov.tr(),
+        LocaleKeys.foodReservationConfirm_months_dec.tr(),
       ];
       return '${start.day} ${months[start.month]}  ${listing.timeRange}';
     }

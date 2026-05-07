@@ -25,18 +25,18 @@ class VolunteerOrderTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Gönüllü Bilgilendirmesi ────────────────────────
-          const Text(
-            'Gönüllü İlan Detayı',
-            style: TextStyle(
+          Text(
+            LocaleKeys.volunteerOrderTab_detailTitle.tr(),
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.',
-            style: TextStyle(
+          Text(
+            LocaleKeys.volunteerOrderTab_detailSubtitle.tr(),
+            style: const TextStyle(
               fontSize: 13,
               color: AppColors.hintTextColor,
               height: 1.5,
@@ -45,9 +45,9 @@ class VolunteerOrderTab extends StatelessWidget {
           const SizedBox(height: 20),
 
           // ── İlan Açıklaması Başlığı ───────────────────────
-          const Text(
-            'İlan Açıklaması',
-            style: TextStyle(
+          Text(
+            LocaleKeys.volunteerOrderTab_descriptionTitle.tr(),
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
               color: AppColors.primaryTextColor,
@@ -278,7 +278,7 @@ class _ExpandableDetail extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.${listing.ingredients != null ? '\n\n${listing.ingredients}' : ''}',
+                    '${LocaleKeys.volunteerOrderTab_ingredientsText.tr()}${listing.ingredients != null ? '\n\n${listing.ingredients}' : ''}',
                     style: const TextStyle(
                       fontSize: 13,
                       color: AppColors.hintTextColor,
@@ -296,7 +296,7 @@ class _ExpandableDetail extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.${listing.packageInfo != null ? '\n\n${listing.packageInfo}' : ''}',
+                    '${LocaleKeys.volunteerOrderTab_packagingText.tr()}${listing.packageInfo != null ? '\n\n${listing.packageInfo}' : ''}',
                     style: const TextStyle(
                       fontSize: 13,
                       color: AppColors.hintTextColor,

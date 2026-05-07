@@ -37,11 +37,12 @@ class BannerCard extends StatelessWidget {
 
           // ── Görsel — Sol Alt ──────────────────────────
           Positioned(
-            left: 20,
-            bottom: 10,
+            left: 30,
+            bottom: 30,
             child: Image.asset(
               banner.imagePath,
-              height: 120,
+              height: 180,
+              width: 150,
               fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),

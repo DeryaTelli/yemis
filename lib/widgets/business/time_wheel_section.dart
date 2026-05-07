@@ -26,9 +26,9 @@ class TimeWheelSection extends StatelessWidget {
           Row(
             children: [
               WheelColumn(
-                count: 12,
-                initialItem: vm.selectedHour - 1,
-                labelBuilder: (i) => '${i + 1}',
+                count: 24,
+                initialItem: vm.selectedHour,
+                labelBuilder: (i) => i.toString().padLeft(2, '0'),
                 onChanged: vm.onHourChanged,
               ),
               WheelColumn(
@@ -36,12 +36,6 @@ class TimeWheelSection extends StatelessWidget {
                 initialItem: vm.selectedMinute,
                 labelBuilder: (i) => i.toString().padLeft(2, '0'),
                 onChanged: vm.onMinuteChanged,
-              ),
-              WheelColumn(
-                count: 2,
-                initialItem: vm.isAm ? 0 : 1,
-                labelBuilder: (i) => i == 0 ? 'AM' : 'PM',
-                onChanged: vm.setAmPm,
               ),
             ],
           ),

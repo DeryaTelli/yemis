@@ -27,7 +27,10 @@ class VolunteerEditListingViewModel extends ChangeNotifier {
     _description = initialListing.description ?? '';
     _locationAddress = initialListing.location;
     if (initialListing.latitude != null && initialListing.longitude != null) {
-      _selectedLatLng = LatLng(initialListing.latitude!, initialListing.longitude!);
+      _selectedLatLng = LatLng(
+        initialListing.latitude!,
+        initialListing.longitude!,
+      );
     }
     _existingImageUrl = initialListing.imageUrl;
 
@@ -125,17 +128,14 @@ class VolunteerEditListingViewModel extends ChangeNotifier {
 
   // ─── Bitiş Saati ──────────────────────────────────────
 
-  int _selectedHour = 5;
+  int _selectedHour = 12;
   int get selectedHour => _selectedHour;
 
-  int _selectedMinute = 41;
+  int _selectedMinute = 0;
   int get selectedMinute => _selectedMinute;
 
-  bool _isAm = false;
-  bool get isAm => _isAm;
-
   void onHourChanged(int index) {
-    _selectedHour = index + 1;
+    _selectedHour = index;
     notifyListeners();
   }
 
@@ -145,11 +145,7 @@ class VolunteerEditListingViewModel extends ChangeNotifier {
   }
 
   void setAmPm(int index) {
-    final newIsAm = index == 0;
-    if (_isAm != newIsAm) {
-      _isAm = newIsAm;
-      notifyListeners();
-    }
+    // 24h format.
   }
 
   // ─── Konum ────────────────────────────────────────────
@@ -182,7 +178,8 @@ class VolunteerEditListingViewModel extends ChangeNotifier {
       final address = result['address'] as String?;
       if (latLng != null) {
         _selectedLatLng = latLng;
-        _locationAddress = address ??
+        _locationAddress =
+            address ??
             '${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
         notifyListeners();
       }
@@ -217,11 +214,15 @@ class VolunteerEditListingViewModel extends ChangeNotifier {
       }
 
       int hour = _selectedHour;
-      if (!_isAm && hour < 12) hour += 12;
-      if (_isAm && hour == 12) hour = 0;
 
       final now = DateTime.now();
-      final pickupEndTime = DateTime(now.year, now.month, now.day, hour, _selectedMinute);
+      final pickupEndTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        hour,
+        _selectedMinute,
+      );
       final finalPickupEndTime = pickupEndTime.isBefore(now)
           ? pickupEndTime.add(const Duration(days: 1))
           : pickupEndTime;
@@ -240,7 +241,10 @@ class VolunteerEditListingViewModel extends ChangeNotifier {
         'delivery_status': 'active',
       };
 
-      final success = await _volunteerService.updateMeal(int.parse(initialListing.id), data);
+      final success = await _volunteerService.updateMeal(
+        int.parse(initialListing.id),
+        data,
+      );
 
       if (success) {
         _isSuccess = true;

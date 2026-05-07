@@ -1,4 +1,4 @@
-{
+﻿{
     "auth": {
         "login": {
             "title": "Log In",
@@ -361,5 +361,163 @@
         "breadPastry": "Bread & Pastry",
         "market": "Market",
         "buyNow": "Buy Now"
+    },
+    "onboarding": {
+        "page1": {
+            "title": "Welcome to Yemis",
+            "subtitle": "Stop Waste, Share Goodness",
+            "description": "Your social benefit-oriented platform preventing food waste"
+        },
+        "page2": {
+            "title": "Discounted from Businesses",
+            "subtitle": "Food doesn't go to waste",
+            "description": "Buy fresh leftover food at affordable prices at the end of the day"
+        },
+        "page3": {
+            "title": "Help Shelters",
+            "subtitle": "Our friends are fed",
+            "description": "Share your leftover food at home through volunteers"
+        },
+        "page4": {
+            "title": "Let's Make a Difference Together",
+            "subtitle": "Share, evaluate, turn into goodness",
+            "description": "Protect the environment, save money, share goodness"
+        },
+        "buttons": {
+            "skip": "Skip",
+            "next": "Next",
+            "start": "Start"
+        }
+    }
+,
+    "volunteerListingDetail": {
+        "activeBadge": "ACTIVE LISTING",
+        "freeLabel": "FREE",
+        "deliveryRange": "Delivery Range:",
+        "locationSection": "Location",
+        "address": "Address:",
+        "descriptionSection": "Description",
+        "noContent": "No content has been provided for this listing yet."
+    },
+    "volunteerListingCard": {
+        "freeLabel": "FREE"
+    },
+    "volunteerOrderTab": {
+        "detailTitle": "Volunteer Listing Detail",
+        "detailSubtitle": "These packages are not for human consumption. They are prepared solely to be delivered voluntarily to street animals or shelters.",
+        "descriptionTitle": "Listing Description",
+        "ingredientsText": "There may be inconsistencies in the ingredient or allergen information of the products. Please consult the venue directly.",
+        "packagingText": "To deliver the volunteer meal to a shelter or street animals, please remember to bring a bag or carrying package."
+    },
+    "volunteerAddListingForm": {
+        "titleLabel": "Listing Title",
+        "titleHint": "E.g.: Food for Street Animals",
+        "descriptionLabel": "Description",
+        "descriptionHint": "Provide information about the listing content...",
+        "photoLabel": "Photo",
+        "endTimeLabel": "End Time",
+        "locationLabel": "Location",
+        "priceLabel": "Listing Price",
+        "addressPlaceholder": "Select Address",
+        "noSavedAddress": "No saved address found."
+    },
+    "foodFavoritesPage": {
+        "empty": "No favorite listings yet",
+        "emptyHint": "You can add listings to favorites by tapping the heart icon."
+    },
+    "foodReservationConfirm": {
+        "title": "Reservation",
+        "goToLocation": "Go to Location",
+        "cancel": "Cancel",
+        "months": {
+            "jan": "January",
+            "feb": "February",
+            "mar": "March",
+            "apr": "April",
+            "may": "May",
+            "jun": "June",
+            "jul": "July",
+            "aug": "August",
+            "sep": "September",
+            "oct": "October",
+            "nov": "November",
+            "dec": "December"
+        },
+        "sectionNearby": "Nearby Places",
+        "sectionBuyNow": "Buy Now",
+        "sectionTodayPopular": "Today Popular"
+    },
+    "foodOrderTab": {
+        "categoryBreadPastry": "Bread & Pastry",
+        "surpriseBoxDesc": "This package consists of various foods that could not be sold at the end of the day but are still fresh. What you get is a complete surprise.",
+        "listingDetail": "Listing Detail",
+        "distanceText": "The business is {distance} away from you",
+        "category": "Category",
+        "ingredientsAllergens": "Ingredients & Allergens",
+        "surpriseIngredients": "We cannot tell you exactly what is in the package because it is a surprise. Please ask the venue directly for allergen or ingredient questions.",
+        "allergens": "Allergens: {allergens}"
+    },
+    "businessListingDetail": {
+        "approvedBadge": "APPROVED BUSINESS",
+        "businessNameFallback": "Business Name",
+        "createdAt": "Created:",
+        "lastPickupTime": "Last Pickup Time:",
+        "category": "Category:",
+        "breadPastry": "Bread & Pastry",
+        "notSpecified": "Not specified",
+        "locationSection": "Location",
+        "address": "Address:",
+        "noAddress": "Location Not Specified",
+        "contentSection": "Content",
+        "noContent": "No content detail has been added for this listing yet.",
+        "allergensSection": "Allergens",
+        "noAllergens": "Not specified",
+        "stockStatus": "Stock Status",
+        "remaining": "Remaining"
+    },
+    "businessListings": {
+        "deleteError": "An error occurred while deleting the listing.",
+        "allTitle": "My Listings",
+        "soldTitle": "Sold Orders",
+        "activeTitle": "Active Listings",
+        "expiredTitle": "Expired Listings",
+        "emptyAll": "You have no listings yet.",
+        "emptySold": "You have no sold orders yet.",
+        "emptyActive": "You have no added listings yet.",
+        "emptyExpired": "You have no expired listings yet.",
+        "deleteDialogTitle": "Delete Listing",
+        "deleteDialogMessage": "Are you sure you want to delete this listing?",
+        "soldOut": "Sold Out",
+        "expired": "Expired",
+        "remaining": "Remaining: {available} / {total}",
+        "noLocation": "Location Not Specified"
+    },
+    "businessProfileEdit": {
+        "fullNameLabel": "Full Name",
+        "fullNameHint": "Enter your first and last name",
+        "emailLabel": "Email",
+        "emailHint": "Enter your email address",
+        "phoneLabel": "Phone Number",
+        "updateButton": "Update Profile",
+        "deleteAccountButton": "Delete Account",
+        "cameraOption": "Take with Camera",
+        "galleryOption": "Choose from Gallery"
+    },
+    "businessCard": {
+        "noLocation": "Location Not Specified"
+    },
+    "businessLocationButton": {
+        "placeholder": "Select Address"
+    },
+    "weeklySales": {
+        "days": {
+            "mon": "Mon",
+            "tue": "Tue",
+            "wed": "Wed",
+            "thu": "Thu",
+            "fri": "Fri",
+            "sat": "Sat",
+            "sun": "Sun"
+        }
     }
 }

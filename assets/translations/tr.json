@@ -1,4 +1,4 @@
-{
+﻿{
     "auth": {
         "login": {
             "title": "Giriş Yap",
@@ -340,7 +340,67 @@
         "title": "Favori"
     },
     "businessListings": {
-        "deleteError": "İlan silinirken bir hata oluştu."
+        "deleteError": "İlan silinirken bir hata oluştu.",
+        "allTitle": "İlanlarım",
+        "soldTitle": "Satılan Siparişler",
+        "activeTitle": "Eklenen İlanlar",
+        "expiredTitle": "Süresi Dolan İlanlar",
+        "emptyAll": "Henüz bir ilanınız bulunmuyor.",
+        "emptySold": "Henüz satılmış bir siparişiniz bulunmuyor.",
+        "emptyActive": "Henüz eklenmiş bir ilanınız bulunmuyor.",
+        "emptyExpired": "Henüz süresi dolmuş bir ilanınız bulunmuyor.",
+        "deleteDialogTitle": "İlanı Sil",
+        "deleteDialogMessage": "Bu ilanı silmek istediğinizden emin misiniz?",
+        "soldOut": "Tükendi",
+        "expired": "Süresi Doldu",
+        "remaining": "Kalan: {available} / {total}",
+        "noLocation": "Konum Belirtilmedi"
+    },
+    "businessListingDetail": {
+        "approvedBadge": "ONAYLI İŞLETME",
+        "businessNameFallback": "İşletme Adı",
+        "createdAt": "Oluşturulma:",
+        "lastPickupTime": "Son Alım Saati:",
+        "category": "Kategori:",
+        "breadPastry": "Ekmek & Pasta",
+        "notSpecified": "Belirtilmedi",
+        "locationSection": "Konum",
+        "address": "Adres:",
+        "noAddress": "Konum Belirtilmedi",
+        "contentSection": "İçerik",
+        "noContent": "Bu ilan için henüz bir içerik detayı girilmemiş.",
+        "allergensSection": "Alerjenler",
+        "noAllergens": "Belirtilmemiş",
+        "stockStatus": "Stok Durumu",
+        "remaining": "Kalan Adet"
+    },
+    "businessProfileEdit": {
+        "fullNameLabel": "Ad Soyad",
+        "fullNameHint": "Adınızı ve soyadınızı girin",
+        "emailLabel": "E-posta",
+        "emailHint": "E-posta adresinizi girin",
+        "phoneLabel": "Telefon Numarası",
+        "updateButton": "Profilini Güncelle",
+        "deleteAccountButton": "Hesabı Sil",
+        "cameraOption": "Kamera ile Çek",
+        "galleryOption": "Galeriden Seç"
+    },
+    "businessCard": {
+        "noLocation": "Konum Belirtilmedi"
+    },
+    "businessLocationButton": {
+        "placeholder": "Adres Seçiniz"
+    },
+    "weeklySales": {
+        "days": {
+            "mon": "Pzt",
+            "tue": "Sal",
+            "wed": "Çar",
+            "thu": "Per",
+            "fri": "Cum",
+            "sat": "Cts",
+            "sun": "Paz"
+        }
     },
     "businessEditOrder": {
         "successTitle": "Başarılı",
@@ -361,5 +421,100 @@
         "breadPastry": "Ekmek & Pasta",
         "market": "Market",
         "buyNow": "Şimdi Al"
+    },
+    "onboarding": {
+        "page1": {
+            "title": "Yemis'e Hoş Geldiniz",
+            "subtitle": "İsrafa Dur De, İyiliği Paylaş",
+            "description": "Gıda israfını önleyen, sosyal fayda odaklı platformunuz"
+        },
+        "page2": {
+            "title": "İşletmelerden İndirimli",
+            "subtitle": "Yiyecekler çöpe gitmez",
+            "description": "Gün sonunda kalan taze yiyecekleri uygun fiyatlarla alın"
+        },
+        "page3": {
+            "title": "Barınaklara Yardım",
+            "subtitle": "Can dostlarımız doyurulur",
+            "description": "Evinizdeki artan yemekleri gönüllüler aracılığıyla paylaşın"
+        },
+        "page4": {
+            "title": "Birlikte Fark Yaratalım",
+            "subtitle": "Paylaş, değerlendir, iyiliğe dönüşsün",
+            "description": "Çevreyi koruyun, tasarruf edin, iyiliği paylaşın"
+        },
+        "buttons": {
+            "skip": "Geç",
+            "next": "İleri",
+            "start": "Başlat"
+        }
+    }
+,
+    "volunteerListingDetail": {
+        "activeBadge": "AKTİF İLAN",
+        "freeLabel": "ÜCRETSİZ",
+        "deliveryRange": "Teslimat Aralığı:",
+        "locationSection": "Konum",
+        "address": "Adres:",
+        "descriptionSection": "Açıklama",
+        "noContent": "Bu ilan için henüz bir içerik detayı girilmemiş."
+    },
+    "volunteerListingCard": {
+        "freeLabel": "ÜCRETSİZ"
+    },
+    "volunteerOrderTab": {
+        "detailTitle": "Gönüllü İlan Detayı",
+        "detailSubtitle": "Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.",
+        "descriptionTitle": "İlan Açıklaması",
+        "ingredientsText": "Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Lütfen doğrudan mekâna danışınız.",
+        "packagingText": "Gönüllü yemeği barınağa ulaştırabilmek için lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız."
+    },
+    "volunteerAddListingForm": {
+        "titleLabel": "İlan Başlığı",
+        "titleHint": "Örn: Sokak Hayvanları İçin Yemek",
+        "descriptionLabel": "Açıklama",
+        "descriptionHint": "İlan içeriği hakkında bilgi veriniz...",
+        "photoLabel": "Fotoğraf",
+        "endTimeLabel": "Bitiş Saati",
+        "locationLabel": "Lokasyon",
+        "priceLabel": "İlan Fiyatı",
+        "addressPlaceholder": "Adres Seçiniz",
+        "noSavedAddress": "Kayıtlı adres bulunamadı."
+    },
+    "foodFavoritesPage": {
+        "empty": "Henüz favori ilan yok",
+        "emptyHint": "Beğendiğin ilanlardaki kalp ikonuna tıklayarak favorilere ekleyebilirsin."
+    },
+    "foodReservationConfirm": {
+        "title": "Rezervasyon",
+        "goToLocation": "Lokasyona Git",
+        "cancel": "İptal Et",
+        "months": {
+            "jan": "Ocak",
+            "feb": "Şubat",
+            "mar": "Mart",
+            "apr": "Nisan",
+            "may": "Mayıs",
+            "jun": "Haziran",
+            "jul": "Temmuz",
+            "aug": "Ağustos",
+            "sep": "Eylül",
+            "oct": "Ekim",
+            "nov": "Kasım",
+            "dec": "Aralık"
+        },
+        "sectionNearby": "Sana Yakın Yerler",
+        "sectionBuyNow": "Şimdi Al",
+        "sectionTodayPopular": "Bugün Popüler"
+    },
+    "foodOrderTab": {
+        "categoryBreadPastry": "Ekmek & Pasta",
+        "surpriseBoxDesc": "Bu paket, gün sonunda satılamayan ama hâlâ taze olan çeşitli yiyeceklerden oluşur. Ne çıkacağı tamamen sürprizdir.",
+        "listingDetail": "İlan Detayı",
+        "distanceText": "İşletme size {distance} uzaklıkta",
+        "category": "Kategori",
+        "ingredientsAllergens": "İçerikler & Alerjenler",
+        "surpriseIngredients": "Paketin içeriğini kesin olarak söyleyemiyoruz. Alerjen sorularınız varsa lütfen doğrudan mekâna sorunuz.",
+        "allergens": "Alerjenler: {allergens}"
     }
 }

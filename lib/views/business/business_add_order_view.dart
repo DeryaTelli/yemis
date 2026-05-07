@@ -89,7 +89,7 @@ class _BodyState extends State<_Body> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _titleController,
-                hintText: 'Örn: Sürpriz Kahvaltı Kutusu',
+                hintText: LocaleKeys.businessAddOrder_titleHint.tr(),
                 onChanged: vm.onTitleChanged,
                 borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
               ),
@@ -127,7 +127,7 @@ class _BodyState extends State<_Body> {
                             vm.selectedCategory != null
                                 ? (vm.selectedCategory!.toLowerCase() ==
                                           'patiseri'
-                                      ? 'Ekmek & Pasta'
+                                      ? LocaleKeys.filters_breadPastry.tr()
                                       : vm.selectedCategory!
                                                 .substring(0, 1)
                                                 .toUpperCase() +
@@ -218,7 +218,7 @@ class _BodyState extends State<_Body> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _descriptionController,
-                hintText: 'İlanınızla ilgili detaylı bilgi giriniz...',
+                hintText: LocaleKeys.businessAddOrder_descriptionHint.tr(),
                 maxLines: 3,
                 onChanged: vm.onDescriptionChanged,
                 borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
@@ -230,7 +230,7 @@ class _BodyState extends State<_Body> {
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _allergensController,
-                hintText: 'Örn: Glüten, Süt, Yumurta içerir...',
+                hintText: LocaleKeys.businessAddOrder_allergensHint.tr(),
                 onChanged: vm.onAllergensChanged,
                 borderColor: AppColors.primaryColor.withValues(alpha: 0.3),
               ),
@@ -414,7 +414,7 @@ class _BodyState extends State<_Body> {
                 return ListTile(
                   title: Text(
                     cat.toLowerCase() == 'patiseri'
-                        ? 'Ekmek & Pasta'
+                        ? LocaleKeys.filters_breadPastry.tr()
                         : cat.substring(0, 1).toUpperCase() + cat.substring(1),
                     style: TextStyle(
                       fontWeight: isSelected

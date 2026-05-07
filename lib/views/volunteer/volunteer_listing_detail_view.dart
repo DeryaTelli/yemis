@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
+import 'package:yemis/utils/theme/app_theme.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../services/volunteer/i_volunteer_service.dart';
 import '../../utils/constants/app_colors.dart';
@@ -23,12 +26,15 @@ class VolunteerListingDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) => VolunteerListingDetailViewModel(
-        volunteerService: ctx.read<IVolunteerService>(),
-        listing: listing,
+    return Theme(
+      data: AppTheme.themeFor(AppSection.volunteer),
+      child: ChangeNotifierProvider(
+        create: (ctx) => VolunteerListingDetailViewModel(
+          volunteerService: ctx.read<IVolunteerService>(),
+          listing: listing,
+        ),
+        child: _VolunteerListingDetailBody(isEditable: isEditable),
       ),
-      child: _VolunteerListingDetailBody(isEditable: isEditable),
     );
   }
 }
@@ -201,8 +207,8 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                                     ),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
-                                  child: const Text(
-                                    'AKTİF İLAN',
+                                  child: Text(
+                                    LocaleKeys.volunteerListingDetail_activeBadge.tr(),
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: Colors.white,
@@ -251,8 +257,8 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                             color: AppColors.volunteerColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: const Text(
-                            'ÜCRETSİZ',
+                          child:  Text(
+                            LocaleKeys.volunteerListingDetail_freeLabel.tr(),
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w900,
@@ -265,7 +271,7 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                     const SizedBox(height: 20),
                     _buildInfoRow(
                       Icons.timer_outlined,
-                      'Teslimat Aralığı:',
+                      LocaleKeys.volunteerListingDetail_deliveryRange.tr(),
                       item.timeRange,
                     ),
                     const SizedBox(height: 24),
@@ -303,11 +309,11 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                       item.location,
                     ),
                     const SizedBox(height: 16),
-                    _sectionTitle('Açıklama'),
+                    _sectionTitle(LocaleKeys.volunteerListingDetail_descriptionSection.tr()),
                     const SizedBox(height: 8),
                     _contentBox(
                       item.description ??
-                          'Bu ilan için henüz bir içerik detayı girilmemiş.',
+                          LocaleKeys.volunteerListingDetail_noContent.tr(),
                     ),
                     const SizedBox(height: 40),
                   ],

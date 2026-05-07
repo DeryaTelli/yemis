@@ -104,17 +104,14 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   }
 
   // ─── Bitiş Saati ──────────────────────────────────────
-  int _selectedHour = 5;
+  int _selectedHour = 12;
   int get selectedHour => _selectedHour;
 
-  int _selectedMinute = 41;
+  int _selectedMinute = 0;
   int get selectedMinute => _selectedMinute;
 
-  bool _isAm = true;
-  bool get isAm => _isAm;
-
   void onHourChanged(int index) {
-    _selectedHour = index + 1;
+    _selectedHour = index;
     notifyListeners();
   }
 
@@ -124,11 +121,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   }
 
   void setAmPm(int index) {
-    final newIsAm = index == 0;
-    if (_isAm != newIsAm) {
-      _isAm = newIsAm;
-      notifyListeners();
-    }
+    // 24 saat formatına geçildiği için bu metod artık kullanılmıyor.
   }
 
   // ─── Konum ────────────────────────────────────────────
@@ -332,9 +325,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
       final pickupStartTime = now.toUtc().toIso8601String();
 
       // Bitiş saati için bugünün tarihini ve seçilen saati kullan
-      int hour = _isAm
-          ? (_selectedHour == 12 ? 0 : _selectedHour)
-          : (_selectedHour == 12 ? 12 : _selectedHour + 12);
+      int hour = _selectedHour;
       final pickupEndTime = DateTime(
         now.year,
         now.month,
@@ -392,9 +383,8 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
   void clearForm() {
     _title = '';
     _selectedImage = null;
-    _selectedHour = 5;
-    _selectedMinute = 41;
-    _isAm = true;
+    _selectedHour = 12;
+    _selectedMinute = 0;
     _selectedLatLng = null;
     _selectedAddressId = null;
     _locationAddress = '';

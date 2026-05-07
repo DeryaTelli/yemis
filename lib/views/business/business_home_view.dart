@@ -33,7 +33,7 @@ class BusinessHomeView extends StatelessWidget {
             moduleType: AppModuleType.business,
             showChatHead: true,
             child: Scaffold(
-              backgroundColor: const Color(0xFFF5F5F5),
+              backgroundColor: Colors.white,
               appBar: HomeAppBar(
                 title: vm.appBarTitle,
                 backgroundColor: vm.appBarColor,
@@ -48,7 +48,10 @@ class BusinessHomeView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ── Haftalık Satış Özeti ────────────────────
-                    WeeklySalesCard(salesData: vm.weeklySales),
+                    WeeklySalesCard(
+                      salesData: vm.weeklySales,
+                      imageUrl: vm.profileImageUrl,
+                    ),
                     const SizedBox(height: 16),
 
                     // ── Eklenen / Satılan Siparişler ─────────────

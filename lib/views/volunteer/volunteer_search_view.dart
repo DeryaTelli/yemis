@@ -1,10 +1,8 @@
-import 'package:yemis/utils/locale_keys.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
-import '../../services/volunteer/mock_volunteer_service.dart';
+import '../../services/volunteer/i_volunteer_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
@@ -32,7 +30,8 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
   @override
   void initState() {
     super.initState();
-    _vm = VolunteerSearchViewModel(service: MockVolunteerService())..init();
+    _vm = VolunteerSearchViewModel(service: context.read<IVolunteerService>())
+      ..init();
 
     _searchController.addListener(() {
       _vm.onSearchChanged(_searchController.text);
@@ -70,6 +69,7 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
                     ? SearchMapView(
                         listings: vm.filteredListings,
                         accentColor: AppColors.volunteerColor,
+                        initialCenter: vm.mapCenter,
                         onMarkerTap: (listing) {
                           Navigator.pushNamed(
                             context,
@@ -166,7 +166,10 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
     }
   }
 
-  void _showFilterBottomSheet(BuildContext context, VolunteerSearchViewModel vm) {
+  void _showFilterBottomSheet(
+    BuildContext context,
+    VolunteerSearchViewModel vm,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,

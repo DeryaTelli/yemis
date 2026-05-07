@@ -27,6 +27,7 @@ import 'package:yemis/services/business/i_business_service.dart';
 import 'package:yemis/services/business/api_business_service.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import 'package:yemis/services/volunteer/api_volunteer_service.dart';
+import 'package:yemis/services/common/assistant_service.dart';
 import 'package:yemis/models/auth/address_model.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/models/food/food_listing.dart';
@@ -75,6 +76,7 @@ import 'views/business/business_edit_order_view.dart';
 import 'views/business/business_listing_detail_view.dart';
 import 'views/common/notification_view.dart';
 import 'views/common/yemo_assistant_view.dart';
+import 'views/common/onboarding_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -95,6 +97,7 @@ void main() async {
 
   final foodService = ApiFoodService();
   final volunteerService = ApiVolunteerService();
+  final assistantService = ApiAssistantService();
 
   // Kayıtlı token'ı yükle
   final prefs = await SharedPreferences.getInstance();
@@ -104,7 +107,13 @@ void main() async {
     businessService.setToken(token);
     foodService.setToken(token);
     volunteerService.setToken(token);
+    assistantService.setToken(token);
   }
+
+  // Onboarding sadece ilk açılışta gösterilir
+  final bool onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
+  final String initialRoute =
+      onboardingSeen ? AppRoutes.login : AppRoutes.onboarding;
 
   MockFoodService().setUserSession(userSession);
 
@@ -120,6 +129,8 @@ void main() async {
         businessService: businessService,
         foodService: foodService,
         volunteerService: volunteerService,
+        assistantService: assistantService,
+        initialRoute: initialRoute,
       ),
     ),
   );
@@ -132,6 +143,8 @@ class MyApp extends StatelessWidget {
   final ApiBusinessService businessService;
   final ApiFoodService foodService;
   final ApiVolunteerService volunteerService;
+  final IAssistantService assistantService;
+  final String initialRoute;
 
   const MyApp({
     super.key,
@@ -141,6 +154,8 @@ class MyApp extends StatelessWidget {
     required this.businessService,
     required this.foodService,
     required this.volunteerService,
+    required this.assistantService,
+    required this.initialRoute,
   });
 
   @override
@@ -155,6 +170,7 @@ class MyApp extends StatelessWidget {
         Provider<ApiFoodService>.value(value: foodService),
         Provider<IVolunteerService>.value(value: volunteerService),
         Provider<ApiVolunteerService>.value(value: volunteerService),
+        Provider<IAssistantService>.value(value: assistantService),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(
             authService,
@@ -195,9 +211,14 @@ class MyApp extends StatelessWidget {
         locale: context.locale,
         supportedLocales: context.supportedLocales,
         localizationsDelegates: context.localizationDelegates,
-        initialRoute: AppRoutes.login,
+        initialRoute: initialRoute,
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            case AppRoutes.onboarding:
+              return MaterialPageRoute(
+                builder: (_) => const OnboardingView(),
+                settings: settings,
+              );
             case AppRoutes.login:
               return MaterialPageRoute(
                 builder: (_) => const LoginView(),

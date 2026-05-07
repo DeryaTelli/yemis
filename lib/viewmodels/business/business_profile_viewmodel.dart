@@ -29,6 +29,9 @@ class BusinessProfileViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool _isUpdating = false;
+  bool get isUpdating => _isUpdating;
+
   String get fullName => _userSession.currentUser?.name ?? '';
   String get email => _userSession.currentUser?.email ?? '';
   String? get imageUrl => _userSession.currentUser?.imageUrl;
@@ -165,47 +168,62 @@ class BusinessProfileViewModel extends ChangeNotifier {
     final int? userId = int.tryParse(currentUser.id);
     if (userId == null) return;
 
-    String? imageUrl = currentUser.imageUrl;
-    if (_selectedImageFile != null) {
-      final uploadedUrl = await _authService.uploadImage(
-        _selectedImageFile!.path,
-      );
-      if (uploadedUrl != null) {
-        imageUrl = uploadedUrl;
-      }
-    }
+    _isUpdating = true;
+    notifyListeners();
 
-    final Map<String, dynamic> updateData = {
-      'name': newName,
-      'email': newEmail,
-      'phone': cleanPhone,
-      if (imageUrl != null) 'image_url': imageUrl,
-    };
-
-    final response = await _authService.updateProfile(userId, updateData);
-
-    if (context.mounted) {
-      if (response.success) {
-        SuccessDialogCustom.show(
-          context,
-          message: response.message,
-          onConfirm: () {
-            if (response.user != null) {
-              _userSession.setUser(response.user!);
-              _remoteImageUrl = response.user!.imageUrl;
-            }
-            _selectedImageFile = null;
-            _resetControllers();
-            notifyListeners();
-            Navigator.pop(context);
-          },
+    try {
+      String? imageUrl = currentUser.imageUrl;
+      if (_selectedImageFile != null) {
+        final uploadedUrl = await _authService.uploadImage(
+          _selectedImageFile!.path,
         );
-      } else {
+        if (uploadedUrl != null) {
+          imageUrl = uploadedUrl;
+        }
+      }
+
+      final Map<String, dynamic> updateData = {
+        'name': newName,
+        'email': newEmail,
+        'phone': cleanPhone,
+        if (imageUrl != null) 'image_url': imageUrl,
+      };
+
+      final response = await _authService.updateProfile(userId, updateData);
+
+      if (context.mounted) {
+        if (response.success) {
+          SuccessDialogCustom.show(
+            context,
+            message: response.message,
+            onConfirm: () {
+              if (response.user != null) {
+                _userSession.setUser(response.user!);
+                _remoteImageUrl = response.user!.imageUrl;
+              }
+              _selectedImageFile = null;
+              _resetControllers();
+              notifyListeners();
+              Navigator.pop(context);
+            },
+          );
+        } else {
+          ErrorDialogCustom.show(
+            context,
+            message: response.message,
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
         ErrorDialogCustom.show(
           context,
-          message: response.message,
+          message: e.toString(),
         );
       }
+    } finally {
+      _isUpdating = false;
+      notifyListeners();
     }
   }
 

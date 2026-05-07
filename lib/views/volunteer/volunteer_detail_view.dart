@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../services/volunteer/i_volunteer_service.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/volunteer/volunteer_detail_viewmodel.dart';
 import '../../widgets/volunteer/volunteer_detail_bottom_bar.dart';
 import '../../widgets/volunteer/volunteer_detail_header.dart';
@@ -22,12 +23,15 @@ class VolunteerDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => VolunteerDetailViewModel(
-        service: context.read<IVolunteerService>(),
-        listingId: listing.id,
-      )..init(),
-      child: _VolunteerDetailBody(listing: listing),
+    return Theme(
+      data: AppTheme.themeFor(AppSection.volunteer),
+      child: ChangeNotifierProvider(
+        create: (_) => VolunteerDetailViewModel(
+          service: context.read<IVolunteerService>(),
+          listingId: listing.id,
+        )..init(),
+        child: _VolunteerDetailBody(listing: listing),
+      ),
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_reserve_viewmodel.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Fiyat satırı.
 class FoodReservePriceRow extends StatelessWidget {
@@ -12,9 +14,9 @@ class FoodReservePriceRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
-          'Fiyat',
-          style: TextStyle(
+        Text(
+          LocaleKeys.foodReserve_price.tr(),
+          style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
             color: AppColors.primaryTextColor,

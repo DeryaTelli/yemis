@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../viewmodels/food/food_reserve_viewmodel.dart';
 
 /// Adet artırma/azaltma satırı.
@@ -12,9 +14,9 @@ class FoodReserveQuantityRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
-          'Adet Sayısı',
-          style: TextStyle(
+        Text(
+          LocaleKeys.foodReserve_quantity.tr(),
+          style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
             color: AppColors.primaryTextColor,

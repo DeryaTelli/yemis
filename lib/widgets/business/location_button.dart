@@ -71,8 +71,8 @@ class LocationButton extends StatelessWidget {
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-                    const Text(
-                      'Adres Seçiniz',
+                    Text(
+                      LocaleKeys.businessLocationButton_placeholder.tr(),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,

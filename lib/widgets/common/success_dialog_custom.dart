@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SuccessDialogCustom extends StatelessWidget {
   final String title;
@@ -9,14 +11,14 @@ class SuccessDialogCustom extends StatelessWidget {
 
   const SuccessDialogCustom({
     super.key,
-    this.title = 'Başarılı',
+    this.title = '',
     required this.message,
     this.onConfirm,
   });
 
   static void show(
     BuildContext context, {
-    String title = 'Başarılı',
+    String? title,
     required String message,
     VoidCallback? onConfirm,
   }) {
@@ -24,7 +26,7 @@ class SuccessDialogCustom extends StatelessWidget {
       context: context,
       barrierDismissible: true,
       builder: (context) => SuccessDialogCustom(
-        title: title,
+        title: title ?? LocaleKeys.common_success.tr(),
         message: message,
         onConfirm: onConfirm,
       ),
@@ -97,7 +99,7 @@ class SuccessDialogCustom extends StatelessWidget {
                 onConfirm?.call();
               },
               child: Text(
-                'Tamam',
+                LocaleKeys.languageSelect_confirmButton.tr(),
                 style: CustomTextStyles.semiBold16Primary.copyWith(
                   color: Theme.of(context).primaryColor,
                 ),

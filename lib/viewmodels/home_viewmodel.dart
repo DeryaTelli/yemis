@@ -70,28 +70,28 @@ class HomeViewModel extends ChangeNotifier {
       subtitle: LocaleKeys.home_onboarding1Subtitle.tr(),
       fromColor: const Color(0xFFFEC380),
       toColor: const Color(0xFFFE8800),
-      imagePath: 'assets/foodIcon/yemo.png',
+      imagePath: 'assets/common/poster1_2.png',
     ),
     AdBanner(
       title: LocaleKeys.home_onboarding2Title.tr(),
       subtitle: LocaleKeys.home_onboarding2Subtitle.tr(),
       fromColor: const Color(0xFF81FBB8),
       toColor: const Color(0xFF28C76F),
-      imagePath: 'assets/foodIcon/yemo.png',
+      imagePath: 'assets/common/poster1_3.png',
     ),
     AdBanner(
       title: LocaleKeys.home_onboarding3Title.tr(),
       subtitle: LocaleKeys.home_onboarding3Subtitle.tr(),
       fromColor: const Color(0xFFABDCFF),
       toColor: const Color(0xFF0396FF),
-      imagePath: 'assets/foodIcon/yemo.png',
+      imagePath: 'assets/common/poster1_1.png',
     ),
     AdBanner(
       title: LocaleKeys.home_onboarding4Title.tr(),
       subtitle: LocaleKeys.home_onboarding4Subtitle.tr(),
       fromColor: const Color(0xFFFEB692),
       toColor: const Color(0xFFEA5455),
-      imagePath: 'assets/foodIcon/yemo.png',
+      imagePath: 'assets/common/poster1_4.png',
     ),
   ];
 

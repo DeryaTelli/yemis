@@ -64,11 +64,11 @@ class _BodyState extends State<_Body> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Başlık ────────────────────────────────────────
-              _label('İlan Başlığı'),
+              _label(LocaleKeys.volunteerAddListingForm_titleLabel.tr()),
               const SizedBox(height: 8),
               _InputField(
                 controller: _titleController,
-                hint: 'Örn: Sokak Hayvanları İçin Yemek',
+                hint: LocaleKeys.volunteerAddListingForm_titleHint.tr(),
                 onChanged: vm.onTitleChanged,
               ),
               const SizedBox(height: 20),
@@ -83,11 +83,11 @@ class _BodyState extends State<_Body> {
               const SizedBox(height: 24),
 
               // ── Açıklama ──────────────────────────────────────
-              _label('Açıklama'),
+              _label(LocaleKeys.volunteerAddListingForm_descriptionLabel.tr()),
               const SizedBox(height: 8),
               _InputField(
                 controller: _descriptionController,
-                hint: 'İlan içeriği hakkında bilgi veriniz...',
+                hint: LocaleKeys.volunteerAddListingForm_descriptionHint.tr(),
                 maxLines: 3,
                 onChanged: vm.onDescriptionChanged,
               ),
@@ -379,9 +379,9 @@ class _TimeWheelSection extends StatelessWidget {
           Row(
             children: [
               _WheelColumn(
-                count: 12,
-                initialItem: vm.selectedHour - 1,
-                labelBuilder: (i) => '${i + 1}',
+                count: 24,
+                initialItem: vm.selectedHour,
+                labelBuilder: (i) => i.toString().padLeft(2, '0'),
                 onChanged: vm.onHourChanged,
               ),
               _WheelColumn(
@@ -389,12 +389,6 @@ class _TimeWheelSection extends StatelessWidget {
                 initialItem: vm.selectedMinute,
                 labelBuilder: (i) => i.toString().padLeft(2, '0'),
                 onChanged: vm.onMinuteChanged,
-              ),
-              _WheelColumn(
-                count: 2,
-                initialItem: vm.isAm ? 0 : 1,
-                labelBuilder: (i) => i == 0 ? 'AM' : 'PM',
-                onChanged: vm.setAmPm,
               ),
             ],
           ),
@@ -485,8 +479,9 @@ class _LocationButton extends StatelessWidget {
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
-                    const Text(
-                      'Adres Seçiniz',
+                    Text(
+                      LocaleKeys.volunteerAddListingForm_addressPlaceholder
+                          .tr(),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -498,8 +493,9 @@ class _LocationButton extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 40),
                         child: Column(
                           children: [
-                            const Text(
-                              'Kayıtlı adres bulunamadı.',
+                            Text(
+                              LocaleKeys.volunteerAddListingForm_noSavedAddress
+                                  .tr(),
                               style: TextStyle(color: Colors.grey),
                             ),
                             const SizedBox(height: 16),
@@ -645,7 +641,9 @@ class _LocationButton extends StatelessWidget {
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                hasData ? vm.locationAddress : LocaleKeys.common_selectLocation.tr(),
+                hasData
+                    ? vm.locationAddress
+                    : LocaleKeys.common_selectLocation.tr(),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: hasData ? FontWeight.w500 : FontWeight.w600,

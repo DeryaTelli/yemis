@@ -39,11 +39,8 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
     // Zamanları ayır
     if (initialListing.pickupEndTime != null) {
       final endTime = initialListing.pickupEndTime!;
-      _selectedHour = endTime.hour > 12
-          ? endTime.hour - 12
-          : (endTime.hour == 0 ? 12 : endTime.hour);
+      _selectedHour = endTime.hour;
       _selectedMinute = endTime.minute;
-      _isAm = endTime.hour < 12;
     }
 
     if (initialListing.latitude != null && initialListing.longitude != null) {
@@ -126,15 +123,13 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
   }
 
   // ─── Bitiş Saati ──────────────────────────────────────
-  int _selectedHour = 5;
+  int _selectedHour = 12;
   int get selectedHour => _selectedHour;
-  int _selectedMinute = 41;
+  int _selectedMinute = 0;
   int get selectedMinute => _selectedMinute;
-  bool _isAm = true;
-  bool get isAm => _isAm;
 
   void onHourChanged(int index) {
-    _selectedHour = index + 1;
+    _selectedHour = index;
     notifyListeners();
   }
 
@@ -144,11 +139,7 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
   }
 
   void setAmPm(int index) {
-    final newIsAm = index == 0;
-    if (_isAm != newIsAm) {
-      _isAm = newIsAm;
-      notifyListeners();
-    }
+    // 24h format.
   }
 
   // ─── Konum ────────────────────────────────────────────
@@ -317,9 +308,7 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
       }
 
       final now = DateTime.now();
-      int hour = _isAm
-          ? (_selectedHour == 12 ? 0 : _selectedHour)
-          : (_selectedHour == 12 ? 12 : _selectedHour + 12);
+      int hour = _selectedHour;
       final pickupEndTime = DateTime(
         now.year,
         now.month,

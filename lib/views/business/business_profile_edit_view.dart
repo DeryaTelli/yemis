@@ -104,22 +104,23 @@ class _BusinessProfileEditBodyState extends State<_BusinessProfileEditBody> {
               // ─── Form Alanları ─────────────────────────
               CustomTextField(
                 controller: vm.fullNameController,
-                labelText: 'Ad Soyad',
-                hintText: 'Adınızı ve soyadınızı girin',
+                labelText: LocaleKeys.businessProfileEdit_fullNameLabel.tr(),
+                hintText: LocaleKeys.businessProfileEdit_fullNameHint.tr(),
+                prefixIcon: const Icon(Icons.person_outline_rounded),
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: vm.emailController,
-                labelText: 'E-posta',
-                hintText: 'E-posta adresinizi girin',
+                labelText: LocaleKeys.businessProfileEdit_emailLabel.tr(),
+                hintText: LocaleKeys.businessProfileEdit_emailHint.tr(),
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
               CustomTextField(
                 controller: vm.phoneController,
-                labelText: 'Telefon Numarası',
-                hintText: '(5XX) XXX XX XX',
-                prefixText: '+90 ',
+                labelText: LocaleKeys.businessProfileEdit_phoneLabel.tr(),
+                hintText: '+90 5XX XXX XX XX',
+                prefixIcon: const Icon(Icons.phone_outlined),
                 keyboardType: TextInputType.phone,
                 inputFormatters: [_phoneMaskFormatter],
               ),
@@ -145,11 +146,19 @@ class _BusinessProfileEditBodyState extends State<_BusinessProfileEditBody> {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      'Profilini Güncelle',
-                      style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w700),
-                    ),
+                    child: vm.isUpdating
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : Text(
+                            LocaleKeys.businessProfileEdit_updateButton.tr(),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -166,9 +175,9 @@ class _BusinessProfileEditBodyState extends State<_BusinessProfileEditBody> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Hesabı Sil',
-                    style: TextStyle(
+                  child: Text(
+                    LocaleKeys.businessProfileEdit_deleteAccountButton.tr(),
+                    style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),
@@ -228,19 +237,19 @@ class _BusinessProfileEditBodyState extends State<_BusinessProfileEditBody> {
               ),
               _BSOption(
                 icon: Icons.camera_alt_rounded,
-                title: 'Kamera ile Çek',
-                onTap: () async {
+                title: LocaleKeys.businessProfileEdit_cameraOption.tr(),
+                onTap: () {
                   Navigator.pop(ctx);
-                  await vm.pickImage(ImageSource.camera);
+                  vm.pickImage(ImageSource.camera);
                 },
               ),
               const Divider(height: 1),
               _BSOption(
                 icon: Icons.photo_library_rounded,
-                title: 'Galeriden Seç',
-                onTap: () async {
+                title: LocaleKeys.businessProfileEdit_galleryOption.tr(),
+                onTap: () {
                   Navigator.pop(ctx);
-                  await vm.pickImage(ImageSource.gallery);
+                  vm.pickImage(ImageSource.gallery);
                 },
               ),
               const SizedBox(height: 20),

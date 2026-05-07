@@ -21,6 +21,8 @@ class BusinessHomeViewModel extends ChangeNotifier {
   }
 
   Color get appBarColor => const Color(0xFFFE8800);
+  
+  String? get profileImageUrl => _userSession.currentUser?.imageUrl;
 
   /// Mock haftalık satış verileri (Pzt → Paz)
   List<double> get weeklySales => [45, 70, 30, 90, 120, 80, 60];

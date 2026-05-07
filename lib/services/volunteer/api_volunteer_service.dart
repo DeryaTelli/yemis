@@ -196,4 +196,34 @@ class ApiVolunteerService implements IVolunteerService {
       return false;
     }
   }
+
+  @override
+  Future<bool> becomeVolunteer(int mealId) async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.mealVolunteer(mealId)}',
+    );
+
+    if (kDebugMode) {
+      print('--- API REQUEST (POST VOLUNTEER) ---');
+      print('URL: $url');
+      print('Headers: $_headers');
+      print('------------------------------------');
+    }
+
+    try {
+      final response = await _client.post(url, headers: _headers);
+
+      if (kDebugMode) {
+        print('--- API RESPONSE (POST VOLUNTEER) ---');
+        print('Status Code: ${response.statusCode}');
+        print('Body: ${response.body}');
+        print('-------------------------------------');
+      }
+
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error becoming volunteer for meal $mealId: $e');
+      return false;
+    }
+  }
 }

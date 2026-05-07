@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../models/volunteer/volunteer_sort_type.dart';
 import '../../services/volunteer/i_volunteer_service.dart';
@@ -29,6 +30,9 @@ class VolunteerSearchViewModel extends ChangeNotifier {
   List<VolunteerListing> _allListings = [];
   List<VolunteerListing> _filteredListings = [];
   List<VolunteerListing> get filteredListings => _filteredListings;
+
+  LatLng? _mapCenter;
+  LatLng? get mapCenter => _mapCenter;
 
   // ─── Actions ──────────────────────────────────────────
 
@@ -95,6 +99,15 @@ class VolunteerSearchViewModel extends ChangeNotifier {
     }
 
     _filteredListings = result;
+
+    // Harita merkezini güncelle (ilk ilanın konumu)
+    if (_filteredListings.isNotEmpty) {
+      final first = _filteredListings.first;
+      if (first.latitude != null && first.longitude != null) {
+        _mapCenter = LatLng(first.latitude!, first.longitude!);
+      }
+    }
+
     notifyListeners();
   }
 

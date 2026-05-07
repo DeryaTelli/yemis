@@ -46,4 +46,8 @@ class ApiConstants {
   static const String myActiveTasks = '/api/volunteer/tasks/my/active';
   static const String attendedTasks = '/api/volunteer/tasks/my/attended';
   static String mealById(int id) => '/api/meals/$id';
+  static String mealVolunteer(int id) => '/api/meals/$id/volunteer';
+
+  // --- Assistant ---
+  static const String assistantAsk = '/api/assistant/ask';
 }

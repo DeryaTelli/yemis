@@ -28,4 +28,7 @@ abstract class IVolunteerService {
 
   /// Bir gönüllü ilanını günceller.
   Future<bool> updateMeal(int id, Map<String, dynamic> data);
+
+  /// Bir ilana gönüllü olarak atanır.
+  Future<bool> becomeVolunteer(int mealId);
 }

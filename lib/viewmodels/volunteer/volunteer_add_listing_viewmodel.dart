@@ -114,17 +114,14 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
 
   // ─── Bitiş Saati ──────────────────────────────────────
 
-  int _selectedHour = 5;
+  int _selectedHour = 12;
   int get selectedHour => _selectedHour;
 
-  int _selectedMinute = 41;
+  int _selectedMinute = 0;
   int get selectedMinute => _selectedMinute;
 
-  bool _isAm = true;
-  bool get isAm => _isAm;
-
   void onHourChanged(int index) {
-    _selectedHour = index + 1;
+    _selectedHour = index;
     notifyListeners();
   }
 
@@ -134,11 +131,7 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
   }
 
   void setAmPm(int index) {
-    final newIsAm = index == 0;
-    if (_isAm != newIsAm) {
-      _isAm = newIsAm;
-      notifyListeners();
-    }
+    // 24h format.
   }
 
   // ─── Konum ────────────────────────────────────────────
@@ -231,8 +224,6 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
 
       // Saat hesaplama
       int hour = _selectedHour;
-      if (!_isAm && hour < 12) hour += 12;
-      if (_isAm && hour == 12) hour = 0;
 
       final now = DateTime.now();
       final pickupEndTime = DateTime(

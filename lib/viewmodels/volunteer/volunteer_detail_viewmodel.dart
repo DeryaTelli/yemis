@@ -123,8 +123,39 @@ class VolunteerDetailViewModel extends ChangeNotifier {
 
   // ─── Gönüllü Ol ─────────────────────────────────────────
 
-  Future<void> volunteer() async {
-    // API Call
-    await Future<void>.delayed(const Duration(milliseconds: 200));
+  bool _isVolunteering = false;
+  bool get isVolunteering => _isVolunteering;
+
+  String? _volunteerError;
+  String? get volunteerError => _volunteerError;
+
+  Future<bool> becomeVolunteer() async {
+    if (_listing == null) return false;
+
+    final mealId = int.tryParse(_listing!.id);
+    if (mealId == null) {
+      _volunteerError = 'Geçersiz ilan ID.';
+      notifyListeners();
+      return false;
+    }
+
+    _isVolunteering = true;
+    _volunteerError = null;
+    notifyListeners();
+
+    try {
+      final success = await _service.becomeVolunteer(mealId);
+      if (!success) {
+        _volunteerError = 'Gönüllü ataması başarısız oldu. Lütfen tekrar deneyin.';
+      }
+      return success;
+    } catch (e) {
+      _volunteerError = 'Bir hata oluştu: $e';
+      debugPrint('Error in becomeVolunteer: $e');
+      return false;
+    } finally {
+      _isVolunteering = false;
+      notifyListeners();
+    }
   }
 }

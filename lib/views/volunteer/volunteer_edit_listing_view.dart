@@ -83,16 +83,16 @@ class _BodyState extends State<_Body> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _label('İlan Başlığı'),
+            _label(LocaleKeys.volunteerAddListingForm_titleLabel.tr()),
             const SizedBox(height: 8),
             _InputField(
               controller: _titleController,
-              hint: 'Örn: Sokak Hayvanları İçin Yemek',
+              hint: LocaleKeys.volunteerAddListingForm_titleHint.tr(),
               onChanged: vm.onTitleChanged,
             ),
             const SizedBox(height: 20),
 
-            _label('Fotoğraf'),
+            _label(LocaleKeys.volunteerAddListingForm_photoLabel.tr()),
             const SizedBox(height: 8),
             _PhotoBox(
               imagePath: vm.selectedImage?.path,
@@ -101,22 +101,22 @@ class _BodyState extends State<_Body> {
             ),
             const SizedBox(height: 24),
 
-            _label('Açıklama'),
+            _label(LocaleKeys.volunteerAddListingForm_descriptionLabel.tr()),
             const SizedBox(height: 8),
             _InputField(
               controller: _descriptionController,
-              hint: 'İlan içeriği hakkında bilgi veriniz...',
+              hint: LocaleKeys.volunteerAddListingForm_descriptionHint.tr(),
               maxLines: 3,
               onChanged: vm.onDescriptionChanged,
             ),
             const SizedBox(height: 24),
 
-            _label('Bitiş Saati'),
+            _label(LocaleKeys.volunteerAddListingForm_endTimeLabel.tr()),
             const SizedBox(height: 8),
             _TimeWheelSection(vm: vm),
             const SizedBox(height: 24),
 
-            _label('Lokasyon'),
+            _label(LocaleKeys.volunteerAddListingForm_locationLabel.tr()),
             const SizedBox(height: 8),
             _LocationButton(vm: vm),
             const SizedBox(height: 20),
@@ -124,7 +124,7 @@ class _BodyState extends State<_Body> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _label('İlan Fiyatı'),
+                _label(LocaleKeys.volunteerAddListingForm_priceLabel.tr()),
                 _FreeChip(),
               ],
             ),
@@ -281,9 +281,8 @@ class _TimeWheelSection extends StatelessWidget {
           ),
           Row(
             children: [
-              _WheelColumn(count: 12, initialItem: vm.selectedHour - 1, labelBuilder: (i) => '${i + 1}', onChanged: vm.onHourChanged),
+              _WheelColumn(count: 24, initialItem: vm.selectedHour, labelBuilder: (i) => i.toString().padLeft(2, '0'), onChanged: vm.onHourChanged),
               _WheelColumn(count: 60, initialItem: vm.selectedMinute, labelBuilder: (i) => i.toString().padLeft(2, '0'), onChanged: vm.onMinuteChanged),
-              _WheelColumn(count: 2, initialItem: vm.isAm ? 0 : 1, labelBuilder: (i) => i == 0 ? 'AM' : 'PM', onChanged: vm.setAmPm),
             ],
           ),
         ],

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../models/business/business_listing_model.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BusinessListingCard extends StatelessWidget {
   final BusinessListingModel listing;
@@ -78,7 +80,9 @@ class BusinessListingCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                listing.isSold ? 'Tükendi' : 'Süresi Doldu',
+                                listing.isSold
+                                    ? LocaleKeys.businessListings_soldOut.tr()
+                                    : LocaleKeys.businessListings_expired.tr(),
                                 style: CustomTextStyles.semiBold16Primary,
                               ),
                             ),
@@ -161,7 +165,8 @@ class BusinessListingCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          listing.address ?? 'Konum Belirtilmedi',
+                          listing.address ??
+                              LocaleKeys.businessListings_noLocation.tr(),
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
@@ -186,7 +191,10 @@ class BusinessListingCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          'Kalan: ${listing.availableQuantity} / ${listing.totalQuantity}',
+                          LocaleKeys.businessListings_remaining.tr(namedArgs: {
+                            'available': '${listing.availableQuantity}',
+                            'total': '${listing.totalQuantity}',
+                          }),
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,

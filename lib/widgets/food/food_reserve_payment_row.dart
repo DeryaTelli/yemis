@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_reserve_viewmodel.dart';
+import '../../utils/locale_keys.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'food_reserve_bottom_sheet.dart';
 
 /// Ödeme yöntemi satırı.
@@ -30,9 +32,9 @@ class FoodReservePaymentRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Ödeme Yöntemi',
-          style: TextStyle(
+        Text(
+          LocaleKeys.foodReserve_paymentMethod.tr(),
+          style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
             color: AppColors.primaryTextColor,
@@ -49,7 +51,7 @@ class FoodReservePaymentRow extends StatelessWidget {
               Text(
                 hasPayment
                     ? vm.selectedPayment!.label
-                    : 'Bir Ödeme Yöntemi Seç',
+                    : LocaleKeys.foodReserve_selectPayment.tr(),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,

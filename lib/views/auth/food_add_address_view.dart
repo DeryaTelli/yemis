@@ -203,7 +203,7 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
               ),
               const SizedBox(height: 32),
               CustomButton(
-                text: 'Kaydet',
+                text: LocaleKeys.common_save.tr(),
                 backgroundColor: themeColor,
                 onPressed: () async {
                   final success = await vm.saveAddress();

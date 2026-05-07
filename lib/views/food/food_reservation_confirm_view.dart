@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
@@ -37,8 +39,8 @@ class FoodReservationConfirmView extends StatelessWidget {
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          'Rezervasyon',
+        title:  Text(
+          LocaleKeys.foodReservationConfirm_title.tr(),
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
         leading: IconButton(
@@ -188,9 +190,9 @@ class _GoToLocationButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         alignment: Alignment.center,
-        child: const Text(
-          'Lokasyona Git',
-          style: TextStyle(
+        child: Text(
+          LocaleKeys.foodReservationConfirm_goToLocation.tr(),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 15,
             fontWeight: FontWeight.w700,
@@ -225,21 +227,21 @@ class _ReservationCard extends StatelessWidget {
         now.year == start.year &&
         now.month == start.month &&
         now.day == start.day;
-    if (isToday) return 'Bugün Al  ${listing.timeRange}';
-    const months = [
+    if (isToday) return '${LocaleKeys.common_pickupToday.tr()}  ${listing.timeRange}';
+    final months = [
       '',
-      'Ocak',
-      'Şubat',
-      'Mart',
-      'Nisan',
-      'Mayıs',
-      'Haziran',
-      'Temmuz',
-      'Ağustos',
-      'Eylül',
-      'Ekim',
-      'Kasım',
-      'Aralık',
+      LocaleKeys.foodReservationConfirm_months_jan.tr(),
+      LocaleKeys.foodReservationConfirm_months_feb.tr(),
+      LocaleKeys.foodReservationConfirm_months_mar.tr(),
+      LocaleKeys.foodReservationConfirm_months_apr.tr(),
+      LocaleKeys.foodReservationConfirm_months_may.tr(),
+      LocaleKeys.foodReservationConfirm_months_jun.tr(),
+      LocaleKeys.foodReservationConfirm_months_jul.tr(),
+      LocaleKeys.foodReservationConfirm_months_aug.tr(),
+      LocaleKeys.foodReservationConfirm_months_sep.tr(),
+      LocaleKeys.foodReservationConfirm_months_oct.tr(),
+      LocaleKeys.foodReservationConfirm_months_nov.tr(),
+      LocaleKeys.foodReservationConfirm_months_dec.tr(),
     ];
     return '${start.day} ${months[start.month]}  ${listing.timeRange}';
   }
@@ -247,11 +249,11 @@ class _ReservationCard extends StatelessWidget {
   String get _sectionLabel {
     switch (listing.section) {
       case FoodSection.nearYou:
-        return 'Sana Yakın Yerler';
+        return LocaleKeys.foodReservationConfirm_sectionNearby.tr();
       case FoodSection.buyNow:
-        return 'Şimdi Al';
+        return LocaleKeys.foodReservationConfirm_sectionBuyNow.tr();
       case FoodSection.todayPopular:
-        return 'Bugün Popüler';
+        return LocaleKeys.foodReservationConfirm_sectionTodayPopular.tr();
     }
   }
 
@@ -358,8 +360,8 @@ class _ReservationCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               alignment: Alignment.center,
-              child: const Text(
-                'İptal Et',
+              child:  Text(
+                LocaleKeys.foodReservationConfirm_cancel.tr(),
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 14,

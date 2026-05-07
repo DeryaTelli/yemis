@@ -102,8 +102,8 @@ class VolunteerMyListingCard extends StatelessWidget {
                       color: AppColors.volunteerColor.withOpacity(0.9),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
-                      'ÜCRETSİZ',
+                    child: Text(
+                      LocaleKeys.volunteerListingCard_freeLabel.tr(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 10,

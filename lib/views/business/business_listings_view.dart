@@ -34,10 +34,10 @@ class _BusinessListingsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<BusinessListingsViewModel>();
 
-    String title = 'İlanlarım';
-    if (type == ListingType.sold) title = 'Satılan Siparişler';
-    if (type == ListingType.active) title = 'Eklenen İlanlar';
-    if (type == ListingType.expired) title = 'Süresi Dolan İlanlar';
+    String title = LocaleKeys.businessListings_allTitle.tr();
+    if (type == ListingType.sold) title = LocaleKeys.businessListings_soldTitle.tr();
+    if (type == ListingType.active) title = LocaleKeys.businessListings_activeTitle.tr();
+    if (type == ListingType.expired) title = LocaleKeys.businessListings_expiredTitle.tr();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
@@ -104,10 +104,10 @@ class _BusinessListingsBody extends StatelessWidget {
   }
 
   Widget _buildEmptyState(ListingType type) {
-    String message = 'Henüz bir ilanınız bulunmuyor.';
-    if (type == ListingType.sold) message = 'Henüz satılmış bir siparişiniz bulunmuyor.';
-    if (type == ListingType.active) message = 'Henüz eklenmiş bir ilanınız bulunmuyor.';
-    if (type == ListingType.expired) message = 'Henüz süresi dolmuş bir ilanınız bulunmuyor.';
+    String message = LocaleKeys.businessListings_emptyAll.tr();
+    if (type == ListingType.sold) message = LocaleKeys.businessListings_emptySold.tr();
+    if (type == ListingType.active) message = LocaleKeys.businessListings_emptyActive.tr();
+    if (type == ListingType.expired) message = LocaleKeys.businessListings_emptyExpired.tr();
 
     return Center(
       child: Column(
@@ -148,16 +148,16 @@ class _BusinessListingsBody extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'İlanı Sil',
+                    LocaleKeys.businessListings_deleteDialogTitle.tr(),
                     style: CustomTextStyles.orelegaOne30Primary,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Bu ilanı silmek istediğinizden emin misiniz?',
-              style: TextStyle(
+            Text(
+              LocaleKeys.businessListings_deleteDialogMessage.tr(),
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey,
@@ -170,7 +170,7 @@ class _BusinessListingsBody extends StatelessWidget {
                 TextButton(
                   onPressed: () => Navigator.pop(ctx, false),
                   child: Text(
-                    'Hayır',
+                    LocaleKeys.common_no.tr(),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -181,9 +181,9 @@ class _BusinessListingsBody extends StatelessWidget {
                 const SizedBox(width: 12),
                 TextButton(
                   onPressed: () => Navigator.pop(ctx, true),
-                  child: const Text(
-                    'Evet',
-                    style: TextStyle(
+                  child: Text(
+                    LocaleKeys.common_yes.tr(),
+                    style: const TextStyle(
                       color: Colors.redAccent,
                       fontWeight: FontWeight.w700,
                       fontSize: 16,

@@ -25,7 +25,7 @@ class FoodOrderTab extends StatelessWidget {
         children: [
           // ── Kategori Detayı ──────────────────────────────
           Text(
-            '${listing.category.toLowerCase() == 'patiseri' ? 'Ekmek & Pasta' : listing.category.substring(0, 1).toUpperCase() + listing.category.substring(1)} Detayı',
+            '${listing.category.toLowerCase() == 'patiseri' ? LocaleKeys.foodOrderTab_categoryBreadPastry.tr() : listing.category.substring(0, 1).toUpperCase() + listing.category.substring(1)} Detayı',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
@@ -35,7 +35,7 @@ class FoodOrderTab extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             listing.category == 'Sürpriz Kutu'
-                ? 'Bu paket, gün sonunda satılamayan ama hâlâ taze olan çeşitli yiyeceklerden oluşur. Ne çıkacağı tamamen sürprizdir.'
+                ? LocaleKeys.foodOrderTab_surpriseBoxDesc.tr()
                 : 'Bu paket, işletmenin ${listing.category.toLowerCase()} kategorisindeki taze ürünlerinden oluşur.',
             style: const TextStyle(
               fontSize: 13,
@@ -47,8 +47,8 @@ class FoodOrderTab extends StatelessWidget {
 
           // ── İlan Detayı (Varsa) ──────────────────────────
           if (listing.description != null && listing.description!.isNotEmpty) ...[
-            const Text(
-              'İlan Detayı',
+            Text(
+              LocaleKeys.foodOrderTab_listingDetail.tr(),
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
@@ -74,7 +74,7 @@ class FoodOrderTab extends StatelessWidget {
                 const Icon(Icons.directions_walk_rounded, size: 18, color: AppColors.primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  'İşletme size ${vm.distanceText} uzaklıkta',
+                  LocaleKeys.foodOrderTab_distanceText.tr(namedArgs: {'distance': vm.distanceText ?? ''}),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -239,10 +239,10 @@ class _ExpandableDetail extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 12),
-                  _buildDetailRow(Icons.grid_view_rounded, 'Kategori', listing.category),
+                  _buildDetailRow(Icons.grid_view_rounded, LocaleKeys.foodOrderTab_category.tr(), listing.category),
                   const SizedBox(height: 12),
-                  const Text(
-                    'İçerikler & Alerjenler',
+                  Text(
+                    LocaleKeys.foodOrderTab_ingredientsAllergens.tr(),
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -250,8 +250,8 @@ class _ExpandableDetail extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Paketin içeriğini kesin olarak söyleyemiyoruz çünkü sürpriz. Mekân, satılmamış ürünlerden bir seçim koyuyor. Alerjen veya içerik sorularınız varsa lütfen doğrudan mekâna sorunuz.',
+                  Text(
+                    LocaleKeys.foodOrderTab_surpriseIngredients.tr(),
                     style: TextStyle(
                       fontSize: 13,
                       color: AppColors.hintTextColor,
@@ -274,7 +274,7 @@ class _ExpandableDetail extends StatelessWidget {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Alerjenler: ${listing.allergens}',
+                              LocaleKeys.foodOrderTab_allergens.tr(namedArgs: {'allergens': listing.allergens ?? ''}),
                               style: const TextStyle(
                                 fontSize: 13,
                                 color: AppColors.primaryTextColor,
@@ -313,7 +313,7 @@ class _ExpandableDetail extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           listing.category.toLowerCase() == 'patiseri'
-              ? 'Ekmek & Pasta'
+              ? LocaleKeys.foodOrderTab_categoryBreadPastry.tr()
               : value.substring(0, 1).toUpperCase() + value.substring(1),
           style: const TextStyle(
             fontSize: 14,
