@@ -85,10 +85,12 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                 const SizedBox(height: 20),
 
                 // ── Harita Alanı ────────────────────────────
-                if (vm.filteredListings.isNotEmpty) ...[
-                  VolunteerMapSection(listings: vm.filteredListings),
-                  const SizedBox(height: 24),
-                ],
+                VolunteerMapSection(
+                  listings: vm.filteredListings,
+                  userLat: vm.userLat,
+                  userLng: vm.userLng,
+                ),
+                const SizedBox(height: 24),
 
                 // ── Sana Yakın Yerler ───────────────────────
                 VolunteerListingSection(
@@ -103,31 +105,6 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                   section: VolunteerSection.todayPopular,
                 ),
                 const SizedBox(height: 32),
-
-                // Boş Durum Kontrolü
-                if (!vm.isLoading && vm.listings.isEmpty)
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(40.0),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.volunteer_activism_outlined,
-                            size: 64,
-                            color: Colors.grey[300],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            "Henüz ilan bulunmuyor.",
-                            style: TextStyle(
-                              color: Colors.grey[500],
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),

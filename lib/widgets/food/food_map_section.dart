@@ -8,9 +8,16 @@ import '../../views/food/food_expanded_map_view.dart';
 /// Harita alanını gösterir.
 /// Fotoğraftaki gibi gerçekçi bir harita görünümü sunar.
 class FoodMapSection extends StatefulWidget {
-  const FoodMapSection({super.key, this.listings = const []});
+  const FoodMapSection({
+    super.key,
+    this.listings = const [],
+    this.userLat,
+    this.userLng,
+  });
 
   final List<FoodListing> listings;
+  final double? userLat;
+  final double? userLng;
 
   @override
   State<FoodMapSection> createState() => _FoodMapSectionState();
@@ -69,14 +76,15 @@ class _FoodMapSectionState extends State<FoodMapSection> {
                 FlutterMap(
                   mapController: _mapController,
                   options: MapOptions(
-                    initialCenter:
-                        widget.listings.isNotEmpty &&
+                    initialCenter: widget.listings.isNotEmpty &&
                             widget.listings.first.latitude != null
                         ? LatLng(
                             widget.listings.first.latitude!,
                             widget.listings.first.longitude!,
                           )
-                        : const LatLng(41.1993, 32.6247),
+                        : (widget.userLat != null && widget.userLng != null)
+                            ? LatLng(widget.userLat!, widget.userLng!)
+                            : const LatLng(41.1993, 32.6247),
                     initialZoom: 15.0,
                     interactionOptions: const InteractionOptions(
                       flags: InteractiveFlag.none,
@@ -84,10 +92,8 @@ class _FoodMapSectionState extends State<FoodMapSection> {
                   ),
                   children: [
                     TileLayer(
-                      urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: const ['a', 'b', 'c'],
-                      userAgentPackageName: 'com.deryatelli.yemis',
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'com.yemis.app',
                     ),
                     MarkerLayer(
                       markers: [

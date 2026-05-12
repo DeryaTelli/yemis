@@ -35,8 +35,9 @@ class ChangePasswordViewModel extends ChangeNotifier {
       return false;
     }
 
-    if (_newPassword.length < 6) {
-      _errorMessage = 'Yeni şifre en az 6 karakter olmalıdır.';
+    if (_newPassword.length < 8 || !_newPassword.contains(RegExp(r'[A-Z]'))) {
+      _errorMessage =
+          'Yeni şifre en az 8 karakter olmalı ve en az bir büyük harf içermelidir.';
       notifyListeners();
       return false;
     }

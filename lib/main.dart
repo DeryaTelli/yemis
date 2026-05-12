@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/services/common/notification_service.dart';
@@ -28,6 +29,7 @@ import 'package:yemis/services/business/api_business_service.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import 'package:yemis/services/volunteer/api_volunteer_service.dart';
 import 'package:yemis/services/common/assistant_service.dart';
+import 'package:yemis/services/notifications/api_notification_service.dart';
 import 'package:yemis/models/auth/address_model.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/models/food/food_listing.dart';
@@ -98,22 +100,45 @@ void main() async {
   final foodService = ApiFoodService();
   final volunteerService = ApiVolunteerService();
   final assistantService = ApiAssistantService();
+  final notificationService = ApiNotificationService();
 
-  // Kayıtlı token'ı yükle
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('auth_token');
-  if (token != null) {
+  // Kayıtlı oturumu yükle
+  await userSession.loadSession();
+
+  if (userSession.isLoggedIn) {
+    final token = userSession.token!;
     authService.setToken(token);
     businessService.setToken(token);
     foodService.setToken(token);
     volunteerService.setToken(token);
     assistantService.setToken(token);
+    notificationService.setToken(token);
+
+    // Uygulama açılışında token kaydı (login halindeyse)
+    NotificationService().getToken().then((fcmToken) {
+      if (fcmToken != null) {
+        final platform = kIsWeb
+            ? 'web'
+            : (defaultTargetPlatform == TargetPlatform.android
+                  ? 'android'
+                  : 'ios');
+        notificationService.registerDeviceToken(fcmToken, platform);
+      }
+    });
   }
 
-  // Onboarding sadece ilk açılışta gösterilir
+  // Onboarding ve Giriş Kontrolü
+  final prefs = await SharedPreferences.getInstance();
   final bool onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
-  final String initialRoute =
-      onboardingSeen ? AppRoutes.login : AppRoutes.onboarding;
+
+  String initialRoute;
+  if (userSession.isLoggedIn) {
+    initialRoute = AppRoutes.home;
+  } else if (!onboardingSeen) {
+    initialRoute = AppRoutes.onboarding;
+  } else {
+    initialRoute = AppRoutes.login;
+  }
 
   MockFoodService().setUserSession(userSession);
 
@@ -130,6 +155,7 @@ void main() async {
         foodService: foodService,
         volunteerService: volunteerService,
         assistantService: assistantService,
+        notificationService: notificationService,
         initialRoute: initialRoute,
       ),
     ),
@@ -144,9 +170,10 @@ class MyApp extends StatelessWidget {
   final ApiFoodService foodService;
   final ApiVolunteerService volunteerService;
   final IAssistantService assistantService;
+  final ApiNotificationService notificationService;
   final String initialRoute;
 
-  const MyApp({
+  MyApp({
     super.key,
     required this.authService,
     required this.userSession,
@@ -155,6 +182,7 @@ class MyApp extends StatelessWidget {
     required this.foodService,
     required this.volunteerService,
     required this.assistantService,
+    required this.notificationService,
     required this.initialRoute,
   });
 
@@ -171,12 +199,14 @@ class MyApp extends StatelessWidget {
         Provider<IVolunteerService>.value(value: volunteerService),
         Provider<ApiVolunteerService>.value(value: volunteerService),
         Provider<IAssistantService>.value(value: assistantService),
+        Provider<ApiNotificationService>.value(value: notificationService),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(
             authService,
             businessService,
             foodService,
             volunteerService,
+            notificationService,
             userSession,
           ),
         ),
@@ -242,6 +272,10 @@ class MyApp extends StatelessWidget {
                 builder: (_) => ChangeNotifierProvider(
                   create: (_) => VerificationViewModel(
                     authService,
+                    businessService,
+                    foodService,
+                    volunteerService,
+                    userSession,
                     email: email,
                     isPasswordReset: isPasswordReset,
                   ),
@@ -252,13 +286,13 @@ class MyApp extends StatelessWidget {
             case AppRoutes.resetPassword:
               final args = settings.arguments as Map<String, dynamic>? ?? {};
               final email = args['email'] as String? ?? '';
-              final otp = args['otp'] as String? ?? '';
+              final code = args['otp'] as String? ?? '';
               return MaterialPageRoute(
                 builder: (_) => ChangeNotifierProvider(
                   create: (_) => ResetPasswordViewModel(
                     authService,
                     email: email,
-                    otp: otp,
+                    code: code,
                   ),
                   child: const ResetPasswordView(),
                 ),
@@ -388,8 +422,10 @@ class MyApp extends StatelessWidget {
                 builder: (ctx) => Theme(
                   data: AppTheme.themeFor(AppSection.volunteer),
                   child: ChangeNotifierProvider(
-                    create: (ctx) =>
-                        VolunteerAddListingViewModel(ctx.read<IAuthService>(), ctx.read<IVolunteerService>()),
+                    create: (ctx) => VolunteerAddListingViewModel(
+                      ctx.read<IAuthService>(),
+                      ctx.read<IVolunteerService>(),
+                    ),
                     child: const VolunteerAddListingView(),
                   ),
                 ),
@@ -475,7 +511,8 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case AppRoutes.businessListings:
-              final type = settings.arguments as ListingType? ?? ListingType.all;
+              final type =
+                  settings.arguments as ListingType? ?? ListingType.all;
               return MaterialPageRoute(
                 builder: (_) => BusinessListingsView(type: type),
                 settings: settings,
@@ -503,7 +540,7 @@ class MyApp extends StatelessWidget {
               final moduleType =
                   settings.arguments as AppModuleType? ?? AppModuleType.food;
               return MaterialPageRoute(
-                builder: (_) => NotificationView(moduleType: moduleType),
+                builder: (ctx) => NotificationView(moduleType: moduleType),
                 settings: settings,
               );
             case AppRoutes.yemoAssistant:

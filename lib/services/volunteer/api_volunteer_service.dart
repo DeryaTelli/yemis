@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/models/volunteer/volunteer_active_listing_model.dart';
+import 'package:yemis/models/volunteer/shelter_model.dart';
 import 'package:yemis/utils/constants/api_constants.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 
@@ -46,7 +47,7 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<List<VolunteerListing>> getActiveListings() async {
-    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}');
+    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveMeals}');
   }
 
   @override
@@ -97,11 +98,13 @@ class ApiVolunteerService implements IVolunteerService {
           }
           return null;
         }).whereType<VolunteerListing>().toList();
+      } else {
+        throw Exception('Failed to fetch meals: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       if (kDebugMode) print('Error fetching meals from $urlString: $e');
+      rethrow;
     }
-    return [];
   }
 
   @override
@@ -225,5 +228,45 @@ class ApiVolunteerService implements IVolunteerService {
       if (kDebugMode) print('Error becoming volunteer for meal $mealId: $e');
       return false;
     }
+  }
+
+  @override
+  Future<List<ShelterModel>> getNearbyShelters({
+    required double lat,
+    required double lng,
+    double radiusKm = 50,
+    String? city,
+    String? district,
+  }) async {
+    String urlString = '${ApiConstants.baseUrl}${ApiConstants.sheltersNearby}?lat=$lat&lng=$lng&radius_km=$radiusKm';
+    if (city != null && city.isNotEmpty) urlString += '&city=$city';
+    if (district != null && district.isNotEmpty) urlString += '&district=$district';
+    
+    final url = Uri.parse(urlString);
+
+    if (kDebugMode) {
+      print('--- API REQUEST (GET NEARBY SHELTERS) ---');
+      print('URL: $url');
+      print('-----------------------------------------');
+    }
+
+    try {
+      final response = await _client.get(url, headers: _headers);
+
+      if (kDebugMode) {
+        print('--- API RESPONSE (GET NEARBY SHELTERS) ---');
+        print('Status Code: ${response.statusCode}');
+        print('Body: ${response.body}');
+        print('------------------------------------------');
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((e) => ShelterModel.fromJson(e)).toList();
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error fetching nearby shelters: $e');
+    }
+    return [];
   }
 }

@@ -42,6 +42,9 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
   Color get appBarColor => const Color(0xFF22B05A); // AppColors.volunteerColor
 
+  double? get userLat => _userSession.currentLat;
+  double? get userLng => _userSession.currentLng;
+
   // ─── Init ─────────────────────────────────────────────
 
   Future<void> init() async {

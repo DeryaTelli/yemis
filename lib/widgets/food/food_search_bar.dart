@@ -48,11 +48,6 @@ class FoodSearchBar extends StatelessWidget {
             color: AppColors.primaryColor,
             size: 22,
           ),
-          suffixIcon: const Icon(
-            Icons.mic_none_rounded,
-            color: AppColors.primaryColor,
-            size: 22,
-          ),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
         ),

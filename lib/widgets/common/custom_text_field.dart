@@ -89,27 +89,42 @@ class CustomTextField extends StatelessWidget {
         style: CustomTextStyles.regular16DarkGrey, // Default text style
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: hintStyle ?? CustomTextStyles.semiBold16Grey, // Default hint style
+          hintStyle:
+              hintStyle ??
+              CustomTextStyles.semiBold16Grey, // Default hint style
           labelText: labelText,
           labelStyle: CustomTextStyles.regular16Grey,
           prefixIcon: prefixIcon,
           prefixText: prefixText,
-          prefixStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1B1B1B)),
+          prefixStyle: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1B1B1B),
+          ),
           suffixIcon: suffixIcon,
           filled: true,
           fillColor: fillColor,
-          contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding:
+              contentPadding ??
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
-            borderSide: BorderSide(color: borderColor ?? AppColors.hintTextColor),
+            borderSide: BorderSide(
+              color: borderColor ?? AppColors.hintTextColor,
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
-            borderSide: BorderSide(color: borderColor ?? AppColors.hintTextColor),
+            borderSide: BorderSide(
+              color: borderColor ?? AppColors.hintTextColor,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 1.5),
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
+              width: 1.5,
+            ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),

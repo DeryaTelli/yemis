@@ -9,6 +9,7 @@ import '../../models/auth/address_model.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
+import '../../widgets/common/error_dialog_custom.dart';
 
 /// Volunteer ilan ekleme ekranının ViewModel'i.
 class VolunteerAddListingViewModel extends ChangeNotifier {
@@ -164,6 +165,18 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
       final latLng = result['latLng'] as LatLng?;
       final address = result['address'] as String?;
       if (latLng != null) {
+        // Mükerrer kontrolü (Koordinat bazlı)
+        final isDuplicate = _savedAddresses.any((a) => a.latitude == latLng.latitude && a.longitude == latLng.longitude);
+        if (isDuplicate) {
+          if (context.mounted) {
+            ErrorDialogCustom.show(
+              context,
+              message: 'Aynı adres tekrar girilemez.',
+            );
+          }
+          return;
+        }
+
         _selectedLatLng = latLng;
         _locationAddress =
             address ??
@@ -179,6 +192,16 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
       AppRoutes.volunteerAddAddress,
     );
     if (result != null && result is String) {
+      final isDuplicate = _savedAddresses.any((a) => a.addressLine.trim().toLowerCase() == result.trim().toLowerCase());
+      if (isDuplicate) {
+        if (context.mounted) {
+          ErrorDialogCustom.show(
+            context,
+            message: 'Aynı adres tekrar girilemez.',
+          );
+        }
+        return;
+      }
       setLocationAddress(result);
     }
   }
@@ -247,8 +270,8 @@ class VolunteerAddListingViewModel extends ChangeNotifier {
         'latitude': _selectedLatLng?.latitude,
         'longitude': _selectedLatLng?.longitude,
         if (imageUrl != null) 'image_url': imageUrl,
-        'pickup_start_time': now.toUtc().toIso8601String(),
-        'pickup_end_time': finalPickupEndTime.toUtc().toIso8601String(),
+        'pickup_start_time': now.toIso8601String(),
+        'pickup_end_time': finalPickupEndTime.toIso8601String(),
         'is_available': true,
         'delivery_status': 'active',
       };

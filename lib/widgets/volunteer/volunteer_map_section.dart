@@ -7,9 +7,16 @@ import '../../views/volunteer/volunteer_expanded_map_view.dart';
 
 /// Gönüllü harita alanını gösterir.
 class VolunteerMapSection extends StatefulWidget {
-  const VolunteerMapSection({super.key, this.listings = const []});
+  const VolunteerMapSection({
+    super.key,
+    this.listings = const [],
+    this.userLat,
+    this.userLng,
+  });
 
   final List<VolunteerListing> listings;
+  final double? userLat;
+  final double? userLng;
 
   @override
   State<VolunteerMapSection> createState() => _VolunteerMapSectionState();
@@ -59,14 +66,15 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
             FlutterMap(
               mapController: _mapController,
               options: MapOptions(
-                initialCenter:
-                    widget.listings.isNotEmpty &&
+                initialCenter: widget.listings.isNotEmpty &&
                         widget.listings.first.latitude != null
                     ? LatLng(
                         widget.listings.first.latitude!,
                         widget.listings.first.longitude!,
                       )
-                    : const LatLng(41.1993, 32.6247),
+                    : (widget.userLat != null && widget.userLng != null)
+                        ? LatLng(widget.userLat!, widget.userLng!)
+                        : const LatLng(41.1993, 32.6247),
                 initialZoom: 15.0,
                 interactionOptions: const InteractionOptions(
                   flags: InteractiveFlag.none,
@@ -74,10 +82,8 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
               ),
               children: [
                 TileLayer(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: const ['a', 'b', 'c'],
-                  userAgentPackageName: 'com.deryatelli.yemis',
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.yemis.app',
                 ),
                 MarkerLayer(
                   markers: [

@@ -6,10 +6,10 @@ import '../../utils/locale_keys.dart';
 class ResetPasswordViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final String email;
-  final String otp;
+  final String code;
 
   ResetPasswordViewModel(this._authService,
-      {required this.email, required this.otp});
+      {required this.email, required this.code});
 
   // --- Controllers ---
   final TextEditingController passwordController = TextEditingController();
@@ -65,8 +65,9 @@ class ResetPasswordViewModel extends ChangeNotifier {
       final response = await _authService.resetPassword(
         ResetPasswordRequest(
           email: email,
-          otp: otp,
-          password: passwordController.text,
+          code: code,
+          newPassword: passwordController.text,
+          newPasswordConfirmation: confirmPasswordController.text,
         ),
       );
 

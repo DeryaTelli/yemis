@@ -1,4 +1,4 @@
-﻿{
+{
     "auth": {
         "login": {
             "title": "Giriş Yap",
@@ -43,7 +43,7 @@
             "emailEmpty": "E-posta adresi boş olamaz.",
             "emailInvalid": "Geçerli bir e-posta adresi girin.",
             "passwordEmpty": "Şifre boş olamaz.",
-            "passwordMinLength": "Şifre en az 6 karakter olmalıdır.",
+            "passwordMinLength": "Şifre en az 8 karakter olmalı ve en az bir büyük harf içermelidir.",
             "nameEmpty": "İsim boş olamaz.",
             "kvkkRequired": "Lütfen KVKK metnini onaylayın.",
             "codeIncomplete": "Lütfen 4 haneli kodu eksiksiz girin.",

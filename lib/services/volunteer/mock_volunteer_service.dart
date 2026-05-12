@@ -1,4 +1,5 @@
 import '../../models/volunteer/volunteer_listing.dart';
+import '../../models/volunteer/shelter_model.dart';
 import 'i_volunteer_service.dart';
 
 /// Sahte gönüllü servisi — backend hazır olunca [ApiVolunteerService] ile değiştirilir.
@@ -50,8 +51,8 @@ class MockVolunteerService implements IVolunteerService {
   @override
   Future<List<VolunteerListing>> getAttendedListings() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    // Üçüncü ilanı gönüllü olduğum ilanmış gibi döndürüyoruz (varsa, yoksa ilkini seçecek şekilde güvenli yapalım)
-    return _listings.length > 2 ? [_listings[2]] : [_listings.first];
+    // Katıldığımız ilanı döndürüyoruz
+    return [_listings.last];
   }
 
   @override
@@ -164,11 +165,52 @@ class MockVolunteerService implements IVolunteerService {
       shelterLatitude: 41.2100,
       shelterLongitude: 32.6100,
     ),
+    // ── Gönüllü Olunan (Mock) ───────────────────────────
+    VolunteerListing(
+      id: 'attended_1',
+      title: 'Barınak İçin Mama Dağıtımı',
+      userName: 'Derya Telli',
+      userLogoUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+      location: 'Kastamonu, Merkez',
+      timeRange: '10.05.2026 | 10:53 - 20:50',
+      imageUrl: 'https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=800',
+      rating: 4.8,
+      section: VolunteerSection.nearYou,
+      isNetworkImage: true,
+      isAttended: true,
+      volunteerComment: 'Bu ilana gönüllü olarak katıldım, barınaktaki hayvanlar için çok verimli bir mama dağıtımı gerçekleştirdik. Teşekkürler!',
+    ),
   ];
 
   @override
   Future<bool> becomeVolunteer(int mealId) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     return true;
+  }
+
+  @override
+  Future<List<ShelterModel>> getNearbyShelters({
+    required double lat,
+    required double lng,
+    double radiusKm = 50,
+    String? city,
+    String? district,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 400));
+    // Test için örnek bir barınak dönüyoruz
+    return [
+      ShelterModel(
+        id: 1,
+        name: 'Karabük Sokak Hayvanları Barınağı',
+        city: 'Karabük',
+        district: 'Merkez',
+        address: 'Barınak Cd. No:1',
+        latitude: 41.2100,
+        longitude: 32.6100,
+        capacity: 100,
+        isActive: true,
+        distanceKm: 2.5,
+      ),
+    ];
   }
 }

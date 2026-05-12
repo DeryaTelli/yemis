@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:lottie/lottie.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
@@ -73,6 +74,8 @@ class VolunteerOrderTab extends StatelessWidget {
               businessLocation: vm.listingLatLng!,
               userLocation: vm.userLatLng,
               height: 180,
+              accentColor: AppColors.volunteerColor,
+              markerIcon: Icons.volunteer_activism,
             )
           else
             SizedBox(
@@ -107,35 +110,103 @@ class VolunteerOrderTab extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // ── Harita: Barınak Lokasyonu ──────────────────────
-          if (vm.shelterLatLng != null)
-            OrderLocationMap(
-              businessLocation: vm.shelterLatLng!,
-              userLocation: vm.userLatLng,
+          // ── Barınak Alanı (Loading / Shelter / Not Found) ──
+          if (vm.isShelterLoading)
+            const SizedBox(
               height: 180,
+              child: Center(child: CircularProgressIndicator(color: AppColors.volunteerColor)),
             )
-          else
-            SizedBox(
-              height: 180,
-              child: Center(
-                child: Text(LocaleKeys.volunteerDetail_noShelterLocation.tr()),
+          else if (vm.nearestShelter == null)
+            Center(
+              child: Column(
+                children: [
+                  Lottie.asset(
+                    'assets/lottie/notFound.json',
+                    height: 140,
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Yakında barınak bulunamadı',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: AppColors.hintTextColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          else ...[
+            // Harita: Barınak Lokasyonu
+            if (vm.shelterLatLng != null)
+              OrderLocationMap(
+                businessLocation: vm.shelterLatLng!,
+                userLocation: vm.userLatLng,
+                height: 180,
+                accentColor: AppColors.volunteerColor,
+                markerIcon: Icons.pets, // Hayvan barınağı için pati ikonu
+              ),
+            const SizedBox(height: 12),
+
+            // Barınak Bilgisi ve Mesafe
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        vm.shelterName,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primaryTextColor,
+                        ),
+                      ),
+                      Text(
+                        vm.shelterAddress,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.hintTextColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.volunteerColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    vm.distanceToShelterText,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.volunteerColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Barınağa Git Butonu
+            _GoToButton(
+              label: LocaleKeys.volunteerDetail_goToShelter.tr(),
+              onTap: () => _push(
+                context,
+                lat: vm.shelterLatLng!.latitude,
+                lng: vm.shelterLatLng!.longitude,
+                name: vm.shelterName,
+                address: vm.shelterAddress,
               ),
             ),
-          const SizedBox(height: 12),
-
-          // ── Barınağa Git Butonu ────────────────────────────
-          _GoToButton(
-            label: LocaleKeys.volunteerDetail_goToShelter.tr(),
-            onTap: vm.shelterLatLng != null
-                ? () => _push(
-                    context,
-                    lat: vm.shelterLatLng!.latitude,
-                    lng: vm.shelterLatLng!.longitude,
-                    name: vm.shelterName,
-                    address: vm.shelterAddress,
-                  )
-                : () {},
-          ),
+          ],
           const SizedBox(height: 24),
 
           // ── Daha Fazla Detay (Expandable) ─────────────────

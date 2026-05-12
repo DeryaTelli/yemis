@@ -1,16 +1,32 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:yemis/services/auth/api_auth_service.dart';
+import 'package:yemis/services/business/api_business_service.dart';
+import 'package:yemis/services/business/i_business_service.dart';
+import 'package:yemis/services/food/api_food_service.dart';
+import 'package:yemis/services/food/i_food_service.dart';
+import 'package:yemis/services/volunteer/api_volunteer_service.dart';
+import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../services/auth/i_auth_service.dart';
+import '../../services/auth/user_session.dart';
 import '../../utils/locale_keys.dart';
 
 class VerificationViewModel extends ChangeNotifier {
   final IAuthService _authService;
+  final IBusinessService _businessService;
+  final IFoodService _foodService;
+  final IVolunteerService _volunteerService;
+  final UserSession _userSession;
   final String email;
   final bool isPasswordReset;
 
   VerificationViewModel(
-    this._authService, {
+    this._authService,
+    this._businessService,
+    this._foodService,
+    this._volunteerService,
+    this._userSession, {
     required this.email,
     this.isPasswordReset = false,
   }) {
@@ -110,6 +126,23 @@ class VerificationViewModel extends ChangeNotifier {
       );
 
       if (response.success) {
+        if (!isPasswordReset && response.user != null) {
+          // Giriş bilgilerini kaydet
+          _userSession.setUser(response.user!, token: response.token);
+
+          if (_authService is ApiAuthService) {
+            (_authService as ApiAuthService).setToken(response.token);
+          }
+          if (_businessService is ApiBusinessService) {
+            (_businessService as ApiBusinessService).setToken(response.token);
+          }
+          if (_foodService is ApiFoodService) {
+            (_foodService as ApiFoodService).setToken(response.token ?? '');
+          }
+          if (_volunteerService is ApiVolunteerService) {
+            (_volunteerService as ApiVolunteerService).setToken(response.token);
+          }
+        }
         onSuccess();
       } else {
         _errorKey = response.errorKey ?? LocaleKeys.auth_errors_codeInvalid;

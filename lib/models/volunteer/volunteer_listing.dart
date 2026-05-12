@@ -28,6 +28,17 @@ class VolunteerListing {
     this.shelterLongitude,
     this.shelterName,
     this.shelterAddress,
+    this.volunteerComment,
+    this.isAttended = false,
+    this.reviewImages = const [],
+    this.volunteerRating = 5.0,
+    this.volunteerName,
+    this.volunteerAvatar,
+    this.assignedVolunteerName,
+    this.assignedVolunteerAvatar,
+    this.isAvailable = true,
+    this.ownerId,
+    this.acceptedByUserId,
   });
 
   final String id;
@@ -54,6 +65,17 @@ class VolunteerListing {
   final double? shelterLongitude;
   final String? shelterName;
   final String? shelterAddress;
+  final String? volunteerComment;
+  final bool isAttended;
+  final List<String> reviewImages;
+  final double volunteerRating;
+  final String? volunteerName;
+  final String? volunteerAvatar;
+  final String? assignedVolunteerName;
+  final String? assignedVolunteerAvatar;
+  final bool isAvailable;
+  final String? ownerId;
+  final int? acceptedByUserId;
 
   VolunteerListing copyWith({
     String? title,
@@ -75,6 +97,16 @@ class VolunteerListing {
     double? shelterLongitude,
     String? shelterName,
     String? shelterAddress,
+    String? volunteerComment,
+    bool? isAttended,
+    List<String>? reviewImages,
+    double? volunteerRating,
+    String? volunteerName,
+    String? volunteerAvatar,
+    String? assignedVolunteerName,
+    String? assignedVolunteerAvatar,
+    bool? isAvailable,
+    String? ownerId,
   }) {
     return VolunteerListing(
       id: id,
@@ -97,6 +129,16 @@ class VolunteerListing {
       shelterLongitude: shelterLongitude ?? this.shelterLongitude,
       shelterName: shelterName ?? this.shelterName,
       shelterAddress: shelterAddress ?? this.shelterAddress,
+      volunteerComment: volunteerComment ?? this.volunteerComment,
+      isAttended: isAttended ?? this.isAttended,
+      reviewImages: reviewImages ?? this.reviewImages,
+      volunteerRating: volunteerRating ?? this.volunteerRating,
+      volunteerName: volunteerName ?? this.volunteerName,
+      volunteerAvatar: volunteerAvatar ?? this.volunteerAvatar,
+      assignedVolunteerName: assignedVolunteerName ?? this.assignedVolunteerName,
+      assignedVolunteerAvatar: assignedVolunteerAvatar ?? this.assignedVolunteerAvatar,
+      isAvailable: isAvailable ?? this.isAvailable,
+      ownerId: ownerId ?? this.ownerId,
     );
   }
 }

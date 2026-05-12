@@ -1,4 +1,4 @@
-﻿{
+{
     "auth": {
         "login": {
             "title": "Log In",
@@ -43,7 +43,7 @@
             "emailEmpty": "Email address cannot be empty.",
             "emailInvalid": "Please enter a valid email address.",
             "passwordEmpty": "Password cannot be empty.",
-            "passwordMinLength": "Password must be at least 6 characters.",
+            "passwordMinLength": "Password must be at least 8 characters and contain at least one uppercase letter.",
             "nameEmpty": "Name cannot be empty.",
             "kvkkRequired": "Please approve the KVKK terms.",
             "codeIncomplete": "Please enter the complete 4-digit code.",

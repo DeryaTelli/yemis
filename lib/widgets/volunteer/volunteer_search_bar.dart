@@ -21,7 +21,9 @@ class VolunteerSearchBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.volunteerColor.withValues(alpha: 0.3)), // İsteğe bağlı yeşil ince sınır
+        border: Border.all(
+          color: AppColors.volunteerColor.withValues(alpha: 0.3),
+        ), // İsteğe bağlı yeşil ince sınır
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
@@ -33,10 +35,7 @@ class VolunteerSearchBar extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
-        style: const TextStyle(
-          fontSize: 14,
-          color: AppColors.primaryTextColor,
-        ),
+        style: const TextStyle(fontSize: 14, color: AppColors.primaryTextColor),
         decoration: InputDecoration(
           hintText: LocaleKeys.volunteerHome_searchHint.tr(),
           hintStyle: const TextStyle(
@@ -46,11 +45,6 @@ class VolunteerSearchBar extends StatelessWidget {
           prefixIcon: const Icon(
             Icons.search_rounded,
             color: AppColors.hintTextColor,
-            size: 22,
-          ),
-          suffixIcon: const Icon(
-            Icons.mic_none_rounded,
-            color: AppColors.volunteerColor, // Yeşil mikrofon ikonu
             size: 22,
           ),
           border: InputBorder.none,

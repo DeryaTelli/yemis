@@ -204,8 +204,14 @@ class VolunteerMyListingCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 160,
-      color: Colors.grey[200],
-      child: const Icon(Icons.volunteer_activism_rounded, color: Colors.grey, size: 40),
+      color: const Color(0xFFE8F5E9),
+      child: const Center(
+        child: Icon(
+          Icons.volunteer_activism_rounded,
+          color: AppColors.volunteerColor,
+          size: 56,
+        ),
+      ),
     );
   }
 }

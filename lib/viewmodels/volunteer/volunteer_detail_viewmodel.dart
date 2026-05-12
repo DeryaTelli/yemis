@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import '../../models/volunteer/volunteer_listing.dart';
+import '../../models/volunteer/shelter_model.dart';
 import '../../services/location/location_service.dart';
 import '../../services/volunteer/i_volunteer_service.dart';
+
+import '../../services/auth/user_session.dart';
 
 class VolunteerDetailViewModel extends ChangeNotifier {
   VolunteerDetailViewModel({
     required IVolunteerService service,
     required String listingId,
+    required UserSession userSession,
   })  : _service = service,
         _listingId = listingId,
+        _userSession = userSession,
         _locationService = LocationService();
 
   final IVolunteerService _service;
   final String _listingId;
+  final UserSession _userSession;
   final LocationService _locationService;
 
   // ─── State ──────────────────────────────────────────────
@@ -54,20 +60,27 @@ class VolunteerDetailViewModel extends ChangeNotifier {
       ? LatLng(_listing!.latitude!, _listing!.longitude!)
       : null;
 
+  ShelterModel? _nearestShelter;
+  ShelterModel? get nearestShelter => _nearestShelter;
+
+  bool _isShelterLoading = false;
+  bool get isShelterLoading => _isShelterLoading;
+
   LatLng? get shelterLatLng {
-    if (_listing?.shelterLatitude != null && _listing?.shelterLongitude != null) {
-      return LatLng(_listing!.shelterLatitude!, _listing!.shelterLongitude!);
-    }
-    // API'den gelmiyorsa ilanın yakınına sahte bir barınak koyalım (Örn: +0.005 offset)
-    if (listingLatLng != null) {
-      return LatLng(listingLatLng!.latitude + 0.005, listingLatLng!.longitude + 0.005);
+    if (_nearestShelter != null) {
+      return LatLng(_nearestShelter!.latitude, _nearestShelter!.longitude);
     }
     return null;
   }
 
-  String get shelterName => _listing?.shelterName ?? 'Sokak Hayvanları Geçici Bakımevi';
+  String get shelterName => _nearestShelter?.name ?? 'Yakında barınak bulunamadı';
 
-  String get shelterAddress => _listing?.shelterAddress ?? 'İlan Konumuna En Yakın Barınak';
+  String get shelterAddress => _nearestShelter?.address ?? '';
+
+  String get distanceToShelterText {
+    if (_nearestShelter == null) return "";
+    return "${_nearestShelter!.distanceKm.toStringAsFixed(1)} km";
+  }
 
   // ─── Init ────────────────────────────────────────────────
 
@@ -78,9 +91,51 @@ class VolunteerDetailViewModel extends ChangeNotifier {
     _listing = await _service.getVolunteerDetail(_listingId);
 
     await _fetchUserLocation();
+    
+    // Konum alındıysa yakındaki barınakları çek
+    if (_userPosition != null) {
+      await fetchNearbyShelters();
+    }
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> fetchNearbyShelters() async {
+    if (_userPosition == null) return;
+    
+    _isShelterLoading = true;
+    notifyListeners();
+    
+    try {
+      final userCity = _userSession.currentUser?.city;
+      
+      final shelters = await _service.getNearbyShelters(
+        lat: _userPosition!.latitude,
+        lng: _userPosition!.longitude,
+        city: userCity,
+        district: _userSession.currentUser?.district,
+      );
+      
+      if (shelters.isNotEmpty) {
+        // Eğer kullanıcının şehri belli ise sadece o şehirdeki barınakları kabul et
+        if (userCity != null && userCity.isNotEmpty) {
+          final cityShelters = shelters.where((s) => s.city.toLowerCase() == userCity.toLowerCase()).toList();
+          _nearestShelter = cityShelters.isNotEmpty ? cityShelters.first : null;
+        } else {
+          // Şehir belli değilse en yakını göster
+          _nearestShelter = shelters.first;
+        }
+      } else {
+        _nearestShelter = null;
+      }
+    } catch (e) {
+      debugPrint("Error fetching nearby shelters: $e");
+      _nearestShelter = null;
+    } finally {
+      _isShelterLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> _fetchUserLocation() async {

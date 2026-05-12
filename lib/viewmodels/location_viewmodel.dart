@@ -324,23 +324,32 @@ class LocationViewModel extends ChangeNotifier {
 
     // API'ye gönder — city/district/neighborhood dahil
     try {
-      await _authService.createAddress(
-        AddressModel(
-          id: 0,
-          userId: 0,
-          label: 'Ev',
-          addressLine: geo.addressLine,
-          city: geo.city.isNotEmpty ? geo.city : null,
-          district: geo.district.isNotEmpty ? geo.district : null,
-          neighborhood: geo.neighborhood.isNotEmpty ? geo.neighborhood : null,
-          latitude: lat,
-          longitude: lng,
-          isDefault: true,
-        ),
-      );
-      debugPrint(
-        '✅ [LocationViewModel] Adres API\'ye gönderildi: ${geo.addressLine}',
-      );
+      final existingAddresses = await _authService.getAddresses();
+      final isDuplicate = existingAddresses.any((a) =>
+          a.addressLine.trim().toLowerCase() == geo.addressLine.trim().toLowerCase() ||
+          (a.latitude == lat && a.longitude == lng));
+
+      if (!isDuplicate) {
+        await _authService.createAddress(
+          AddressModel(
+            id: 0,
+            userId: 0,
+            label: 'Ev',
+            addressLine: geo.addressLine,
+            city: geo.city.isNotEmpty ? geo.city : null,
+            district: geo.district.isNotEmpty ? geo.district : null,
+            neighborhood: geo.neighborhood.isNotEmpty ? geo.neighborhood : null,
+            latitude: lat,
+            longitude: lng,
+            isDefault: true,
+          ),
+        );
+        debugPrint(
+          '✅ [LocationViewModel] Adres API\'ye gönderildi: ${geo.addressLine}',
+        );
+      } else {
+        debugPrint('ℹ️ [LocationViewModel] Adres zaten mevcut, tekrar eklenmedi.');
+      }
     } catch (e) {
       debugPrint('⚠️ [LocationViewModel] Adres API hatası: $e');
     }

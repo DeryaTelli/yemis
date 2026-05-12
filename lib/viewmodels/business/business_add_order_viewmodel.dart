@@ -322,7 +322,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
 
       // 2. Zamanları ayarla
       final now = DateTime.now();
-      final pickupStartTime = now.toUtc().toIso8601String();
+      final pickupStartTime = now.toIso8601String();
 
       // Bitiş saati için bugünün tarihini ve seçilen saati kullan
       int hour = _selectedHour;
@@ -332,7 +332,7 @@ class BusinessAddOrderViewModel extends ChangeNotifier {
         now.day,
         hour,
         _selectedMinute,
-      ).toUtc().toIso8601String();
+      ).toIso8601String();
 
       // 3. Veriyi hazırla
       final bagData = {

@@ -123,10 +123,12 @@ class VolunteerDetailHeroImage extends StatelessWidget {
 
   Widget _buildImageError() => Container(
         color: const Color(0xFFE8F5E9),
-        child: const Icon(
-          Icons.volunteer_activism_rounded,
-          color: AppColors.volunteerColor,
-          size: 64,
+        child: const Center(
+          child: Icon(
+            Icons.volunteer_activism_rounded,
+            color: AppColors.volunteerColor,
+            size: 80,
+          ),
         ),
       );
 

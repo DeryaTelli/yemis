@@ -9,11 +9,15 @@ class OrderLocationMap extends StatelessWidget {
     required this.businessLocation,
     this.userLocation,
     this.height = 150,
+    this.accentColor,
+    this.markerIcon,
   });
 
   final LatLng businessLocation;
   final LatLng? userLocation;
   final double height;
+  final Color? accentColor;
+  final IconData? markerIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +36,15 @@ class OrderLocationMap extends StatelessWidget {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-              subdomains: const ['a', 'b', 'c'],
-              userAgentPackageName: 'com.deryatelli.yemis',
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.yemis.app',
             ),
             if (userLocation != null)
               PolylineLayer(
                 polylines: [
                   Polyline<Object>(
                     points: [userLocation!, businessLocation],
-                    color: AppColors.primaryColor.withValues(alpha: 0.5),
+                    color: (accentColor ?? AppColors.primaryColor).withValues(alpha: 0.5),
                     strokeWidth: 3,
                   ),
                 ],
@@ -65,7 +68,7 @@ class OrderLocationMap extends StatelessWidget {
                   height: 32,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
+                      color: accentColor ?? AppColors.primaryColor,
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                       boxShadow: [
@@ -76,9 +79,9 @@ class OrderLocationMap extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Icon(
-                        Icons.restaurant,
+                        markerIcon ?? Icons.restaurant,
                         color: Colors.white,
                         size: 16,
                       ),

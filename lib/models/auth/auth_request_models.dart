@@ -77,18 +77,21 @@ class VerifyCodeRequest {
 /// Şifre yenileme isteği
 class ResetPasswordRequest {
   final String email;
-  final String otp;
-  final String password;
+  final String code;
+  final String newPassword;
+  final String newPasswordConfirmation;
 
   const ResetPasswordRequest({
     required this.email,
-    required this.otp,
-    required this.password,
+    required this.code,
+    required this.newPassword,
+    required this.newPasswordConfirmation,
   });
 
   Map<String, dynamic> toJson() => {
         'email': email,
-        'otp': otp,
-        'password': password,
+        'code': code,
+        'new_password': newPassword,
+        'new_password_confirmation': newPasswordConfirmation,
       };
 }

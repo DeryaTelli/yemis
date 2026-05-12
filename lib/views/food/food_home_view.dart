@@ -99,7 +99,11 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
               const SizedBox(height: 16),
 
               // ── Harita Alanı ────────────────────────────
-              FoodMapSection(listings: vm.filteredListings),
+              FoodMapSection(
+                listings: vm.filteredListings,
+                userLat: vm.userLat,
+                userLng: vm.userLng,
+              ),
               const SizedBox(height: 16),
 
               // ── Filtre Chip'leri ────────────────────────

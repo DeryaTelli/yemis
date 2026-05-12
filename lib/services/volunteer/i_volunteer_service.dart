@@ -1,4 +1,5 @@
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/models/volunteer/shelter_model.dart';
 
 /// Gönüllü servisi için arayüz.
 abstract class IVolunteerService {
@@ -31,4 +32,13 @@ abstract class IVolunteerService {
 
   /// Bir ilana gönüllü olarak atanır.
   Future<bool> becomeVolunteer(int mealId);
+
+  /// Yakındaki barınakları getirir.
+  Future<List<ShelterModel>> getNearbyShelters({
+    required double lat,
+    required double lng,
+    double radiusKm = 50,
+    String? city,
+    String? district,
+  });
 }

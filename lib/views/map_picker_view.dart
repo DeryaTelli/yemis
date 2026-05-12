@@ -100,7 +100,6 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.yemis.app',
-                maxZoom: 19,
               ),
             ],
           ),

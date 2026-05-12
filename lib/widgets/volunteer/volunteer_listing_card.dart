@@ -4,6 +4,8 @@ import 'package:yemis/utils/theme/text_styles_custom.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
+import 'package:provider/provider.dart';
+import '../../services/auth/user_session.dart';
 
 /// Bir gönüllü ilanı kartı.
 class VolunteerListingCard extends StatelessWidget {
@@ -41,7 +43,7 @@ class VolunteerListingCard extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -57,16 +59,16 @@ class VolunteerListingCard extends StatelessWidget {
                       child: listing.imageUrl.isEmpty
                           ? _errorIcon()
                           : (listing.isNetworkImage
-                              ? Image.network(
-                                  listing.imageUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => _errorIcon(),
-                                )
-                              : Image.asset(
-                                  listing.imageUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => _errorIcon(),
-                                )),
+                                ? Image.network(
+                                    listing.imageUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => _errorIcon(),
+                                  )
+                                : Image.asset(
+                                    listing.imageUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => _errorIcon(),
+                                  )),
                     ),
                   ),
 
@@ -124,27 +126,28 @@ class VolunteerListingCard extends StatelessWidget {
                         border: Border.all(color: Colors.white, width: 2),
                       ),
                       child: ClipOval(
-                        child: listing.userLogoUrl != null &&
+                        child:
+                            listing.userLogoUrl != null &&
                                 listing.userLogoUrl!.isNotEmpty
                             ? (listing.userLogoUrl!.startsWith('http')
-                                ? Image.network(
-                                    listing.userLogoUrl!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => const Icon(
-                                      Icons.person_rounded,
-                                      color: AppColors.volunteerColor,
-                                      size: 20,
-                                    ),
-                                  )
-                                : Image.asset(
-                                    listing.userLogoUrl!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => const Icon(
-                                      Icons.person_rounded,
-                                      color: AppColors.volunteerColor,
-                                      size: 20,
-                                    ),
-                                  ))
+                                  ? Image.network(
+                                      listing.userLogoUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Icon(
+                                        Icons.person_rounded,
+                                        color: AppColors.volunteerColor,
+                                        size: 20,
+                                      ),
+                                    )
+                                  : Image.asset(
+                                      listing.userLogoUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Icon(
+                                        Icons.person_rounded,
+                                        color: AppColors.volunteerColor,
+                                        size: 20,
+                                      ),
+                                    ))
                             : const Icon(
                                 Icons.person_rounded,
                                 color: AppColors.volunteerColor,
@@ -215,24 +218,328 @@ class VolunteerListingCard extends StatelessWidget {
 
                         const SizedBox(height: 12),
 
-                        // Gönüllü Ol Butonu
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: AppColors.volunteerBackgroundGradient,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              LocaleKeys.volunteerDetail_becomeButton.tr(),
-                              style: CustomTextStyles.semiBold13White,
+                        // Gönüllü Bilgisi (Eğer birisi gönüllü olmuşsa)
+                        if (listing.assignedVolunteerName != null)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF1F8E9),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: AppColors.volunteerColor.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 16,
+                                    backgroundColor: Colors.white,
+                                    child: ClipOval(
+                                      child:
+                                          (listing.assignedVolunteerAvatar !=
+                                                  null &&
+                                              listing
+                                                  .assignedVolunteerAvatar!
+                                                  .isNotEmpty)
+                                          ? (listing.assignedVolunteerAvatar!
+                                                    .startsWith('http')
+                                                ? Image.network(
+                                                    listing
+                                                        .assignedVolunteerAvatar!,
+                                                    width: 32,
+                                                    height: 32,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.asset(
+                                                    listing
+                                                        .assignedVolunteerAvatar!,
+                                                    width: 32,
+                                                    height: 32,
+                                                    fit: BoxFit.cover,
+                                                  ))
+                                          : const Icon(
+                                              Icons.person,
+                                              color: AppColors.volunteerColor,
+                                              size: 18,
+                                            ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Bu ilana gönüllü olundu:',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.volunteerColor,
+                                          ),
+                                        ),
+                                        Text(
+                                          listing.assignedVolunteerName!,
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.primaryTextColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.check_circle_rounded,
+                                    color: AppColors.volunteerColor,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                        // Yorum yoksa ama gönüllü olunmuşsa (Gönüllü İlanlarım kısmında)
+                        if (listing.isAttended &&
+                            (listing.volunteerComment == null ||
+                                listing.volunteerComment!.isEmpty))
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColors.volunteerColor.withValues(
+                                  alpha: 0.05,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: AppColors.volunteerColor.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                ),
+                              ),
+                              child: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline_rounded,
+                                    size: 16,
+                                    color: AppColors.volunteerColor,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Henüz bu ilana bir yorum eklememişsiniz.',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.volunteerColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                        const SizedBox(height: 8),
+
+                        // Yorum (Detaylı Tasarım: Avatar, Yıldızlar, Metin, Fotolar)
+                        if (listing.isAttended &&
+                            listing.volunteerComment != null &&
+                            listing.volunteerComment!.isNotEmpty)
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.volunteerColor.withValues(
+                                alpha: 0.05,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: AppColors.volunteerColor.withValues(
+                                  alpha: 0.1,
+                                ),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // ... (Existing review content) ...
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 18,
+                                      backgroundColor: Colors.white,
+                                      child: ClipOval(
+                                        child:
+                                            (listing.volunteerAvatar != null &&
+                                                listing
+                                                    .volunteerAvatar!
+                                                    .isNotEmpty)
+                                            ? (listing.volunteerAvatar!
+                                                      .startsWith('http')
+                                                  ? Image.network(
+                                                      listing.volunteerAvatar!,
+                                                      width: 36,
+                                                      height: 36,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Image.asset(
+                                                      listing.volunteerAvatar!,
+                                                      width: 36,
+                                                      height: 36,
+                                                      fit: BoxFit.cover,
+                                                    ))
+                                            : const Icon(
+                                                Icons.person,
+                                                color: AppColors.volunteerColor,
+                                                size: 20,
+                                              ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                listing.volunteerName ??
+                                                    listing.userName,
+                                                style: const TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: AppColors
+                                                      .primaryTextColor,
+                                                ),
+                                              ),
+                                              const Text(
+                                                'Bugün, 09:12',
+                                                style: TextStyle(
+                                                  fontSize: 11,
+                                                  color:
+                                                      AppColors.hintTextColor,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 2),
+                                          _StarRow(
+                                            rating: listing.volunteerRating,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  listing.volunteerComment!,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.primaryTextColor,
+                                    height: 1.5,
+                                  ),
+                                ),
+                                if (listing.reviewImages.isNotEmpty) ...[
+                                  const SizedBox(height: 12),
+                                  SizedBox(
+                                    height: 60,
+                                    child: ListView.separated(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: listing.reviewImages.length,
+                                      separatorBuilder: (_, __) =>
+                                          const SizedBox(width: 8),
+                                      itemBuilder: (context, index) {
+                                        return ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          child: Image.network(
+                                            listing.reviewImages[index],
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          )
+                        else if (listing.isAvailable &&
+                            !listing.isAttended &&
+                            listing.assignedVolunteerName == null)
+                          // Gönüllü Ol Butonu (Hala aktif olanlar için)
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.volunteerColor,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                LocaleKeys.volunteerDetail_becomeButton.tr(),
+                                style: CustomTextStyles.semiBold13White,
+                              ),
+                            ),
+                          )
+                        else if (!listing.isAvailable &&
+                            listing.assignedVolunteerName == null &&
+                            !listing.isAttended)
+                          // Geçmiş ilanlarda kimse gönüllü olmamışsa uyarı
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.orange.withValues(
+                                  alpha: 0.05,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: Colors.orange.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline_rounded,
+                                    size: 16,
+                                    color: Colors.orange[700],
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Bu ilana henüz kimse gönüllü olmadı.',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.orange[800],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ],
@@ -247,11 +554,13 @@ class VolunteerListingCard extends StatelessWidget {
 
   Widget _errorIcon() {
     return Container(
-      color: AppColors.volunteerColor.withValues(alpha: 0.1),
-      child: const Icon(
-        Icons.volunteer_activism_rounded,
-        color: AppColors.volunteerColor,
-        size: 32,
+      color: const Color(0xFFE8F5E9),
+      child: const Center(
+        child: Icon(
+          Icons.volunteer_activism_rounded,
+          color: AppColors.volunteerColor,
+          size: 44,
+        ),
       ),
     );
   }
@@ -310,4 +619,37 @@ class _GradientBorderPainter extends CustomPainter {
       oldDelegate.gradient != gradient ||
       oldDelegate.width != width ||
       oldDelegate.borderRadius != borderRadius;
+}
+
+class _StarRow extends StatelessWidget {
+  const _StarRow({required this.rating});
+
+  final double rating;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(5, (i) {
+        if (i < rating.floor()) {
+          return const Icon(
+            Icons.star_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
+        } else if (i < rating) {
+          return const Icon(
+            Icons.star_half_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
+        } else {
+          return const Icon(
+            Icons.star_outline_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
+        }
+      }),
+    );
+  }
 }

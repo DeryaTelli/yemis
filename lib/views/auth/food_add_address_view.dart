@@ -16,6 +16,7 @@ import '../../widgets/common/location_picker_bottom_sheet.dart';
 import '../../models/app_module_type.dart';
 import '../../models/auth/address_model.dart';
 import '../../services/auth/user_session.dart';
+import '../../widgets/common/error_dialog_custom.dart';
 
 class FoodAddAddressView extends StatelessWidget {
   final AddressModel? address;
@@ -209,6 +210,8 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
                   final success = await vm.saveAddress();
                   if (success && context.mounted) {
                     Navigator.pop(context, true);
+                  } else if (vm.errorMessage != null && context.mounted) {
+                    ErrorDialogCustom.show(context, message: vm.errorMessage!);
                   }
                 },
                 width: double.infinity,

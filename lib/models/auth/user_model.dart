@@ -16,6 +16,8 @@ class UserModel {
   final String? phoneNumber;
   final String? address;
   final String? imageUrl;
+  final String? city;
+  final String? district;
   final bool isVerified;
   final bool isVolunteer;
   final UserType userType;
@@ -27,6 +29,8 @@ class UserModel {
     required this.userType,
     this.phoneNumber,
     this.address,
+    this.city,
+    this.district,
     this.imageUrl,
     this.isVerified = false,
     this.isVolunteer = false,
@@ -73,6 +77,8 @@ class UserModel {
       email: (json['email'] ?? '').toString(),
       phoneNumber: json['phoneNumber']?.toString() ?? json['phone']?.toString(),
       address: json['address']?.toString(),
+      city: json['city']?.toString(),
+      district: json['district']?.toString(),
       imageUrl: processedImageUrl,
       isVerified: json['is_verified'] ?? false,
       isVolunteer: json['is_volunteer'] ?? false,
@@ -86,6 +92,8 @@ class UserModel {
     'email': email,
     'phoneNumber': phoneNumber,
     'address': address,
+    'city': city,
+    'district': district,
     'imageUrl': imageUrl,
     'isVerified': isVerified,
     'isVolunteer': isVolunteer,

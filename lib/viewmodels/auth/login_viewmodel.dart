@@ -5,19 +5,23 @@ import 'package:yemis/services/business/api_business_service.dart';
 import 'package:yemis/services/business/i_business_service.dart';
 import 'package:yemis/services/food/api_food_service.dart';
 import 'package:yemis/services/food/i_food_service.dart';
+import 'package:yemis/services/notifications/api_notification_service.dart';
 import 'package:yemis/services/volunteer/api_volunteer_service.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import '../../models/auth/auth_request_models.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
 import '../../utils/locale_keys.dart';
-import '../../utils/routes/app_routes.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
+import 'package:yemis/services/common/notification_service.dart';
+import 'dart:io';
 
 class LoginViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final IBusinessService _businessService;
   final IFoodService _foodService;
   final IVolunteerService _volunteerService;
+  final ApiNotificationService _notificationService;
   final UserSession _userSession;
 
   /// SharedPreferences anahtarı — LocationViewModel ile ortak
@@ -28,6 +32,7 @@ class LoginViewModel extends ChangeNotifier {
     this._businessService,
     this._foodService,
     this._volunteerService,
+    this._notificationService,
     this._userSession,
   );
 
@@ -124,11 +129,17 @@ class LoginViewModel extends ChangeNotifier {
         if (_volunteerService is ApiVolunteerService) {
           (_volunteerService as ApiVolunteerService).setToken(response.token);
         }
+        _notificationService.setToken(response.token);
 
-        // Token'ı kalıcı kaydet
-        if (response.token != null) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('auth_token', response.token!);
+        // --- Register Device Token ---
+        try {
+          final fcmToken = await NotificationService().getToken();
+          if (fcmToken != null) {
+            final platform = Platform.isAndroid ? 'android' : 'ios';
+            await _notificationService.registerDeviceToken(fcmToken, platform);
+          }
+        } catch (e) {
+          debugPrint('Error registering device token: $e');
         }
 
         onSuccess();

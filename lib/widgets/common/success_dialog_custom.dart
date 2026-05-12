@@ -70,7 +70,7 @@ class SuccessDialogCustom extends StatelessWidget {
                 height: 120,
                 repeat: false,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   title,

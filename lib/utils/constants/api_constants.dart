@@ -42,6 +42,7 @@ class ApiConstants {
   // --- Meals (Volunteer Listings) ---
   static const String meals = '/api/meals';
   static const String myMeals = '/api/meals/my';
+  static const String myActiveMeals = '/api/meals/my/active';
   static const String myPastMeals = '/api/meals/my/past';
   static const String myActiveTasks = '/api/volunteer/tasks/my/active';
   static const String attendedTasks = '/api/volunteer/tasks/my/attended';
@@ -50,4 +51,16 @@ class ApiConstants {
 
   // --- Assistant ---
   static const String assistantAsk = '/api/assistant/ask';
+
+  // --- Shelters ---
+  static const String sheltersNearby = '/api/shelters/nearby';
+
+  // --- Notifications ---
+  static const String notifications = '/api/notifications/my';
+  static const String notificationsUnreadCount = '/api/notifications/unread-count';
+  static const String notificationsReadAll = '/api/notifications/read-all';
+  static const String notificationPreferences = '/api/notifications/preferences';
+  static const String notificationDeviceToken = '/api/notifications/device-token';
+  static String notificationRead(int id) => '/api/notifications/$id/read';
+  static String notificationById(int id) => '/api/notifications/$id';
 }

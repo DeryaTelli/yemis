@@ -68,12 +68,12 @@ class VolunteerListingSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        //const SizedBox(height: 4),
 
         // ── Yatay Liste ──────────────────────────────────
         SizedBox(
           height:
-              255, // İlan kartı yüksekliği (Önceden 240'tı, taşmayı önlemek için 255 yapıldı)
+              260, // İlan kartı yüksekliği (Önceden 255'ti, taşmayı önlemek için 270 yapıldı)
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,

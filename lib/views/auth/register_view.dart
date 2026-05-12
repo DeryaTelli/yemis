@@ -145,7 +145,7 @@ class _RegisterViewState extends State<RegisterView> {
                             return LocaleKeys.auth_validation_passwordEmpty
                                 .tr();
                           }
-                          if (v.length < 6) {
+                          if (v.length < 8 || !v.contains(RegExp(r'[A-Z]'))) {
                             return LocaleKeys.auth_validation_passwordMinLength
                                 .tr();
                           }

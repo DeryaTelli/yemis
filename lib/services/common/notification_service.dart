@@ -164,4 +164,8 @@ class NotificationService {
       payload: payload,
     );
   }
+
+  Future<String?> getToken() async {
+    return await _fcm.getToken();
+  }
 }

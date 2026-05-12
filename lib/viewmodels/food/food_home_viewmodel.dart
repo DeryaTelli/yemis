@@ -52,6 +52,9 @@ class FoodHomeViewModel extends ChangeNotifier {
 
   Color get appBarColor => const Color(0xFFFE8800);
 
+  double? get userLat => _userSession.currentLat;
+  double? get userLng => _userSession.currentLng;
+
   void _onUserSessionChanged() {
     if (_userSession.currentAddress != null) {
       _locationName = _userSession.currentAddress!;

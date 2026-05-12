@@ -47,15 +47,9 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
           moduleType: AppModuleType.food,
           child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(80),
-              child: AppBar(
-                toolbarHeight: 80,
-                title: Text(LocaleKeys.auth_resetPassword_title.tr()),
-                backgroundColor: const Color(0xFFFE8800),
-                foregroundColor: Colors.white,
-                elevation: 0,
-              ),
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(LocaleKeys.auth_resetPassword_title.tr()),
             ),
             body: SafeArea(
               child: SingleChildScrollView(
@@ -65,19 +59,18 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Center(
                         child: Lottie.asset(
                           'assets/lottie/forgot_password.json',
-                          height: 250,
+                          height: 220,
                           fit: BoxFit.contain,
                         ),
                       ),
-                      const SizedBox(height: 12),
-
+                      const SizedBox(height: 20),
                       Text(
-                        'Lütfen yeni şifrenizi girin.',
-                        style: CustomTextStyles.semiBold16Grey,
+                        'Hesabınız için yeni bir şifre belirleyin.',
+                        style: CustomTextStyles.regular16Grey,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 32),
@@ -99,9 +92,10 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                         ),
                         validator: (v) {
                           if (v == null || v.isEmpty) {
-                            return LocaleKeys.auth_validation_passwordEmpty.tr();
+                            return LocaleKeys.auth_validation_passwordEmpty
+                                .tr();
                           }
-                          if (v.length < 6) {
+                          if (v.length < 8 || !v.contains(RegExp(r'[A-Z]'))) {
                             return LocaleKeys.auth_validation_passwordMinLength
                                 .tr();
                           }
@@ -116,9 +110,19 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                         hintText: LocaleKeys.auth_fields_confirmPassword.tr(),
                         obscureText: !vm.passwordVisible,
                         textInputAction: TextInputAction.done,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            vm.passwordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: const Color(0xFF838383),
+                          ),
+                          onPressed: vm.togglePasswordVisibility,
+                        ),
                         validator: (v) {
                           if (v == null || v.isEmpty) {
-                            return LocaleKeys.auth_validation_passwordEmpty.tr();
+                            return LocaleKeys.auth_validation_passwordEmpty
+                                .tr();
                           }
                           if (v != vm.passwordController.text) {
                             return LocaleKeys.auth_validation_passwordsNotMatch
@@ -138,9 +142,13 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                             vm.clearFields();
                             SuccessDialogCustom.show(
                               context,
-                              message: LocaleKeys.auth_forgotPassword_success.tr(),
+                              message: LocaleKeys.auth_forgotPassword_success
+                                  .tr(),
                               onConfirm: () {
-                                Navigator.popUntil(context, (route) => route.isFirst);
+                                Navigator.popUntil(
+                                  context,
+                                  (route) => route.isFirst,
+                                );
                               },
                             );
                           },

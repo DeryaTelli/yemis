@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/services/auth/user_session.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../services/volunteer/i_volunteer_service.dart';
 import '../../utils/constants/app_colors.dart';
@@ -29,6 +30,7 @@ class VolunteerDetailView extends StatelessWidget {
         create: (_) => VolunteerDetailViewModel(
           service: context.read<IVolunteerService>(),
           listingId: listing.id,
+          userSession: context.read<UserSession>(),
         )..init(),
         child: _VolunteerDetailBody(listing: listing),
       ),

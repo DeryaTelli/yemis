@@ -166,6 +166,9 @@ class FoodAddAddressViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
   bool get isEditMode => initialAddress != null;
 
   List<String> get iller => _provinces.map((e) => e.name).toList()..sort();
@@ -296,17 +299,43 @@ class FoodAddAddressViewModel extends ChangeNotifier {
   }
 
   Future<bool> saveAddress() async {
+    _errorMessage = null;
     if (adresController.text.isEmpty) {
-      debugPrint('⚠️ [FoodAddAddressViewModel] Kayıt başarısız: Eksik alanlar var.');
+      _errorMessage = 'Lütfen adres bilgilerini doldurunuz.';
+      notifyListeners();
       return false;
     }
-
     _isLoading = true;
     notifyListeners();
 
     // Eğer koordinat seçilmemişse geocode etmeye çalış
     if (!hasCoordinates) {
       await _geocodeAddress();
+    }
+
+    // Mükerrer adres kontrolü
+    try {
+      final existingAddresses = await _authService.getAddresses();
+      final currentFullAddress = formattedAddress;
+      
+      final isDuplicate = existingAddresses.any((a) {
+        // Düzenleme modundaysak kendisiyle karşılaştırmasın
+        if (isEditMode && a.id == initialAddress?.id) return false;
+        
+        final sameAddressLine = a.addressLine.trim().toLowerCase() == currentFullAddress.trim().toLowerCase();
+        final sameCoordinates = hasCoordinates && a.latitude == _latitude && a.longitude == _longitude;
+        
+        return sameAddressLine || sameCoordinates;
+      });
+
+      if (isDuplicate) {
+        _isLoading = false;
+        _errorMessage = 'Aynı adres tekrar girilemez.';
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      debugPrint('⚠️ [FoodAddAddressVM] Mükerrer kontrolü sırasında hata: $e');
     }
 
     try {

@@ -36,9 +36,8 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                subdomains: const ['a', 'b', 'c'],
-                userAgentPackageName: 'com.deryatelli.yemis',
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.yemis.app',
               ),
               MarkerLayer(
                 markers: [
