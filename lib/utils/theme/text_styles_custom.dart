@@ -47,7 +47,7 @@ class CustomTextStyles {
   static TextStyle get semiBold16PrimaryDense => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFFEF9F27), height: 12 / 16, letterSpacing: -0.2);
 
   // --- Orelega One ---
-
+   static TextStyle get orelegaOne28DarkGrey => GoogleFonts.orelegaOne(fontSize: 28, fontWeight: FontWeight.w400, color: const Color(0xFF4F4F4F));
   static TextStyle get orelegaOne18DarkGrey => GoogleFonts.orelegaOne(fontSize: 18, fontWeight: FontWeight.w400, color: const Color(0xFF4F4F4F));
   static TextStyle get orelegaOne32White => GoogleFonts.orelegaOne(fontSize: 32, fontWeight: FontWeight.w400, color: Colors.white);
   static TextStyle get orelegaOne32Grey => GoogleFonts.orelegaOne(fontSize: 32, fontWeight: FontWeight.w400, color: Color(0xFF838383));

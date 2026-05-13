@@ -2,14 +2,27 @@ import 'package:yemis/utils/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth/user_session.dart';
+import '../../services/business/i_business_service.dart';
 import '../../utils/routes/app_routes.dart';
+import '../../models/business/business_dashboard_model.dart';
 
 class BusinessHomeViewModel extends ChangeNotifier {
-  BusinessHomeViewModel({required UserSession userSession}) : _userSession = userSession {
+  BusinessHomeViewModel({
+    required UserSession userSession,
+    required IBusinessService businessService,
+  })  : _userSession = userSession,
+        _businessService = businessService {
     _userSession.addListener(_onUserSessionChanged);
+    Future.microtask(() => init());
   }
 
   final UserSession _userSession;
+  final IBusinessService _businessService;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  BusinessDashboardModel? _dashboardStats;
 
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
@@ -24,11 +37,21 @@ class BusinessHomeViewModel extends ChangeNotifier {
   
   String? get profileImageUrl => _userSession.currentUser?.imageUrl;
 
-  /// Mock haftalık satış verileri (Pzt → Paz)
-  List<double> get weeklySales => [45, 70, 30, 90, 120, 80, 60];
+  /// Haftalık satış verileri (API'den gelir)
+  List<double> get weeklySales => _dashboardStats?.weeklySales ?? [0, 0, 0, 0, 0, 0, 0];
 
   /// Satılan siparişler sayesinde önlenen CO₂ oranı (0.0 – 1.0)
-  double get co2SavedPercent => 0.80;
+  double get co2SavedPercent => (_dashboardStats?.co2Saved ?? 0.0) / 100.0;
+
+  Future<void> init() async {
+    _isLoading = true;
+    notifyListeners();
+
+    _dashboardStats = await _businessService.getDashboardStats();
+
+    _isLoading = false;
+    notifyListeners();
+  }
 
   void _onUserSessionChanged() {
     notifyListeners();

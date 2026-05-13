@@ -89,7 +89,9 @@ class VolunteerListingSection extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (_) => VolunteerDetailView(listing: listing),
                     ),
-                  );
+                  ).then((value) {
+                    if (value == true) vm.init();
+                  });
                 },
               );
             },

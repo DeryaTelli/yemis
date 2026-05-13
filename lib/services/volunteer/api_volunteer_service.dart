@@ -269,4 +269,28 @@ class ApiVolunteerService implements IVolunteerService {
     }
     return [];
   }
+
+  @override
+  Future<bool> completeTask(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.completeTask(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error completing task: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> cancelTask(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.cancelTask(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error cancelling task: $e');
+      return false;
+    }
+  }
 }

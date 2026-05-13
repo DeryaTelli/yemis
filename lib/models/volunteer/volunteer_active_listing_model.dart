@@ -243,6 +243,7 @@ class VolunteerActiveListingModel {
 
     return VolunteerListing(
       id: id.toString(),
+      taskId: id.toString(), // Task API'den geliyorsa id task_id'dir
       title: title,
       userName: posterName ?? 'Bilinmiyor',
       userLogoUrl: posterImageUrl,
@@ -268,6 +269,31 @@ class VolunteerActiveListingModel {
       isAvailable: isAvailable,
       ownerId: createdByUserId?.toString(),
       acceptedByUserId: acceptedByUserId,
+      deliveryStatus: _mapDeliveryStatus(deliveryStatus),
+      pickupStartTime: pickupStartTime,
+      pickupEndTime: pickupEndTime,
     );
+  }
+
+  DeliveryStatus _mapDeliveryStatus(String? status) {
+    if (status == null) return DeliveryStatus.pending;
+    
+    // Backend'den gelen status stringlerini enum'a çevir
+    switch (status.toLowerCase()) {
+      case 'on_the_way_to_pickup':
+      case 'almaya_gidiyor':
+        return DeliveryStatus.onTheWayToPickUp;
+      case 'picked_up':
+      case 'evden_alindi':
+        return DeliveryStatus.pickedUp;
+      case 'on_the_way':
+      case 'yolda':
+        return DeliveryStatus.onTheWay;
+      case 'completed':
+      case 'tamamlandi':
+        return DeliveryStatus.completed;
+      default:
+        return DeliveryStatus.pending;
+    }
   }
 }

@@ -4,6 +4,15 @@ enum VolunteerSection {
   todayPopular, // Bugün Popüler Olanlar
 }
 
+/// Gönüllü görevinin teslimat durumunu belirtir.
+enum DeliveryStatus {
+  pending,               // Beklemede / Yeni atanmış
+  onTheWayToPickUp,      // İlanı almak için yola çıktım
+  pickedUp,              // İlanı aldım
+  onTheWay,              // Barınağa götürüyorum
+  completed,             // Götürdüm / Tamamlandı
+}
+
 /// Bir gönüllü ilanını temsil eder.
 class VolunteerListing {
   const VolunteerListing({
@@ -39,9 +48,16 @@ class VolunteerListing {
     this.isAvailable = true,
     this.ownerId,
     this.acceptedByUserId,
+    this.deliveryStatus = DeliveryStatus.pending,
+    this.taskId,
+    this.pickupStartTime,
+    this.pickupEndTime,
   });
 
   final String id;
+  final String? taskId; // Gönüllü görevi için task ID
+  final DateTime? pickupStartTime;
+  final DateTime? pickupEndTime;
   final String title;
   final String userName;
   final String? userLogoUrl;
@@ -76,6 +92,7 @@ class VolunteerListing {
   final bool isAvailable;
   final String? ownerId;
   final int? acceptedByUserId;
+  final DeliveryStatus deliveryStatus;
 
   VolunteerListing copyWith({
     String? title,
@@ -107,9 +124,12 @@ class VolunteerListing {
     String? assignedVolunteerAvatar,
     bool? isAvailable,
     String? ownerId,
+    DeliveryStatus? deliveryStatus,
+    String? taskId,
   }) {
     return VolunteerListing(
       id: id,
+      taskId: taskId ?? this.taskId,
       title: title ?? this.title,
       userName: userName ?? this.userName,
       userLogoUrl: userLogoUrl ?? this.userLogoUrl,
@@ -139,6 +159,9 @@ class VolunteerListing {
       assignedVolunteerAvatar: assignedVolunteerAvatar ?? this.assignedVolunteerAvatar,
       isAvailable: isAvailable ?? this.isAvailable,
       ownerId: ownerId ?? this.ownerId,
+      deliveryStatus: deliveryStatus ?? this.deliveryStatus,
+      pickupStartTime: pickupStartTime ?? this.pickupStartTime,
+      pickupEndTime: pickupEndTime ?? this.pickupEndTime,
     );
   }
 }

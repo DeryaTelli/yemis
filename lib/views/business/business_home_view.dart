@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/services/auth/user_session.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
+import 'package:yemis/services/business/i_business_service.dart';
 import 'package:yemis/viewmodels/business/business_listings_viewmodel.dart';
 import 'package:yemis/widgets/business/co2_card.dart';
 import 'package:yemis/widgets/business/info_card.dart';
@@ -24,12 +25,14 @@ class BusinessHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) =>
-          BusinessHomeViewModel(userSession: ctx.read<UserSession>()),
+      create: (ctx) => BusinessHomeViewModel(
+        userSession: ctx.read<UserSession>(),
+        businessService: ctx.read<IBusinessService>(),
+      ),
       child: Consumer<BusinessHomeViewModel>(
         builder: (context, vm, child) {
           return LoadingOverlay(
-            isLoading: false, // İşletme ana sayfasında şimdilik sabit
+            isLoading: vm.isLoading,
             moduleType: AppModuleType.business,
             showChatHead: true,
             child: Scaffold(

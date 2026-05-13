@@ -46,7 +46,7 @@ class BusinessProfileViewModel extends ChangeNotifier {
       phoneController = TextEditingController() {
     _remoteImageUrl = _userSession.currentUser?.imageUrl;
     _resetControllers();
-    fetchProfile();
+    Future.microtask(() => fetchProfile());
   }
 
   Future<void> fetchProfile() async {

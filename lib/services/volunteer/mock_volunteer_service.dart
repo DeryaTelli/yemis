@@ -170,15 +170,18 @@ class MockVolunteerService implements IVolunteerService {
       id: 'attended_1',
       title: 'Barınak İçin Mama Dağıtımı',
       userName: 'Derya Telli',
-      userLogoUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+      userLogoUrl:
+          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
       location: 'Kastamonu, Merkez',
       timeRange: '10.05.2026 | 10:53 - 20:50',
-      imageUrl: 'https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=800',
+      imageUrl:
+          'https://images.unsplash.com/photo-1548191265-cc70d3d45ba1?w=800',
       rating: 4.8,
       section: VolunteerSection.nearYou,
       isNetworkImage: true,
       isAttended: true,
-      volunteerComment: 'Bu ilana gönüllü olarak katıldım, barınaktaki hayvanlar için çok verimli bir mama dağıtımı gerçekleştirdik. Teşekkürler!',
+      volunteerComment:
+          'Bu ilana gönüllü olarak katıldım, barınaktaki hayvanlar için çok verimli bir mama dağıtımı gerçekleştirdik. Teşekkürler!',
     ),
   ];
 
@@ -212,5 +215,17 @@ class MockVolunteerService implements IVolunteerService {
         distanceKm: 2.5,
       ),
     ];
+  }
+
+  @override
+  Future<bool> completeTask(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return true;
+  }
+
+  @override
+  Future<bool> cancelTask(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return true;
   }
 }

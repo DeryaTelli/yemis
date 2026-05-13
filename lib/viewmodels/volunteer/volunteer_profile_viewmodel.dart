@@ -24,7 +24,7 @@ class VolunteerProfileViewModel extends ChangeNotifier {
   String? get remoteImageUrl => _userSession.currentUser?.imageUrl;
 
   VolunteerProfileViewModel(this._authService, this._userSession) {
-    fetchProfile();
+    Future.microtask(() => fetchProfile());
   }
 
   Future<void> fetchProfile() async {

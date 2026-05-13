@@ -64,6 +64,7 @@ class VolunteerDetailBottomBar extends StatelessWidget {
                           duration: const Duration(seconds: 3),
                         ),
                       );
+                      Navigator.pop(context, true);
                     } else if (vm.volunteerError != null) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(

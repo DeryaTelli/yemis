@@ -63,4 +63,9 @@ class ApiConstants {
   static const String notificationDeviceToken = '/api/notifications/device-token';
   static String notificationRead(int id) => '/api/notifications/$id/read';
   static String notificationById(int id) => '/api/notifications/$id';
+  static String completeTask(int id) => '/api/volunteer/tasks/$id/complete';
+  static String cancelTask(int id) => '/api/volunteer/tasks/$id/cancel';
+
+  // --- Stats ---
+  static const String businessDashboard = '/api/stats/business/dashboard';
 }

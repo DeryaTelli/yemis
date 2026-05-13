@@ -41,4 +41,10 @@ abstract class IVolunteerService {
     String? city,
     String? district,
   });
+  
+  /// Bir gönüllü görevini tamamlar.
+  Future<bool> completeTask(int taskId);
+
+  /// Bir gönüllü görevini iptal eder/bırakır.
+  Future<bool> cancelTask(int taskId);
 }

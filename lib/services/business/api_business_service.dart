@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../models/business/business_listing_model.dart';
+import '../../models/business/business_dashboard_model.dart';
 import '../../utils/constants/api_constants.dart';
 import 'i_business_service.dart';
 
@@ -170,5 +171,35 @@ class ApiBusinessService implements IBusinessService {
       if (kDebugMode) print('Error updating bag: $e');
       return false;
     }
+  }
+
+  @override
+  Future<BusinessDashboardModel?> getDashboardStats() async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.businessDashboard}');
+
+    if (kDebugMode) {
+      print('--- API REQUEST (GET DASHBOARD) ---');
+      print('URL: $url');
+      print('-----------------------------------');
+    }
+
+    try {
+      final response = await _client.get(url, headers: _headers);
+
+      if (kDebugMode) {
+        print('--- API RESPONSE ---');
+        print('Status Code: ${response.statusCode}');
+        print('Body: ${response.body}');
+        print('--------------------');
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decoded = jsonDecode(response.body);
+        return BusinessDashboardModel.fromJson(decoded);
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error fetching dashboard stats: $e');
+    }
+    return null;
   }
 }

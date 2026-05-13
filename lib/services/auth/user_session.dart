@@ -10,12 +10,14 @@ class UserSession extends ChangeNotifier {
   String? _currentAddress;
   double? _currentLat;
   double? _currentLng;
+  bool _shouldPersist = true; // Varsayılan olarak true (geriye dönük uyumluluk için)
 
   UserModel? get currentUser => _user;
   String? get token => _token;
   String? get currentAddress => _currentAddress;
   double? get currentLat => _currentLat;
   double? get currentLng => _currentLng;
+  bool get shouldPersist => _shouldPersist;
 
   /// SharedPreferences anahtarları
   static const String _userKey = 'auth_user';
@@ -23,6 +25,7 @@ class UserSession extends ChangeNotifier {
   static const String _addressKey = 'current_location_address';
   static const String _latKey = 'current_lat';
   static const String _lngKey = 'current_lng';
+  static const String _persistKey = 'auth_persist';
 
   /// Kayıtlı oturumu yükler.
   Future<void> loadSession() async {
@@ -41,14 +44,18 @@ class UserSession extends ChangeNotifier {
     _currentAddress = prefs.getString(_addressKey);
     _currentLat = prefs.getDouble(_latKey);
     _currentLng = prefs.getDouble(_lngKey);
+    _shouldPersist = prefs.getBool(_persistKey) ?? true;
     
     notifyListeners();
   }
 
   /// Giriş yapan kullanıcıyı kaydeder ve dinleyicileri bilgilendirir.
-  /// Arka planda kalıcı belleğe yazar.
-  void setUser(UserModel user, {String? token}) {
+  /// [persist] false ise bilgiler sadece bellekte tutulur, SharedPreferences'a yazılmaz.
+  void setUser(UserModel user, {String? token, bool? persist}) {
     _user = user;
+    if (persist != null) {
+      _shouldPersist = persist;
+    }
     // Sadece yeni bir token gelmişse mevcut olanı güncelle. 
     // Profil güncellemelerinde token null gelirse mevcut olanı koruyoruz.
     if (token != null && token.isNotEmpty) {
@@ -56,8 +63,13 @@ class UserSession extends ChangeNotifier {
     }
     notifyListeners();
     
-    // Her durumda en güncel tokenı sakla
-    _persistUser(user, _token);
+    // Sadece persist true ise sakla
+    if (_shouldPersist) {
+      _persistUser(user, _token);
+    } else {
+      // Eğer persist false ise ve daha önce kayıtlı veri varsa temizle
+      _clearPersistedSession();
+    }
   }
 
   Future<void> _persistUser(UserModel user, String? token) async {
@@ -66,6 +78,7 @@ class UserSession extends ChangeNotifier {
     if (token != null && token.isNotEmpty) {
       await prefs.setString(_tokenKey, token);
     }
+    await prefs.setBool(_persistKey, true);
   }
 
   /// Mevcut konumu günceller ve dinleyicileri bilgilendirir.
@@ -106,6 +119,7 @@ class UserSession extends ChangeNotifier {
     await prefs.remove(_addressKey);
     await prefs.remove(_latKey);
     await prefs.remove(_lngKey);
+    await prefs.remove(_persistKey);
   }
 
   /// Kullanıcı tipi — null ise [UserType.food] varsayılır.

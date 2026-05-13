@@ -1,4 +1,5 @@
 import '../../models/business/business_listing_model.dart';
+import '../../models/business/business_dashboard_model.dart';
 
 abstract class IBusinessService {
   /// Yeni bir sürpriz kutu (bag) oluşturur.
@@ -18,4 +19,7 @@ abstract class IBusinessService {
 
   /// Mevcut bir ilanı günceller.
   Future<bool> updateBag(int id, Map<String, dynamic> data);
+
+  /// İşletme dashboard istatistiklerini getirir.
+  Future<BusinessDashboardModel?> getDashboardStats();
 }

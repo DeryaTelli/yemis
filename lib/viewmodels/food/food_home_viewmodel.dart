@@ -89,8 +89,10 @@ class FoodHomeViewModel extends ChangeNotifier {
 
   Future<void> init() async {
     debugPrint('🚀 [FoodHomeVM] Başlatılıyor...');
-    _isLoading = true;
-    _safeNotify();
+    Future.microtask(() {
+      _isLoading = true;
+      _safeNotify();
+    });
 
     try {
       final results = await Future.wait([

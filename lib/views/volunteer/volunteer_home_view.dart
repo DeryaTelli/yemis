@@ -13,6 +13,7 @@ import 'package:yemis/widgets/common/home_app_bar.dart';
 import 'package:yemis/widgets/volunteer/volunteer_listing_section.dart';
 import 'package:yemis/widgets/volunteer/volunteer_map_section.dart';
 import 'package:yemis/widgets/volunteer/volunteer_search_bar.dart';
+import 'package:yemis/widgets/volunteer/volunteer_task_tracking_card.dart';
 import 'package:yemis/widgets/common/loading_overlay.dart';
 import 'package:yemis/widgets/common/draggable_chat_head.dart';
 
@@ -82,7 +83,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                   controller: _searchController,
                   onChanged: vm.onSearchChanged,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
 
                 // ── Harita Alanı ────────────────────────────
                 VolunteerMapSection(
@@ -90,6 +91,15 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                   userLat: vm.userLat,
                   userLng: vm.userLng,
                 ),
+                const SizedBox(height: 12),
+
+                // ── Görev Takip Kartları ────────────────────
+                ...vm.activeTasks.map(
+                  (task) => VolunteerTaskTrackingCard(task: task),
+                ),
+                if (vm.pendingReviewTask != null)
+                  VolunteerTaskTrackingCard(task: vm.pendingReviewTask!),
+
                 const SizedBox(height: 24),
 
                 // ── Sana Yakın Yerler ───────────────────────

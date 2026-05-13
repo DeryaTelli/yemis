@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_module_type.dart';
 import '../../services/auth/user_session.dart';
+import '../../services/business/i_business_service.dart';
 import '../../viewmodels/home/business_home_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 
@@ -11,7 +12,10 @@ class BusinessHomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => BusinessHomeViewModel(userSession: ctx.read<UserSession>()),
+      create: (ctx) => BusinessHomeViewModel(
+        userSession: ctx.read<UserSession>(),
+        businessService: ctx.read<IBusinessService>(),
+      ),
       child: Consumer<BusinessHomeViewModel>(
         builder: (context, vm, child) {
           return Scaffold(

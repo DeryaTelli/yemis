@@ -14,6 +14,7 @@ import '../../services/auth/user_session.dart';
 import '../../utils/locale_keys.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
 import 'package:yemis/services/common/notification_service.dart';
+import 'package:yemis/services/common/assistant_service.dart';
 import 'dart:io';
 
 class LoginViewModel extends ChangeNotifier {
@@ -22,6 +23,7 @@ class LoginViewModel extends ChangeNotifier {
   final IFoodService _foodService;
   final IVolunteerService _volunteerService;
   final ApiNotificationService _notificationService;
+  final IAssistantService _assistantService;
   final UserSession _userSession;
 
   /// SharedPreferences anahtarı — LocationViewModel ile ortak
@@ -33,6 +35,7 @@ class LoginViewModel extends ChangeNotifier {
     this._foodService,
     this._volunteerService,
     this._notificationService,
+    this._assistantService,
     this._userSession,
   );
 
@@ -116,7 +119,7 @@ class LoginViewModel extends ChangeNotifier {
         debugPrint('Is Food: ${response.user?.isFood}');
         debugPrint('----------------------');
 
-        _userSession.setUser(response.user!, token: response.token);
+        _userSession.setUser(response.user!, token: response.token, persist: _rememberMe);
         if (_authService is ApiAuthService) {
           (_authService as ApiAuthService).setToken(response.token);
         }
@@ -130,6 +133,9 @@ class LoginViewModel extends ChangeNotifier {
           (_volunteerService as ApiVolunteerService).setToken(response.token);
         }
         _notificationService.setToken(response.token);
+        if (_assistantService is ApiAssistantService) {
+          (_assistantService as ApiAssistantService).setToken(response.token);
+        }
 
         // --- Register Device Token ---
         try {

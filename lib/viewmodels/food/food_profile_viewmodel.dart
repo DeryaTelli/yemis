@@ -62,7 +62,7 @@ class FoodProfileViewModel extends ChangeNotifier {
     // Mevcut verileri hemen göster, sonra API'den tazele
     _initData();
     _resetControllers();
-    fetchProfile();
+    Future.microtask(() => fetchProfile());
   }
 
   Future<void> fetchProfile() async {

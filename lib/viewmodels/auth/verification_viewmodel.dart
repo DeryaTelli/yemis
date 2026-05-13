@@ -11,12 +11,14 @@ import '../../models/auth/auth_request_models.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
 import '../../utils/locale_keys.dart';
+import '../../services/common/assistant_service.dart';
 
 class VerificationViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final IBusinessService _businessService;
   final IFoodService _foodService;
   final IVolunteerService _volunteerService;
+  final IAssistantService _assistantService;
   final UserSession _userSession;
   final String email;
   final bool isPasswordReset;
@@ -26,6 +28,7 @@ class VerificationViewModel extends ChangeNotifier {
     this._businessService,
     this._foodService,
     this._volunteerService,
+    this._assistantService,
     this._userSession, {
     required this.email,
     this.isPasswordReset = false,
@@ -128,7 +131,7 @@ class VerificationViewModel extends ChangeNotifier {
       if (response.success) {
         if (!isPasswordReset && response.user != null) {
           // Giriş bilgilerini kaydet
-          _userSession.setUser(response.user!, token: response.token);
+          _userSession.setUser(response.user!, token: response.token, persist: true);
 
           if (_authService is ApiAuthService) {
             (_authService as ApiAuthService).setToken(response.token);
@@ -141,6 +144,9 @@ class VerificationViewModel extends ChangeNotifier {
           }
           if (_volunteerService is ApiVolunteerService) {
             (_volunteerService as ApiVolunteerService).setToken(response.token);
+          }
+          if (_assistantService is ApiAssistantService) {
+            (_assistantService as ApiAssistantService).setToken(response.token);
           }
         }
         onSuccess();
