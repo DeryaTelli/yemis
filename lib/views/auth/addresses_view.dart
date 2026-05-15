@@ -70,7 +70,7 @@ class AddressesView extends StatelessWidget {
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                'Henüz kayıtlı bir adresiniz bulunmuyor.',
+                                LocaleKeys.addresses_notFound.tr(),
                                 style: TextStyle(
                                   color: Colors.grey[500],
                                   fontSize: 14,
@@ -116,7 +116,7 @@ class AddressesView extends StatelessWidget {
                                           const SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
-                                              'Adresi Sil',
+                                              LocaleKeys.addresses_deleteTitle.tr(),
                                               style: CustomTextStyles
                                                   .orelegaOne30Primary,
                                             ),
@@ -125,7 +125,7 @@ class AddressesView extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 16),
                                       Text(
-                                        'Bu adresi silmek istediğinizden emin misiniz?',
+                                        LocaleKeys.addresses_deleteConfirm.tr(),
                                         style: CustomTextStyles.semiBold16Grey,
                                       ),
                                       const SizedBox(height: 24),
@@ -137,7 +137,7 @@ class AddressesView extends StatelessWidget {
                                             onPressed: () =>
                                                 Navigator.pop(ctx, false),
                                             child: Text(
-                                              'Hayır',
+                                              LocaleKeys.common_no.tr(),
                                               style: CustomTextStyles
                                                   .semiBold16Grey,
                                             ),
@@ -146,9 +146,9 @@ class AddressesView extends StatelessWidget {
                                           TextButton(
                                             onPressed: () =>
                                                 Navigator.pop(ctx, true),
-                                            child: const Text(
-                                              'Evet',
-                                              style: TextStyle(
+                                            child: Text(
+                                              LocaleKeys.common_yes.tr(),
+                                              style: const TextStyle(
                                                 color: Colors.redAccent,
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 16,
@@ -167,7 +167,9 @@ class AddressesView extends StatelessWidget {
                               vm.deleteAddress(address.id);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(LocaleKeys.addresses_deleted.tr()),
+                                  content: Text(
+                                    LocaleKeys.addresses_deleted.tr(),
+                                  ),
                                   duration: const Duration(seconds: 2),
                                 ),
                               );
@@ -188,7 +190,7 @@ class AddressesView extends StatelessWidget {
                             child: _AddressCard(
                               key: ValueKey(address.id),
                               label: address.label.isEmpty
-                                  ? 'Ev'
+                                  ? LocaleKeys.addresses_defaultLabel.tr()
                                   : address.label,
                               name:
                                   context
@@ -262,7 +264,7 @@ class AddressesView extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             Text(
-              'Yeni Adres Ekle',
+              LocaleKeys.addresses_newAddress.tr(),
               style: TextStyle(
                 color: themeColor,
                 fontSize: 16,
@@ -301,7 +303,7 @@ class AddressesView extends StatelessWidget {
             ),
             _OptionTile(
               icon: Icons.my_location_rounded,
-              title: 'Lokasyondan Seç',
+              title: LocaleKeys.addresses_selectFromLocation.tr(),
               themeColor: themeColor,
               onTap: () async {
                 Navigator.pop(ctx);
@@ -319,7 +321,7 @@ class AddressesView extends StatelessWidget {
             const Divider(height: 1),
             _OptionTile(
               icon: Icons.edit_location_alt_rounded,
-              title: 'Adres Gir',
+              title: LocaleKeys.addresses_enterAddress.tr(),
               themeColor: themeColor,
               onTap: () async {
                 Navigator.pop(ctx);
@@ -427,7 +429,7 @@ class _AddressCard extends StatelessWidget {
               GestureDetector(
                 onTap: onEdit,
                 child: Text(
-                  'Düzenle',
+                  LocaleKeys.addresses_editLabel.tr(),
                   style: TextStyle(
                     color: themeColor,
                     fontSize: 13,

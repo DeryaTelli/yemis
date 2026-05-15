@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import '../../models/volunteer/shelter_model.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../views/volunteer/volunteer_expanded_map_view.dart';
@@ -10,11 +11,13 @@ class VolunteerMapSection extends StatefulWidget {
   const VolunteerMapSection({
     super.key,
     this.listings = const [],
+    this.shelters = const [],
     this.userLat,
     this.userLng,
   });
 
   final List<VolunteerListing> listings;
+  final List<ShelterModel> shelters;
   final double? userLat;
   final double? userLng;
 
@@ -120,6 +123,37 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
                             ),
                           ),
                         ),
+                    ...widget.shelters.map(
+                      (s) => Marker(
+                        point: LatLng(s.latitude, s.longitude),
+                        width: 32,
+                        height: 32,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white,
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.pets,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -133,8 +167,10 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        VolunteerExpandedMapView(listings: widget.listings),
+                    builder: (_) => VolunteerExpandedMapView(
+                      listings: widget.listings,
+                      shelters: widget.shelters,
+                    ),
                   ),
                 ),
                 child: Container(

@@ -1,6 +1,6 @@
-﻿// Bu dosya çeviri key'lerini sabit olarak tutar.
-// JSON yapısındaki key hiyerarşisi burada yansıtılır.
-// Kullanım: LocaleKeys.auth_login_title.tr()
+// Bu dosya Ã§eviri key'lerini sabit olarak tutar.
+// JSON yapÄ±sÄ±ndaki key hiyerarÅŸisi burada yansÄ±tÄ±lÄ±r.
+// KullanÄ±m: LocaleKeys.auth_login_title.tr()
 abstract class LocaleKeys {
   // auth.login
   static const auth_login_title = 'auth.login.title';
@@ -111,8 +111,58 @@ abstract class LocaleKeys {
   static const foodProfile_logout = 'foodProfile.logout';
   static const foodProfile_editTitle = 'foodProfile.editTitle';
   static const foodProfile_updateButton = 'foodProfile.updateButton';
+  static const profileEdit_updateSuccess = 'profileEdit.updateSuccess';
 
-  // volunteer
+  // yemoAssistant
+  static const yemoAssistant_foodFindTitle = 'yemoAssistant.foodFindTitle';
+  static const yemoAssistant_foodFindSubtitle = 'yemoAssistant.foodFindSubtitle';
+  static const yemoAssistant_foodReserveTitle = 'yemoAssistant.foodReserveTitle';
+  static const yemoAssistant_foodReserveSubtitle = 'yemoAssistant.foodReserveSubtitle';
+  static const yemoAssistant_foodAiTitle = 'yemoAssistant.foodAiTitle';
+  static const yemoAssistant_foodAiSubtitle = 'yemoAssistant.foodAiSubtitle';
+  static const yemoAssistant_businessSalesTitle = 'yemoAssistant.businessSalesTitle';
+  static const yemoAssistant_businessSalesSubtitle = 'yemoAssistant.businessSalesSubtitle';
+  static const yemoAssistant_businessAddOrderTitle = 'yemoAssistant.businessAddOrderTitle';
+  static const yemoAssistant_businessAddOrderSubtitle = 'yemoAssistant.businessAddOrderSubtitle';
+  static const yemoAssistant_businessCo2Title = 'yemoAssistant.businessCo2Title';
+  static const yemoAssistant_businessCo2Subtitle = 'yemoAssistant.businessCo2Subtitle';
+  static const yemoAssistant_volunteerListingsTitle = 'yemoAssistant.volunteerListingsTitle';
+  static const yemoAssistant_volunteerListingsSubtitle = 'yemoAssistant.volunteerListingsSubtitle';
+  static const yemoAssistant_volunteerBecomeTitle = 'yemoAssistant.volunteerBecomeTitle';
+  static const yemoAssistant_volunteerBecomeSubtitle = 'yemoAssistant.volunteerBecomeSubtitle';
+  static const yemoAssistant_volunteerRegionTitle = 'yemoAssistant.volunteerRegionTitle';
+  static const yemoAssistant_volunteerRegionSubtitle = 'yemoAssistant.volunteerRegionSubtitle';
+  static const yemoAssistant_commonQuestionsTitle = 'yemoAssistant.commonQuestionsTitle';
+  static const yemoAssistant_commonQuestionsSubtitle = 'yemoAssistant.commonQuestionsSubtitle';
+  static const yemoAssistant_hintText = 'yemoAssistant.hintText';
+  static const yemoAssistant_errorBusy = 'yemoAssistant.errorBusy';
+  static const yemoAssistant_errorNetwork = 'yemoAssistant.errorNetwork';
+
+  // notifications
+  static const notifications_markAllRead = 'notifications.markAllRead';
+  static const notifications_title = 'notifications.title';
+  static const notifications_preferences = 'notifications.preferences';
+  static const notifications_emptyTitle = 'notifications.emptyTitle';
+  static const notifications_emptySubtitle = 'notifications.emptySubtitle';
+  static const notifications_channelPrefs = 'notifications.channelPrefs';
+  static const notifications_typePrefs = 'notifications.typePrefs';
+  static const notifications_prefsNote = 'notifications.prefsNote';
+  static const notifications_pushTitle = 'notifications.pushTitle';
+  static const notifications_pushSubtitle = 'notifications.pushSubtitle';
+  static const notifications_emailTitle = 'notifications.emailTitle';
+  static const notifications_emailSubtitle = 'notifications.emailSubtitle';
+  static const notifications_orderTitle = 'notifications.orderTitle';
+  static const notifications_orderSubtitle = 'notifications.orderSubtitle';
+  static const notifications_promoTitle = 'notifications.promoTitle';
+  static const notifications_promoSubtitle = 'notifications.promoSubtitle';
+  static const notifications_volunteerTitle = 'notifications.volunteerTitle';
+  static const notifications_volunteerSubtitle = 'notifications.volunteerSubtitle';
+
+  // changePassword
+  static const changePassword_currentPassword = 'changePassword.currentPassword';
+  static const changePassword_newPassword = 'changePassword.newPassword';
+
+  // register
   static const volunteer_becomeButton = 'volunteer.becomeButton';
   static const volunteer_free = 'volunteer.free';
 
@@ -429,6 +479,7 @@ abstract class LocaleKeys {
   static const volunteerListingDetail_address = 'volunteerListingDetail.address';
   static const volunteerListingDetail_descriptionSection = 'volunteerListingDetail.descriptionSection';
   static const volunteerListingDetail_noContent = 'volunteerListingDetail.noContent';
+  static const volunteerListingDetail_volunteerSection = 'volunteerListingDetail.volunteerSection';
 
   static const volunteerListingCard_freeLabel = 'volunteerListingCard.freeLabel';
 
@@ -479,6 +530,9 @@ abstract class LocaleKeys {
   static const foodOrderTab_ingredientsAllergens = 'foodOrderTab.ingredientsAllergens';
   static const foodOrderTab_surpriseIngredients = 'foodOrderTab.surpriseIngredients';
   static const foodOrderTab_allergens = 'foodOrderTab.allergens';
+  static const foodOrderTab_categoryDetail = 'foodOrderTab.categoryDetail';
+  static const foodOrderTab_categoryDesc = 'foodOrderTab.categoryDesc';
+  static const foodReviewItem_today = 'foodReviewItem.today';
 
   static const businessListingDetail_approvedBadge = 'businessListingDetail.approvedBadge';
   static const businessListingDetail_businessNameFallback = 'businessListingDetail.businessNameFallback';
@@ -532,4 +586,105 @@ abstract class LocaleKeys {
   static const weeklySales_days_fri = 'weeklySales.days.fri';
   static const weeklySales_days_sat = 'weeklySales.days.sat';
   static const weeklySales_days_sun = 'weeklySales.days.sun';
+
+  // addresses (missing)
+  static const addresses_newAddress = 'addresses.newAddress';
+  static const addresses_deleteTitle = 'addresses.deleteTitle';
+  static const addresses_deleteConfirm = 'addresses.deleteConfirm';
+  static const addresses_defaultLabel = 'addresses.defaultLabel';
+  static const addresses_editLabel = 'addresses.editLabel';
+  static const addresses_selectFromLocation = 'addresses.selectFromLocation';
+  static const addresses_enterAddress = 'addresses.enterAddress';
+  static const addresses_notFound = 'addresses.notFound';
+  static const addresses_editTitle = 'addresses.editTitle';
+  static const addresses_addTitle = 'addresses.addTitle';
+  static const addresses_ilLabel = 'addresses.ilLabel';
+  static const addresses_ilceLabel = 'addresses.ilceLabel';
+  static const addresses_mahalleLabel = 'addresses.mahalleLabel';
+  static const addresses_adresLabel = 'addresses.adresLabel';
+  static const addresses_adresHint = 'addresses.adresHint';
+  static const addresses_baslikLabel = 'addresses.baslikLabel';
+  static const addresses_baslikHint = 'addresses.baslikHint';
+  static const addresses_selectPlaceholder = 'addresses.selectPlaceholder';
+  static const addresses_selectIlFirst = 'addresses.selectIlFirst';
+  static const addresses_selectIlceFirst = 'addresses.selectIlceFirst';
+  static const addresses_selectIlTitle = 'addresses.selectIlTitle';
+  static const addresses_selectIlceTitle = 'addresses.selectIlceTitle';
+  static const addresses_selectMahalleTitle = 'addresses.selectMahalleTitle';
+  static const addresses_mapMarked = 'addresses.mapMarked';
+
+  // taskTracking – messages
+  static const taskTracking_completedOwner = 'taskTracking.completedOwner';
+  static const taskTracking_completedVolunteer = 'taskTracking.completedVolunteer';
+  static const taskTracking_deliveredPendingReviewOwner = 'taskTracking.deliveredPendingReviewOwner';
+  static const taskTracking_deliveredPendingReviewVolunteer = 'taskTracking.deliveredPendingReviewVolunteer';
+  static const taskTracking_goingToShelterOwner = 'taskTracking.goingToShelterOwner';
+  static const taskTracking_goingToShelterVolunteer = 'taskTracking.goingToShelterVolunteer';
+  static const taskTracking_pickedUpOwner = 'taskTracking.pickedUpOwner';
+  static const taskTracking_pickedUpVolunteer = 'taskTracking.pickedUpVolunteer';
+  static const taskTracking_ownerHandedOverOwner = 'taskTracking.ownerHandedOverOwner';
+  static const taskTracking_ownerHandedOverVolunteer = 'taskTracking.ownerHandedOverVolunteer';
+  static const taskTracking_goingToPickUpOwner = 'taskTracking.goingToPickUpOwner';
+  static const taskTracking_goingToPickUpVolunteer = 'taskTracking.goingToPickUpVolunteer';
+  static const taskTracking_acceptedOwner = 'taskTracking.acceptedOwner';
+  static const taskTracking_acceptedVolunteer = 'taskTracking.acceptedVolunteer';
+  static const taskTracking_pendingOwner = 'taskTracking.pendingOwner';
+  static const taskTracking_pendingVolunteer = 'taskTracking.pendingVolunteer';
+
+  static const taskTracking_statusPendingOwner = 'taskTracking.statusPendingOwner';
+  static const taskTracking_statusPendingVolunteer = 'taskTracking.statusPendingVolunteer';
+  static const taskTracking_statusApprovedOwner = 'taskTracking.statusApprovedOwner';
+  static const taskTracking_statusApprovedVolunteer = 'taskTracking.statusApprovedVolunteer';
+  static const taskTracking_statusInProgressOwner = 'taskTracking.statusInProgressOwner';
+  static const taskTracking_statusInProgressVolunteer = 'taskTracking.statusInProgressVolunteer';
+  static const taskTracking_statusDeliveredOwner = 'taskTracking.statusDeliveredOwner';
+  static const taskTracking_statusDeliveredVolunteer = 'taskTracking.statusDeliveredVolunteer';
+  static const taskTracking_statusCompletedOwner = 'taskTracking.statusCompletedOwner';
+  static const taskTracking_statusCompletedVolunteer = 'taskTracking.statusCompletedVolunteer';
+  static const taskTracking_statusCancelledOwner = 'taskTracking.statusCancelledOwner';
+  static const taskTracking_statusCancelledVolunteer = 'taskTracking.statusCancelledVolunteer';
+  static const taskTracking_buttonReject = 'taskTracking.buttonReject';
+  static const taskTracking_buttonApprove = 'taskTracking.buttonApprove';
+  static const taskTracking_buttonCancel = 'taskTracking.buttonCancel';
+  static const taskTracking_buttonHandover = 'taskTracking.buttonHandover';
+  static const taskTracking_buttonConfirmDelivery = 'taskTracking.buttonConfirmDelivery';
+  static const taskTracking_volunteerComment = 'taskTracking.volunteerComment';
+  static const taskTracking_assignedVolunteer = 'taskTracking.assignedVolunteer';
+  static const taskTracking_volunteer = 'taskTracking.volunteer';
+  static const taskTracking_deliveredExclamation = 'taskTracking.deliveredExclamation';
+  static const taskTracking_waitingApproval = 'taskTracking.waitingApproval';
+  static const taskTracking_stepApproved = 'taskTracking.stepApproved';
+  static const taskTracking_given = 'taskTracking.given';
+  static const taskTracking_delivering = 'taskTracking.delivering';
+  static const taskTracking_stepCompleted = 'taskTracking.stepCompleted';
+  static const taskTracking_stepReview = 'taskTracking.stepReview';
+  static const taskTracking_stepApproval = 'taskTracking.stepApproval';
+  static const taskTracking_stepPickup = 'taskTracking.stepPickup';
+  static const taskTracking_stepDelivery = 'taskTracking.stepDelivery';
+  static const taskTracking_stepResult = 'taskTracking.stepResult';
+
+  // volunteerListingCard
+  static const volunteerListingCard_volunteered = 'volunteerListingCard.volunteered';
+  static const volunteerListingCard_noReviewYet = 'volunteerListingCard.noReviewYet';
+  static const volunteerListingCard_noVolunteerYet = 'volunteerListingCard.noVolunteerYet';
+
+  // volunteerListing
+  static const volunteerListing_volunteerFailed = 'volunteerListing.volunteerFailed';
+
+  // volunteerOrderTab
+  static const volunteerOrderTab_noShelterNearby = 'volunteerOrderTab.noShelterNearby';
+
+  // volunteerCancelDialog
+  static const volunteerCancelDialog_confirm = 'volunteerCancelDialog.confirm';
+
+  // taskTracking – buttons
+  static const taskTracking_btnLeaveReview = 'taskTracking.btnLeaveReview';
+  static const taskTracking_btnReject = 'taskTracking.btnReject';
+  static const taskTracking_btnApprove = 'taskTracking.btnApprove';
+  static const taskTracking_btnHandover = 'taskTracking.btnHandover';
+  static const taskTracking_btnGoPickup = 'taskTracking.btnGoPickup';
+  static const taskTracking_btnPickedUp = 'taskTracking.btnPickedUp';
+  static const taskTracking_btnGoShelter = 'taskTracking.btnGoShelter';
+  static const taskTracking_btnComplete = 'taskTracking.btnComplete';
+  static const taskTracking_btnCancel = 'taskTracking.btnCancel';
 }

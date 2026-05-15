@@ -1,43 +1,20 @@
-import 'package:yemis/utils/locale_keys.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../utils/locale_keys.dart';
 import '../../viewmodels/business/business_add_order_viewmodel.dart';
 
 class LocationButton extends StatelessWidget {
   const LocationButton({super.key, required this.vm});
   final BusinessAddOrderViewModel vm;
 
-  Future<void> _handleTap(BuildContext context) async {
-    await vm.fetchAddresses();
-
-    if (context.mounted) {
-      if (vm.savedAddresses.isEmpty) {
-        // Kayıtlı adres yoksa yönlendir
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(LocaleKeys.businessAddOrder_errorNoAddress.tr()),
-            backgroundColor: AppColors.primaryColor,
-          ),
-        );
-        Navigator.pushNamed(
-          context,
-          AppRoutes.addresses,
-          arguments: AppModuleType.business,
-        );
-      } else {
-        // Kayıtlı adresleri göster
-        _showSavedAddressesSheet(context);
-      }
-    }
-  }
-
   void _showSavedAddressesSheet(BuildContext context) {
+    // Adresleri yükle
+    vm.fetchAddresses();
+
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.white,
@@ -73,7 +50,7 @@ class LocationButton extends StatelessWidget {
                     ),
                     Text(
                       LocaleKeys.businessLocationButton_placeholder.tr(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                       ),
@@ -82,7 +59,33 @@ class LocationButton extends StatelessWidget {
                     if (vm.savedAddresses.isEmpty)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 40),
-                        child: Text(LocaleKeys.addresses_noAddressFound.tr()),
+                        child: Column(
+                          children: [
+                            Text(
+                              LocaleKeys.addresses_noAddressFound.tr(),
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            const SizedBox(height: 16),
+                            TextButton.icon(
+                              onPressed: () {
+                                Navigator.pop(context); // Sheet'i kapat
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.addresses,
+                                  arguments: AppModuleType.business,
+                                );
+                              },
+                              icon: const Icon(Icons.add_location_alt_outlined),
+                              label: Text(LocaleKeys.addresses_addAddress.tr()),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppColors.primaryColor,
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
                     else
                       Flexible(
@@ -166,23 +169,6 @@ class LocationButton extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(height: 16),
-                    TextButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context); // Sheet'i kapat
-                        Navigator.pushNamed(
-                          context,
-                          AppRoutes.addresses,
-                          arguments: AppModuleType.business,
-                        );
-                      },
-                      icon: const Icon(Icons.add_location_alt_outlined),
-                      label: Text(LocaleKeys.addresses_addAddress.tr()),
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.primaryColor,
-                        textStyle: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               );
@@ -192,13 +178,12 @@ class LocationButton extends StatelessWidget {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final bool hasData = vm.locationAddress.isNotEmpty;
 
     return GestureDetector(
-      onTap: () => _handleTap(context),
+      onTap: () => _showSavedAddressesSheet(context),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

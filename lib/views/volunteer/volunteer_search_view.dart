@@ -13,6 +13,8 @@ import '../../widgets/common/search_app_bar_custom.dart';
 import '../../widgets/common/search_map_view.dart';
 import '../../widgets/volunteer/volunteer_filter_bottom_sheet.dart';
 import '../../widgets/volunteer/volunteer_listing_card.dart';
+import '../../widgets/common/success_dialog_custom.dart';
+import '../../widgets/common/error_dialog_custom.dart';
 
 import '../../widgets/common/loading_overlay.dart';
 
@@ -120,6 +122,23 @@ class _VolunteerSearchViewState extends State<VolunteerSearchView> {
                 AppRoutes.volunteerDetail,
                 arguments: listing,
               );
+            },
+            onVolunteerTap: () async {
+              final success = await vm.becomeVolunteer(listing.id);
+              if (success && context.mounted) {
+                SuccessDialogCustom.show(
+                  context,
+                  title: LocaleKeys.common_success.tr(),
+                  message: LocaleKeys.volunteerDetail_volunteerSuccess.tr(
+                    namedArgs: {'title': listing.title},
+                  ),
+                );
+              } else if (!success && context.mounted) {
+                ErrorDialogCustom.show(
+                  context,
+                  message: LocaleKeys.volunteerListing_volunteerFailed.tr(),
+                );
+              }
             },
           ),
         );

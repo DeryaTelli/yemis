@@ -65,6 +65,15 @@ class ApiConstants {
   static String notificationById(int id) => '/api/notifications/$id';
   static String completeTask(int id) => '/api/volunteer/tasks/$id/complete';
   static String cancelTask(int id) => '/api/volunteer/tasks/$id/cancel';
+  static String startPickup(int id) => '/api/volunteer/tasks/$id/start-pickup';
+  static String markPickedUp(int id) => '/api/volunteer/tasks/$id/mark-picked-up';
+  static String startDelivery(int id) => '/api/volunteer/tasks/$id/start-delivery';
+  static String confirmDelivery(int id) => '/api/volunteer/tasks/$id/confirm-delivery';
+  static String acceptVolunteer(int id) => '/api/volunteer/tasks/$id/accept';
+  static String rejectVolunteer(int id) => '/api/volunteer/tasks/$id/reject';
+  static String ownerHandover(int id) => '/api/volunteer/tasks/$id/handover';
+  static String volunteerReview(int id) => '/api/reviews/volunteer-tasks/$id';
+  static String ownerReview(int id) => '/api/reviews/volunteer-tasks/$id/owner';
 
   // --- Stats ---
   static const String businessDashboard = '/api/stats/business/dashboard';

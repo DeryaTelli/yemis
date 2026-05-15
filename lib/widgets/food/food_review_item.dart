@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../models/food/food_review.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/locale_keys.dart';
 
 /// Tek bir yorum kartı.
 class FoodReviewItem extends StatelessWidget {
@@ -12,7 +14,7 @@ class FoodReviewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final timeStr =
         '${review.date.hour.toString().padLeft(2, '0')}:${review.date.minute.toString().padLeft(2, '0')}';
-    final dateStr = 'Today, $timeStr';
+    final dateStr = LocaleKeys.foodReviewItem_today.tr(namedArgs: {'time': timeStr});
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),

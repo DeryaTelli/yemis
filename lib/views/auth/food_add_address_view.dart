@@ -101,7 +101,7 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(vm.isEditMode ? 'Adresi Düzenle' : 'Adres Ekle'),
+          title: Text(vm.isEditMode ? LocaleKeys.addresses_editTitle.tr() : LocaleKeys.addresses_addTitle.tr()),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () => Navigator.pop(context),
@@ -112,23 +112,23 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _fieldLabel('İl'),
+              _fieldLabel(LocaleKeys.addresses_ilLabel.tr()),
               _SelectionField(
-                hint: 'Seçiniz',
+                hint: LocaleKeys.addresses_selectPlaceholder.tr(),
                 value: vm.selectedIl,
                 themeColor: themeColor,
                 onTap: () => _showPicker(
                   context,
-                  'İl Seçiniz',
+                  LocaleKeys.addresses_selectIlTitle.tr(),
                   vm.iller,
                   vm.selectIl,
                   themeColor,
                 ),
               ),
               const SizedBox(height: 16),
-              _fieldLabel('İlçe'),
+              _fieldLabel(LocaleKeys.addresses_ilceLabel.tr()),
               _SelectionField(
-                hint: vm.selectedIl == null ? 'Önce il seçiniz' : 'Seçiniz',
+                hint: vm.selectedIl == null ? LocaleKeys.addresses_selectIlFirst.tr() : LocaleKeys.addresses_selectPlaceholder.tr(),
                 value: vm.selectedIlce,
                 enabled: vm.selectedIl != null,
                 themeColor: themeColor,
@@ -136,16 +136,16 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
                     ? null
                     : () => _showPicker(
                         context,
-                        'İlçe Seçiniz',
+                        LocaleKeys.addresses_selectIlceTitle.tr(),
                         vm.ilceler,
                         vm.selectIlce,
                         themeColor,
                       ),
               ),
               const SizedBox(height: 16),
-              _fieldLabel('Mahalle'),
+              _fieldLabel(LocaleKeys.addresses_mahalleLabel.tr()),
               _SelectionField(
-                hint: vm.selectedIlce == null ? 'Önce ilçe seçiniz' : 'Seçiniz',
+                hint: vm.selectedIlce == null ? LocaleKeys.addresses_selectIlceFirst.tr() : LocaleKeys.addresses_selectPlaceholder.tr(),
                 value: vm.selectedMahalle,
                 enabled: vm.selectedIlce != null,
                 themeColor: themeColor,
@@ -153,26 +153,26 @@ class _FoodAddAddressBodyState extends State<_FoodAddAddressBody> {
                     ? null
                     : () => _showPicker(
                         context,
-                        'Mahalle Seçiniz',
+                        LocaleKeys.addresses_selectMahalleTitle.tr(),
                         vm.mahalleler,
                         vm.selectMahalle,
                         themeColor,
                       ),
               ),
               const SizedBox(height: 24),
-              _fieldLabel('Adres'),
+              _fieldLabel(LocaleKeys.addresses_adresLabel.tr()),
               CustomTextField(
                 controller: vm.adresController,
-                hintText: 'Cadde, mahalle sokak ve diğer bilgileri giriniz.',
+                hintText: LocaleKeys.addresses_adresHint.tr(),
                 maxLines: 3,
                 borderColor: const Color(0xFFE0E0E0),
                 fillColor: const Color(0xFFF9F9F9),
               ),
               const SizedBox(height: 16),
-              _fieldLabel('Adres Başlığı'),
+              _fieldLabel(LocaleKeys.addresses_baslikLabel.tr()),
               CustomTextField(
                 controller: vm.baslikController,
-                hintText: 'Adres Başlığı Giriniz (Örn: Ev, İş)',
+                hintText: LocaleKeys.addresses_baslikHint.tr(),
                 borderColor: const Color(0xFFE0E0E0),
                 fillColor: const Color(0xFFF9F9F9),
               ),
@@ -351,7 +351,7 @@ class _MapPickerButton extends StatelessWidget {
             Expanded(
               child: Text(
                 hasCoordinates
-                    ? 'Konum Haritadan İşaretlendi'
+                    ? LocaleKeys.addresses_mapMarked.tr()
                     : LocaleKeys.common_selectLocationFromMap.tr(),
                 style: TextStyle(
                   fontSize: 14,

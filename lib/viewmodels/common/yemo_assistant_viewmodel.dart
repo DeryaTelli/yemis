@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import '../../services/common/assistant_service.dart';
 
 class ChatMessage {
@@ -46,13 +48,13 @@ class YemoAssistantViewModel extends ChangeNotifier {
         _messages.add(ChatMessage(text: response, isUser: false));
       } else {
         _messages.add(ChatMessage(
-          text: 'Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar dene.',
+          text: LocaleKeys.yemoAssistant_errorBusy.tr(),
           isUser: false,
         ));
       }
     } catch (e) {
       _messages.add(ChatMessage(
-        text: 'Bir hata oluştu. Lütfen bağlantını kontrol et.',
+        text: LocaleKeys.yemoAssistant_errorNetwork.tr(),
         isUser: false,
       ));
     } finally {

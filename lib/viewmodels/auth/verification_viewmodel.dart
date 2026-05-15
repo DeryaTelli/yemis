@@ -113,7 +113,7 @@ class VerificationViewModel extends ChangeNotifier {
 
   /// Kodu doğrular. Başarılıysa [onSuccess] çağrılır.
   Future<void> verify({
-    required VoidCallback onSuccess,
+    required Function(String?) onSuccess,
     Function(String)? onError,
   }) async {
     final code = otp;
@@ -149,7 +149,7 @@ class VerificationViewModel extends ChangeNotifier {
             (_assistantService as ApiAssistantService).setToken(response.token);
           }
         }
-        onSuccess();
+        onSuccess(response.token);
       } else {
         _errorKey = response.errorKey ?? LocaleKeys.auth_errors_codeInvalid;
         if (onError != null) {

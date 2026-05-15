@@ -41,6 +41,17 @@ abstract class IVolunteerService {
     String? city,
     String? district,
   });
+
+  /// Gönüllü görev adımları
+  Future<bool> startPickup(int taskId);
+  Future<bool> markPickedUp(int taskId);
+  Future<bool> startDelivery(int taskId);
+  Future<bool> confirmDelivery(int taskId);
+  Future<bool> acceptVolunteer(int taskId);
+  Future<bool> rejectVolunteer(int taskId);
+  Future<bool> ownerHandover(int taskId);
+  Future<bool> submitVolunteerReview(int taskId, Map<String, dynamic> data);
+  Future<bool> submitOwnerReview(int taskId, Map<String, dynamic> data);
   
   /// Bir gönüllü görevini tamamlar.
   Future<bool> completeTask(int taskId);

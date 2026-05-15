@@ -25,7 +25,11 @@ class FoodOrderTab extends StatelessWidget {
         children: [
           // ── Kategori Detayı ──────────────────────────────
           Text(
-            '${listing.category.toLowerCase() == 'patiseri' ? LocaleKeys.foodOrderTab_categoryBreadPastry.tr() : listing.category.substring(0, 1).toUpperCase() + listing.category.substring(1)} Detayı',
+            LocaleKeys.foodOrderTab_categoryDetail.tr(
+              namedArgs: {'category': listing.category.toLowerCase() == 'patiseri'
+                ? LocaleKeys.foodOrderTab_categoryBreadPastry.tr()
+                : listing.category.substring(0, 1).toUpperCase() + listing.category.substring(1)},
+            ),
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
@@ -36,7 +40,9 @@ class FoodOrderTab extends StatelessWidget {
           Text(
             listing.category == 'Sürpriz Kutu'
                 ? LocaleKeys.foodOrderTab_surpriseBoxDesc.tr()
-                : 'Bu paket, işletmenin ${listing.category.toLowerCase()} kategorisindeki taze ürünlerinden oluşur.',
+                : LocaleKeys.foodOrderTab_categoryDesc.tr(
+                    namedArgs: {'category': listing.category.toLowerCase()},
+                  ),
             style: const TextStyle(
               fontSize: 13,
               color: AppColors.hintTextColor,

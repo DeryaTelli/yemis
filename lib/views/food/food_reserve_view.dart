@@ -140,9 +140,9 @@ class _ReserveButton extends StatelessWidget {
                     strokeWidth: 2,
                   ),
                 )
-              : const Text(
-                  'Rezerve Et',
-                  style: TextStyle(
+              : Text(
+                  LocaleKeys.foodReserve_reserveButton.tr(),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,

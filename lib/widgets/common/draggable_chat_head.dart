@@ -21,7 +21,7 @@ class _DraggableChatHeadState extends State<DraggableChatHead> {
     if (!isInitialized) {
       // Set initial position safely within the screen bounds
       final size = MediaQuery.of(context).size;
-      position = Offset(size.width - 90, size.height * 0.65);
+      position = Offset(size.width - 85, size.height - 180);
       isInitialized = true;
     }
   }

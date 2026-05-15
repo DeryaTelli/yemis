@@ -88,6 +88,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                 // ── Harita Alanı ────────────────────────────
                 VolunteerMapSection(
                   listings: vm.filteredListings,
+                  shelters: vm.nearbyShelters,
                   userLat: vm.userLat,
                   userLng: vm.userLng,
                 ),

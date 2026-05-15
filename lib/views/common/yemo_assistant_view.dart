@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/services/common/assistant_service.dart';
 import 'package:yemis/utils/constants/app_colors.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/viewmodels/common/yemo_assistant_viewmodel.dart';
 
 class YemoAssistantView extends StatelessWidget {
@@ -151,24 +153,24 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                         _buildActionCard(
                           icon: Icons.location_on,
                           iconColor: themeColor,
-                          title: 'Yakınında yemek bul',
-                          subtitle: 'En yakın ve uygun yemekleri keşfet',
+                          title: LocaleKeys.yemoAssistant_foodFindTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_foodFindSubtitle.tr(),
                           onTap: () => vm.startGuidance('find_food'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.shopping_basket,
                           iconColor: themeColor,
-                          title: 'Rezerve et',
-                          subtitle: 'İhtiyacın olan yemeği rezerve et',
+                          title: LocaleKeys.yemoAssistant_foodReserveTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_foodReserveSubtitle.tr(),
                           onTap: () => vm.startGuidance('reserve'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.auto_awesome,
                           iconColor: themeColor,
-                          title: 'Yapay zeka önerileri',
-                          subtitle: 'Sana özel yemek önerileri al',
+                          title: LocaleKeys.yemoAssistant_foodAiTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_foodAiSubtitle.tr(),
                           onTap: () => vm.startGuidance('ai_suggestions'),
                         ),
                       ] else if (widget.moduleType ==
@@ -176,48 +178,48 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                         _buildActionCard(
                           icon: Icons.bar_chart,
                           iconColor: themeColor,
-                          title: 'Satışları takip et',
-                          subtitle: 'Satış verilerini anlık olarak gör',
+                          title: LocaleKeys.yemoAssistant_businessSalesTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_businessSalesSubtitle.tr(),
                           onTap: () => vm.startGuidance('sales'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.add_box,
                           iconColor: themeColor,
-                          title: 'Sipariş ekle',
-                          subtitle: 'Yeni bir yemek ilanı oluştur',
+                          title: LocaleKeys.yemoAssistant_businessAddOrderTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_businessAddOrderSubtitle.tr(),
                           onTap: () => vm.startGuidance('add_order'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.eco,
                           iconColor: themeColor,
-                          title: 'CO2 Etkisi',
-                          subtitle: 'Doğaya katkını hemen incele',
+                          title: LocaleKeys.yemoAssistant_businessCo2Title.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_businessCo2Subtitle.tr(),
                           onTap: () => vm.startGuidance('co2'),
                         ),
                       ] else ...[
                         _buildActionCard(
                           icon: Icons.volunteer_activism,
                           iconColor: themeColor,
-                          title: 'İlanları gör',
-                          subtitle: 'Yardım edebileceğin yerleri keşfet',
+                          title: LocaleKeys.yemoAssistant_volunteerListingsTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_volunteerListingsSubtitle.tr(),
                           onTap: () => vm.startGuidance('volunteer_listings'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.favorite,
                           iconColor: themeColor,
-                          title: 'Gönüllü ol',
-                          subtitle: 'Destek ol, fark yarat',
+                          title: LocaleKeys.yemoAssistant_volunteerBecomeTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_volunteerBecomeSubtitle.tr(),
                           onTap: () => vm.startGuidance('become_volunteer'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.map,
                           iconColor: themeColor,
-                          title: 'Bölgeni seç',
-                          subtitle: 'Yardım etmek istediğin bölgeyi bul',
+                          title: LocaleKeys.yemoAssistant_volunteerRegionTitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_volunteerRegionSubtitle.tr(),
                           onTap: () => vm.startGuidance('select_region'),
                         ),
                       ],
@@ -225,8 +227,8 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                       _buildActionCard(
                         icon: Icons.chat_bubble,
                         iconColor: themeColor,
-                        title: 'Sorularını sor',
-                        subtitle: 'Merak ettiğin her şeyi sorabilirsin',
+                        title: LocaleKeys.yemoAssistant_commonQuestionsTitle.tr(),
+                        subtitle: LocaleKeys.yemoAssistant_commonQuestionsSubtitle.tr(),
                         onTap: () => vm.startGuidance('Sorularını sor'),
                       ),
                       const SizedBox(height: 24),
@@ -266,10 +268,10 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                           Expanded(
                             child: TextField(
                               controller: vm.messageController,
-                              decoration: const InputDecoration(
-                                hintText: "Yemo'ya bir şey sor...",
+                              decoration: InputDecoration(
+                                hintText: LocaleKeys.yemoAssistant_hintText.tr(),
                                 border: InputBorder.none,
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   color: Colors.black38,
                                   fontSize: 15,
                                 ),

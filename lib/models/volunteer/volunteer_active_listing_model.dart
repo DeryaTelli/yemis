@@ -276,24 +276,40 @@ class VolunteerActiveListingModel {
   }
 
   DeliveryStatus _mapDeliveryStatus(String? status) {
-    if (status == null) return DeliveryStatus.pending;
+    if (status == null) return DeliveryStatus.pendingOwnerApproval;
     
-    // Backend'den gelen status stringlerini enum'a çevir
     switch (status.toLowerCase()) {
-      case 'on_the_way_to_pickup':
+      case 'pending_owner_approval':
+      case 'requested':
+      case 'basvuruldu':
+        return DeliveryStatus.pendingOwnerApproval;
+      case 'accepted':
+      case 'atanildi':
+        return DeliveryStatus.accepted;
+      case 'going_to_pickup':
       case 'almaya_gidiyor':
-        return DeliveryStatus.onTheWayToPickUp;
+        return DeliveryStatus.goingToPickUp;
+      case 'owner_handed_over':
+      case 'ilan_verildi':
+        return DeliveryStatus.ownerHandedOver;
       case 'picked_up':
       case 'evden_alindi':
+      case 'teslim_alindi':
         return DeliveryStatus.pickedUp;
-      case 'on_the_way':
+      case 'going_to_shelter':
       case 'yolda':
-        return DeliveryStatus.onTheWay;
+        return DeliveryStatus.goingToShelter;
+      case 'delivered_pending_review':
+      case 'teslim_edildi':
+        return DeliveryStatus.deliveredPendingReview;
       case 'completed':
       case 'tamamlandi':
         return DeliveryStatus.completed;
+      case 'cancelled':
+      case 'iptal_edildi':
+        return DeliveryStatus.cancelled;
       default:
-        return DeliveryStatus.pending;
+        return DeliveryStatus.pendingOwnerApproval;
     }
   }
 }

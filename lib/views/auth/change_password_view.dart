@@ -104,7 +104,7 @@ class _BodyState extends State<_Body> {
 
               CustomTextField(
                 controller: _oldPassController,
-                labelText: 'Mevcut Şifre',
+                labelText: LocaleKeys.changePassword_currentPassword.tr(),
                 hintText: '••••••••',
                 obscureText: _obscureOld,
                 onChanged: vm.onOldPasswordChanged,
@@ -122,7 +122,7 @@ class _BodyState extends State<_Body> {
 
               CustomTextField(
                 controller: _newPassController,
-                labelText: 'Yeni Şifre',
+                labelText: LocaleKeys.changePassword_newPassword.tr(),
                 hintText: '••••••••',
                 obscureText: _obscureNew,
                 onChanged: vm.onNewPasswordChanged,

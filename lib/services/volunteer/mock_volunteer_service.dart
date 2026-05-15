@@ -228,4 +228,58 @@ class MockVolunteerService implements IVolunteerService {
     await Future.delayed(const Duration(milliseconds: 500));
     return true;
   }
+
+  @override
+  Future<bool> startPickup(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> markPickedUp(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> startDelivery(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> confirmDelivery(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> acceptVolunteer(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> rejectVolunteer(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> ownerHandover(int taskId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> submitVolunteerReview(int taskId, Map<String, dynamic> data) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
+
+  @override
+  Future<bool> submitOwnerReview(int taskId, Map<String, dynamic> data) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    return true;
+  }
 }

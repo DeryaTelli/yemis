@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
 import '../../services/auth/user_session.dart';
 import '../../services/business/i_business_service.dart';
@@ -18,18 +19,23 @@ class BusinessHomeView extends StatelessWidget {
       ),
       child: Consumer<BusinessHomeViewModel>(
         builder: (context, vm, child) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: Text(
-                "Business Home - Tab ${vm.selectedIndex}",
-                style: const TextStyle(fontSize: 24),
+          return LoadingOverlay(
+            isLoading: vm.isLoading,
+            moduleType: AppModuleType.business,
+            showChatHead: true,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Center(
+                child: Text(
+                  "Business Home - Tab ${vm.selectedIndex}",
+                  style: const TextStyle(fontSize: 24),
+                ),
               ),
-            ),
-            bottomNavigationBar: AppBottomNavBar(
-              selectedIndex: vm.selectedIndex,
-              onItemSelected: vm.onTabSelected,
-              moduleType: AppModuleType.business,
+              bottomNavigationBar: AppBottomNavBar(
+                selectedIndex: vm.selectedIndex,
+                onItemSelected: vm.onTabSelected,
+                moduleType: AppModuleType.business,
+              ),
             ),
           );
         },

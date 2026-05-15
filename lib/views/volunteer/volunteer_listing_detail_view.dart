@@ -13,6 +13,7 @@ import '../../viewmodels/volunteer/volunteer_listing_detail_viewmodel.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
 import '../../widgets/food/order_location_map.dart';
+import '../../widgets/volunteer/volunteer_task_tracking_card.dart';
 
 class VolunteerListingDetailView extends StatelessWidget {
   final VolunteerListing listing;
@@ -275,7 +276,7 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                       item.timeRange,
                     ),
                     const SizedBox(height: 24),
-                    _sectionTitle('Konum'),
+                    _sectionTitle(LocaleKeys.volunteerListingDetail_locationSection.tr()),
                     const SizedBox(height: 12),
                     Container(
                       decoration: BoxDecoration(
@@ -305,7 +306,7 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                     const SizedBox(height: 12),
                     _buildInfoRow(
                       Icons.location_on_outlined,
-                      'Adres:',
+                      LocaleKeys.volunteerListingDetail_address.tr(),
                       item.location,
                     ),
                     const SizedBox(height: 16),
@@ -315,6 +316,12 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                       item.description ??
                           LocaleKeys.volunteerListingDetail_noContent.tr(),
                     ),
+                    if (isEditable && item.assignedVolunteerName != null) ...[
+                      const SizedBox(height: 24),
+                      _sectionTitle(LocaleKeys.volunteerListingDetail_volunteerSection.tr()),
+                      const SizedBox(height: 12),
+                      VolunteerTaskTrackingCard(task: item, isOwner: true),
+                    ],
                     const SizedBox(height: 40),
                   ],
                 ),

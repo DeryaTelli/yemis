@@ -138,12 +138,15 @@ class _VerificationViewState extends State<VerificationView> {
                     CustomButton(
                       text: LocaleKeys.auth_verification_button.tr(),
                       onPressed: () => vm.verify(
-                        onSuccess: () {
+                        onSuccess: (token) {
                           if (vm.isPasswordReset) {
                             Navigator.pushReplacementNamed(
                               context,
                               AppRoutes.resetPassword,
-                              arguments: {'email': vm.email, 'otp': vm.otp},
+                              arguments: {
+                                'email': vm.email,
+                                'otp': token ?? vm.otp
+                              },
                             );
                           } else {
                             vm.clearFields();

@@ -103,7 +103,7 @@ class _BodyState extends State<_Body> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _label('İlan Başlığı'),
+              _label(LocaleKeys.businessAddOrder_titleLabel.tr()),
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _titleController,
@@ -143,12 +143,12 @@ class _BodyState extends State<_Body> {
                           Text(
                             vm.selectedCategory != null
                                 ? (vm.selectedCategory!.toLowerCase() == 'patiseri'
-                                    ? 'Ekmek & Pasta'
+                                    ? LocaleKeys.businessListingDetail_breadPastry.tr()
                                     : vm.selectedCategory!
                                               .substring(0, 1)
                                               .toUpperCase() +
                                           vm.selectedCategory!.substring(1))
-                                : 'Kategori Seçin',
+                                : LocaleKeys.businessAddOrder_categoryPlaceholder.tr(),
                             style: TextStyle(
                               color: vm.selectedCategory != null
                                   ? AppColors.primaryTextColor
@@ -168,7 +168,7 @@ class _BodyState extends State<_Body> {
               ),
               const SizedBox(height: 16),
 
-              _label('İlan Fotoğrafı'),
+              _label(LocaleKeys.businessAddOrder_photoLabel.tr()),
               const SizedBox(height: 8),
               PhotoBox(
                 imagePath: vm.selectedImage?.path,
@@ -179,7 +179,7 @@ class _BodyState extends State<_Body> {
               ),
               const SizedBox(height: 12),
 
-              _label('Bitiş Saati'),
+              _label(LocaleKeys.businessAddOrder_endTimeLabel.tr()),
               const SizedBox(height: 8),
               // TimeWheelSection vm tipi uyuşmazlığı olabilir, vm interface veya dynamic kullanılabilir.
               // Şimdilik BusinessAddOrderViewModel bekliyor olabilir, kontrol etmeliyiz.
@@ -187,21 +187,21 @@ class _BodyState extends State<_Body> {
               _buildTimeSelector(vm),
               const SizedBox(height: 24),
 
-              _label('İlan Konumu'),
+              _label(LocaleKeys.businessAddOrder_locationLabel.tr()),
               const SizedBox(height: 8),
               _buildLocationButton(vm),
               const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [_label('İlan Sayısı'), _buildQuantityRow(vm)],
+                children: [_label(LocaleKeys.businessAddOrder_quantityLabel.tr()), _buildQuantityRow(vm)],
               ),
               const SizedBox(height: 16),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _label('İlan Fiyatı'),
+                  _label(LocaleKeys.businessAddOrder_priceLabel.tr()),
                   PriceField(
                     controller: _priceController,
                     hintText: '0',
@@ -214,7 +214,7 @@ class _BodyState extends State<_Body> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _label('İndirim Fiyatı'),
+                  _label(LocaleKeys.businessAddOrder_discountPriceLabel.tr()),
                   PriceField(
                     controller: _discountPriceController,
                     hintText: '0',
@@ -224,7 +224,7 @@ class _BodyState extends State<_Body> {
               ),
               const SizedBox(height: 24),
 
-              _label('İlan Detayı'),
+              _label(LocaleKeys.businessAddOrder_descriptionLabel.tr()),
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _descriptionController,
@@ -235,7 +235,7 @@ class _BodyState extends State<_Body> {
               ),
               const SizedBox(height: 16),
 
-              _label('Alerjen Bilgisi'),
+              _label(LocaleKeys.businessAddOrder_allergensLabel.tr()),
               const SizedBox(height: 8),
               CustomTextField(
                 controller: _allergensController,
@@ -285,9 +285,9 @@ class _BodyState extends State<_Body> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text(
-                      'Güncelle',
-                      style: TextStyle(
+                    child: Text(
+                      LocaleKeys.common_save.tr(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -468,7 +468,7 @@ class _BodyState extends State<_Body> {
                 return ListTile(
                   title: Text(
                     cat.toLowerCase() == 'patiseri'
-                        ? 'Ekmek & Pasta'
+                        ? LocaleKeys.businessListingDetail_breadPastry.tr()
                         : cat.substring(0, 1).toUpperCase() + cat.substring(1),
                     style: TextStyle(
                       fontWeight: isSelected

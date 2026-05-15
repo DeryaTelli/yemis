@@ -14,7 +14,6 @@ class WeeklySalesCard extends StatelessWidget {
     this.imageUrl,
   });
 
-  static const _days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cts', 'Paz'];
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +80,12 @@ class WeeklySalesCard extends StatelessWidget {
           const SizedBox(height: 16),
           SizedBox(
             height: 140,
-            child: BarChart(data: salesData, days: _days),
+            child: BarChart(
+              data: salesData, 
+              days: context.locale.languageCode == 'en' 
+                ? const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                : const ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cts', 'Paz'],
+            ),
           ),
         ],
       ),

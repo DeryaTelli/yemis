@@ -8,6 +8,8 @@ import '../../utils/locale_keys.dart';
 import '../../viewmodels/home/volunteer_home_viewmodel.dart';
 import '../../views/volunteer/volunteer_detail_view.dart';
 import 'volunteer_listing_card.dart';
+import '../common/success_dialog_custom.dart';
+import '../common/error_dialog_custom.dart';
 
 /// Yatay kaydırılabilir gönüllü ilanları bölümü.
 class VolunteerListingSection extends StatelessWidget {
@@ -92,6 +94,23 @@ class VolunteerListingSection extends StatelessWidget {
                   ).then((value) {
                     if (value == true) vm.init();
                   });
+                },
+                onVolunteerTap: () async {
+                  final success = await vm.becomeVolunteer(listing.id);
+                  if (success && context.mounted) {
+                    SuccessDialogCustom.show(
+                      context,
+                      title: LocaleKeys.common_success.tr(),
+                      message: LocaleKeys.volunteerDetail_volunteerSuccess.tr(
+                        namedArgs: {'title': listing.title},
+                      ),
+                    );
+                  } else if (!success && context.mounted) {
+                    ErrorDialogCustom.show(
+                      context,
+                      message: LocaleKeys.volunteerListing_volunteerFailed.tr(),
+                    );
+                  }
                 },
               );
             },

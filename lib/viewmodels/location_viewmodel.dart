@@ -334,7 +334,7 @@ class LocationViewModel extends ChangeNotifier {
           AddressModel(
             id: 0,
             userId: 0,
-            label: 'Ev',
+            label: '',
             addressLine: geo.addressLine,
             city: geo.city.isNotEmpty ? geo.city : null,
             district: geo.district.isNotEmpty ? geo.district : null,

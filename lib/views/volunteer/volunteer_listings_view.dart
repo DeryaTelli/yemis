@@ -248,9 +248,9 @@ class _VolunteerListingsBody extends StatelessWidget {
                 const SizedBox(width: 12),
                 TextButton(
                   onPressed: () => Navigator.pop(ctx, true),
-                  child: const Text(
-                    'Evet',
-                    style: TextStyle(
+                  child: Text(
+                    LocaleKeys.common_yes.tr(),
+                    style: const TextStyle(
                       color: Colors.redAccent,
                       fontWeight: FontWeight.w700,
                       fontSize: 16,

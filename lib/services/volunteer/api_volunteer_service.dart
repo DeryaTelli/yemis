@@ -271,6 +271,114 @@ class ApiVolunteerService implements IVolunteerService {
   }
 
   @override
+  Future<bool> startPickup(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.startPickup(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error starting pickup: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> markPickedUp(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.markPickedUp(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error marking picked up: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> startDelivery(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.startDelivery(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error starting delivery: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> confirmDelivery(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.confirmDelivery(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error confirming delivery: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> acceptVolunteer(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.acceptVolunteer(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error accepting volunteer: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> rejectVolunteer(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.rejectVolunteer(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error rejecting volunteer: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> ownerHandover(int taskId) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.ownerHandover(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error in owner handover: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> submitVolunteerReview(int taskId, Map<String, dynamic> data) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.volunteerReview(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers, body: jsonEncode(data));
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error submitting volunteer review: $e');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> submitOwnerReview(int taskId, Map<String, dynamic> data) async {
+    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.ownerReview(taskId)}');
+    try {
+      final response = await _client.post(url, headers: _headers, body: jsonEncode(data));
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error submitting owner review: $e');
+      return false;
+    }
+  }
+
+  @override
   Future<bool> completeTask(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.completeTask(taskId)}');
     try {

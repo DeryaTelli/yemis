@@ -130,4 +130,29 @@ class VolunteerSearchViewModel extends ChangeNotifier {
     _selectedIndex = index;
     notifyListeners();
   }
+
+  /// Bir ilana gönüllü olarak atanır
+  Future<bool> becomeVolunteer(String listingId) async {
+    final mealId = int.tryParse(listingId);
+    if (mealId == null) return false;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _service.becomeVolunteer(mealId);
+      if (success) {
+        // İlanları tazele
+        _allListings = await _service.getFeaturedListings();
+        _applyFilterAndSort();
+      }
+      return success;
+    } catch (e) {
+      debugPrint('Error in becomeVolunteer: $e');
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

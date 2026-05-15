@@ -31,6 +31,9 @@ class VolunteerListingDetailViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
   Future<void> refreshListing() async {
     if (_volunteerService == null) return;
     
@@ -46,5 +49,105 @@ class VolunteerListingDetailViewModel extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<bool> acceptVolunteer() async {
+    if (_volunteerService == null || _listing.taskId == null) return false;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _volunteerService!.acceptVolunteer(int.parse(_listing.taskId!));
+      if (success) {
+        await refreshListing();
+      }
+      return success;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> rejectVolunteer() async {
+    if (_volunteerService == null || _listing.taskId == null) return false;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _volunteerService!.rejectVolunteer(int.parse(_listing.taskId!));
+      if (success) {
+        await refreshListing();
+      }
+      return success;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> ownerHandover() async {
+    if (_volunteerService == null || _listing.taskId == null) return false;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _volunteerService!.ownerHandover(int.parse(_listing.taskId!));
+      if (success) {
+        await refreshListing();
+      }
+      return success;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> confirmDelivery() async {
+    if (_volunteerService == null || _listing.taskId == null) return false;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _volunteerService!.confirmDelivery(int.parse(_listing.taskId!));
+      if (success) {
+        await refreshListing();
+      }
+      return success;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> submitOwnerReview(Map<String, dynamic> data) async {
+    if (_volunteerService == null || _listing.taskId == null) return false;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _volunteerService!.submitOwnerReview(int.parse(_listing.taskId!), data);
+      if (success) {
+        await refreshListing();
+      }
+      return success;
+    } catch (e) {
+      _errorMessage = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

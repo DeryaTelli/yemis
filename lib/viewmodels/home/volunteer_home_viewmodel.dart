@@ -2,6 +2,7 @@ import 'package:yemis/utils/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/models/volunteer/shelter_model.dart';
 import 'package:yemis/services/auth/user_session.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
@@ -34,6 +35,9 @@ class VolunteerHomeViewModel extends ChangeNotifier {
   List<VolunteerListing> _activeTasks = [];
   List<VolunteerListing> get activeTasks => _activeTasks;
 
+  List<ShelterModel> _nearbyShelters = [];
+  List<ShelterModel> get nearbyShelters => _nearbyShelters;
+
   VolunteerListing? _pendingReviewTask;
   VolunteerListing? get pendingReviewTask => _pendingReviewTask;
 
@@ -54,12 +58,15 @@ class VolunteerHomeViewModel extends ChangeNotifier {
   // ─── Init ─────────────────────────────────────────────
 
   Future<void> init() async {
-    _isLoading = true;
-    notifyListeners();
+    Future.microtask(() {
+      _isLoading = true;
+      notifyListeners();
+    });
 
     await Future.wait([
       _fetchListings(),
       _fetchActiveTasks(),
+      _fetchNearbyShelters(),
     ]);
 
     _isLoading = false;
@@ -71,7 +78,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       final results = await _service.getFeaturedListings(
         lat: _userSession.currentLat,
         lng: _userSession.currentLng,
-        radius: 10000,
+        radius: 50,
       );
 
       var sortedListings = List<VolunteerListing>.from(results);
@@ -112,16 +119,15 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       final now = DateTime.now();
 
       // Sadece tamamlanmamış ve süresi geçmemiş olanları aktif task olarak kabul et
-      // Not: Eğer ilan alınmışsa (pickedUp/onTheWay), süresi geçse bile teslim etmesi için gösteriyoruz.
       _activeTasks = tasks.where((t) {
-        // Zaten tamamlanmışsa gösterme
-        if (t.isAttended && t.deliveryStatus == DeliveryStatus.completed) return false;
+        // Tamamlanmış olanları her halükarda aktif listesinden çıkar
+        if (t.deliveryStatus == DeliveryStatus.completed) return false;
 
         // Süresi dolmuş mu kontrolü
         final isExpired = t.pickupEndTime != null && t.pickupEndTime!.isBefore(now);
         
-        // Eğer süresi dolmuşsa ve henüz ilanı almamışsa (pending veya yola çıkma aşaması) gösterme
-        if (isExpired && (t.deliveryStatus == DeliveryStatus.pending || t.deliveryStatus == DeliveryStatus.onTheWayToPickUp)) {
+        // Eğer süresi dolmuşsa ve henüz yemeği teslim almamışsa (pickedUp öncesi tüm aşamalar) gösterme
+        if (isExpired && t.deliveryStatus.index < DeliveryStatus.pickedUp.index) {
           return false;
         }
 
@@ -132,15 +138,75 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     }
   }
 
-  // ─── Task Actions ─────────────────────────────────────
-
-  /// Teslimat durumunu bir sonraki adıma taşır (Yerel)
-  void updateTaskStatus(String taskId, DeliveryStatus newStatus) {
-    final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
-    if (index != -1) {
-      _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: newStatus);
-      notifyListeners();
+  Future<void> _fetchNearbyShelters() async {
+    if (_userSession.currentLat == null || _userSession.currentLng == null) return;
+    
+    try {
+      _nearbyShelters = await _service.getNearbyShelters(
+        lat: _userSession.currentLat!,
+        lng: _userSession.currentLng!,
+        radiusKm: 50,
+      );
+    } catch (e) {
+      debugPrint('Error fetching nearby shelters: $e');
     }
+  }
+
+  /// Görev akış adımları (Backend API)
+  Future<void> startPickup(String taskId) async {
+    _isLoading = true;
+    notifyListeners();
+    final success = await _service.startPickup(int.parse(taskId));
+    if (success) {
+      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      if (index != -1) {
+        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToPickUp);
+      }
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> markPickedUp(String taskId) async {
+    _isLoading = true;
+    notifyListeners();
+    final success = await _service.markPickedUp(int.parse(taskId));
+    if (success) {
+      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      if (index != -1) {
+        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
+      }
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> confirmPickedUp(String taskId) async {
+    _isLoading = true;
+    notifyListeners();
+    final success = await _service.markPickedUp(int.parse(taskId));
+    if (success) {
+      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      if (index != -1) {
+        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
+      }
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> startDelivery(String taskId) async {
+    _isLoading = true;
+    notifyListeners();
+    final success = await _service.startDelivery(int.parse(taskId));
+    if (success) {
+      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      if (index != -1) {
+        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToShelter);
+      }
+    }
+    _isLoading = false;
+    notifyListeners();
   }
 
   /// Görevi tamamla (Backend API)
@@ -154,9 +220,8 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
     final success = await _service.completeTask(int.parse(taskId));
     if (success) {
-      // Aktiflerden çıkar, inceleme bekleyenlere ekle
-      _activeTasks.removeAt(taskIndex);
-      _pendingReviewTask = task.copyWith(deliveryStatus: DeliveryStatus.completed);
+      // Aktiflerden çıkar, inceleme bekleyenlere ekle (Onay bekliyor durumunda)
+      _activeTasks[taskIndex] = task.copyWith(deliveryStatus: DeliveryStatus.deliveredPendingReview);
     }
 
     _isLoading = false;
@@ -179,10 +244,35 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Yorum yapıldıktan sonra kartı kaldırır
+  /// İnceleme bekleyen görevler için
   void onReviewSubmitted() {
     _pendingReviewTask = null;
     notifyListeners();
+  }
+
+  /// Bir ilana gönüllü olarak atanır (Kart üzerinden hızlı erişim)
+  Future<bool> becomeVolunteer(String listingId) async {
+    final mealId = int.tryParse(listingId);
+    if (mealId == null) return false;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _service.becomeVolunteer(mealId);
+      if (success) {
+        // İlanları tazele
+        await _fetchListings();
+        await _fetchActiveTasks();
+      }
+      return success;
+    } catch (e) {
+      debugPrint('Error in becomeVolunteer: $e');
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   void _onUserSessionChanged() {

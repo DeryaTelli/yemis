@@ -125,9 +125,9 @@ class VolunteerOrderTab extends StatelessWidget {
                     height: 140,
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Yakında barınak bulunamadı',
-                    style: TextStyle(
+                  Text(
+                    LocaleKeys.volunteerOrderTab_noShelterNearby.tr(),
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.hintTextColor,
                       fontWeight: FontWeight.w600,

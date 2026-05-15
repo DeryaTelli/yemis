@@ -103,7 +103,7 @@ class _NotificationViewBodyState extends State<_NotificationViewBody>
             IconButton(
               onPressed: () => vm.markAllAsRead(),
               icon: Icon(Icons.done_all_rounded, color: color),
-              tooltip: 'Tümünü Okundu İşaretle',
+              tooltip: LocaleKeys.notifications_markAllRead.tr(),
             ),
         ],
         bottom: TabBar(
@@ -120,9 +120,9 @@ class _NotificationViewBodyState extends State<_NotificationViewBody>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Bildirimler',
-                    style: TextStyle(
+                  Text(
+                    LocaleKeys.notifications_title.tr(),
+                    style: const TextStyle(
                       fontFamily: 'nunito',
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
@@ -152,10 +152,10 @@ class _NotificationViewBodyState extends State<_NotificationViewBody>
                 ],
               ),
             ),
-            const Tab(
+            Tab(
               child: Text(
-                'Tercihler',
-                style: TextStyle(
+                LocaleKeys.notifications_preferences.tr(),
+                style: const TextStyle(
                   fontFamily: 'nunito',
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
@@ -223,12 +223,12 @@ class _NotificationsTab extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Henüz bildiriminiz yok',
+            LocaleKeys.notifications_emptyTitle.tr(),
             style: CustomTextStyles.semiBold16Grey,
           ),
           const SizedBox(height: 8),
           Text(
-            'Yeni bildirimler burada görünecek',
+            LocaleKeys.notifications_emptySubtitle.tr(),
             style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
           ),
         ],
@@ -391,13 +391,13 @@ class _PreferencesTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        _buildSectionHeader('Kanal Tercihleri'),
+        _buildSectionHeader(LocaleKeys.notifications_channelPrefs.tr()),
         const SizedBox(height: 12),
         _buildPrefsCard([
           _PrefItem(
             icon: Icons.notifications_active_outlined,
-            title: 'Push Bildirimleri',
-            subtitle: 'Uygulama içi anlık bildirimler',
+            title: LocaleKeys.notifications_pushTitle.tr(),
+            subtitle: LocaleKeys.notifications_pushSubtitle.tr(),
             value: prefs.pushEnabled,
             color: primaryColor,
             onChanged: (v) =>
@@ -405,8 +405,8 @@ class _PreferencesTab extends StatelessWidget {
           ),
           _PrefItem(
             icon: Icons.email_outlined,
-            title: 'E-posta Bildirimleri',
-            subtitle: 'E-posta ile bildirim al',
+            title: LocaleKeys.notifications_emailTitle.tr(),
+            subtitle: LocaleKeys.notifications_emailSubtitle.tr(),
             value: prefs.emailEnabled,
             color: primaryColor,
             onChanged: (v) =>
@@ -414,13 +414,13 @@ class _PreferencesTab extends StatelessWidget {
           ),
         ]),
         const SizedBox(height: 20),
-        _buildSectionHeader('Bildirim Türleri'),
+        _buildSectionHeader(LocaleKeys.notifications_typePrefs.tr()),
         const SizedBox(height: 12),
         _buildPrefsCard([
           _PrefItem(
             icon: Icons.shopping_basket_outlined,
-            title: 'Sipariş Güncellemeleri',
-            subtitle: 'Sipariş durumu değişikliklerinde bildirim al',
+            title: LocaleKeys.notifications_orderTitle.tr(),
+            subtitle: LocaleKeys.notifications_orderSubtitle.tr(),
             value: prefs.orderUpdatesEnabled,
             color: primaryColor,
             onChanged: (v) =>
@@ -428,8 +428,8 @@ class _PreferencesTab extends StatelessWidget {
           ),
           _PrefItem(
             icon: Icons.local_offer_outlined,
-            title: 'Promosyonlar',
-            subtitle: 'Kampanya ve fırsat bildirimleri',
+            title: LocaleKeys.notifications_promoTitle.tr(),
+            subtitle: LocaleKeys.notifications_promoSubtitle.tr(),
             value: prefs.promotionsEnabled,
             color: primaryColor,
             onChanged: (v) =>
@@ -437,8 +437,8 @@ class _PreferencesTab extends StatelessWidget {
           ),
           _PrefItem(
             icon: Icons.volunteer_activism_outlined,
-            title: 'Gönüllü Güncellemeleri',
-            subtitle: 'Gönüllü ilan ve görev bildirimleri',
+            title: LocaleKeys.notifications_volunteerTitle.tr(),
+            subtitle: LocaleKeys.notifications_volunteerSubtitle.tr(),
             value: prefs.volunteerUpdatesEnabled,
             color: primaryColor,
             onChanged: (v) => vm.updatePreferences(
@@ -460,7 +460,7 @@ class _PreferencesTab extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Tercihleriniz anında kaydedilir. Değişiklikler tüm cihazlarınıza yansır.',
+                  LocaleKeys.notifications_prefsNote.tr(),
                   style: TextStyle(
                     fontSize: 12,
                     color: primaryColor.withOpacity(0.8),

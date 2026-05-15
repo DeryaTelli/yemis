@@ -1,523 +1,645 @@
-{
-    "auth": {
-        "login": {
-            "title": "Log In",
-            "rememberMe": "Remember me",
-            "forgotPassword": "Forgot password?",
-            "noAccount": "Don't have an account?",
-            "register": "Sign Up",
-            "button": "Log In"
-        },
-        "register": {
-            "title": "Sign Up",
-            "kvkk": "Please approve KVKK",
-            "hasAccount": "Already have an account?",
-            "login": "Log In",
-            "button": "Sign Up"
-        },
-        "forgotPassword": {
-            "title": "Forgot Password",
-            "description": "Enter the email address associated with your account and we'll send you a code to reset your password.",
-            "button": "Send",
-            "success": "Your password has been reset successfully."
-        },
-        "verification": {
-            "title": "Verification Code",
-            "description": "Enter the verification code sent to your email to complete account verification",
-            "codeSent": "A verification code has been sent to your email.",
-            "resend": "Resend",
-            "button": "Verify",
-            "successMessage": "Account verified! Please log in."
-        },
-        "fields": {
-            "email": "Email",
-            "password": "Password",
-            "name": "Name and Surname",
-            "newPassword": "New Password",
-            "confirmPassword": "Confirm Password",
-            "phone": "Phone Number",
-            "fullNameHint": "Enter your name and surname",
-            "emailHint": "Enter your email address"
-        },
-        "validation": {
-            "emailEmpty": "Email address cannot be empty.",
-            "emailInvalid": "Please enter a valid email address.",
-            "passwordEmpty": "Password cannot be empty.",
-            "passwordMinLength": "Password must be at least 8 characters and contain at least one uppercase letter.",
-            "nameEmpty": "Name cannot be empty.",
-            "kvkkRequired": "Please approve the KVKK terms.",
-            "codeIncomplete": "Please enter the complete 4-digit code.",
-            "passwordsNotMatch": "Passwords do not match.",
-            "phoneEmpty": "Phone number cannot be empty.",
-            "phoneInvalid": "Please enter a valid phone number."
-        },
-        "errors": {
-            "invalidCredentials": "Invalid email or password.",
-            "emailAlreadyRegistered": "This email address is already registered.",
-            "general": "An error occurred. Please try again.",
-            "emailSendFailed": "Failed to send email. Please try again.",
-            "codeSendFailed": "Failed to send code. Please try again.",
-            "codeInvalid": "Invalid verification code. Please try again.",
-            "registerSuccess": "Registration successful. Please verify your email.",
-            "loginSuccess": "Login successful."
-        },
-        "resetPassword": {
-            "title": "Password Reset"
-        },
-        "changePassword": {
-            "title": "Change Password"
-        }
-    },
-    "location": {
-        "title": "Location",
-        "shareTitle": "Share Your Location",
-        "shareDescription": "By sharing your location, we can show you the nearest places, services and recommendations faster.",
-        "buttonShare": "Share",
-        "buttonPick": "Pick Location",
-        "permissionDenied": "Location permission is required. Please enable it in app settings.",
-        "fetchError": "Could not get location, please try again."
-    },
-    "mapPicker": {
-        "searchHint": "Search Location",
-        "confirmButton": "Select Location",
-        "locating": "Finding your location..."
-    },
-    "foodDetail": {
-        "tabOrder": "Order",
-        "tabReview": "Review",
-        "goToLocation": "Go to Location",
-        "moreDetail": "More Details",
-        "ingredients": "Ingredients & Allergens",
-        "reserveButton": "Reserve",
-        "shareLabel": "Share",
-        "noReviews": "No reviews yet.",
-        "noLocation": "Location not available"
-    },
-    "home": {
-        "nearbyPlaces": "Places Near You",
-        "seeAll": "See All",
-        "surpriseBox": "Surprise Box",
-        "buyNow": "Buy Now",
-        "todayPopular": "Today's Popular",
-        "locationLoading": "Loading location…",
-        "volunteerSubtitle": "Share leftover food at home!",
-        "foodTitle": "Food",
-        "foodSubtitle": "Get food at a good price and prevent waste!",
-        "businessTitle": "Business",
-        "businessSubtitle": "Manage your menu, reduce waste!",
-        "onboarding1Subtitle": "Prevent global food waste using Yemis!",
-        "onboarding2Title": "Stay Fresh",
-        "onboarding2Subtitle": "Prevent waste, protect your budget, and\ncontribute to nature.",
-        "onboarding3Title": "Share",
-        "onboarding3Subtitle": "Share your extra food and\nbring a smile to someone.",
-        "onboarding4Title": "Discover",
-        "onboarding4Subtitle": "See opportunities around you,\neat at the best prices!"
-    },
-    "foodProfile": {
-        "title": "Profile",
-        "notifications": "Notifications",
-        "history": "My Past Reservations",
-        "addresses": "My Saved Addresses",
-        "cards": "My Saved Cards",
-        "updateProfile": "Update Profile",
-        "changePassword": "Change Password",
-        "changeLanguage": "Change Language",
-        "logout": "Log Out",
-        "editTitle": "Edit Profile",
-        "updateButton": "Update Account"
-    },
-    "volunteer": {
-        "becomeButton": "Be Volunteer",
-        "free": "Free"
-    },
-    "volunteerAddListing": {
-        "title": "Add Listing",
-        "photoLabel": "Add Listing Photo",
-        "endTimeLabel": "Listing End Time",
-        "locationLabel": "Listing Location",
-        "locationButton": "Select Location",
-        "priceLabel": "Listing Price",
-        "priceFree": "Free",
-        "shareButton": "Share",
-        "successMessage": "Your listing has been shared successfully!",
-        "errorNoLocation": "Please select a location.",
-        "photoSelected": "Photo Selected",
-        "pickFromCamera": "Take from Camera",
-        "pickFromGallery": "Choose from Gallery"
-    },
-    "volunteerDetail": {
-        "tabOrder": "Order",
-        "tabReview": "Review",
-        "becomeButton": "Be Volunteer",
-        "freeLabel": "Free",
-        "goToLocation": "Go to Location",
-        "goToShelter": "Go to Shelter",
-        "nearestShelter": "Nearest Shelter",
-        "noLocation": "Location not available",
-        "noShelterLocation": "Shelter location not available",
-        "moreDetail": "More Details",
-        "ingredients": "Ingredients & Allergens",
-        "packaging": "Packaging",
-        "shareLabel": "Share",
-        "listingLocation": "Listing Location",
-        "volunteerSuccess": "You volunteered for {title}. Thank you!",
-        "noReviews": "No reviews yet."
-    },
-    "volunteerHome": {
-        "nearbyPlaces": "Places Near You",
-        "todayPopular": "Today's Popular",
-        "seeAll": "See All",
-        "searchHint": "Search"
-    },
-    "volunteerSearch": {
-        "title": "Search Volunteers",
-        "comingSoon": "Volunteer search page coming soon!"
-    },
-    "volunteerProfile": {
-        "title": "Profile",
-        "comingSoon": "Volunteer profile page coming soon!",
-        "notifications": "Notifications",
-        "pastListings": "Past Listings",
-        "attendedListings": "My Volunteer Tasks",
-        "activeListings": "Active Listings",
-        "savedAddresses": "Saved Addresses",
-        "savedCards": "Saved Cards",
-        "changeLanguage": "Change Language",
-        "deleteAccount": "Delete Account"
-    },
-    "volunteerListings": {
-        "activeTitle": "Active Listings",
-        "pastTitle": "Past Listings",
-        "attendedTitle": "My Volunteer Tasks",
-        "emptyMessage": "You don't have any listings in this category yet.",
-        "deleteError": "An error occurred while deleting the listing.",
-        "deleteConfirm": "Are you sure you want to delete this listing?",
-        "deleteTitle": "Delete Listing"
-    },
-    "languageSelect": {
-        "title": "Select Language",
-        "description": "Please make your language selection to use the app in your preferred language.",
-        "turkish": "Turkish",
-        "english": "English",
-        "confirmButton": "OK"
-    },
-    "businessHome": {
-        "weeklySalesTitle": "Weekly Sales Summary",
-        "addedOrders": "Added\nOrders",
-        "soldOrders": "Sold\nOrders",
-        "reportsTitle": "Reports",
-        "reportsDescription": "Track order performance, reservations, and waste reduction all in one place. Easily view your daily and monthly business summaries.",
-        "co2Title": "CO₂ Impact",
-        "co2Description": "When no food surplus is generated, the CO₂ emitted during food production and the waste process is prevented. Every saved meal means less carbon left behind.",
-        "addOrderButton": "Add Order"
-    },
-    "businessProfile": {
-        "title": "Profile",
-        "dailyLabel": "Daily",
-        "soldCountLabel": "Items Sold",
-        "earningsLabel": "Total Earnings",
-        "notifications": "Notifications",
-        "reports": "Reports",
-        "pastListings": "Past Listings",
-        "soldListings": "Sold Listings",
-        "unsoldListings": "Unsold Listings",
-        "savedCards": "Saved Cards",
-        "updateProfile": "Update Profile",
-        "changePassword": "Change Password",
-        "changeLanguage": "Change Language",
-        "deleteAccount": "Delete Account",
-        "editTitle": "Edit Profile",
-        "addedListings": "Added Listings",
-        "soldOrdersTitle": "Sold Orders",
-        "expiredListings": "Expired Listings"
-    },
-    "businessAddOrder": {
-        "title": "Add Order",
-        "photoLabel": "Add Listing Photo",
-        "endTimeLabel": "Listing End Time",
-        "locationLabel": "Listing Location",
-        "locationButton": "Select Location",
-        "quantityLabel": "Listing Quantity",
-        "priceLabel": "Listing Price",
-        "discountPriceLabel": "Discount Price",
-        "shareButton": "Share",
-        "successMessage": "Your order has been shared successfully!",
-        "errorNoLocation": "Please select a location.",
-        "titleLabel": "Listing Title",
-        "descriptionLabel": "Listing Description",
-        "allergensLabel": "Allergens Information",
-        "pickFromCamera": "Take from Camera",
-        "pickFromGallery": "Choose from Gallery",
-        "categoryLabel": "Category",
-        "categoryPlaceholder": "Choose a category",
-        "errorNoAddress": "Please add a business address first.",
-        "titleHint": "e.g., Surprise Breakfast Box",
-        "descriptionHint": "Enter detailed information about your listing...",
-        "allergensHint": "e.g., Contains Gluten, Milk, Egg..."
-    },
-    "businessApprovals": {
-        "title": "Approve Reservation",
-        "noPending": "No pending reservations.",
-        "reservedBy": "reserved by",
-        "todayPickup": "Pick Up Today",
-        "approveButton": "Approve",
-        "rejectButton": "Reject",
-        "approved": "Approved",
-        "rejected": "Rejected"
-    },
-    "foodReserve": {
-        "title": "Reserve",
-        "paymentMethod": "Payment Method",
-        "selectPayment": "Select a Payment Method",
-        "quantity": "Quantity",
-        "price": "Price",
-        "reserveButton": "Reserve",
-        "successMessage": "Reservation placed for {title}!",
-        "googlePay": "Pay with Google Pay",
-        "applePay": "Pay with Apple Pay"
-    },
-    "addresses": {
-        "title": "My Addresses",
-        "addAddress": "Add New Address",
-        "noAddressFound": "No saved address found.",
-        "deleted": "Address deleted",
-        "city": "City",
-        "district": "District",
-        "neighborhood": "Neighborhood",
-        "addressLine": "Address",
-        "addressTitle": "Address Title",
-        "select": "Select",
-        "selectCityFirst": "Select city first",
-        "selectDistrictFirst": "Select district first",
-        "enterAddressInfo": "Enter street, neighborhood, and other info.",
-        "enterAddressTitle": "Enter Address Title"
-    },
-    "common": {
-        "edit": "Edit",
-        "delete": "Delete",
-        "update": "Update",
-        "camera": "Camera",
-        "gallery": "Gallery",
-        "cancel": "Cancel",
-        "save": "Save",
-        "error": "Error",
-        "success": "Success",
-        "yes": "Yes",
-        "no": "No",
-        "pickFromCamera": "Take with Camera",
-        "pickFromGallery": "Choose from Gallery",
-        "searchHint": "Search",
-        "list": "List",
-        "map": "Map",
-        "warning": "Warning",
-        "profileNoChange": "Please make a change in your profile.",
-        "invalidUserId": "User ID is invalid.",
-        "fullName": "Full Name",
-        "selectLocation": "Select Location",
-        "selectLocationFromMap": "Select Location from Map",
-        "noResults": "No results found.",
-        "pickupToday": "Pickup Today",
-        "pickupTomorrow": "Pickup Tomorrow",
-        "sorting": "Sort",
-        "clear": "Clear"
-    },
-    "volunteerEditListing": {
-        "title": "Edit Listing",
-        "successTitle": "Updated",
-        "successMessage": "Listing successfully updated."
-    },
-    "navigation": {
-        "permissionRequired": "Location permission required",
-        "openSettings": "Open Settings",
-        "goToLocation": "Go to Location",
-        "navigate": "Navigate",
-        "getDirections": "Get Directions",
-        "openGoogleMaps": "Open with Google Maps",
-        "openYandexMaps": "Open with Yandex Maps",
-        "openAppleMaps": "Open with Apple Maps"
-    },
-    "foodFavorites": {
-        "title": "Favorite"
-    },
-    "businessListings": {
-        "deleteError": "An error occurred while deleting the listing."
-    },
-    "businessEditOrder": {
-        "successTitle": "Success",
-        "successMessage": "Listing successfully updated."
-    },
-    "sorting": {
-        "defaultSort": "Default",
-        "rating": "Rating",
-        "lowToHigh": "Low to high",
-        "highToLow": "High to low",
-        "price": "Price",
-        "distance": "Distance",
-        "nearToFar": "Near to far"
-    },
-    "filters": {
-        "all": "All",
-        "food": "Food",
-        "breadPastry": "Bread & Pastry",
-        "market": "Market",
-        "buyNow": "Buy Now"
-    },
-    "onboarding": {
-        "page1": {
-            "title": "Welcome to Yemis",
-            "subtitle": "Stop Waste, Share Goodness",
-            "description": "Your social benefit-oriented platform preventing food waste"
-        },
-        "page2": {
-            "title": "Discounted from Businesses",
-            "subtitle": "Food doesn't go to waste",
-            "description": "Buy fresh leftover food at affordable prices at the end of the day"
-        },
-        "page3": {
-            "title": "Help Shelters",
-            "subtitle": "Our friends are fed",
-            "description": "Share your leftover food at home through volunteers"
-        },
-        "page4": {
-            "title": "Let's Make a Difference Together",
-            "subtitle": "Share, evaluate, turn into goodness",
-            "description": "Protect the environment, save money, share goodness"
-        },
-        "buttons": {
-            "skip": "Skip",
-            "next": "Next",
-            "start": "Start"
-        }
-    }
-,
-    "volunteerListingDetail": {
-        "activeBadge": "ACTIVE LISTING",
-        "freeLabel": "FREE",
-        "deliveryRange": "Delivery Range:",
-        "locationSection": "Location",
-        "address": "Address:",
-        "descriptionSection": "Description",
-        "noContent": "No content has been provided for this listing yet."
-    },
-    "volunteerListingCard": {
-        "freeLabel": "FREE"
-    },
-    "volunteerOrderTab": {
-        "detailTitle": "Volunteer Listing Detail",
-        "detailSubtitle": "These packages are not for human consumption. They are prepared solely to be delivered voluntarily to street animals or shelters.",
-        "descriptionTitle": "Listing Description",
-        "ingredientsText": "There may be inconsistencies in the ingredient or allergen information of the products. Please consult the venue directly.",
-        "packagingText": "To deliver the volunteer meal to a shelter or street animals, please remember to bring a bag or carrying package."
-    },
-    "volunteerAddListingForm": {
-        "titleLabel": "Listing Title",
-        "titleHint": "E.g.: Food for Street Animals",
-        "descriptionLabel": "Description",
-        "descriptionHint": "Provide information about the listing content...",
-        "photoLabel": "Photo",
-        "endTimeLabel": "End Time",
-        "locationLabel": "Location",
-        "priceLabel": "Listing Price",
-        "addressPlaceholder": "Select Address",
-        "noSavedAddress": "No saved address found."
-    },
-    "foodFavoritesPage": {
-        "empty": "No favorite listings yet",
-        "emptyHint": "You can add listings to favorites by tapping the heart icon."
-    },
-    "foodReservationConfirm": {
-        "title": "Reservation",
-        "goToLocation": "Go to Location",
-        "cancel": "Cancel",
-        "months": {
-            "jan": "January",
-            "feb": "February",
-            "mar": "March",
-            "apr": "April",
-            "may": "May",
-            "jun": "June",
-            "jul": "July",
-            "aug": "August",
-            "sep": "September",
-            "oct": "October",
-            "nov": "November",
-            "dec": "December"
-        },
-        "sectionNearby": "Nearby Places",
-        "sectionBuyNow": "Buy Now",
-        "sectionTodayPopular": "Today Popular"
-    },
-    "foodOrderTab": {
-        "categoryBreadPastry": "Bread & Pastry",
-        "surpriseBoxDesc": "This package consists of various foods that could not be sold at the end of the day but are still fresh. What you get is a complete surprise.",
-        "listingDetail": "Listing Detail",
-        "distanceText": "The business is {distance} away from you",
-        "category": "Category",
-        "ingredientsAllergens": "Ingredients & Allergens",
-        "surpriseIngredients": "We cannot tell you exactly what is in the package because it is a surprise. Please ask the venue directly for allergen or ingredient questions.",
-        "allergens": "Allergens: {allergens}"
-    },
-    "businessListingDetail": {
-        "approvedBadge": "APPROVED BUSINESS",
-        "businessNameFallback": "Business Name",
-        "createdAt": "Created:",
-        "lastPickupTime": "Last Pickup Time:",
-        "category": "Category:",
-        "breadPastry": "Bread & Pastry",
-        "notSpecified": "Not specified",
-        "locationSection": "Location",
-        "address": "Address:",
-        "noAddress": "Location Not Specified",
-        "contentSection": "Content",
-        "noContent": "No content detail has been added for this listing yet.",
-        "allergensSection": "Allergens",
-        "noAllergens": "Not specified",
-        "stockStatus": "Stock Status",
-        "remaining": "Remaining"
-    },
-    "businessListings": {
-        "deleteError": "An error occurred while deleting the listing.",
-        "allTitle": "My Listings",
-        "soldTitle": "Sold Orders",
-        "activeTitle": "Active Listings",
-        "expiredTitle": "Expired Listings",
-        "emptyAll": "You have no listings yet.",
-        "emptySold": "You have no sold orders yet.",
-        "emptyActive": "You have no added listings yet.",
-        "emptyExpired": "You have no expired listings yet.",
-        "deleteDialogTitle": "Delete Listing",
-        "deleteDialogMessage": "Are you sure you want to delete this listing?",
-        "soldOut": "Sold Out",
-        "expired": "Expired",
-        "remaining": "Remaining: {available} / {total}",
-        "noLocation": "Location Not Specified"
-    },
-    "businessProfileEdit": {
-        "fullNameLabel": "Full Name",
-        "fullNameHint": "Enter your first and last name",
-        "emailLabel": "Email",
-        "emailHint": "Enter your email address",
-        "phoneLabel": "Phone Number",
-        "updateButton": "Update Profile",
-        "deleteAccountButton": "Delete Account",
-        "cameraOption": "Take with Camera",
-        "galleryOption": "Choose from Gallery"
-    },
-    "businessCard": {
-        "noLocation": "Location Not Specified"
-    },
-    "businessLocationButton": {
-        "placeholder": "Select Address"
-    },
-    "weeklySales": {
-        "days": {
-            "mon": "Mon",
-            "tue": "Tue",
-            "wed": "Wed",
-            "thu": "Thu",
-            "fri": "Fri",
-            "sat": "Sat",
-            "sun": "Sun"
-        }
-    }
+﻿{
+    "auth":  {
+                 "login":  {
+                               "title":  "Log In",
+                               "rememberMe":  "Remember me",
+                               "forgotPassword":  "Forgot password?",
+                               "noAccount":  "Don\u0027t have an account?",
+                               "register":  "Sign Up",
+                               "button":  "Log In"
+                           },
+                 "register":  {
+                                  "title":  "Sign Up",
+                                  "kvkk":  "Please approve KVKK",
+                                  "hasAccount":  "Already have an account?",
+                                  "login":  "Log In",
+                                  "button":  "Sign Up"
+                              },
+                 "forgotPassword":  {
+                                        "title":  "Forgot Password",
+                                        "description":  "Enter the email address associated with your account and we\u0027ll send you a code to reset your password.",
+                                        "button":  "Send",
+                                        "success":  "Your password has been reset successfully."
+                                    },
+                 "verification":  {
+                                      "title":  "Verification Code",
+                                      "description":  "Enter the verification code sent to your email to complete account verification",
+                                      "codeSent":  "A verification code has been sent to your email.",
+                                      "resend":  "Resend",
+                                      "button":  "Verify",
+                                      "successMessage":  "Account verified! Please log in."
+                                  },
+                 "fields":  {
+                                "email":  "Email",
+                                "password":  "Password",
+                                "name":  "Name and Surname",
+                                "newPassword":  "New Password",
+                                "confirmPassword":  "Confirm Password",
+                                "phone":  "Phone Number",
+                                "fullNameHint":  "Enter your name and surname",
+                                "emailHint":  "Enter your email address"
+                            },
+                 "validation":  {
+                                    "emailEmpty":  "Email address cannot be empty.",
+                                    "emailInvalid":  "Please enter a valid email address.",
+                                    "passwordEmpty":  "Password cannot be empty.",
+                                    "passwordMinLength":  "Password must be at least 8 characters and contain at least one uppercase letter.",
+                                    "nameEmpty":  "Name cannot be empty.",
+                                    "kvkkRequired":  "Please approve the KVKK terms.",
+                                    "codeIncomplete":  "Please enter the complete 4-digit code.",
+                                    "passwordsNotMatch":  "Passwords do not match.",
+                                    "phoneEmpty":  "Phone number cannot be empty.",
+                                    "phoneInvalid":  "Please enter a valid phone number."
+                                },
+                 "errors":  {
+                                "invalidCredentials":  "Invalid email or password.",
+                                "emailAlreadyRegistered":  "This email address is already registered.",
+                                "general":  "An error occurred. Please try again.",
+                                "emailSendFailed":  "Failed to send email. Please try again.",
+                                "codeSendFailed":  "Failed to send code. Please try again.",
+                                "codeInvalid":  "Invalid verification code. Please try again.",
+                                "registerSuccess":  "Registration successful. Please verify your email.",
+                                "loginSuccess":  "Login successful."
+                            },
+                 "resetPassword":  {
+                                       "title":  "Password Reset"
+                                   },
+                 "changePassword":  {
+                                        "title":  "Change Password"
+                                    }
+             },
+    "location":  {
+                     "title":  "Location",
+                     "shareTitle":  "Share Your Location",
+                     "shareDescription":  "By sharing your location, we can show you the nearest places, services and recommendations faster.",
+                     "buttonShare":  "Share",
+                     "buttonPick":  "Pick Location",
+                     "permissionDenied":  "Location permission is required. Please enable it in app settings.",
+                     "fetchError":  "Could not get location, please try again."
+                 },
+    "mapPicker":  {
+                      "searchHint":  "Search Location",
+                      "confirmButton":  "Select Location",
+                      "locating":  "Finding your location..."
+                  },
+    "foodDetail":  {
+                       "tabOrder":  "Order",
+                       "tabReview":  "Review",
+                       "goToLocation":  "Go to Location",
+                       "moreDetail":  "More Details",
+                       "ingredients":  "Ingredients \u0026 Allergens",
+                       "reserveButton":  "Reserve",
+                       "shareLabel":  "Share",
+                       "noReviews":  "No reviews yet.",
+                       "noLocation":  "Location not available"
+                   },
+    "home":  {
+                 "nearbyPlaces":  "Places Near You",
+                 "seeAll":  "See All",
+                 "surpriseBox":  "Surprise Box",
+                 "buyNow":  "Buy Now",
+                 "todayPopular":  "Today\u0027s Popular",
+                 "locationLoading":  "Loading locationâ€¦",
+                 "volunteerSubtitle":  "Share leftover food at home!",
+                 "foodTitle":  "Food",
+                 "foodSubtitle":  "Get food at a good price and prevent waste!",
+                 "businessTitle":  "Business",
+                 "businessSubtitle":  "Manage your menu, reduce waste!",
+                 "onboarding1Subtitle":  "Prevent global food waste using Yemis!",
+                 "onboarding2Title":  "Stay Fresh",
+                 "onboarding2Subtitle":  "Prevent waste, protect your budget, and\ncontribute to nature.",
+                 "onboarding3Title":  "Share",
+                 "onboarding3Subtitle":  "Share your extra food and\nbring a smile to someone.",
+                 "onboarding4Title":  "Discover",
+                 "onboarding4Subtitle":  "See opportunities around you,\neat at the best prices!"
+             },
+    "foodProfile":  {
+                        "title":  "Profile",
+                        "notifications":  "Notifications",
+                        "history":  "My Past Reservations",
+                        "addresses":  "My Saved Addresses",
+                        "cards":  "My Saved Cards",
+                        "updateProfile":  "Update Profile",
+                        "changePassword":  "Change Password",
+                        "changeLanguage":  "Change Language",
+                        "logout":  "Log Out",
+                        "editTitle":  "Edit Profile",
+                        "updateButton":  "Update Account"
+                    },
+    "volunteer":  {
+                      "becomeButton":  "Be Volunteer",
+                      "free":  "Free"
+                  },
+    "volunteerAddListing":  {
+                                "title":  "Add Listing",
+                                "photoLabel":  "Add Listing Photo",
+                                "endTimeLabel":  "Listing End Time",
+                                "locationLabel":  "Listing Location",
+                                "locationButton":  "Select Location",
+                                "priceLabel":  "Listing Price",
+                                "priceFree":  "Free",
+                                "shareButton":  "Share",
+                                "successMessage":  "Your listing has been shared successfully!",
+                                "errorNoLocation":  "Please select a location.",
+                                "photoSelected":  "Photo Selected",
+                                "pickFromCamera":  "Take from Camera",
+                                "pickFromGallery":  "Choose from Gallery"
+                            },
+    "volunteerDetail":  {
+                            "tabOrder":  "Order",
+                            "tabReview":  "Review",
+                            "becomeButton":  "Be Volunteer",
+                            "freeLabel":  "Free",
+                            "goToLocation":  "Go to Location",
+                            "goToShelter":  "Go to Shelter",
+                            "nearestShelter":  "Nearest Shelter",
+                            "noLocation":  "Location not available",
+                            "noShelterLocation":  "Shelter location not available",
+                            "moreDetail":  "More Details",
+                            "ingredients":  "Ingredients \u0026 Allergens",
+                            "packaging":  "Packaging",
+                            "shareLabel":  "Share",
+                            "listingLocation":  "Listing Location",
+                            "volunteerSuccess":  "You volunteered for {title}. Thank you!",
+                            "noReviews":  "No reviews yet."
+                        },
+    "volunteerHome":  {
+                          "nearbyPlaces":  "Places Near You",
+                          "todayPopular":  "Today\u0027s Popular",
+                          "seeAll":  "See All",
+                          "searchHint":  "Search"
+                      },
+    "volunteerSearch":  {
+                            "title":  "Search Volunteers",
+                            "comingSoon":  "Volunteer search page coming soon!"
+                        },
+    "volunteerProfile":  {
+                             "title":  "Profile",
+                             "comingSoon":  "Volunteer profile page coming soon!",
+                             "notifications":  "Notifications",
+                             "pastListings":  "Past Listings",
+                             "attendedListings":  "My Volunteer Tasks",
+                             "activeListings":  "Active Listings",
+                             "savedAddresses":  "Saved Addresses",
+                             "savedCards":  "Saved Cards",
+                             "changeLanguage":  "Change Language",
+                             "deleteAccount":  "Delete Account"
+                         },
+    "volunteerListings":  {
+                              "activeTitle":  "Active Listings",
+                              "pastTitle":  "Past Listings",
+                              "attendedTitle":  "My Volunteer Tasks",
+                              "emptyMessage":  "You don\u0027t have any listings in this category yet.",
+                              "deleteError":  "An error occurred while deleting the listing.",
+                              "deleteConfirm":  "Are you sure you want to delete this listing?",
+                              "deleteTitle":  "Delete Listing"
+                          },
+    "languageSelect":  {
+                           "title":  "Select Language",
+                           "description":  "Please make your language selection to use the app in your preferred language.",
+                           "turkish":  "Turkish",
+                           "english":  "English",
+                           "confirmButton":  "OK"
+                       },
+    "businessHome":  {
+                         "weeklySalesTitle":  "Weekly Sales Summary",
+                         "addedOrders":  "Added\nOrders",
+                         "soldOrders":  "Sold\nOrders",
+                         "reportsTitle":  "Reports",
+                         "reportsDescription":  "Track order performance, reservations, and waste reduction all in one place. Easily view your daily and monthly business summaries.",
+                         "co2Title":  "COâ‚‚ Impact",
+                         "co2Description":  "When no food surplus is generated, the COâ‚‚ emitted during food production and the waste process is prevented. Every saved meal means less carbon left behind.",
+                         "addOrderButton":  "Add Order"
+                     },
+    "businessProfile":  {
+                            "title":  "Profile",
+                            "dailyLabel":  "Daily",
+                            "soldCountLabel":  "Items Sold",
+                            "earningsLabel":  "Total Earnings",
+                            "notifications":  "Notifications",
+                            "reports":  "Reports",
+                            "pastListings":  "Past Listings",
+                            "soldListings":  "Sold Listings",
+                            "unsoldListings":  "Unsold Listings",
+                            "savedCards":  "Saved Cards",
+                            "updateProfile":  "Update Profile",
+                            "changePassword":  "Change Password",
+                            "changeLanguage":  "Change Language",
+                            "deleteAccount":  "Delete Account",
+                            "editTitle":  "Edit Profile",
+                            "addedListings":  "Added Listings",
+                            "soldOrdersTitle":  "Sold Orders",
+                            "expiredListings":  "Expired Listings"
+                        },
+    "businessAddOrder":  {
+                             "title":  "Add Order",
+                             "photoLabel":  "Add Listing Photo",
+                             "endTimeLabel":  "Listing End Time",
+                             "locationLabel":  "Listing Location",
+                             "locationButton":  "Select Location",
+                             "quantityLabel":  "Listing Quantity",
+                             "priceLabel":  "Listing Price",
+                             "discountPriceLabel":  "Discount Price",
+                             "shareButton":  "Share",
+                             "successMessage":  "Your order has been shared successfully!",
+                             "errorNoLocation":  "Please select a location.",
+                             "titleLabel":  "Listing Title",
+                             "descriptionLabel":  "Listing Description",
+                             "allergensLabel":  "Allergens Information",
+                             "pickFromCamera":  "Take from Camera",
+                             "pickFromGallery":  "Choose from Gallery",
+                             "categoryLabel":  "Category",
+                             "categoryPlaceholder":  "Choose a category",
+                             "errorNoAddress":  "Please add a business address first.",
+                             "titleHint":  "e.g., Surprise Breakfast Box",
+                             "descriptionHint":  "Enter detailed information about your listing...",
+                             "allergensHint":  "e.g., Contains Gluten, Milk, Egg..."
+                         },
+    "businessApprovals":  {
+                              "title":  "Approve Reservation",
+                              "noPending":  "No pending reservations.",
+                              "reservedBy":  "reserved by",
+                              "todayPickup":  "Pick Up Today",
+                              "approveButton":  "Approve",
+                              "rejectButton":  "Reject",
+                              "approved":  "Approved",
+                              "rejected":  "Rejected"
+                          },
+    "foodReserve":  {
+                        "title":  "Reserve",
+                        "paymentMethod":  "Payment Method",
+                        "selectPayment":  "Select a Payment Method",
+                        "quantity":  "Quantity",
+                        "price":  "Price",
+                        "reserveButton":  "Reserve",
+                        "successMessage":  "Reservation placed for {title}!",
+                        "googlePay":  "Pay with Google Pay",
+                        "applePay":  "Pay with Apple Pay"
+                    },
+    "addresses":  {
+                      "title":  "My Addresses",
+                      "addAddress":  "Add New Address",
+                      "noAddressFound":  "No saved address found.",
+                      "deleted":  "Address deleted",
+                      "city":  "City",
+                      "district":  "District",
+                      "neighborhood":  "Neighborhood",
+                      "addressLine":  "Address",
+                      "addressTitle":  "Address Title",
+                      "select":  "Select",
+                      "selectCityFirst":  "Select city first",
+                      "selectDistrictFirst":  "Select district first",
+                      "enterAddressInfo":  "Enter street, neighborhood, and other info.",
+                      "enterAddressTitle":  "Enter Address Title",
+                      "newAddress":  "Add New Address",
+                      "deleteTitle":  "Delete Address",
+                      "deleteConfirm":  "Are you sure you want to delete this address?",
+                      "defaultLabel":  "Home",
+                      "editLabel":  "Edit",
+                      "selectFromLocation":  "Select from Location",
+                      "enterAddress":  "Enter Address",
+                      "notFound":  "No saved addresses found.",
+                      "editTitle":  "Edit Address",
+                      "addTitle":  "Add Address",
+                      "ilLabel":  "Province",
+                      "ilceLabel":  "District",
+                      "mahalleLabel":  "Neighborhood",
+                      "adresLabel":  "Address",
+                      "adresHint":  "Enter street, neighborhood, and other details.",
+                      "baslikLabel":  "Address Title",
+                      "baslikHint":  "Enter Address Title (e.g. Home, Work)",
+                      "selectPlaceholder":  "Select",
+                      "selectIlFirst":  "Select province first",
+                      "selectIlceFirst":  "Select district first",
+                      "selectIlTitle":  "Select Province",
+                      "selectIlceTitle":  "Select District",
+                      "selectMahalleTitle":  "Select Neighborhood",
+                      "mapMarked":  "Location Marked on Map"
+                  },
+    "common":  {
+                   "edit":  "Edit",
+                   "delete":  "Delete",
+                   "update":  "Update",
+                   "camera":  "Camera",
+                   "gallery":  "Gallery",
+                   "cancel":  "Cancel",
+                   "save":  "Save",
+                   "error":  "Error",
+                   "success":  "Success",
+                   "yes":  "Yes",
+                   "no":  "No",
+                   "pickFromCamera":  "Take with Camera",
+                   "pickFromGallery":  "Choose from Gallery",
+                   "searchHint":  "Search",
+                   "list":  "List",
+                   "map":  "Map",
+                   "warning":  "Warning",
+                   "profileNoChange":  "Please make a change in your profile.",
+                   "invalidUserId":  "User ID is invalid.",
+                   "fullName":  "Full Name",
+                   "selectLocation":  "Select Location",
+                   "selectLocationFromMap":  "Select Location from Map",
+                   "noResults":  "No results found.",
+                   "pickupToday":  "Pickup Today",
+                   "pickupTomorrow":  "Pickup Tomorrow",
+                   "sorting":  "Sort",
+                   "clear":  "Clear"
+               },
+    "volunteerEditListing":  {
+                                 "title":  "Edit Listing",
+                                 "successTitle":  "Updated",
+                                 "successMessage":  "Listing successfully updated."
+                             },
+    "navigation":  {
+                       "permissionRequired":  "Location permission required",
+                       "openSettings":  "Open Settings",
+                       "goToLocation":  "Go to Location",
+                       "navigate":  "Navigate",
+                       "getDirections":  "Get Directions",
+                       "openGoogleMaps":  "Open with Google Maps",
+                       "openYandexMaps":  "Open with Yandex Maps",
+                       "openAppleMaps":  "Open with Apple Maps"
+                   },
+    "foodFavorites":  {
+                          "title":  "Favorite"
+                      },
+    "businessListings":  {
+                             "deleteError":  "An error occurred while deleting the listing.",
+                             "allTitle":  "My Listings",
+                             "soldTitle":  "Sold Orders",
+                             "activeTitle":  "Active Listings",
+                             "expiredTitle":  "Expired Listings",
+                             "emptyAll":  "You have no listings yet.",
+                             "emptySold":  "You have no sold orders yet.",
+                             "emptyActive":  "You have no added listings yet.",
+                             "emptyExpired":  "You have no expired listings yet.",
+                             "deleteDialogTitle":  "Delete Listing",
+                             "deleteDialogMessage":  "Are you sure you want to delete this listing?",
+                             "soldOut":  "Sold Out",
+                             "expired":  "Expired",
+                             "remaining":  "Remaining: {available} / {total}",
+                             "noLocation":  "Location Not Specified"
+                         },
+    "businessEditOrder":  {
+                              "successTitle":  "Success",
+                              "successMessage":  "Listing successfully updated."
+                          },
+    "sorting":  {
+                    "defaultSort":  "Default",
+                    "rating":  "Rating",
+                    "lowToHigh":  "Low to high",
+                    "highToLow":  "High to low",
+                    "price":  "Price",
+                    "distance":  "Distance",
+                    "nearToFar":  "Near to far"
+                },
+    "filters":  {
+                    "all":  "All",
+                    "food":  "Food",
+                    "breadPastry":  "Bread \u0026 Pastry",
+                    "market":  "Market",
+                    "buyNow":  "Buy Now"
+                },
+    "onboarding":  {
+                       "page1":  {
+                                     "title":  "Welcome to Yemis",
+                                     "subtitle":  "Stop Waste, Share Goodness",
+                                     "description":  "Your social benefit-oriented platform preventing food waste"
+                                 },
+                       "page2":  {
+                                     "title":  "Discounted from Businesses",
+                                     "subtitle":  "Food doesn\u0027t go to waste",
+                                     "description":  "Buy fresh leftover food at affordable prices at the end of the day"
+                                 },
+                       "page3":  {
+                                     "title":  "Help Shelters",
+                                     "subtitle":  "Our friends are fed",
+                                     "description":  "Share your leftover food at home through volunteers"
+                                 },
+                       "page4":  {
+                                     "title":  "Let\u0027s Make a Difference Together",
+                                     "subtitle":  "Share, evaluate, turn into goodness",
+                                     "description":  "Protect the environment, save money, share goodness"
+                                 },
+                       "buttons":  {
+                                       "skip":  "Skip",
+                                       "next":  "Next",
+                                       "start":  "Start"
+                                   }
+                   },
+    "volunteerListingDetail":  {
+                                   "activeBadge":  "ACTIVE LISTING",
+                                   "freeLabel":  "FREE",
+                                   "deliveryRange":  "Delivery Range:",
+                                   "address":  "Address:",
+                                   "descriptionSection":  "Description",
+                                   "noContent":  "No content has been provided for this listing yet.",
+                                   "locationSection":  "Location",
+                                   "addressLabel":  "Address:",
+                                   "volunteerSection":  "Volunteer \u0026 Task Status"
+                               },
+    "volunteerListingCard":  {
+                                 "freeLabel":  "FREE",
+                                 "volunteered":  "Volunteered for this listing:",
+                                 "noReviewYet":  "No review added to this listing yet...",
+                                 "noVolunteerYet":  "No one has volunteered for this listing yet..."
+                             },
+    "volunteerAddListingForm":  {
+                                    "titleLabel":  "Listing Title",
+                                    "titleHint":  "E.g.: Food for Street Animals",
+                                    "descriptionLabel":  "Description",
+                                    "descriptionHint":  "Provide information about the listing content...",
+                                    "photoLabel":  "Photo",
+                                    "endTimeLabel":  "End Time",
+                                    "locationLabel":  "Location",
+                                    "priceLabel":  "Listing Price",
+                                    "addressPlaceholder":  "Select Address",
+                                    "noSavedAddress":  "No saved address found."
+                                },
+    "foodFavoritesPage":  {
+                              "empty":  "No favorite listings yet",
+                              "emptyHint":  "You can add listings to favorites by tapping the heart icon."
+                          },
+    "foodReservationConfirm":  {
+                                   "title":  "Reservation",
+                                   "goToLocation":  "Go to Location",
+                                   "cancel":  "Cancel",
+                                   "months":  {
+                                                  "jan":  "January",
+                                                  "feb":  "February",
+                                                  "mar":  "March",
+                                                  "apr":  "April",
+                                                  "may":  "May",
+                                                  "jun":  "June",
+                                                  "jul":  "July",
+                                                  "aug":  "August",
+                                                  "sep":  "September",
+                                                  "oct":  "October",
+                                                  "nov":  "November",
+                                                  "dec":  "December"
+                                              },
+                                   "sectionNearby":  "Nearby Places",
+                                   "sectionBuyNow":  "Buy Now",
+                                   "sectionTodayPopular":  "Today Popular"
+                               },
+    "foodOrderTab":  {
+                         "categoryBreadPastry":  "Bread \u0026 Pastry",
+                         "surpriseBoxDesc":  "This package consists of various foods that could not be sold at the end of the day but are still fresh. What you get is a complete surprise.",
+                         "listingDetail":  "Listing Detail",
+                         "distanceText":  "The business is {distance} away from you",
+                         "category":  "Category",
+                         "ingredientsAllergens":  "Ingredients \u0026 Allergens",
+                         "surpriseIngredients":  "We cannot tell you exactly what is in the package because it is a surprise. Please ask the venue directly for allergen or ingredient questions.",
+                         "allergens":  "Allergens: {allergens}",
+                         "categoryDetail":  "{category} Detail",
+                         "categoryDesc":  "This package consists of fresh products from the {category} category of the business."
+                     },
+    "businessListingDetail":  {
+                                  "approvedBadge":  "APPROVED BUSINESS",
+                                  "businessNameFallback":  "Business Name",
+                                  "createdAt":  "Created:",
+                                  "lastPickupTime":  "Last Pickup Time:",
+                                  "category":  "Category:",
+                                  "breadPastry":  "Bread \u0026 Pastry",
+                                  "notSpecified":  "Not specified",
+                                  "locationSection":  "Location",
+                                  "address":  "Address:",
+                                  "noAddress":  "Location Not Specified",
+                                  "contentSection":  "Content",
+                                  "noContent":  "No content detail has been added for this listing yet.",
+                                  "allergensSection":  "Allergens",
+                                  "noAllergens":  "Not specified",
+                                  "stockStatus":  "Stock Status",
+                                  "remaining":  "Remaining"
+                              },
+    "businessProfileEdit":  {
+                                "fullNameLabel":  "Full Name",
+                                "fullNameHint":  "Enter your first and last name",
+                                "emailLabel":  "Email",
+                                "emailHint":  "Enter your email address",
+                                "phoneLabel":  "Phone Number",
+                                "updateButton":  "Update Profile",
+                                "deleteAccountButton":  "Delete Account",
+                                "cameraOption":  "Take with Camera",
+                                "galleryOption":  "Choose from Gallery"
+                            },
+    "businessCard":  {
+                         "noLocation":  "Location Not Specified"
+                     },
+    "businessLocationButton":  {
+                                   "placeholder":  "Select Address"
+                               },
+    "weeklySales":  {
+                        "days":  {
+                                     "mon":  "Mon",
+                                     "tue":  "Tue",
+                                     "wed":  "Wed",
+                                     "thu":  "Thu",
+                                     "fri":  "Fri",
+                                     "sat":  "Sat",
+                                     "sun":  "Sun"
+                                 }
+                    },
+    "foodReviewItem":  {
+                           "today":  "Today, {time}"
+                       },
+    "taskTracking":  {
+                         "completedOwner":  "The volunteer successfully delivered your listing to the shelter.",
+                         "completedVolunteer":  "You successfully completed the task! 🥳 Share your experience to inspire others.",
+                         "deliveredPendingReviewOwner":  "The volunteer delivered your listing to the shelter. Waiting for a review.",
+                         "deliveredPendingReviewVolunteer":  "You delivered the food to the shelter. Leave a review about your experience.",
+                         "goingToShelterOwner":  "The volunteer is taking your listing to the shelter.",
+                         "goingToShelterVolunteer":  "You are taking the food to the shelter. You can complete the task after delivery.",
+                         "pickedUpOwner":  "The volunteer picked up your listing.",
+                         "pickedUpVolunteer":  "You picked up the food. You can now head to the shelter.",
+                         "ownerHandedOverOwner":  "You handed over the listing to the volunteer. Waiting for the volunteer to confirm pickup.",
+                         "ownerHandedOverVolunteer":  "The owner reported handing over the food. Confirm that you picked it up.",
+                         "goingToPickUpOwner":  "The volunteer is coming to pick up your listing.",
+                         "goingToPickUpVolunteer":  "You\u0027re on your way to pick up the food. Notify when you arrive at the owner.",
+                         "acceptedOwner":  "You accepted the volunteer. The volunteer can come to pick up your listing.",
+                         "acceptedVolunteer":  "The owner accepted you. Tap the button to go pick it up.",
+                         "pendingOwner":  "A volunteer has applied for your listing.",
+                         "pendingVolunteer":  "Your volunteer application has been submitted. Waiting for owner approval.",
+                         "btnLeaveReview":  "Leave a Review",
+                         "btnReject":  "Reject",
+                         "btnApprove":  "Approve",
+                         "btnHandover":  "I Gave the Listing to the Volunteer",
+                         "btnGoPickup":  "Go Pick Up",
+                         "btnPickedUp":  "I Picked It Up",
+                         "btnGoShelter":  "Going to Shelter",
+                         "btnComplete":  "Complete Delivery",
+                         "btnCancel":  "Cancel",
+                         "volunteerComment":  "Volunteer Comment:",
+                         "assignedVolunteer":  "Assigned Volunteer",
+                         "volunteer":  "Volunteer",
+                         "deliveredExclamation":  "Delivered!",
+                         "waitingApproval":  "Waiting for Approval",
+                         "given":  "Given",
+                         "delivering":  "Delivering",
+                         "stepApproval":  "Approval",
+                         "stepPickup":  "Pickup",
+                         "stepDelivery":  "Delivery",
+                         "stepResult":  "Result",
+                         "stepApproved":  "Approved",
+                         "stepCompleted":  "Completed",
+                         "stepReview":  "Review"
+                     },
+    "changePassword":  {
+                           "currentPassword":  "Current Password",
+                           "newPassword":  "New Password"
+                       },
+    "notifications":  {
+                          "pushTitle":  "Push Notifications",
+                          "pushSubtitle":  "In-app instant notifications",
+                          "emailTitle":  "Email Notifications",
+                          "emailSubtitle":  "Receive notifications via email",
+                          "orderTitle":  "Order Updates",
+                          "orderSubtitle":  "Receive notifications on order status changes",
+                          "promoTitle":  "Promotions",
+                          "promoSubtitle":  "Campaign and deal notifications",
+                          "volunteerTitle":  "Volunteer Updates",
+                          "volunteerSubtitle":  "Volunteer listing and task notifications",
+                          "markAllRead":  "Mark All as Read",
+                          "title":  "Notifications",
+                          "preferences":  "Preferences",
+                          "emptyTitle":  "No notifications yet",
+                          "emptySubtitle":  "New notifications will appear here",
+                          "channelPrefs":  "Channel Preferences",
+                          "typePrefs":  "Notification Types",
+                          "prefsNote":  "Your preferences are saved instantly and apply to all your devices."
+                      },
+    "yemoAssistant":  {
+                          "foodFindTitle":  "Find food nearby",
+                          "foodFindSubtitle":  "Discover the closest and affordable meals",
+                          "foodReserveTitle":  "Reserve",
+                          "foodReserveSubtitle":  "Reserve the food you need",
+                          "foodAiTitle":  "AI suggestions",
+                          "foodAiSubtitle":  "Get personalized meal recommendations",
+                          "businessSalesTitle":  "Track sales",
+                          "businessSalesSubtitle":  "View sales data instantly",
+                          "businessAddOrderTitle":  "Add order",
+                          "businessAddOrderSubtitle":  "Create a new food listing",
+                          "businessCo2Title":  "CO2 Impact",
+                          "businessCo2Subtitle":  "Check your contribution to nature immediately",
+                          "volunteerListingsTitle":  "See listings",
+                          "volunteerListingsSubtitle":  "Discover places where you can help",
+                          "volunteerBecomeTitle":  "Become a volunteer",
+                          "volunteerBecomeSubtitle":  "Support and make a difference",
+                          "volunteerRegionTitle":  "Select your region",
+                          "volunteerRegionSubtitle":  "Find the region you want to help",
+                          "commonQuestionsTitle":  "Ask questions",
+                          "commonQuestionsSubtitle":  "You can ask anything you are curious about",
+                          "hintText":  "Ask Yemo something...",
+                          "errorBusy":  "Sorry, I can\u0027t reply right now. Please try again later.",
+                          "errorNetwork":  "An error occurred. Please check your connection."
+                      },
+    "volunteerCancelDialog":  {
+                                  "confirm":  "Are you sure you want to cancel this volunteer task? This action cannot be undone."
+                              },
+    "volunteerOrderTab":  {
+                              "noShelterNearby":  "No shelters found nearby"
+                          },
+    "volunteerListing":  {
+                             "volunteerFailed":  "Volunteering action failed."
+                         }
 }

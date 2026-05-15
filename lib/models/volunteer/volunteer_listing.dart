@@ -6,11 +6,15 @@ enum VolunteerSection {
 
 /// Gönüllü görevinin teslimat durumunu belirtir.
 enum DeliveryStatus {
-  pending,               // Beklemede / Yeni atanmış
-  onTheWayToPickUp,      // İlanı almak için yola çıktım
-  pickedUp,              // İlanı aldım
-  onTheWay,              // Barınağa götürüyorum
-  completed,             // Götürdüm / Tamamlandı
+  pendingOwnerApproval,         // Gönüllü talep etti, sahip onayı bekliyor (requested)
+  accepted,                     // Sahibi onayladı, gönüllü bekleniyor
+  goingToPickUp,               // Gönüllü almaya geliyor (start-pickup)
+  ownerHandedOver,             // Sahibi ilanı verdiğini bildirdi (owner-handover)
+  pickedUp,                    // Gönüllü teslim aldığını onayladı (mark-picked-up)
+  goingToShelter,              // Barınağa götürülüyor (start-delivery)
+  deliveredPendingReview,      // Barınağa ulaştı, yorum bekleniyor (complete)
+  completed,                   // Tamamlandı ve yorum yapıldı
+  cancelled,                   // İptal edildi
 }
 
 /// Bir gönüllü ilanını temsil eder.
@@ -48,7 +52,7 @@ class VolunteerListing {
     this.isAvailable = true,
     this.ownerId,
     this.acceptedByUserId,
-    this.deliveryStatus = DeliveryStatus.pending,
+    this.deliveryStatus = DeliveryStatus.pendingOwnerApproval,
     this.taskId,
     this.pickupStartTime,
     this.pickupEndTime,

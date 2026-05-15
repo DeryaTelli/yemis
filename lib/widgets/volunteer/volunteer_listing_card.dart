@@ -13,12 +13,14 @@ class VolunteerListingCard extends StatelessWidget {
     super.key,
     required this.listing,
     this.onTap,
+    this.onVolunteerTap,
     this.width,
     this.imageHeight = 110, // Küçültüldü
   });
 
   final VolunteerListing listing;
   final VoidCallback? onTap;
+  final VoidCallback? onVolunteerTap;
   final double? width;
   final double imageHeight;
 
@@ -42,8 +44,7 @@ class VolunteerListingCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -274,9 +275,9 @@ class VolunteerListingCard extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          'Bu ilana gönüllü olundu:',
-                                          style: TextStyle(
+                                        Text(
+                                          LocaleKeys.volunteerListingCard_volunteered.tr(),
+                                          style: const TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w600,
                                             color: AppColors.volunteerColor,
@@ -322,9 +323,9 @@ class VolunteerListingCard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.info_outline_rounded,
                                     size: 16,
                                     color: AppColors.volunteerColor,
@@ -332,8 +333,8 @@ class VolunteerListingCard extends StatelessWidget {
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'Henüz bu ilana bir yorum eklememişsiniz.',
-                                      style: TextStyle(
+                                      LocaleKeys.volunteerListingCard_noReviewYet.tr(),
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.volunteerColor,
@@ -344,6 +345,7 @@ class VolunteerListingCard extends StatelessWidget {
                               ),
                             ),
                           ),
+                            
 
                         const SizedBox(height: 8),
 
@@ -483,18 +485,21 @@ class VolunteerListingCard extends StatelessWidget {
                           // Gönüllü Ol Butonu (Hala aktif olanlar için)
                           Align(
                             alignment: Alignment.centerRight,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.volunteerColor,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                LocaleKeys.volunteerDetail_becomeButton.tr(),
-                                style: CustomTextStyles.semiBold13White,
+                            child: GestureDetector(
+                              onTap: onVolunteerTap,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.volunteerColor,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  LocaleKeys.volunteerDetail_becomeButton.tr(),
+                                  style: CustomTextStyles.semiBold13White,
+                                ),
                               ),
                             ),
                           )
@@ -528,7 +533,7 @@ class VolunteerListingCard extends StatelessWidget {
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'Bu ilana henüz kimse gönüllü olmadı.',
+                                      LocaleKeys.volunteerListingCard_noVolunteerYet.tr(),
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
@@ -548,7 +553,6 @@ class VolunteerListingCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 

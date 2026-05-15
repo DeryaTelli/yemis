@@ -22,6 +22,20 @@ class VolunteerDetailViewModel extends ChangeNotifier {
   final String _listingId;
   final UserSession _userSession;
   final LocationService _locationService;
+  bool _isDisposed = false;
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_isDisposed) {
+      super.notifyListeners();
+    }
+  }
 
   // ─── State ──────────────────────────────────────────────
 
@@ -85,15 +99,17 @@ class VolunteerDetailViewModel extends ChangeNotifier {
   // ─── Init ────────────────────────────────────────────────
 
   Future<void> init() async {
-    _isLoading = true;
-    notifyListeners();
+    Future.microtask(() {
+      _isLoading = true;
+      notifyListeners();
+    });
 
     _listing = await _service.getVolunteerDetail(_listingId);
 
     await _fetchUserLocation();
     
-    // Konum alındıysa yakındaki barınakları çek
-    if (_userPosition != null) {
+    // İlan verisi geldiyse ilanın konumuna göre yakındaki barınakları çek
+    if (_listing != null && _listing!.latitude != null && _listing!.longitude != null) {
       await fetchNearbyShelters();
     }
 
@@ -102,30 +118,21 @@ class VolunteerDetailViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchNearbyShelters() async {
-    if (_userPosition == null) return;
+    if (_listing == null || _listing!.latitude == null || _listing!.longitude == null) return;
     
     _isShelterLoading = true;
     notifyListeners();
     
     try {
-      final userCity = _userSession.currentUser?.city;
-      
       final shelters = await _service.getNearbyShelters(
-        lat: _userPosition!.latitude,
-        lng: _userPosition!.longitude,
-        city: userCity,
-        district: _userSession.currentUser?.district,
+        lat: _listing!.latitude!,
+        lng: _listing!.longitude!,
+        radiusKm: 50,
       );
       
       if (shelters.isNotEmpty) {
-        // Eğer kullanıcının şehri belli ise sadece o şehirdeki barınakları kabul et
-        if (userCity != null && userCity.isNotEmpty) {
-          final cityShelters = shelters.where((s) => s.city.toLowerCase() == userCity.toLowerCase()).toList();
-          _nearestShelter = cityShelters.isNotEmpty ? cityShelters.first : null;
-        } else {
-          // Şehir belli değilse en yakını göster
-          _nearestShelter = shelters.first;
-        }
+        // En yakını göster (API zaten mesafeye göre sıralı döndürüyor olmalı)
+        _nearestShelter = shelters.first;
       } else {
         _nearestShelter = null;
       }

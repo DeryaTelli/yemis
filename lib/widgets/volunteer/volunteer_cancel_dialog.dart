@@ -1,5 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 
 class VolunteerCancelDialog extends StatelessWidget {
@@ -64,7 +66,7 @@ class VolunteerCancelDialog extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Görevi İptal Et',
+                  LocaleKeys.taskTracking_buttonCancel.tr(),
                   style: CustomTextStyles.orelegaOne28DarkGrey,
                 ),
               ),
@@ -74,7 +76,7 @@ class VolunteerCancelDialog extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              'Bu gönüllü görevinden vazgeçmek istediğinize emin misiniz?',
+              LocaleKeys.volunteerCancelDialog_confirm.tr(),
               style: CustomTextStyles.semiBold14DarkGrey,
             ),
           ),

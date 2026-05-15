@@ -1,520 +1,645 @@
-{
-    "auth": {
-        "login": {
-            "title": "Giriş Yap",
-            "rememberMe": "Remember me",
-            "forgotPassword": "Forgot password?",
-            "noAccount": "Hesabın yok mu?",
-            "register": "Kayıt Ol",
-            "button": "Giriş Yap"
-        },
-        "register": {
-            "title": "Kayıt Ol",
-            "kvkk": "KVKK onaylayınız",
-            "hasAccount": "Hesabın var mı?",
-            "login": "Giriş Yap",
-            "button": "Kayıt Ol"
-        },
-        "forgotPassword": {
-            "title": "Şifremi Unuttum",
-            "description": "Hesabınıza kayıtlı e-posta adresini girin, şifrenizi yenileyebilmeniz için size bir kod gönderelim.",
-            "button": "Gönder",
-            "success": "Şifreniz başarıyla yenilendi."
-        },
-        "verification": {
-            "title": "Doğrulama Kodu",
-            "description": "E-postanıza gönderilen doğrulama kodunu girerek hesap doğrulama işlemini tamamlayın",
-            "codeSent": "E-postanıza bir doğrulama kodu gönderildi.",
-            "resend": "Tekrar gönder",
-            "button": "Onayla",
-            "successMessage": "Hesap doğrulandı! Lütfen giriş yapın."
-        },
-        "fields": {
-            "email": "Email",
-            "password": "Şifre",
-            "name": "İsim ve Soyisim",
-            "newPassword": "Yeni Şifre",
-            "confirmPassword": "Şifre Tekrar",
-            "phone": "Telefon Numarası",
-            "fullNameHint": "Adınızı ve soyadınızı girin",
-            "emailHint": "E-posta adresinizi girin"
-        },
-        "validation": {
-            "emailEmpty": "E-posta adresi boş olamaz.",
-            "emailInvalid": "Geçerli bir e-posta adresi girin.",
-            "passwordEmpty": "Şifre boş olamaz.",
-            "passwordMinLength": "Şifre en az 8 karakter olmalı ve en az bir büyük harf içermelidir.",
-            "nameEmpty": "İsim boş olamaz.",
-            "kvkkRequired": "Lütfen KVKK metnini onaylayın.",
-            "codeIncomplete": "Lütfen 4 haneli kodu eksiksiz girin.",
-            "passwordsNotMatch": "Şifreler eşleşmiyor.",
-            "phoneEmpty": "Telefon numarası boş olamaz.",
-            "phoneInvalid": "Geçerli bir telefon numarası girin."
-        },
-        "errors": {
-            "invalidCredentials": "E-posta veya şifre hatalı.",
-            "emailAlreadyRegistered": "Bu e-posta adresi zaten kayıtlı.",
-            "general": "Bir hata oluştu. Lütfen tekrar deneyin.",
-            "emailSendFailed": "E-posta gönderilemedi. Lütfen tekrar deneyin.",
-            "codeSendFailed": "Kod gönderilemedi. Lütfen tekrar deneyin.",
-            "codeInvalid": "Doğrulama kodu hatalı. Lütfen tekrar deneyin.",
-            "registerSuccess": "Kayıt başarılı. Lütfen e-postanızı doğrulayın.",
-            "loginSuccess": "Giriş başarılı."
-        },
-        "resetPassword": {
-            "title": "Şifre Yenileme"
-        },
-        "changePassword": {
-            "title": "Şifre Değiştir"
-        }
-    },
-    "location": {
-        "title": "Lokasyon",
-        "shareTitle": "Konumunu Paylaş",
-        "shareDescription": "Konumunu paylaşarak sana en yakın noktaları, hizmetleri ve önerileri daha hızlı sunabiliriz.",
-        "buttonShare": "Paylaş",
-        "buttonPick": "Konum Seç",
-        "permissionDenied": "Konum izni gereklidir. Lütfen uygulama ayarlarından konum iznini etkinleştirin.",
-        "fetchError": "Konum alınamadı, lütfen tekrar deneyin."
-    },
-    "mapPicker": {
-        "searchHint": "Lokasyon Ara",
-        "confirmButton": "Konumu Seç",
-        "locating": "Konumunuz bulunuyor..."
-    },
-    "foodDetail": {
-        "tabOrder": "Sipariş",
-        "tabReview": "Yorum",
-        "goToLocation": "Lokasyona Git",
-        "moreDetail": "Daha Fazla Detay",
-        "ingredients": "İçerikler & Alerjenler",
-        "reserveButton": "Rezerve Et",
-        "shareLabel": "Paylaş",
-        "noReviews": "Henüz yorum yapılmamış.",
-        "noLocation": "Konum bilgisi yok"
-    },
-    "home": {
-        "nearbyPlaces": "Sana Yakın Yerler",
-        "seeAll": "Tümü",
-        "surpriseBox": "Sürpriz Kutu",
-        "buyNow": "Şimdi Al",
-        "todayPopular": "Bugün Popüler Olanlar",
-        "locationLoading": "Konum yükleniyor…",
-        "volunteerSubtitle": "Evde kalan yemekleri paylaş!",
-        "foodTitle": "Yemek",
-        "foodSubtitle": "Uygun fiyata yemek al israfın önüne geç!",
-        "businessTitle": "İşletme",
-        "businessSubtitle": "Menünü yönet, israfı azalt!",
-        "onboarding1Subtitle": "Yemis kullanarak dünya yemek israfının önüne geç!",
-        "onboarding2Title": "Taze Kal",
-        "onboarding2Subtitle": "İsrafı önle, bütçeni koru ve\ndoğaya katkıda bulun.",
-        "onboarding3Title": "Paylaş",
-        "onboarding3Subtitle": "Fazla yemeğini paylaşarak\nbir gülümsemeye vesile ol.",
-        "onboarding4Title": "Keşfet",
-        "onboarding4Subtitle": "Çevrendeki fırsatları gör,\nen uygun fiyatlarla doy!"
-    },
-    "foodProfile": {
-        "title": "Profil",
-        "notifications": "Bildirimler",
-        "history": "Geçmiş Rezervasyonlarım",
-        "addresses": "Kayıtlı Adreslerim",
-        "cards": "Kayıtlı Kartlarım",
-        "updateProfile": "Profil Güncelle",
-        "changePassword": "Şifre Değiştir",
-        "changeLanguage": "Dil Değiştir",
-        "logout": "Çıkış Yap",
-        "editTitle": "Profili Düzenle",
-        "updateButton": "Hesabı Düzenle"
-    },
-    "volunteer": {
-        "becomeButton": "Gönüllü Ol",
-        "free": "Ücretsiz"
-    },
-    "volunteerAddListing": {
-        "title": "İlan Ekle",
-        "photoLabel": "İlan Fotoğrafı Ekle",
-        "endTimeLabel": "İlan Bitiş Saati",
-        "locationLabel": "İlanın Konumu",
-        "locationButton": "Konum Seç",
-        "priceLabel": "İlan Fiyatı",
-        "priceFree": "Ücretsiz",
-        "shareButton": "Paylaş",
-        "successMessage": "İlanınız başarıyla paylaşıldı!",
-        "errorNoLocation": "Lütfen bir konum seçin.",
-        "photoSelected": "Fotoğraf Seçildi",
-        "pickFromCamera": "Kameradan Çek",
-        "pickFromGallery": "Galeriden Seç"
-    },
-    "volunteerDetail": {
-        "tabOrder": "Sipariş",
-        "tabReview": "Yorum",
-        "becomeButton": "Gönüllü Ol",
-        "freeLabel": "Ücretsiz",
-        "goToLocation": "Lokasyona Git",
-        "goToShelter": "Barınağa Git",
-        "nearestShelter": "En Yakın Barınak",
-        "noLocation": "Konum bilgisi yok",
-        "noShelterLocation": "Barınak konum bilgisi yok",
-        "moreDetail": "Daha Fazla Detay",
-        "ingredients": "İçerikler & Alerjenler",
-        "packaging": "Paket",
-        "shareLabel": "Paylaş",
-        "listingLocation": "İlan Lokasyonu",
-        "volunteerSuccess": "{title} için gönüllü oldunuz. Teşekkürler!",
-        "noReviews": "Henüz yorum bulunmamaktadır."
-    },
-    "volunteerHome": {
-        "nearbyPlaces": "Sana Yakın Yerler",
-        "todayPopular": "Bugün Popüler Olanlar",
-        "seeAll": "Tümü",
-        "searchHint": "Ara"
-    },
-    "volunteerSearch": {
-        "title": "Gönüllü Ara",
-        "comingSoon": "Gönüllü arama sayfası yakında!"
-    },
-    "volunteerProfile": {
-        "title": "Profil",
-        "comingSoon": "Gönüllü profil sayfası yakında!",
-        "notifications": "Bildirimler",
-        "pastListings": "Geçmiş İlanlarım",
-        "attendedListings": "Gönüllü İlanlarım",
-        "activeListings": "Aktif İlanlarım",
-        "savedAddresses": "Kayıtlı Adreslerim",
-        "savedCards": "Kayıtlı Kartlarım",
-        "changeLanguage": "Dil Değiştir",
-        "deleteAccount": "Hesabı Sil"
-    },
-    "volunteerListings": {
-        "activeTitle": "Aktif İlanlarım",
-        "pastTitle": "Geçmiş İlanlarım",
-        "attendedTitle": "Gönüllü İlanlarım",
-        "emptyMessage": "Henüz bu kategoride ilanınız bulunmuyor.",
-        "deleteError": "İlan silinirken bir hata oluştu.",
-        "deleteConfirm": "Bu ilanı silmek istediğinizden emin misiniz?",
-        "deleteTitle": "İlanı Sil"
-    },
-    "languageSelect": {
-        "title": "Dil Seçin",
-        "description": "Uygulamayı istediğiniz dilde kullanabilmeniz için lütfen dil seçiminizi yapın.",
-        "turkish": "Türkçe",
-        "english": "İngilizce",
-        "confirmButton": "Tamam"
-    },
-    "businessHome": {
-        "weeklySalesTitle": "Haftalık Satış Özeti",
-        "addedOrders": "Eklenen\nİlanlar",
-        "soldOrders": "Satılan\nSiparişler",
-        "reportsTitle": "Raporlar",
-        "reportsDescription": "Sipariş performansını, yapılan rezervasyonları ve atık düşüşünü tek bir yerden takip edin. İşletmenizin günlük-aylık özetleri kolayca görüntüleyin.",
-        "co2Title": "CO₂ Etkisi",
-        "co2Description": "Yemek artığı oluşmadığında, gıdanın üretimi ve atık sürecinde ortaya çıkan CO₂ salımı önlenir. Her kurtarılan öğün, çevreye bırakılmayan karbon anlamına gelir.",
-        "addOrderButton": "Sipariş Ekle"
-    },
-    "businessProfile": {
-        "title": "Profil",
-        "dailyLabel": "Günlük",
-        "soldCountLabel": "Satılan Ürün Sayısı",
-        "earningsLabel": "Toplam Kazanç",
-        "notifications": "Bildirimler",
-        "reports": "Raporlar",
-        "pastListings": "Geçmiş İlanlar",
-        "soldListings": "Satılan İlanlar",
-        "unsoldListings": "Satılmayan İlanlar",
-        "savedCards": "Kayıtlı Kartlarım",
-        "updateProfile": "Profilimi Güncelle",
-        "changePassword": "Şifremi Değiştir",
-        "changeLanguage": "Dil Değiştir",
-        "deleteAccount": "Hesabı Sil",
-        "editTitle": "Profil Düzenle",
-        "addedListings": "Eklenen İlanlar",
-        "soldOrdersTitle": "Satılan Siparişler",
-        "expiredListings": "Süresi Dolan İlanlar"
-    },
-    "businessAddOrder": {
-        "title": "Sipariş Ekle",
-        "photoLabel": "İlan Fotoğrafı Ekle",
-        "endTimeLabel": "İlan Bitiş Saati",
-        "locationLabel": "İlanın Konumu",
-        "locationButton": "Konum Seç",
-        "quantityLabel": "İlan Sayısı",
-        "priceLabel": "İlan Fiyatı",
-        "discountPriceLabel": "İndirim Fiyatı",
-        "shareButton": "Paylaş",
-        "successMessage": "Siparişiniz başarıyla paylaşıldı!",
-        "errorNoLocation": "Lütfen bir konum seçin.",
-        "titleLabel": "İlan Başlığı",
-        "descriptionLabel": "İlan Açıklaması",
-        "allergensLabel": "Alerjen Bilgisi",
-        "pickFromCamera": "Kameradan Çek",
-        "pickFromGallery": "Galeriden Seç",
-        "categoryLabel": "Kategori",
-        "categoryPlaceholder": "Bir kategori seçin",
-        "errorNoAddress": "Lütfen önce bir işletme adresi ekleyin.",
-        "titleHint": "Örn: Sürpriz Kahvaltı Kutusu",
-        "descriptionHint": "İlanınızla ilgili detaylı bilgi giriniz...",
-        "allergensHint": "Örn: Glüten, Süt, Yumurta içerir..."
-    },
-    "businessApprovals": {
-        "title": "Rezervasyon Onayla",
-        "noPending": "Bekleyen rezervasyon yok.",
-        "reservedBy": "tarafından reserve edildi",
-        "todayPickup": "Bugün Al",
-        "approveButton": "Onayla",
-        "rejectButton": "Reddet",
-        "approved": "Onaylandı",
-        "rejected": "Reddedildi"
-    },
-    "foodReserve": {
-        "title": "Rezerve Et",
-        "paymentMethod": "Ödeme Yöntemi",
-        "selectPayment": "Bir Ödeme Yöntemi Seç",
-        "quantity": "Adet Sayısı",
-        "price": "Fiyat",
-        "reserveButton": "Rezerve Et",
-        "successMessage": "{title} için rezervasyon alındı!",
-        "googlePay": "Google Pay ile öde",
-        "applePay": "Apple Pay ile öde"
-    },
-    "addresses": {
-        "title": "Adreslerim",
-        "addAddress": "Yeni Adres Ekle",
-        "noAddressFound": "Kayıtlı adres bulunamadı.",
-        "deleted": "Adres silindi",
-        "city": "İl",
-        "district": "İlçe",
-        "neighborhood": "Mahalle",
-        "addressLine": "Adres",
-        "addressTitle": "Adres Başlığı",
-        "select": "Seçiniz",
-        "selectCityFirst": "Önce il seçiniz",
-        "selectDistrictFirst": "Önce ilçe seçiniz",
-        "enterAddressInfo": "Cadde, mahalle sokak ve diğer bilgileri giriniz.",
-        "enterAddressTitle": "Adres Başlığı Giriniz"
-    },
-    "common": {
-        "edit": "Düzenle",
-        "delete": "Sil",
-        "update": "Güncelle",
-        "camera": "Kamera",
-        "gallery": "Galeri",
-        "cancel": "İptal",
-        "save": "Kaydet",
-        "error": "Hata",
-        "success": "Başarılı",
-        "yes": "Evet",
-        "no": "Hayır",
-        "pickFromCamera": "Kamera ile Çek",
-        "pickFromGallery": "Galeriden Seç",
-        "searchHint": "Ara",
-        "list": "Liste",
-        "map": "Harita",
-        "warning": "Uyarı",
-        "profileNoChange": "Lütfen profilinizde bir değişiklik yapın.",
-        "invalidUserId": "Kullanıcı ID geçersiz.",
-        "fullName": "Ad Soyad",
-        "selectLocation": "Konum Seç",
-        "selectLocationFromMap": "Haritadan Konum Seç",
-        "noResults": "Sonuç bulunamadı.",
-        "pickupToday": "Bugün Al",
-        "pickupTomorrow": "Yarın Al",
-        "sorting": "Sıralama",
-        "clear": "Temizle"
-    },
-    "volunteerEditListing": {
-        "title": "İlanı Düzenle",
-        "successTitle": "Güncellendi",
-        "successMessage": "İlan başarıyla güncellendi."
-    },
-    "navigation": {
-        "permissionRequired": "Konum izni gerekiyor",
-        "openSettings": "Ayarları Aç",
-        "goToLocation": "Konuma Git",
-        "navigate": "Yönlendir",
-        "getDirections": "Yol Tarifi Al",
-        "openGoogleMaps": "Google Maps ile Aç",
-        "openYandexMaps": "Yandex Navigasyon ile Aç",
-        "openAppleMaps": "Apple Maps ile Aç"
-    },
-    "foodFavorites": {
-        "title": "Favori"
-    },
-    "businessListings": {
-        "deleteError": "İlan silinirken bir hata oluştu.",
-        "allTitle": "İlanlarım",
-        "soldTitle": "Satılan Siparişler",
-        "activeTitle": "Eklenen İlanlar",
-        "expiredTitle": "Süresi Dolan İlanlar",
-        "emptyAll": "Henüz bir ilanınız bulunmuyor.",
-        "emptySold": "Henüz satılmış bir siparişiniz bulunmuyor.",
-        "emptyActive": "Henüz eklenmiş bir ilanınız bulunmuyor.",
-        "emptyExpired": "Henüz süresi dolmuş bir ilanınız bulunmuyor.",
-        "deleteDialogTitle": "İlanı Sil",
-        "deleteDialogMessage": "Bu ilanı silmek istediğinizden emin misiniz?",
-        "soldOut": "Tükendi",
-        "expired": "Süresi Doldu",
-        "remaining": "Kalan: {available} / {total}",
-        "noLocation": "Konum Belirtilmedi"
-    },
-    "businessListingDetail": {
-        "approvedBadge": "ONAYLI İŞLETME",
-        "businessNameFallback": "İşletme Adı",
-        "createdAt": "Oluşturulma:",
-        "lastPickupTime": "Son Alım Saati:",
-        "category": "Kategori:",
-        "breadPastry": "Ekmek & Pasta",
-        "notSpecified": "Belirtilmedi",
-        "locationSection": "Konum",
-        "address": "Adres:",
-        "noAddress": "Konum Belirtilmedi",
-        "contentSection": "İçerik",
-        "noContent": "Bu ilan için henüz bir içerik detayı girilmemiş.",
-        "allergensSection": "Alerjenler",
-        "noAllergens": "Belirtilmemiş",
-        "stockStatus": "Stok Durumu",
-        "remaining": "Kalan Adet"
-    },
-    "businessProfileEdit": {
-        "fullNameLabel": "Ad Soyad",
-        "fullNameHint": "Adınızı ve soyadınızı girin",
-        "emailLabel": "E-posta",
-        "emailHint": "E-posta adresinizi girin",
-        "phoneLabel": "Telefon Numarası",
-        "updateButton": "Profilini Güncelle",
-        "deleteAccountButton": "Hesabı Sil",
-        "cameraOption": "Kamera ile Çek",
-        "galleryOption": "Galeriden Seç"
-    },
-    "businessCard": {
-        "noLocation": "Konum Belirtilmedi"
-    },
-    "businessLocationButton": {
-        "placeholder": "Adres Seçiniz"
-    },
-    "weeklySales": {
-        "days": {
-            "mon": "Pzt",
-            "tue": "Sal",
-            "wed": "Çar",
-            "thu": "Per",
-            "fri": "Cum",
-            "sat": "Cts",
-            "sun": "Paz"
-        }
-    },
-    "businessEditOrder": {
-        "successTitle": "Başarılı",
-        "successMessage": "İlan başarıyla güncellendi."
-    },
-    "sorting": {
-        "defaultSort": "Varsayılan",
-        "rating": "Derecelendirme",
-        "lowToHigh": "Düşükten yükseğe",
-        "highToLow": "Yüksekten düşüğe",
-        "price": "Fiyat",
-        "distance": "Mesafe",
-        "nearToFar": "Yakından uzağa"
-    },
-    "filters": {
-        "all": "Hepsi",
-        "food": "Yemek",
-        "breadPastry": "Ekmek & Pasta",
-        "market": "Market",
-        "buyNow": "Şimdi Al"
-    },
-    "onboarding": {
-        "page1": {
-            "title": "Yemis'e Hoş Geldiniz",
-            "subtitle": "İsrafa Dur De, İyiliği Paylaş",
-            "description": "Gıda israfını önleyen, sosyal fayda odaklı platformunuz"
-        },
-        "page2": {
-            "title": "İşletmelerden İndirimli",
-            "subtitle": "Yiyecekler çöpe gitmez",
-            "description": "Gün sonunda kalan taze yiyecekleri uygun fiyatlarla alın"
-        },
-        "page3": {
-            "title": "Barınaklara Yardım",
-            "subtitle": "Can dostlarımız doyurulur",
-            "description": "Evinizdeki artan yemekleri gönüllüler aracılığıyla paylaşın"
-        },
-        "page4": {
-            "title": "Birlikte Fark Yaratalım",
-            "subtitle": "Paylaş, değerlendir, iyiliğe dönüşsün",
-            "description": "Çevreyi koruyun, tasarruf edin, iyiliği paylaşın"
-        },
-        "buttons": {
-            "skip": "Geç",
-            "next": "İleri",
-            "start": "Başlat"
-        }
-    }
-,
-    "volunteerListingDetail": {
-        "activeBadge": "AKTİF İLAN",
-        "freeLabel": "ÜCRETSİZ",
-        "deliveryRange": "Teslimat Aralığı:",
-        "locationSection": "Konum",
-        "address": "Adres:",
-        "descriptionSection": "Açıklama",
-        "noContent": "Bu ilan için henüz bir içerik detayı girilmemiş."
-    },
-    "volunteerListingCard": {
-        "freeLabel": "ÜCRETSİZ"
-    },
-    "volunteerOrderTab": {
-        "detailTitle": "Gönüllü İlan Detayı",
-        "detailSubtitle": "Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.",
-        "descriptionTitle": "İlan Açıklaması",
-        "ingredientsText": "Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Lütfen doğrudan mekâna danışınız.",
-        "packagingText": "Gönüllü yemeği barınağa ulaştırabilmek için lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız."
-    },
-    "volunteerAddListingForm": {
-        "titleLabel": "İlan Başlığı",
-        "titleHint": "Örn: Sokak Hayvanları İçin Yemek",
-        "descriptionLabel": "Açıklama",
-        "descriptionHint": "İlan içeriği hakkında bilgi veriniz...",
-        "photoLabel": "Fotoğraf",
-        "endTimeLabel": "Bitiş Saati",
-        "locationLabel": "Lokasyon",
-        "priceLabel": "İlan Fiyatı",
-        "addressPlaceholder": "Adres Seçiniz",
-        "noSavedAddress": "Kayıtlı adres bulunamadı."
-    },
-    "foodFavoritesPage": {
-        "empty": "Henüz favori ilan yok",
-        "emptyHint": "Beğendiğin ilanlardaki kalp ikonuna tıklayarak favorilere ekleyebilirsin."
-    },
-    "foodReservationConfirm": {
-        "title": "Rezervasyon",
-        "goToLocation": "Lokasyona Git",
-        "cancel": "İptal Et",
-        "months": {
-            "jan": "Ocak",
-            "feb": "Şubat",
-            "mar": "Mart",
-            "apr": "Nisan",
-            "may": "Mayıs",
-            "jun": "Haziran",
-            "jul": "Temmuz",
-            "aug": "Ağustos",
-            "sep": "Eylül",
-            "oct": "Ekim",
-            "nov": "Kasım",
-            "dec": "Aralık"
-        },
-        "sectionNearby": "Sana Yakın Yerler",
-        "sectionBuyNow": "Şimdi Al",
-        "sectionTodayPopular": "Bugün Popüler"
-    },
-    "foodOrderTab": {
-        "categoryBreadPastry": "Ekmek & Pasta",
-        "surpriseBoxDesc": "Bu paket, gün sonunda satılamayan ama hâlâ taze olan çeşitli yiyeceklerden oluşur. Ne çıkacağı tamamen sürprizdir.",
-        "listingDetail": "İlan Detayı",
-        "distanceText": "İşletme size {distance} uzaklıkta",
-        "category": "Kategori",
-        "ingredientsAllergens": "İçerikler & Alerjenler",
-        "surpriseIngredients": "Paketin içeriğini kesin olarak söyleyemiyoruz. Alerjen sorularınız varsa lütfen doğrudan mekâna sorunuz.",
-        "allergens": "Alerjenler: {allergens}"
-    }
+﻿{
+    "auth":  {
+                 "login":  {
+                               "title":  "GiriÅŸ Yap",
+                               "rememberMe":  "Remember me",
+                               "forgotPassword":  "Forgot password?",
+                               "noAccount":  "HesabÄ±n yok mu?",
+                               "register":  "KayÄ±t Ol",
+                               "button":  "GiriÅŸ Yap"
+                           },
+                 "register":  {
+                                  "title":  "KayÄ±t Ol",
+                                  "kvkk":  "KVKK onaylayÄ±nÄ±z",
+                                  "hasAccount":  "HesabÄ±n var mÄ±?",
+                                  "login":  "GiriÅŸ Yap",
+                                  "button":  "KayÄ±t Ol"
+                              },
+                 "forgotPassword":  {
+                                        "title":  "Åifremi Unuttum",
+                                        "description":  "HesabÄ±nÄ±za kayÄ±tlÄ± e-posta adresini girin, ÅŸifrenizi yenileyebilmeniz iÃ§in size bir kod gÃ¶nderelim.",
+                                        "button":  "GÃ¶nder",
+                                        "success":  "Åifreniz baÅŸarÄ±yla yenilendi."
+                                    },
+                 "verification":  {
+                                      "title":  "DoÄŸrulama Kodu",
+                                      "description":  "E-postanÄ±za gÃ¶nderilen doÄŸrulama kodunu girerek hesap doÄŸrulama iÅŸlemini tamamlayÄ±n",
+                                      "codeSent":  "E-postanÄ±za bir doÄŸrulama kodu gÃ¶nderildi.",
+                                      "resend":  "Tekrar gÃ¶nder",
+                                      "button":  "Onayla",
+                                      "successMessage":  "Hesap doÄŸrulandÄ±! LÃ¼tfen giriÅŸ yapÄ±n."
+                                  },
+                 "fields":  {
+                                "email":  "Email",
+                                "password":  "Åifre",
+                                "name":  "Ä°sim ve Soyisim",
+                                "newPassword":  "Yeni Åifre",
+                                "confirmPassword":  "Åifre Tekrar",
+                                "phone":  "Telefon NumarasÄ±",
+                                "fullNameHint":  "AdÄ±nÄ±zÄ± ve soyadÄ±nÄ±zÄ± girin",
+                                "emailHint":  "E-posta adresinizi girin"
+                            },
+                 "validation":  {
+                                    "emailEmpty":  "E-posta adresi boÅŸ olamaz.",
+                                    "emailInvalid":  "GeÃ§erli bir e-posta adresi girin.",
+                                    "passwordEmpty":  "Åifre boÅŸ olamaz.",
+                                    "passwordMinLength":  "Åifre en az 8 karakter olmalÄ± ve en az bir bÃ¼yÃ¼k harf iÃ§ermelidir.",
+                                    "nameEmpty":  "Ä°sim boÅŸ olamaz.",
+                                    "kvkkRequired":  "LÃ¼tfen KVKK metnini onaylayÄ±n.",
+                                    "codeIncomplete":  "LÃ¼tfen 4 haneli kodu eksiksiz girin.",
+                                    "passwordsNotMatch":  "Åifreler eÅŸleÅŸmiyor.",
+                                    "phoneEmpty":  "Telefon numarasÄ± boÅŸ olamaz.",
+                                    "phoneInvalid":  "GeÃ§erli bir telefon numarasÄ± girin."
+                                },
+                 "errors":  {
+                                "invalidCredentials":  "E-posta veya ÅŸifre hatalÄ±.",
+                                "emailAlreadyRegistered":  "Bu e-posta adresi zaten kayÄ±tlÄ±.",
+                                "general":  "Bir hata oluÅŸtu. LÃ¼tfen tekrar deneyin.",
+                                "emailSendFailed":  "E-posta gÃ¶nderilemedi. LÃ¼tfen tekrar deneyin.",
+                                "codeSendFailed":  "Kod gÃ¶nderilemedi. LÃ¼tfen tekrar deneyin.",
+                                "codeInvalid":  "DoÄŸrulama kodu hatalÄ±. LÃ¼tfen tekrar deneyin.",
+                                "registerSuccess":  "KayÄ±t baÅŸarÄ±lÄ±. LÃ¼tfen e-postanÄ±zÄ± doÄŸrulayÄ±n.",
+                                "loginSuccess":  "GiriÅŸ baÅŸarÄ±lÄ±."
+                            },
+                 "resetPassword":  {
+                                       "title":  "Åifre Yenileme"
+                                   },
+                 "changePassword":  {
+                                        "title":  "Åifre DeÄŸiÅŸtir"
+                                    }
+             },
+    "location":  {
+                     "title":  "Lokasyon",
+                     "shareTitle":  "Konumunu PaylaÅŸ",
+                     "shareDescription":  "Konumunu paylaÅŸarak sana en yakÄ±n noktalarÄ±, hizmetleri ve Ã¶nerileri daha hÄ±zlÄ± sunabiliriz.",
+                     "buttonShare":  "PaylaÅŸ",
+                     "buttonPick":  "Konum SeÃ§",
+                     "permissionDenied":  "Konum izni gereklidir. LÃ¼tfen uygulama ayarlarÄ±ndan konum iznini etkinleÅŸtirin.",
+                     "fetchError":  "Konum alÄ±namadÄ±, lÃ¼tfen tekrar deneyin."
+                 },
+    "mapPicker":  {
+                      "searchHint":  "Lokasyon Ara",
+                      "confirmButton":  "Konumu SeÃ§",
+                      "locating":  "Konumunuz bulunuyor..."
+                  },
+    "foodDetail":  {
+                       "tabOrder":  "SipariÅŸ",
+                       "tabReview":  "Yorum",
+                       "goToLocation":  "Lokasyona Git",
+                       "moreDetail":  "Daha Fazla Detay",
+                       "ingredients":  "Ä°Ã§erikler \u0026 Alerjenler",
+                       "reserveButton":  "Rezerve Et",
+                       "shareLabel":  "PaylaÅŸ",
+                       "noReviews":  "HenÃ¼z yorum yapÄ±lmamÄ±ÅŸ.",
+                       "noLocation":  "Konum bilgisi yok"
+                   },
+    "home":  {
+                 "nearbyPlaces":  "Sana YakÄ±n Yerler",
+                 "seeAll":  "TÃ¼mÃ¼",
+                 "surpriseBox":  "SÃ¼rpriz Kutu",
+                 "buyNow":  "Åimdi Al",
+                 "todayPopular":  "BugÃ¼n PopÃ¼ler Olanlar",
+                 "locationLoading":  "Konum yÃ¼kleniyorâ€¦",
+                 "volunteerSubtitle":  "Evde kalan yemekleri paylaÅŸ!",
+                 "foodTitle":  "Yemek",
+                 "foodSubtitle":  "Uygun fiyata yemek al israfÄ±n Ã¶nÃ¼ne geÃ§!",
+                 "businessTitle":  "Ä°ÅŸletme",
+                 "businessSubtitle":  "MenÃ¼nÃ¼ yÃ¶net, israfÄ± azalt!",
+                 "onboarding1Subtitle":  "Yemis kullanarak dÃ¼nya yemek israfÄ±nÄ±n Ã¶nÃ¼ne geÃ§!",
+                 "onboarding2Title":  "Taze Kal",
+                 "onboarding2Subtitle":  "Ä°srafÄ± Ã¶nle, bÃ¼tÃ§eni koru ve\ndoÄŸaya katkÄ±da bulun.",
+                 "onboarding3Title":  "PaylaÅŸ",
+                 "onboarding3Subtitle":  "Fazla yemeÄŸini paylaÅŸarak\nbir gÃ¼lÃ¼msemeye vesile ol.",
+                 "onboarding4Title":  "KeÅŸfet",
+                 "onboarding4Subtitle":  "Ã‡evrendeki fÄ±rsatlarÄ± gÃ¶r,\nen uygun fiyatlarla doy!"
+             },
+    "foodProfile":  {
+                        "title":  "Profil",
+                        "notifications":  "Bildirimler",
+                        "history":  "GeÃ§miÅŸ RezervasyonlarÄ±m",
+                        "addresses":  "KayÄ±tlÄ± Adreslerim",
+                        "cards":  "KayÄ±tlÄ± KartlarÄ±m",
+                        "updateProfile":  "Profil GÃ¼ncelle",
+                        "changePassword":  "Åifre DeÄŸiÅŸtir",
+                        "changeLanguage":  "Dil DeÄŸiÅŸtir",
+                        "logout":  "Ã‡Ä±kÄ±ÅŸ Yap",
+                        "editTitle":  "Profili DÃ¼zenle",
+                        "updateButton":  "HesabÄ± DÃ¼zenle"
+                    },
+    "volunteer":  {
+                      "becomeButton":  "GÃ¶nÃ¼llÃ¼ Ol",
+                      "free":  "Ãœcretsiz"
+                  },
+    "volunteerAddListing":  {
+                                "title":  "Ä°lan Ekle",
+                                "photoLabel":  "Ä°lan FotoÄŸrafÄ± Ekle",
+                                "endTimeLabel":  "Ä°lan BitiÅŸ Saati",
+                                "locationLabel":  "Ä°lanÄ±n Konumu",
+                                "locationButton":  "Konum SeÃ§",
+                                "priceLabel":  "Ä°lan FiyatÄ±",
+                                "priceFree":  "Ãœcretsiz",
+                                "shareButton":  "PaylaÅŸ",
+                                "successMessage":  "Ä°lanÄ±nÄ±z baÅŸarÄ±yla paylaÅŸÄ±ldÄ±!",
+                                "errorNoLocation":  "LÃ¼tfen bir konum seÃ§in.",
+                                "photoSelected":  "FotoÄŸraf SeÃ§ildi",
+                                "pickFromCamera":  "Kameradan Ã‡ek",
+                                "pickFromGallery":  "Galeriden SeÃ§"
+                            },
+    "volunteerDetail":  {
+                            "tabOrder":  "SipariÅŸ",
+                            "tabReview":  "Yorum",
+                            "becomeButton":  "GÃ¶nÃ¼llÃ¼ Ol",
+                            "freeLabel":  "Ãœcretsiz",
+                            "goToLocation":  "Lokasyona Git",
+                            "goToShelter":  "BarÄ±naÄŸa Git",
+                            "nearestShelter":  "En YakÄ±n BarÄ±nak",
+                            "noLocation":  "Konum bilgisi yok",
+                            "noShelterLocation":  "BarÄ±nak konum bilgisi yok",
+                            "moreDetail":  "Daha Fazla Detay",
+                            "ingredients":  "Ä°Ã§erikler \u0026 Alerjenler",
+                            "packaging":  "Paket",
+                            "shareLabel":  "PaylaÅŸ",
+                            "listingLocation":  "Ä°lan Lokasyonu",
+                            "volunteerSuccess":  "{title} iÃ§in gÃ¶nÃ¼llÃ¼ oldunuz. TeÅŸekkÃ¼rler!",
+                            "noReviews":  "HenÃ¼z yorum bulunmamaktadÄ±r."
+                        },
+    "volunteerHome":  {
+                          "nearbyPlaces":  "Sana YakÄ±n Yerler",
+                          "todayPopular":  "BugÃ¼n PopÃ¼ler Olanlar",
+                          "seeAll":  "TÃ¼mÃ¼",
+                          "searchHint":  "Ara"
+                      },
+    "volunteerSearch":  {
+                            "title":  "GÃ¶nÃ¼llÃ¼ Ara",
+                            "comingSoon":  "GÃ¶nÃ¼llÃ¼ arama sayfasÄ± yakÄ±nda!"
+                        },
+    "volunteerProfile":  {
+                             "title":  "Profil",
+                             "comingSoon":  "GÃ¶nÃ¼llÃ¼ profil sayfasÄ± yakÄ±nda!",
+                             "notifications":  "Bildirimler",
+                             "pastListings":  "GeÃ§miÅŸ Ä°lanlarÄ±m",
+                             "attendedListings":  "GÃ¶nÃ¼llÃ¼ Ä°lanlarÄ±m",
+                             "activeListings":  "Aktif Ä°lanlarÄ±m",
+                             "savedAddresses":  "KayÄ±tlÄ± Adreslerim",
+                             "savedCards":  "KayÄ±tlÄ± KartlarÄ±m",
+                             "changeLanguage":  "Dil DeÄŸiÅŸtir",
+                             "deleteAccount":  "HesabÄ± Sil"
+                         },
+    "volunteerListings":  {
+                              "activeTitle":  "Aktif Ä°lanlarÄ±m",
+                              "pastTitle":  "GeÃ§miÅŸ Ä°lanlarÄ±m",
+                              "attendedTitle":  "GÃ¶nÃ¼llÃ¼ Ä°lanlarÄ±m",
+                              "emptyMessage":  "HenÃ¼z bu kategoride ilanÄ±nÄ±z bulunmuyor.",
+                              "deleteError":  "Ä°lan silinirken bir hata oluÅŸtu.",
+                              "deleteConfirm":  "Bu ilanÄ± silmek istediÄŸinizden emin misiniz?",
+                              "deleteTitle":  "Ä°lanÄ± Sil"
+                          },
+    "languageSelect":  {
+                           "title":  "Dil SeÃ§in",
+                           "description":  "UygulamayÄ± istediÄŸiniz dilde kullanabilmeniz iÃ§in lÃ¼tfen dil seÃ§iminizi yapÄ±n.",
+                           "turkish":  "TÃ¼rkÃ§e",
+                           "english":  "Ä°ngilizce",
+                           "confirmButton":  "Tamam"
+                       },
+    "businessHome":  {
+                         "weeklySalesTitle":  "HaftalÄ±k SatÄ±ÅŸ Ã–zeti",
+                         "addedOrders":  "Eklenen\nÄ°lanlar",
+                         "soldOrders":  "SatÄ±lan\nSipariÅŸler",
+                         "reportsTitle":  "Raporlar",
+                         "reportsDescription":  "SipariÅŸ performansÄ±nÄ±, yapÄ±lan rezervasyonlarÄ± ve atÄ±k dÃ¼ÅŸÃ¼ÅŸÃ¼nÃ¼ tek bir yerden takip edin. Ä°ÅŸletmenizin gÃ¼nlÃ¼k-aylÄ±k Ã¶zetleri kolayca gÃ¶rÃ¼ntÃ¼leyin.",
+                         "co2Title":  "COâ‚‚ Etkisi",
+                         "co2Description":  "Yemek artÄ±ÄŸÄ± oluÅŸmadÄ±ÄŸÄ±nda, gÄ±danÄ±n Ã¼retimi ve atÄ±k sÃ¼recinde ortaya Ã§Ä±kan COâ‚‚ salÄ±mÄ± Ã¶nlenir. Her kurtarÄ±lan Ã¶ÄŸÃ¼n, Ã§evreye bÄ±rakÄ±lmayan karbon anlamÄ±na gelir.",
+                         "addOrderButton":  "SipariÅŸ Ekle"
+                     },
+    "businessProfile":  {
+                            "title":  "Profil",
+                            "dailyLabel":  "GÃ¼nlÃ¼k",
+                            "soldCountLabel":  "SatÄ±lan ÃœrÃ¼n SayÄ±sÄ±",
+                            "earningsLabel":  "Toplam KazanÃ§",
+                            "notifications":  "Bildirimler",
+                            "reports":  "Raporlar",
+                            "pastListings":  "GeÃ§miÅŸ Ä°lanlar",
+                            "soldListings":  "SatÄ±lan Ä°lanlar",
+                            "unsoldListings":  "SatÄ±lmayan Ä°lanlar",
+                            "savedCards":  "KayÄ±tlÄ± KartlarÄ±m",
+                            "updateProfile":  "Profilimi GÃ¼ncelle",
+                            "changePassword":  "Åifremi DeÄŸiÅŸtir",
+                            "changeLanguage":  "Dil DeÄŸiÅŸtir",
+                            "deleteAccount":  "HesabÄ± Sil",
+                            "editTitle":  "Profil DÃ¼zenle",
+                            "addedListings":  "Eklenen Ä°lanlar",
+                            "soldOrdersTitle":  "SatÄ±lan SipariÅŸler",
+                            "expiredListings":  "SÃ¼resi Dolan Ä°lanlar"
+                        },
+    "businessAddOrder":  {
+                             "title":  "SipariÅŸ Ekle",
+                             "photoLabel":  "Ä°lan FotoÄŸrafÄ± Ekle",
+                             "endTimeLabel":  "Ä°lan BitiÅŸ Saati",
+                             "locationLabel":  "Ä°lanÄ±n Konumu",
+                             "locationButton":  "Konum SeÃ§",
+                             "quantityLabel":  "Ä°lan SayÄ±sÄ±",
+                             "priceLabel":  "Ä°lan FiyatÄ±",
+                             "discountPriceLabel":  "Ä°ndirim FiyatÄ±",
+                             "shareButton":  "PaylaÅŸ",
+                             "successMessage":  "SipariÅŸiniz baÅŸarÄ±yla paylaÅŸÄ±ldÄ±!",
+                             "errorNoLocation":  "LÃ¼tfen bir konum seÃ§in.",
+                             "titleLabel":  "Ä°lan BaÅŸlÄ±ÄŸÄ±",
+                             "descriptionLabel":  "Ä°lan AÃ§Ä±klamasÄ±",
+                             "allergensLabel":  "Alerjen Bilgisi",
+                             "pickFromCamera":  "Kameradan Ã‡ek",
+                             "pickFromGallery":  "Galeriden SeÃ§",
+                             "categoryLabel":  "Kategori",
+                             "categoryPlaceholder":  "Bir kategori seÃ§in",
+                             "errorNoAddress":  "LÃ¼tfen Ã¶nce bir iÅŸletme adresi ekleyin.",
+                             "titleHint":  "Ã–rn: SÃ¼rpriz KahvaltÄ± Kutusu",
+                             "descriptionHint":  "Ä°lanÄ±nÄ±zla ilgili detaylÄ± bilgi giriniz...",
+                             "allergensHint":  "Ã–rn: GlÃ¼ten, SÃ¼t, Yumurta iÃ§erir..."
+                         },
+    "businessApprovals":  {
+                              "title":  "Rezervasyon Onayla",
+                              "noPending":  "Bekleyen rezervasyon yok.",
+                              "reservedBy":  "tarafÄ±ndan reserve edildi",
+                              "todayPickup":  "BugÃ¼n Al",
+                              "approveButton":  "Onayla",
+                              "rejectButton":  "Reddet",
+                              "approved":  "OnaylandÄ±",
+                              "rejected":  "Reddedildi"
+                          },
+    "foodReserve":  {
+                        "title":  "Rezerve Et",
+                        "paymentMethod":  "Ã–deme YÃ¶ntemi",
+                        "selectPayment":  "Bir Ã–deme YÃ¶ntemi SeÃ§",
+                        "quantity":  "Adet SayÄ±sÄ±",
+                        "price":  "Fiyat",
+                        "reserveButton":  "Rezerve Et",
+                        "successMessage":  "{title} iÃ§in rezervasyon alÄ±ndÄ±!",
+                        "googlePay":  "Google Pay ile Ã¶de",
+                        "applePay":  "Apple Pay ile Ã¶de"
+                    },
+    "addresses":  {
+                      "title":  "Adreslerim",
+                      "addAddress":  "Yeni Adres Ekle",
+                      "noAddressFound":  "KayÄ±tlÄ± adres bulunamadÄ±.",
+                      "deleted":  "Adres silindi",
+                      "city":  "Ä°l",
+                      "district":  "Ä°lÃ§e",
+                      "neighborhood":  "Mahalle",
+                      "addressLine":  "Adres",
+                      "addressTitle":  "Adres BaÅŸlÄ±ÄŸÄ±",
+                      "select":  "SeÃ§iniz",
+                      "selectCityFirst":  "Ã–nce il seÃ§iniz",
+                      "selectDistrictFirst":  "Ã–nce ilÃ§e seÃ§iniz",
+                      "enterAddressInfo":  "Cadde, mahalle sokak ve diÄŸer bilgileri giriniz.",
+                      "enterAddressTitle":  "Adres BaÅŸlÄ±ÄŸÄ± Giriniz",
+                      "newAddress":  "Yeni Adres Ekle",
+                      "deleteTitle":  "Adresi Sil",
+                      "deleteConfirm":  "Bu adresi silmek istediğinizden emin misiniz?",
+                      "defaultLabel":  "Ev",
+                      "editLabel":  "Düzenle",
+                      "selectFromLocation":  "Lokasyondan Seç",
+                      "enterAddress":  "Adres Gir",
+                      "notFound":  "Henüz kayıtlı bir adresiniz bulunmuyor.",
+                      "editTitle":  "Adresi Düzenle",
+                      "addTitle":  "Adres Ekle",
+                      "ilLabel":  "İl",
+                      "ilceLabel":  "İlçe",
+                      "mahalleLabel":  "Mahalle",
+                      "adresLabel":  "Adres",
+                      "adresHint":  "Cadde, mahalle sokak ve diğer bilgileri giriniz.",
+                      "baslikLabel":  "Adres Başlığı",
+                      "baslikHint":  "Adres Başlığı Giriniz (Örn: Ev, İş)",
+                      "selectPlaceholder":  "Seçiniz",
+                      "selectIlFirst":  "Önce il seçiniz",
+                      "selectIlceFirst":  "Önce ilçe seçiniz",
+                      "selectIlTitle":  "İl Seçiniz",
+                      "selectIlceTitle":  "İlçe Seçiniz",
+                      "selectMahalleTitle":  "Mahalle Seçiniz",
+                      "mapMarked":  "Konum Haritadan İşaretlendi"
+                  },
+    "common":  {
+                   "edit":  "DÃ¼zenle",
+                   "delete":  "Sil",
+                   "update":  "GÃ¼ncelle",
+                   "camera":  "Kamera",
+                   "gallery":  "Galeri",
+                   "cancel":  "Ä°ptal",
+                   "save":  "Kaydet",
+                   "error":  "Hata",
+                   "success":  "BaÅŸarÄ±lÄ±",
+                   "yes":  "Evet",
+                   "no":  "HayÄ±r",
+                   "pickFromCamera":  "Kamera ile Ã‡ek",
+                   "pickFromGallery":  "Galeriden SeÃ§",
+                   "searchHint":  "Ara",
+                   "list":  "Liste",
+                   "map":  "Harita",
+                   "warning":  "UyarÄ±",
+                   "profileNoChange":  "LÃ¼tfen profilinizde bir deÄŸiÅŸiklik yapÄ±n.",
+                   "invalidUserId":  "KullanÄ±cÄ± ID geÃ§ersiz.",
+                   "fullName":  "Ad Soyad",
+                   "selectLocation":  "Konum SeÃ§",
+                   "selectLocationFromMap":  "Haritadan Konum SeÃ§",
+                   "noResults":  "SonuÃ§ bulunamadÄ±.",
+                   "pickupToday":  "BugÃ¼n Al",
+                   "pickupTomorrow":  "YarÄ±n Al",
+                   "sorting":  "SÄ±ralama",
+                   "clear":  "Temizle"
+               },
+    "volunteerEditListing":  {
+                                 "title":  "Ä°lanÄ± DÃ¼zenle",
+                                 "successTitle":  "GÃ¼ncellendi",
+                                 "successMessage":  "Ä°lan baÅŸarÄ±yla gÃ¼ncellendi."
+                             },
+    "navigation":  {
+                       "permissionRequired":  "Konum izni gerekiyor",
+                       "openSettings":  "AyarlarÄ± AÃ§",
+                       "goToLocation":  "Konuma Git",
+                       "navigate":  "YÃ¶nlendir",
+                       "getDirections":  "Yol Tarifi Al",
+                       "openGoogleMaps":  "Google Maps ile AÃ§",
+                       "openYandexMaps":  "Yandex Navigasyon ile AÃ§",
+                       "openAppleMaps":  "Apple Maps ile AÃ§"
+                   },
+    "foodFavorites":  {
+                          "title":  "Favori"
+                      },
+    "businessListings":  {
+                             "deleteError":  "Ä°lan silinirken bir hata oluÅŸtu.",
+                             "allTitle":  "Ä°lanlarÄ±m",
+                             "soldTitle":  "SatÄ±lan SipariÅŸler",
+                             "activeTitle":  "Eklenen Ä°lanlar",
+                             "expiredTitle":  "SÃ¼resi Dolan Ä°lanlar",
+                             "emptyAll":  "HenÃ¼z bir ilanÄ±nÄ±z bulunmuyor.",
+                             "emptySold":  "HenÃ¼z satÄ±lmÄ±ÅŸ bir sipariÅŸiniz bulunmuyor.",
+                             "emptyActive":  "HenÃ¼z eklenmiÅŸ bir ilanÄ±nÄ±z bulunmuyor.",
+                             "emptyExpired":  "HenÃ¼z sÃ¼resi dolmuÅŸ bir ilanÄ±nÄ±z bulunmuyor.",
+                             "deleteDialogTitle":  "Ä°lanÄ± Sil",
+                             "deleteDialogMessage":  "Bu ilanÄ± silmek istediÄŸinizden emin misiniz?",
+                             "soldOut":  "TÃ¼kendi",
+                             "expired":  "SÃ¼resi Doldu",
+                             "remaining":  "Kalan: {available} / {total}",
+                             "noLocation":  "Konum Belirtilmedi"
+                         },
+    "businessListingDetail":  {
+                                  "approvedBadge":  "ONAYLI Ä°ÅLETME",
+                                  "businessNameFallback":  "Ä°ÅŸletme AdÄ±",
+                                  "createdAt":  "OluÅŸturulma:",
+                                  "lastPickupTime":  "Son AlÄ±m Saati:",
+                                  "category":  "Kategori:",
+                                  "breadPastry":  "Ekmek \u0026 Pasta",
+                                  "notSpecified":  "Belirtilmedi",
+                                  "locationSection":  "Konum",
+                                  "address":  "Adres:",
+                                  "noAddress":  "Konum Belirtilmedi",
+                                  "contentSection":  "Ä°Ã§erik",
+                                  "noContent":  "Bu ilan iÃ§in henÃ¼z bir iÃ§erik detayÄ± girilmemiÅŸ.",
+                                  "allergensSection":  "Alerjenler",
+                                  "noAllergens":  "BelirtilmemiÅŸ",
+                                  "stockStatus":  "Stok Durumu",
+                                  "remaining":  "Kalan Adet"
+                              },
+    "businessProfileEdit":  {
+                                "fullNameLabel":  "Ad Soyad",
+                                "fullNameHint":  "AdÄ±nÄ±zÄ± ve soyadÄ±nÄ±zÄ± girin",
+                                "emailLabel":  "E-posta",
+                                "emailHint":  "E-posta adresinizi girin",
+                                "phoneLabel":  "Telefon NumarasÄ±",
+                                "updateButton":  "Profilini GÃ¼ncelle",
+                                "deleteAccountButton":  "HesabÄ± Sil",
+                                "cameraOption":  "Kamera ile Ã‡ek",
+                                "galleryOption":  "Galeriden SeÃ§"
+                            },
+    "businessCard":  {
+                         "noLocation":  "Konum Belirtilmedi"
+                     },
+    "businessLocationButton":  {
+                                   "placeholder":  "Adres SeÃ§iniz"
+                               },
+    "weeklySales":  {
+                        "days":  {
+                                     "mon":  "Pzt",
+                                     "tue":  "Sal",
+                                     "wed":  "Ã‡ar",
+                                     "thu":  "Per",
+                                     "fri":  "Cum",
+                                     "sat":  "Cts",
+                                     "sun":  "Paz"
+                                 }
+                    },
+    "businessEditOrder":  {
+                              "successTitle":  "BaÅŸarÄ±lÄ±",
+                              "successMessage":  "Ä°lan baÅŸarÄ±yla gÃ¼ncellendi."
+                          },
+    "sorting":  {
+                    "defaultSort":  "VarsayÄ±lan",
+                    "rating":  "Derecelendirme",
+                    "lowToHigh":  "DÃ¼ÅŸÃ¼kten yÃ¼kseÄŸe",
+                    "highToLow":  "YÃ¼ksekten dÃ¼ÅŸÃ¼ÄŸe",
+                    "price":  "Fiyat",
+                    "distance":  "Mesafe",
+                    "nearToFar":  "YakÄ±ndan uzaÄŸa"
+                },
+    "filters":  {
+                    "all":  "Hepsi",
+                    "food":  "Yemek",
+                    "breadPastry":  "Ekmek \u0026 Pasta",
+                    "market":  "Market",
+                    "buyNow":  "Åimdi Al"
+                },
+    "onboarding":  {
+                       "page1":  {
+                                     "title":  "Yemis\u0027e HoÅŸ Geldiniz",
+                                     "subtitle":  "Ä°srafa Dur De, Ä°yiliÄŸi PaylaÅŸ",
+                                     "description":  "GÄ±da israfÄ±nÄ± Ã¶nleyen, sosyal fayda odaklÄ± platformunuz"
+                                 },
+                       "page2":  {
+                                     "title":  "Ä°ÅŸletmelerden Ä°ndirimli",
+                                     "subtitle":  "Yiyecekler Ã§Ã¶pe gitmez",
+                                     "description":  "GÃ¼n sonunda kalan taze yiyecekleri uygun fiyatlarla alÄ±n"
+                                 },
+                       "page3":  {
+                                     "title":  "BarÄ±naklara YardÄ±m",
+                                     "subtitle":  "Can dostlarÄ±mÄ±z doyurulur",
+                                     "description":  "Evinizdeki artan yemekleri gÃ¶nÃ¼llÃ¼ler aracÄ±lÄ±ÄŸÄ±yla paylaÅŸÄ±n"
+                                 },
+                       "page4":  {
+                                     "title":  "Birlikte Fark YaratalÄ±m",
+                                     "subtitle":  "PaylaÅŸ, deÄŸerlendir, iyiliÄŸe dÃ¶nÃ¼ÅŸsÃ¼n",
+                                     "description":  "Ã‡evreyi koruyun, tasarruf edin, iyiliÄŸi paylaÅŸÄ±n"
+                                 },
+                       "buttons":  {
+                                       "skip":  "GeÃ§",
+                                       "next":  "Ä°leri",
+                                       "start":  "BaÅŸlat"
+                                   }
+                   },
+    "volunteerListingDetail":  {
+                                   "activeBadge":  "AKTÄ°F Ä°LAN",
+                                   "freeLabel":  "ÃœCRETSÄ°Z",
+                                   "deliveryRange":  "Teslimat AralÄ±ÄŸÄ±:",
+                                   "address":  "Adres:",
+                                   "descriptionSection":  "AÃ§Ä±klama",
+                                   "noContent":  "Bu ilan iÃ§in henÃ¼z bir iÃ§erik detayÄ± girilmemiÅŸ.",
+                                   "locationSection":  "Konum",
+                                   "addressLabel":  "Adres:",
+                                   "volunteerSection":  "Gönüllü ve Görev Durumu"
+                               },
+    "volunteerListingCard":  {
+                                 "freeLabel":  "ÃœCRETSÄ°Z",
+                                 "volunteered":  "Bu ilana gönüllü olundu:",
+                                 "noReviewYet":  "Henüz bu ilana bir yorum eklenmemiş...",
+                                 "noVolunteerYet":  "Bu ilana henüz kimse gönüllü olmamış..."
+                             },
+    "volunteerAddListingForm":  {
+                                    "titleLabel":  "Ä°lan BaÅŸlÄ±ÄŸÄ±",
+                                    "titleHint":  "Ã–rn: Sokak HayvanlarÄ± Ä°Ã§in Yemek",
+                                    "descriptionLabel":  "AÃ§Ä±klama",
+                                    "descriptionHint":  "Ä°lan iÃ§eriÄŸi hakkÄ±nda bilgi veriniz...",
+                                    "photoLabel":  "FotoÄŸraf",
+                                    "endTimeLabel":  "BitiÅŸ Saati",
+                                    "locationLabel":  "Lokasyon",
+                                    "priceLabel":  "Ä°lan FiyatÄ±",
+                                    "addressPlaceholder":  "Adres SeÃ§iniz",
+                                    "noSavedAddress":  "KayÄ±tlÄ± adres bulunamadÄ±."
+                                },
+    "foodFavoritesPage":  {
+                              "empty":  "HenÃ¼z favori ilan yok",
+                              "emptyHint":  "BeÄŸendiÄŸin ilanlardaki kalp ikonuna tÄ±klayarak favorilere ekleyebilirsin."
+                          },
+    "foodReservationConfirm":  {
+                                   "title":  "Rezervasyon",
+                                   "goToLocation":  "Lokasyona Git",
+                                   "cancel":  "Ä°ptal Et",
+                                   "months":  {
+                                                  "jan":  "Ocak",
+                                                  "feb":  "Åubat",
+                                                  "mar":  "Mart",
+                                                  "apr":  "Nisan",
+                                                  "may":  "MayÄ±s",
+                                                  "jun":  "Haziran",
+                                                  "jul":  "Temmuz",
+                                                  "aug":  "AÄŸustos",
+                                                  "sep":  "EylÃ¼l",
+                                                  "oct":  "Ekim",
+                                                  "nov":  "KasÄ±m",
+                                                  "dec":  "AralÄ±k"
+                                              },
+                                   "sectionNearby":  "Sana YakÄ±n Yerler",
+                                   "sectionBuyNow":  "Åimdi Al",
+                                   "sectionTodayPopular":  "BugÃ¼n PopÃ¼ler"
+                               },
+    "foodOrderTab":  {
+                         "categoryBreadPastry":  "Ekmek \u0026 Pasta",
+                         "surpriseBoxDesc":  "Bu paket, gÃ¼n sonunda satÄ±lamayan ama hÃ¢lÃ¢ taze olan Ã§eÅŸitli yiyeceklerden oluÅŸur. Ne Ã§Ä±kacaÄŸÄ± tamamen sÃ¼rprizdir.",
+                         "listingDetail":  "Ä°lan DetayÄ±",
+                         "distanceText":  "Ä°ÅŸletme size {distance} uzaklÄ±kta",
+                         "category":  "Kategori",
+                         "ingredientsAllergens":  "Ä°Ã§erikler \u0026 Alerjenler",
+                         "surpriseIngredients":  "Paketin iÃ§eriÄŸini kesin olarak sÃ¶yleyemiyoruz. Alerjen sorularÄ±nÄ±z varsa lÃ¼tfen doÄŸrudan mekÃ¢na sorunuz.",
+                         "allergens":  "Alerjenler: {allergens}",
+                         "categoryDetail":  "{category} Detayı",
+                         "categoryDesc":  "Bu paket, işletmenin {category} kategorisindeki taze ürünlerinden oluşur."
+                     },
+    "foodReviewItem":  {
+                           "today":  "Bugün, {time}"
+                       },
+    "taskTracking":  {
+                         "completedOwner":  "Gönüllü ilanınızı başarıyla barınağa ulaştırdı.",
+                         "completedVolunteer":  "Görevi başarıyla tamamladın! 🥳 Deneyimini paylaşarak başkalarına ilham verebilirsin.",
+                         "deliveredPendingReviewOwner":  "Gönüllü ilanınızı barınağa ulaştırdı. Yorum yapması bekleniyor.",
+                         "deliveredPendingReviewVolunteer":  "Yemeği barınağa teslim ettiniz. Deneyiminiz hakkında yorum yapın.",
+                         "goingToShelterOwner":  "Gönüllü ilanınızı barınağa götürüyor.",
+                         "goingToShelterVolunteer":  "Yemeği barınağa götürüyorsunuz. Teslim ettikten sonra görevi tamamlayabilirsiniz.",
+                         "pickedUpOwner":  "Gönüllü ilanınızı teslim aldı.",
+                         "pickedUpVolunteer":  "Yemeği teslim aldınız. Şimdi barınağa doğru yola çıkabilirsiniz.",
+                         "ownerHandedOverOwner":  "İlanı gönüllüye teslim ettiniz. Gönüllünün teslim aldığını onaylaması bekleniyor.",
+                         "ownerHandedOverVolunteer":  "İlan sahibi yemeği verdiğini bildirdi. Teslim aldığınızı onaylayın.",
+                         "goingToPickUpOwner":  "Gönüllü ilanınızı almaya geliyor.",
+                         "goingToPickUpVolunteer":  "Yemeği teslim almak için yola çıktınız. İlan sahibine ulaştığınızda bildirin.",
+                         "acceptedOwner":  "Gönüllüyü onayladınız. Gönüllü ilanınızı almaya gelebilir.",
+                         "acceptedVolunteer":  "İlan sahibi sizi kabul etti. Almaya gitmek için butona tıklayın.",
+                         "pendingOwner":  "Bir gönüllü ilanınıza talip oldu.",
+                         "pendingVolunteer":  "Gönüllülük başvurunuz iletildi. İlan sahibinin onaylaması bekleniyor.",
+                         "btnLeaveReview":  "Yorum Yap",
+                         "btnReject":  "Reddet",
+                         "btnApprove":  "Onayla",
+                         "btnHandover":  "İlanı Gönüllüye Verdim",
+                         "btnGoPickup":  "Almaya Git",
+                         "btnPickedUp":  "İlanı Aldım",
+                         "btnGoShelter":  "Barınağa Gidiyorum",
+                         "btnComplete":  "Teslimatı Tamamladım",
+                         "btnCancel":  "İptal Et",
+                         "volunteerComment":  "Gönüllü Yorumu:",
+                         "assignedVolunteer":  "Atanmış Gönüllü",
+                         "volunteer":  "Gönüllü",
+                         "deliveredExclamation":  "Teslim edildi!",
+                         "waitingApproval":  "Onay Bekliyor",
+                         "given":  "Verildi",
+                         "delivering":  "Götürülüyor",
+                         "stepApproval":  "Onay",
+                         "stepPickup":  "Alım",
+                         "stepDelivery":  "Teslimat",
+                         "stepResult":  "Sonuç",
+                         "stepApproved":  "Onaylandı",
+                         "stepCompleted":  "Tamamlandı",
+                         "stepReview":  "Yorum"
+                     },
+    "changePassword":  {
+                           "currentPassword":  "Mevcut Şifre",
+                           "newPassword":  "Yeni Şifre"
+                       },
+    "notifications":  {
+                          "pushTitle":  "Push Bildirimleri",
+                          "pushSubtitle":  "Uygulama içi anlık bildirimler",
+                          "emailTitle":  "E-posta Bildirimleri",
+                          "emailSubtitle":  "E-posta ile bildirim al",
+                          "orderTitle":  "Sipariş Güncellemeleri",
+                          "orderSubtitle":  "Sipariş durumu değişikliklerinde bildirim al",
+                          "promoTitle":  "Promosyonlar",
+                          "promoSubtitle":  "Kampanya ve fırsat bildirimleri",
+                          "volunteerTitle":  "Gönüllü Güncellemeleri",
+                          "volunteerSubtitle":  "Gönüllü ilan ve görev bildirimleri",
+                          "markAllRead":  "Tümünü Okundu İşaretle",
+                          "title":  "Bildirimler",
+                          "preferences":  "Tercihler",
+                          "emptyTitle":  "Henüz bildiriminiz yok",
+                          "emptySubtitle":  "Yeni bildirimler burada görünecek",
+                          "channelPrefs":  "Kanal Tercihleri",
+                          "typePrefs":  "Bildirim Türleri",
+                          "prefsNote":  "Tercihleriniz anında kaydedilir. Değişiklikler tüm cihazlarınızda geçerli olur."
+                      },
+    "yemoAssistant":  {
+                          "foodFindTitle":  "Yakınında yemek bul",
+                          "foodFindSubtitle":  "En yakın ve uygun yemekleri keşfet",
+                          "foodReserveTitle":  "Rezerve et",
+                          "foodReserveSubtitle":  "İhtiyacın olan yemeği rezerve et",
+                          "foodAiTitle":  "Yapay zeka önerileri",
+                          "foodAiSubtitle":  "Sana özel yemek önerileri al",
+                          "businessSalesTitle":  "Satışları takip et",
+                          "businessSalesSubtitle":  "Satış verilerini anlık olarak gör",
+                          "businessAddOrderTitle":  "Sipariş ekle",
+                          "businessAddOrderSubtitle":  "Yeni bir yemek ilanı oluştur",
+                          "businessCo2Title":  "CO2 Etkisi",
+                          "businessCo2Subtitle":  "Doğaya katkını hemen incele",
+                          "volunteerListingsTitle":  "İlanları gör",
+                          "volunteerListingsSubtitle":  "Yardım edebileceğin yerleri keşfet",
+                          "volunteerBecomeTitle":  "Gönüllü ol",
+                          "volunteerBecomeSubtitle":  "Destek ol, fark yarat",
+                          "volunteerRegionTitle":  "Bölgeni seç",
+                          "volunteerRegionSubtitle":  "Yardım etmek istediğin bölgeyi bul",
+                          "commonQuestionsTitle":  "Sorularını sor",
+                          "commonQuestionsSubtitle":  "Merak ettiğin her şeyi sorabilirsin",
+                          "hintText":  "Yemo\u0027ya bir şey sor...",
+                          "errorBusy":  "Üzgünüm, şu an cevap veremiyorum. Lütfen daha sonra tekrar dene.",
+                          "errorNetwork":  "Bir hata oluştu. Lütfen bağlantını kontrol et."
+                      },
+    "volunteerCancelDialog":  {
+                                  "confirm":  "Bu gönüllü görevinden vazgeçmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+                              },
+    "volunteerOrderTab":  {
+                              "noShelterNearby":  "Yakında barınak bulunamadı"
+                          },
+    "volunteerListing":  {
+                             "volunteerFailed":  "Gönüllü olma işlemi başarısız oldu."
+                         }
 }

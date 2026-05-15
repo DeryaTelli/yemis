@@ -52,6 +52,7 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
     return LoadingOverlay(
       isLoading: vm.isLoading,
       moduleType: AppModuleType.volunteer,
+      showChatHead: true,
       child: Scaffold(
         backgroundColor: const Color(0xFFF8F9FA),
         appBar: HomeAppBar(
