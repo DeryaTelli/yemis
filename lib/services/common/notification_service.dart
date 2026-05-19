@@ -125,9 +125,15 @@ class NotificationService {
     });
 
     // 8. Get Token
-    String? token = await _fcm.getToken();
-    if (kDebugMode) {
-      print('FCM Token: $token');
+    try {
+      String? token = await _fcm.getToken();
+      if (kDebugMode) {
+        print('FCM Token: $token');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting FCM token: $e');
+      }
     }
   }
 
@@ -166,6 +172,13 @@ class NotificationService {
   }
 
   Future<String?> getToken() async {
-    return await _fcm.getToken();
+    try {
+      return await _fcm.getToken();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting FCM token: $e');
+      }
+      return null;
+    }
   }
 }

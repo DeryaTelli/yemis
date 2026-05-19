@@ -67,11 +67,6 @@ class SearchAppBarCustom extends StatelessWidget
                           color: accentColor,
                           size: 22,
                         ),
-                        suffixIcon: Icon(
-                          Icons.mic_none_rounded,
-                          color: accentColor,
-                          size: 22,
-                        ),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 12,
                           horizontal: 12,
