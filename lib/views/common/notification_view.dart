@@ -253,13 +253,49 @@ class _NotificationCard extends StatelessWidget {
   });
 
   IconData get _icon {
-    switch (notification.notificationType.toLowerCase()) {
+    switch (notification.icon.toLowerCase()) {
+      case 'user-plus':
+        return Icons.person_add_alt_1_outlined;
+      case 'clock':
+        return Icons.access_time_rounded;
+      case 'badge-check':
+      case 'check-circle':
+        return Icons.check_circle_outline_rounded;
+      case 'x-circle':
+        return Icons.cancel_outlined;
+      case 'package-check':
+        return Icons.inventory_2_outlined;
+      case 'home':
+        return Icons.home_work_outlined;
+      case 'star':
+        return Icons.star_border_rounded;
+      case 'undo-2':
+        return Icons.undo_rounded;
+      case 'alarm-clock':
+        return Icons.alarm_rounded;
+      case 'receipt':
+        return Icons.receipt_long_outlined;
+      case 'map-pin':
+        return Icons.location_on_outlined;
+      case 'refresh-cw':
+        return Icons.sync_rounded;
+      case 'local-offer':
+        return Icons.local_offer_outlined;
+      case 'settings':
+        return Icons.settings_outlined;
+      case 'bell':
+        return Icons.notifications_outlined;
+    }
+
+    switch (notification.category.toLowerCase()) {
       case 'volunteer':
         return Icons.volunteer_activism_outlined;
       case 'order':
         return Icons.shopping_basket_outlined;
       case 'promotion':
         return Icons.local_offer_outlined;
+      case 'review':
+        return Icons.star_border_rounded;
       case 'system':
         return Icons.settings_outlined;
       default:
@@ -267,8 +303,95 @@ class _NotificationCard extends StatelessWidget {
     }
   }
 
+  String get _emoji {
+    switch (notification.icon.toLowerCase()) {
+      case 'user-plus':
+        return '🙋';
+      case 'clock':
+        return '⏳';
+      case 'badge-check':
+      case 'check-circle':
+        return '✅';
+      case 'x-circle':
+        return '❌';
+      case 'package-check':
+        return '📦';
+      case 'home':
+        return '🏠';
+      case 'star':
+        return '⭐';
+      case 'undo-2':
+        return '↩️';
+      case 'alarm-clock':
+        return '⏰';
+      case 'receipt':
+        return '🧾';
+      case 'map-pin':
+        return '📍';
+      case 'refresh-cw':
+        return '🔄';
+      case 'local-offer':
+        return '🎁';
+    }
+
+    switch (notification.category.toLowerCase()) {
+      case 'volunteer':
+        return '🐾';
+      case 'order':
+        return '🛍️';
+      case 'promotion':
+        return '✨';
+      case 'review':
+        return '⭐';
+      case 'system':
+        return '🔔';
+      default:
+        return '🔔';
+    }
+  }
+
+  String get _categoryLabel {
+    switch (notification.category.toLowerCase()) {
+      case 'volunteer':
+        return 'Gonullu';
+      case 'order':
+        return 'Siparis';
+      case 'promotion':
+        return 'Firsat';
+      case 'review':
+        return 'Yorum';
+      case 'system':
+        return 'Sistem';
+      default:
+        return 'Bildirim';
+    }
+  }
+
+  Color _colorFromHex(String value, Color fallback) {
+    final normalized = value.trim().replaceFirst('#', '');
+    if (normalized.length != 6 && normalized.length != 8) return fallback;
+    final colorValue = int.tryParse(normalized, radix: 16);
+    if (colorValue == null) return fallback;
+    return Color(normalized.length == 6 ? 0xFF000000 | colorValue : colorValue);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final accentColor = _colorFromHex(notification.accentColor, primaryColor);
+    final backgroundColor = _colorFromHex(
+      notification.backgroundColor,
+      accentColor.withValues(alpha: 0.08),
+    );
+    final cardColor = notification.isRead
+        ? Colors.white
+        : Color.alphaBlend(
+            accentColor.withValues(alpha: 0.07),
+            backgroundColor,
+          );
+    final borderColor = notification.isRead
+        ? Colors.grey.shade200
+        : accentColor.withValues(alpha: 0.24);
+
     return Dismissible(
       key: ValueKey(notification.id),
       direction: DismissDirection.endToStart,
@@ -288,83 +411,140 @@ class _NotificationCard extends StatelessWidget {
       onDismissed: (_) => onDelete(),
       child: GestureDetector(
         onTap: notification.isRead ? null : onMarkRead,
-        child: Container(
-          decoration: BoxDecoration(
-            color: notification.isRead
-                ? Colors.white
-                : primaryColor.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: notification.isRead
-                  ? Colors.grey.shade200
-                  : primaryColor.withOpacity(0.2),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: borderColor),
+              boxShadow: [
+                BoxShadow(
+                  color: accentColor.withValues(
+                    alpha: notification.isRead ? 0.035 : 0.11,
+                  ),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.03),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
-            leading: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(color: primaryColor.withOpacity(0.5)),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(_icon, color: primaryColor, size: 22),
-            ),
-            title: Text(
-              notification.title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF1A1A2E),
-                letterSpacing: -0.2,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Stack(
               children: [
-                const SizedBox(height: 4),
-                Text(
-                  notification.message,
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.3,
-                    fontWeight: notification.isRead
-                        ? FontWeight.w400
-                        : FontWeight.w500,
-                    color: Colors.grey.shade700,
+                Positioned.fill(
+                  left: 0,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(width: 4, color: accentColor),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  timeAgo,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade400,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(18, 15, 16, 15),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: accentColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: accentColor.withValues(alpha: 0.2),
+                          ),
+                        ),
+                        child: Icon(_icon, color: accentColor, size: 23),
+                      ),
+                      const SizedBox(width: 13),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    notification.title,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF1A1A2E),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                _NotificationPill(
+                                  label: timeAgo,
+                                  color: accentColor,
+                                  filled: !notification.isRead,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 7),
+                            Text(
+                              notification.body,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                height: 1.35,
+                                fontWeight: notification.isRead
+                                    ? FontWeight.w400
+                                    : FontWeight.w600,
+                                color: const Color(0xFF6B7280),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                _NotificationPill(
+                                  label: '$_emoji $_categoryLabel',
+                                  color: accentColor,
+                                ),
+                                if (!notification.isRead) ...[
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: accentColor,
+                                      borderRadius: BorderRadius.circular(999),
+                                    ),
+                                    child: const Text(
+                                      'Yeni',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10.5,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                const Spacer(),
+                                Container(
+                                  width: 7,
+                                  height: 7,
+                                  decoration: BoxDecoration(
+                                    color: notification.isRead
+                                        ? Colors.grey.shade300
+                                        : accentColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            trailing: !notification.isRead
-                ? Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      shape: BoxShape.circle,
-                    ),
-                  )
-                : null,
           ),
         ),
       ),
@@ -373,6 +553,42 @@ class _NotificationCard extends StatelessWidget {
 }
 
 // ── Preferences Tab ───────────────────────────────────────────────────────────
+
+class _NotificationPill extends StatelessWidget {
+  final String label;
+  final Color color;
+  final bool filled;
+
+  const _NotificationPill({
+    required this.label,
+    required this.color,
+    this.filled = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+      decoration: BoxDecoration(
+        color: filled ? color : color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: filled ? color : color.withValues(alpha: 0.15),
+        ),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: filled ? Colors.white : color,
+          fontSize: 10.5,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
 
 class _PreferencesTab extends StatelessWidget {
   final Color primaryColor;

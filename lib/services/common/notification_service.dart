@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:yemis/utils/constants/api_constants.dart';
 
 @pragma('vm:entry-point')
@@ -20,15 +21,17 @@ class NotificationService {
   NotificationService._internal();
 
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   static const String channelId = 'high_importance_channel';
   static const String channelName = 'High Importance Notifications';
-  static const String channelDescription = 'This channel is used for important notifications.';
+  static const String channelDescription =
+      'This channel is used for important notifications.';
 
   Future<void> initialize() async {
     // 1. Request Permissions
-    NotificationSettings settings = await _fcm.requestPermission(
+    await _fcm.requestPermission(
       alert: true,
       badge: true,
       sound: true,
@@ -42,15 +45,16 @@ class NotificationService {
     // 3. Local Notifications Initialization
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      ),
-    );
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: DarwinInitializationSettings(
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+          ),
+        );
 
     await _localNotifications.initialize(
       initializationSettings,
@@ -73,7 +77,9 @@ class NotificationService {
     );
 
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(channel);
 
     // 5. iOS Foreground Notification Options
@@ -87,11 +93,12 @@ class NotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
+      final accentColor = _colorFromHex(message.data['accent_color']);
 
       if (notification != null) {
         _localNotifications.show(
           notification.hashCode,
-          notification.title,
+          message.data['title'] ?? notification.title,
           notification.body,
           NotificationDetails(
             android: AndroidNotificationDetails(
@@ -99,13 +106,15 @@ class NotificationService {
               channel.name,
               channelDescription: channel.description,
               icon: android?.smallIcon ?? '@mipmap/ic_launcher',
+              color: accentColor,
               importance: Importance.max,
               priority: Priority.high,
               ticker: 'ticker',
               playSound: true,
               enableVibration: true,
               visibility: NotificationVisibility.public,
-              fullScreenIntent: false, // Set to true for even more intrusive alerts
+              fullScreenIntent:
+                  false, // Set to true for even more intrusive alerts
             ),
             iOS: const DarwinNotificationDetails(
               presentAlert: true,
@@ -136,17 +145,16 @@ class NotificationService {
   }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      channelId,
-      channelName,
-      channelDescription: channelDescription,
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-      enableVibration: true,
-      visibility: NotificationVisibility.public,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(
+          channelId,
+          channelName,
+          channelDescription: channelDescription,
+          importance: Importance.max,
+          priority: Priority.high,
+          playSound: true,
+          enableVibration: true,
+          visibility: NotificationVisibility.public,
+        );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: DarwinNotificationDetails(
         presentAlert: true,
@@ -193,5 +201,14 @@ class NotificationService {
       }
     }
     return null;
+  }
+
+  Color? _colorFromHex(dynamic value) {
+    if (value == null) return null;
+    final normalized = value.toString().trim().replaceFirst('#', '');
+    if (normalized.length != 6 && normalized.length != 8) return null;
+    final colorValue = int.tryParse(normalized, radix: 16);
+    if (colorValue == null) return null;
+    return Color(normalized.length == 6 ? 0xFF000000 | colorValue : colorValue);
   }
 }
