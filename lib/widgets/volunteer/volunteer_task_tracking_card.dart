@@ -697,6 +697,32 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
     VolunteerHomeViewModel? vm,
     DeliveryStatus status,
   ) {
+    if (!isOwner && status == DeliveryStatus.pendingOwnerApproval) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          OutlinedButton.icon(
+            onPressed: vm == null ? null : () => _showCancelDialog(context, vm, task),
+            icon: const Icon(Icons.close, size: 12, color: Colors.red),
+            label: Text(LocaleKeys.taskTracking_btnCancel.tr()),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.red,
+              side: const BorderSide(color: Colors.red, width: 1),
+              backgroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+              minimumSize: const Size(100, 32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              textStyle: CustomTextStyles.semiBold13White.copyWith(
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     final progress = _progressForSide;
     if (progress != null && progress.availableActions.isNotEmpty) {
       return _buildBackendActions(context, vm, progress.availableActions);
@@ -995,7 +1021,7 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
     VolunteerCancelDialog.show(
       context,
       onConfirm: () {
-        vm.cancelVolunteerTask(task.taskId!);
+        vm.cancelVolunteerTask(task.taskId ?? task.id);
       },
     );
   }

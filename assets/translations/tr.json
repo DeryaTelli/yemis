@@ -1,4 +1,4 @@
-﻿    {
+    {
     "auth": {
         "login": {
         "title": "Giriş Yap",
@@ -161,7 +161,10 @@
         "shareLabel": "Paylaş",
         "listingLocation": "İlan Konumu",
         "volunteerSuccess": "{title} için gönüllü oldunuz. Teşekkürler!",
-        "noReviews": "Henüz yorum bulunmamaktadır."
+        "noReviews": "Henüz yorum bulunmamaktadır.",
+        "cancelButton": "Başvuruyu İptal Et",
+        "cancelSuccess": "Gönüllülük başvurunuz iptal edildi.",
+        "cancelError": "İptal işlemi başarısız oldu. Lütfen tekrar deneyin."
     },
     "volunteerHome": {
         "nearbyPlaces": "Sana Yakın Yerler",

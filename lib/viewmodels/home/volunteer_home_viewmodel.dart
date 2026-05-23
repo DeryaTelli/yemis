@@ -160,7 +160,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.startPickup(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToPickUp);
       }
@@ -175,7 +175,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.markPickedUp(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
       }
@@ -190,7 +190,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.markPickedUp(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
       }
@@ -205,19 +205,20 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.startDelivery(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => t.taskId == taskId);
+      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToShelter);
       }
       await _fetchActiveTasks();
     }
     _isLoading = false;
+    _isLoading = false;
     notifyListeners();
   }
 
   /// Görevi tamamla (Backend API)
   Future<void> completeVolunteerTask(String taskId) async {
-    final taskIndex = _activeTasks.indexWhere((t) => t.taskId == taskId);
+    final taskIndex = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
     if (taskIndex == -1) return;
 
     final task = _activeTasks[taskIndex];
@@ -240,7 +241,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     required int rating,
     required String comment,
   }) async {
-    final taskIndex = _activeTasks.indexWhere((t) => t.taskId == taskId);
+    final taskIndex = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
     if (taskIndex == -1) return false;
 
     _isLoading = true;
@@ -277,7 +278,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
     final success = await _service.cancelTask(int.parse(taskId));
     if (success) {
-      _activeTasks.removeWhere((t) => t.taskId == taskId);
+      _activeTasks.removeWhere((t) => (t.taskId ?? t.id) == taskId);
       // İlanları da tazele ki iptal edilen ilan geri gelsin
       await _fetchListings();
     }
@@ -292,7 +293,6 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Bir ilana gönüllü olarak atanır (Kart üzerinden hızlı erişim)
   Future<bool> becomeVolunteer(String listingId) async {
     final mealId = int.tryParse(listingId);
     if (mealId == null) return false;

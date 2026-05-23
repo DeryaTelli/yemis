@@ -1,4 +1,4 @@
-﻿{
+{
     "auth":  {
                  "login":  {
                                "title":  "Log In",
@@ -161,7 +161,10 @@
                             "shareLabel":  "Share",
                             "listingLocation":  "Listing Location",
                             "volunteerSuccess":  "You volunteered for {title}. Thank you!",
-                            "noReviews":  "No reviews yet."
+                            "noReviews":  "No reviews yet.",
+                            "cancelButton":  "Cancel Application",
+                            "cancelSuccess":  "Your volunteer application has been cancelled.",
+                            "cancelError":  "Cancellation failed. Please try again."
                         },
     "volunteerHome":  {
                           "nearbyPlaces":  "Places Near You",

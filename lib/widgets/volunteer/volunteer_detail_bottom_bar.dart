@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
 import '../../viewmodels/volunteer/volunteer_detail_viewmodel.dart';
+import '../volunteer/volunteer_cancel_dialog.dart';
 
 class VolunteerDetailBottomBar extends StatelessWidget {
   const VolunteerDetailBottomBar({super.key, required this.vm});
@@ -44,68 +45,132 @@ class VolunteerDetailBottomBar extends StatelessWidget {
           ),
           const Spacer(),
 
-          // Gönüllü Ol
-          GestureDetector(
-            onTap: vm.isVolunteering
-                ? null
-                : () async {
-                    final success = await vm.becomeVolunteer();
-                    if (!context.mounted) return;
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            LocaleKeys.volunteerDetail_volunteerSuccess.tr(
-                              namedArgs: {'title': listing.title},
-                            ),
-                          ),
-                          backgroundColor: AppColors.volunteerColor,
-                          behavior: SnackBarBehavior.floating,
-                          duration: const Duration(seconds: 3),
-                        ),
+          // Başvuru beklemedeyse: İptal Et butonu
+          if (vm.isMyApplicationPending)
+            GestureDetector(
+              onTap: vm.isCancelling
+                  ? null
+                  : () {
+                      VolunteerCancelDialog.show(
+                        context,
+                        onConfirm: () async {
+                          final success = await vm.cancelVolunteer();
+                          if (!context.mounted) return;
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  LocaleKeys.volunteerDetail_cancelSuccess.tr(),
+                                ),
+                                backgroundColor: AppColors.volunteerColor,
+                                behavior: SnackBarBehavior.floating,
+                                duration: const Duration(seconds: 3),
+                              ),
+                            );
+                            Navigator.pop(context, true);
+                          } else if (vm.cancelError != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(vm.cancelError!),
+                                backgroundColor: Colors.red,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        },
                       );
-                      Navigator.pop(context, true);
-                    } else if (vm.volunteerError != null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(vm.volunteerError!),
-                          backgroundColor: Colors.red,
-                          behavior: SnackBarBehavior.floating,
+                    },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                decoration: BoxDecoration(
+                  color: vm.isCancelling
+                      ? Colors.red.withValues(alpha: 0.4)
+                      : Colors.red.shade600,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: vm.isCancelling
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: Colors.white,
                         ),
-                      );
-                    }
-                  },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
-              decoration: BoxDecoration(
-                gradient: vm.isVolunteering
-                    ? null
-                    : AppColors.volunteerBackgroundGradient,
-                color: vm.isVolunteering
-                    ? AppColors.volunteerColor.withValues(alpha: 0.4)
-                    : null,
-                borderRadius: BorderRadius.circular(12),
+                      )
+                    : Text(
+                        LocaleKeys.volunteerDetail_cancelButton.tr(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
               ),
-              child: vm.isVolunteering
-                  ? const SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        color: Colors.white,
+            )
+          // Başvuru beklemede değilse: Gönüllü Ol butonu
+          else
+            GestureDetector(
+              onTap: vm.isVolunteering
+                  ? null
+                  : () async {
+                      final success = await vm.becomeVolunteer();
+                      if (!context.mounted) return;
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              LocaleKeys.volunteerDetail_volunteerSuccess.tr(
+                                namedArgs: {'title': listing.title},
+                              ),
+                            ),
+                            backgroundColor: AppColors.volunteerColor,
+                            behavior: SnackBarBehavior.floating,
+                            duration: const Duration(seconds: 3),
+                          ),
+                        );
+                        Navigator.pop(context, true);
+                      } else if (vm.volunteerError != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(vm.volunteerError!),
+                            backgroundColor: Colors.red,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
+                decoration: BoxDecoration(
+                  gradient: vm.isVolunteering
+                      ? null
+                      : AppColors.volunteerBackgroundGradient,
+                  color: vm.isVolunteering
+                      ? AppColors.volunteerColor.withValues(alpha: 0.4)
+                      : null,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: vm.isVolunteering
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(
+                        LocaleKeys.volunteerDetail_becomeButton.tr(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    )
-                  : Text(
-                      LocaleKeys.volunteerDetail_becomeButton.tr(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -66,7 +66,7 @@ class VolunteerCancelDialog extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  LocaleKeys.taskTracking_buttonCancel.tr(),
+                  LocaleKeys.taskTracking_btnCancel.tr(),
                   style: CustomTextStyles.orelegaOne28DarkGrey,
                 ),
               ),

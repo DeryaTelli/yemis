@@ -213,6 +213,9 @@ abstract class LocaleKeys {
   static const volunteerDetail_volunteerSuccess =
       'volunteerDetail.volunteerSuccess';
   static const volunteerDetail_noReviews = 'volunteerDetail.noReviews';
+  static const volunteerDetail_cancelButton = 'volunteerDetail.cancelButton';
+  static const volunteerDetail_cancelSuccess = 'volunteerDetail.cancelSuccess';
+  static const volunteerDetail_cancelError = 'volunteerDetail.cancelError';
 
   // volunteerHome
   static const volunteerHome_nearbyPlaces = 'volunteerHome.nearbyPlaces';

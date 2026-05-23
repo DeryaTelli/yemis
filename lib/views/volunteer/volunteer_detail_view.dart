@@ -32,6 +32,7 @@ class VolunteerDetailView extends StatelessWidget {
             service: context.read<IVolunteerService>(),
             listingId: listing.id,
             userSession: context.read<UserSession>(),
+            initialListing: listing,
           );
           WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
           return vm;
