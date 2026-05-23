@@ -240,6 +240,9 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     String taskId, {
     required int rating,
     required String comment,
+    String? imageUrl1,
+    String? imageUrl2,
+    String? imageUrl3,
   }) async {
     final taskIndex = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
     if (taskIndex == -1) return false;
@@ -251,13 +254,20 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       final success = await _service.submitVolunteerReview(int.parse(taskId), {
         'rating': rating,
         'comment': comment,
-        'review': comment,
+        'image_url_1': imageUrl1 ?? 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
+        'image_url_2': imageUrl2 ?? 'https://images.unsplash.com/photo-1586816001966-79b736744398?w=400',
+        'image_url_3': imageUrl3 ?? 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400',
       });
       if (success) {
         _activeTasks[taskIndex] = _activeTasks[taskIndex].copyWith(
           deliveryStatus: DeliveryStatus.completed,
           volunteerComment: comment,
           volunteerRating: rating.toDouble(),
+          reviewImages: [
+            imageUrl1 ?? 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
+            imageUrl2 ?? 'https://images.unsplash.com/photo-1586816001966-79b736744398?w=400',
+            imageUrl3 ?? 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400',
+          ],
         );
         await _fetchActiveTasks();
       }

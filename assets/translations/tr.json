@@ -164,7 +164,9 @@
         "noReviews": "Henüz yorum bulunmamaktadır.",
         "cancelButton": "Başvuruyu İptal Et",
         "cancelSuccess": "Gönüllülük başvurunuz iptal edildi.",
-        "cancelError": "İptal işlemi başarısız oldu. Lütfen tekrar deneyin."
+        "cancelError": "İptal işlemi başarısız oldu. Lütfen tekrar deneyin.",
+        "cannotVolunteerOwnListing": "Kendi ilanınıza gönüllü olamazsınız.",
+        "cannotVolunteerTitle": "Gönüllü Olunamıyor"
     },
     "volunteerHome": {
         "nearbyPlaces": "Sana Yakın Yerler",

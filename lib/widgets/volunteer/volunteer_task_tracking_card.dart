@@ -23,7 +23,7 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = isOwner ? null : context.read<VolunteerHomeViewModel>();
     final status = task.deliveryStatus;
-    final isCompleted = status == DeliveryStatus.completed;
+
 
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -72,30 +72,109 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F8E9),
+        color: AppColors.volunteerColor.withOpacity(0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.volunteerColor.withOpacity(0.2)),
+        border: Border.all(
+          color: AppColors.volunteerColor.withOpacity(0.1),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.white,
+                child: ClipOval(
+                  child:
+                      (task.volunteerAvatar != null &&
+                          task.volunteerAvatar!.isNotEmpty)
+                      ? (task.volunteerAvatar!.startsWith('http')
+                            ? Image.network(
+                                task.volunteerAvatar!,
+                                width: 36,
+                                height: 36,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                task.volunteerAvatar!,
+                                width: 36,
+                                height: 36,
+                                fit: BoxFit.cover,
+                              ))
+                      : const Icon(
+                          Icons.person,
+                          color: AppColors.volunteerColor,
+                          size: 20,
+                        ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          task.volunteerName ?? task.userName,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryTextColor,
+                          ),
+                        ),
+                        Text(
+                          task.reviewCreatedAt ?? 'Bugün, 09:12',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.hintTextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    _StarRow(
+                      rating: task.volunteerRating,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
           Text(
-            LocaleKeys.taskTracking_volunteerComment.tr(),
+            task.volunteerComment!,
             style: const TextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: AppColors.volunteerColor,
+              color: AppColors.primaryTextColor,
+              height: 1.5,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            '"${task.volunteerComment}"',
-            style: const TextStyle(
-              fontSize: 12,
-              fontStyle: FontStyle.italic,
-              color: Color(0xFF444444),
+          if (task.reviewImages.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 60,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: task.reviewImages.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      task.reviewImages[index],
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
@@ -121,7 +200,7 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
     final String displayName = isOwner
         ? (task.assignedVolunteerName ?? LocaleKeys.taskTracking_assignedVolunteer.tr())
         : task.title;
-    final String? displayAvatar = isOwner ? task.assignedVolunteerAvatar : null;
+
     final String displaySubTitle = isOwner ? LocaleKeys.taskTracking_volunteer.tr() : task.location;
 
     return Row(
@@ -1125,5 +1204,38 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
         );
       },
     ).whenComplete(controller.dispose);
+  }
+}
+
+class _StarRow extends StatelessWidget {
+  const _StarRow({required this.rating});
+
+  final double rating;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(5, (i) {
+        if (i < rating.floor()) {
+          return const Icon(
+            Icons.star_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
+        } else if (i < rating) {
+          return const Icon(
+            Icons.star_half_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
+        } else {
+          return const Icon(
+            Icons.star_outline_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
+        }
+      }),
+    );
   }
 }

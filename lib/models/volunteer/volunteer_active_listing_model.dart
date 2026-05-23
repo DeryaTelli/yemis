@@ -20,6 +20,7 @@ class VolunteerActiveListingModel {
   final String? deliveryStatus;
   final DateTime? createdAt;
   final String? volunteerComment;
+  final String? reviewCreatedAt;
   final List<String> reviewImages;
   final double? volunteerRating;
   final int? acceptedByUserId;
@@ -49,6 +50,7 @@ class VolunteerActiveListingModel {
     this.deliveryStatus,
     this.createdAt,
     this.volunteerComment,
+    this.reviewCreatedAt,
     this.reviewImages = const [],
     this.volunteerRating,
     this.posterName,
@@ -103,17 +105,44 @@ class VolunteerActiveListingModel {
           volunteerData['profile_image']?.toString();
     }
 
-    final reviewData = _firstMap(json, const [
-      'volunteer_review',
-      'review_data',
-      'task_review',
-      'review',
-    ]);
+    final reviewData = json['volunteer_review'] is Map
+        ? Map<String, dynamic>.from(json['volunteer_review'] as Map)
+        : (json['review'] is Map
+            ? Map<String, dynamic>.from(json['review'] as Map)
+            : null);
+
+    final parsedReviewImages = <String>[];
+    String? reviewCreatedAt;
     if (reviewData != null) {
       volunteerComment ??=
           reviewData['comment']?.toString() ??
           reviewData['review']?.toString() ??
           reviewData['text']?.toString();
+
+      if (reviewData['image_url_1'] != null && reviewData['image_url_1'].toString().isNotEmpty) {
+        parsedReviewImages.add(reviewData['image_url_1'].toString());
+      }
+      if (reviewData['image_url_2'] != null && reviewData['image_url_2'].toString().isNotEmpty) {
+        parsedReviewImages.add(reviewData['image_url_2'].toString());
+      }
+      if (reviewData['image_url_3'] != null && reviewData['image_url_3'].toString().isNotEmpty) {
+        parsedReviewImages.add(reviewData['image_url_3'].toString());
+      }
+
+      if (reviewData['created_at'] != null) {
+        final rawCreatedAt = reviewData['created_at'].toString();
+        try {
+          final dt = DateTime.parse(rawCreatedAt).toLocal();
+          final now = DateTime.now();
+          if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
+            reviewCreatedAt = 'Bugün, ${DateFormat('HH:mm').format(dt)}';
+          } else {
+            reviewCreatedAt = DateFormat('dd.MM.yyyy, HH:mm').format(dt);
+          }
+        } catch (_) {
+          reviewCreatedAt = rawCreatedAt;
+        }
+      }
     }
     final ownerProgress = _progressFromJson(json['owner_progress']);
     final volunteerProgress =
@@ -301,15 +330,18 @@ class VolunteerActiveListingModel {
       volunteerComment: json['id']?.toString() == "5"
           ? "Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var."
           : volunteerComment,
+      reviewCreatedAt: reviewCreatedAt,
       reviewImages: json['id']?.toString() == "5"
           ? [
               "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
               "https://images.unsplash.com/photo-1586816001966-79b736744398?w=400",
               "https://images.unsplash.com/photo-1550547660-d9450f859349?w=400",
             ]
-          : (json['review_images'] != null
-                ? List<String>.from(json['review_images'])
-                : []),
+          : parsedReviewImages.isNotEmpty
+              ? parsedReviewImages
+              : (json['review_images'] != null
+                    ? List<String>.from(json['review_images'])
+                    : []),
       volunteerRating: json['id']?.toString() == "5"
           ? 5.0
           : (reviewData?['rating'] != null
@@ -397,6 +429,7 @@ class VolunteerActiveListingModel {
       longitude: longitude,
       isNetworkImage: imageUrl != null && imageUrl!.startsWith('http'),
       volunteerComment: volunteerComment,
+      reviewCreatedAt: reviewCreatedAt,
       isAttended: volunteerComment != null || acceptedByUserId != null,
       reviewImages: reviewImages,
       volunteerRating: volunteerRating ?? 5.0,

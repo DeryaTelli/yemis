@@ -102,6 +102,7 @@ class VolunteerListing {
     this.shelterName,
     this.shelterAddress,
     this.volunteerComment,
+    this.reviewCreatedAt,
     this.isAttended = false,
     this.reviewImages = const [],
     this.volunteerRating = 5.0,
@@ -148,6 +149,7 @@ class VolunteerListing {
   final String? shelterName;
   final String? shelterAddress;
   final String? volunteerComment;
+  final String? reviewCreatedAt;
   final bool isAttended;
   final List<String> reviewImages;
   final double volunteerRating;
@@ -183,6 +185,7 @@ class VolunteerListing {
     String? shelterName,
     String? shelterAddress,
     String? volunteerComment,
+    String? reviewCreatedAt,
     bool? isAttended,
     List<String>? reviewImages,
     double? volunteerRating,
@@ -223,6 +226,7 @@ class VolunteerListing {
       shelterName: shelterName ?? this.shelterName,
       shelterAddress: shelterAddress ?? this.shelterAddress,
       volunteerComment: volunteerComment ?? this.volunteerComment,
+      reviewCreatedAt: reviewCreatedAt ?? this.reviewCreatedAt,
       isAttended: isAttended ?? this.isAttended,
       reviewImages: reviewImages ?? this.reviewImages,
       volunteerRating: volunteerRating ?? this.volunteerRating,

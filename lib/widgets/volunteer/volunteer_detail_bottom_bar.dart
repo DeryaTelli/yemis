@@ -131,13 +131,31 @@ class VolunteerDetailBottomBar extends StatelessWidget {
                         );
                         Navigator.pop(context, true);
                       } else if (vm.volunteerError != null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(vm.volunteerError!),
-                            backgroundColor: Colors.red,
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
+                        if (vm.volunteerError == LocaleKeys.volunteerDetail_cannotVolunteerOwnListing.tr()) {
+                          showDialog<void>(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(LocaleKeys.volunteerDetail_cannotVolunteerTitle.tr()),
+                                content: Text(vm.volunteerError!),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(LocaleKeys.languageSelect_confirmButton.tr()),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(vm.volunteerError!),
+                              backgroundColor: Colors.red,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
                       }
                     },
               child: AnimatedContainer(

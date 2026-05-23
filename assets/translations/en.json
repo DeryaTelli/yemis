@@ -164,7 +164,9 @@
                             "noReviews":  "No reviews yet.",
                             "cancelButton":  "Cancel Application",
                             "cancelSuccess":  "Your volunteer application has been cancelled.",
-                            "cancelError":  "Cancellation failed. Please try again."
+                            "cancelError":  "Cancellation failed. Please try again.",
+                            "cannotVolunteerOwnListing":  "You cannot volunteer for your own listing.",
+                            "cannotVolunteerTitle":  "Cannot Volunteer"
                         },
     "volunteerHome":  {
                           "nearbyPlaces":  "Places Near You",

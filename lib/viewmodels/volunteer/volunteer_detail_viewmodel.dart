@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '../../utils/locale_keys.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../models/volunteer/shelter_model.dart';
 import '../../services/location/location_service.dart';
@@ -102,7 +104,7 @@ class VolunteerDetailViewModel extends ChangeNotifier {
 
   Future<void> init() async {
     _isLoading = true;
-    notifyListeners();
+    Future.microtask(() => notifyListeners());
 
     try {
       final freshListing = await _service.getVolunteerDetail(_listingId);
@@ -221,6 +223,13 @@ class VolunteerDetailViewModel extends ChangeNotifier {
 
   Future<bool> becomeVolunteer() async {
     if (_listing == null) return false;
+
+    final currentUserId = _userSession.currentUser?.id;
+    if (_listing!.ownerId != null && _listing!.ownerId == currentUserId) {
+      _volunteerError = LocaleKeys.volunteerDetail_cannotVolunteerOwnListing.tr();
+      notifyListeners();
+      return false;
+    }
 
     final mealId = int.tryParse(_listing!.id);
     if (mealId == null) {

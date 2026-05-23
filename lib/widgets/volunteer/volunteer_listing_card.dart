@@ -423,9 +423,9 @@ class VolunteerListingCard extends StatelessWidget {
                                                       .primaryTextColor,
                                                 ),
                                               ),
-                                              const Text(
-                                                'Bugün, 09:12',
-                                                style: TextStyle(
+                                              Text(
+                                                listing.reviewCreatedAt ?? 'Bugün, 09:12',
+                                                style: const TextStyle(
                                                   fontSize: 11,
                                                   color:
                                                       AppColors.hintTextColor,
