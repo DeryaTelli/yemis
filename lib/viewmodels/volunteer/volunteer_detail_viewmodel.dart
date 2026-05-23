@@ -99,22 +99,26 @@ class VolunteerDetailViewModel extends ChangeNotifier {
   // ─── Init ────────────────────────────────────────────────
 
   Future<void> init() async {
-    Future.microtask(() {
-      _isLoading = true;
-      notifyListeners();
-    });
-
-    _listing = await _service.getVolunteerDetail(_listingId);
-
-    await _fetchUserLocation();
-    
-    // İlan verisi geldiyse ilanın konumuna göre yakındaki barınakları çek
-    if (_listing != null && _listing!.latitude != null && _listing!.longitude != null) {
-      await fetchNearbyShelters();
-    }
-
-    _isLoading = false;
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      _listing = await _service.getVolunteerDetail(_listingId);
+
+      await _fetchUserLocation();
+
+      // İlan verisi geldiyse ilanın konumuna göre yakındaki barınakları çek
+      if (_listing != null &&
+          _listing!.latitude != null &&
+          _listing!.longitude != null) {
+        await fetchNearbyShelters();
+      }
+    } catch (e) {
+      debugPrint("Error initializing volunteer detail: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> fetchNearbyShelters() async {

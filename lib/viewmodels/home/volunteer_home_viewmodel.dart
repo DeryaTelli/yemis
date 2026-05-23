@@ -58,19 +58,21 @@ class VolunteerHomeViewModel extends ChangeNotifier {
   // ─── Init ─────────────────────────────────────────────
 
   Future<void> init() async {
-    Future.microtask(() {
-      _isLoading = true;
-      notifyListeners();
-    });
-
-    await Future.wait([
-      _fetchListings(),
-      _fetchActiveTasks(),
-      _fetchNearbyShelters(),
-    ]);
-
-    _isLoading = false;
+    _isLoading = true;
     notifyListeners();
+
+    try {
+      await Future.wait([
+        _fetchListings(),
+        _fetchActiveTasks(),
+        _fetchNearbyShelters(),
+      ]);
+    } catch (e) {
+      debugPrint('Error initializing volunteer home: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> _fetchListings() async {
@@ -115,7 +117,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
   Future<void> _fetchActiveTasks() async {
     try {
-      final tasks = await _service.getAttendedListings();
+      final tasks = await _service.getMyActiveTasks();
       final now = DateTime.now();
 
       // Sadece tamamlanmamış ve süresi geçmemiş olanları aktif task olarak kabul et
@@ -162,6 +164,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToPickUp);
       }
+      await _fetchActiveTasks();
     }
     _isLoading = false;
     notifyListeners();
@@ -176,6 +179,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
       }
+      await _fetchActiveTasks();
     }
     _isLoading = false;
     notifyListeners();
@@ -190,6 +194,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
       }
+      await _fetchActiveTasks();
     }
     _isLoading = false;
     notifyListeners();
@@ -204,6 +209,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       if (index != -1) {
         _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToShelter);
       }
+      await _fetchActiveTasks();
     }
     _isLoading = false;
     notifyListeners();
@@ -222,10 +228,46 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     if (success) {
       // Aktiflerden çıkar, inceleme bekleyenlere ekle (Onay bekliyor durumunda)
       _activeTasks[taskIndex] = task.copyWith(deliveryStatus: DeliveryStatus.deliveredPendingReview);
+      await _fetchActiveTasks();
     }
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<bool> submitVolunteerReview(
+    String taskId, {
+    required int rating,
+    required String comment,
+  }) async {
+    final taskIndex = _activeTasks.indexWhere((t) => t.taskId == taskId);
+    if (taskIndex == -1) return false;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _service.submitVolunteerReview(int.parse(taskId), {
+        'rating': rating,
+        'comment': comment,
+        'review': comment,
+      });
+      if (success) {
+        _activeTasks[taskIndex] = _activeTasks[taskIndex].copyWith(
+          deliveryStatus: DeliveryStatus.completed,
+          volunteerComment: comment,
+          volunteerRating: rating.toDouble(),
+        );
+        await _fetchActiveTasks();
+      }
+      return success;
+    } catch (e) {
+      debugPrint('Error submitting volunteer review: $e');
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   /// Görevi iptal et (Backend API)

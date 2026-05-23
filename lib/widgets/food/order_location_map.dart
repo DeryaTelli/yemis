@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../utils/constants/app_colors.dart';
+import '../common/app_tile_layer.dart';
 
 class OrderLocationMap extends StatelessWidget {
   const OrderLocationMap({
@@ -35,10 +36,7 @@ class OrderLocationMap extends StatelessWidget {
             ),
           ),
           children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.yemis.app',
-            ),
+            const AppTileLayer(),
             if (userLocation != null)
               PolylineLayer(
                 polylines: [

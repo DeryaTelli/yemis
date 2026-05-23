@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/location/navigation_viewmodel.dart';
+import '../../widgets/common/app_tile_layer.dart';
 
 class NavigationView extends StatelessWidget {
   const NavigationView({
@@ -30,12 +31,16 @@ class NavigationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => NavigationViewModel(
-        destinationLat: latitude,
-        destinationLng: longitude,
-        businessName: businessName,
-        address: address,
-      )..init(),
+      create: (_) {
+        final vm = NavigationViewModel(
+          destinationLat: latitude,
+          destinationLng: longitude,
+          businessName: businessName,
+          address: address,
+        );
+        WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
+        return vm;
+      },
       child: _NavigationBody(
         accentGradient: accentGradient,
         accentColor: accentColor,
@@ -113,10 +118,7 @@ class _NavigationBody extends StatelessWidget {
         initialZoom: 14.0,
       ),
       children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.yemis.app',
-        ),
+        const AppTileLayer(),
         if (vm.userLocation != null)
           PolylineLayer(
             polylines: [

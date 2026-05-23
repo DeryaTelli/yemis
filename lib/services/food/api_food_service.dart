@@ -30,7 +30,9 @@ class ApiFoodService implements IFoodService {
       final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.bags}');
       debugPrint('📡 [ApiFoodService] GET Request: $url');
 
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       debugPrint('📥 [ApiFoodService] Response Status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
@@ -96,7 +98,9 @@ class ApiFoodService implements IFoodService {
       final url = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.bagById(int.parse(id))}',
       );
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -147,7 +151,9 @@ class ApiFoodService implements IFoodService {
       final url = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.myFavorites}',
       );
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -169,11 +175,13 @@ class ApiFoodService implements IFoodService {
           final postUrl = Uri.parse(
             '${ApiConstants.baseUrl}${ApiConstants.favorites}',
           );
-          final postResponse = await _client.post(
-            postUrl,
-            headers: _headers,
-            body: jsonEncode({'bag_id': bagId}),
-          );
+          final postResponse = await _client
+              .post(
+                postUrl,
+                headers: _headers,
+                body: jsonEncode({'bag_id': bagId}),
+              )
+              .timeout(ApiConstants.requestTimeout);
 
           if (postResponse.statusCode == 201 ||
               postResponse.statusCode == 200) {
@@ -192,7 +200,9 @@ class ApiFoodService implements IFoodService {
       final url = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.favoriteById(favoriteId)}',
       );
-      final response = await _client.delete(url, headers: _headers);
+      final response = await _client
+          .delete(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (response.statusCode == 200) {
         debugPrint('✅ [ApiFoodService] Favori silindi: $favoriteId');
@@ -210,7 +220,9 @@ class ApiFoodService implements IFoodService {
       final url = Uri.parse(
         '${ApiConstants.baseUrl}${ApiConstants.myFavorites}',
       );
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       debugPrint(
         '📥 [ApiFoodService] getFavorites Status: ${response.statusCode}',
       );

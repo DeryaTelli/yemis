@@ -4,6 +4,8 @@ import 'volunteer_listing.dart';
 
 class VolunteerActiveListingModel {
   final int id;
+  final int? taskId;
+  final int? mealId;
   final int? addressId;
   final String? addressLine;
   final double? latitude;
@@ -26,9 +28,13 @@ class VolunteerActiveListingModel {
   final String? posterImageUrl;
   final String? assignedVolunteerName;
   final String? assignedVolunteerAvatar;
+  final VolunteerTaskProgress? ownerProgress;
+  final VolunteerTaskProgress? volunteerProgress;
 
   VolunteerActiveListingModel({
     required this.id,
+    this.taskId,
+    this.mealId,
     this.addressId,
     this.addressLine,
     this.latitude,
@@ -50,11 +56,21 @@ class VolunteerActiveListingModel {
     this.assignedVolunteerName,
     this.assignedVolunteerAvatar,
     this.acceptedByUserId,
+    this.ownerProgress,
+    this.volunteerProgress,
   });
 
   factory VolunteerActiveListingModel.fromJson(Map<String, dynamic> json) {
     String? pName = json['creator_name']?.toString();
     String? pImage = json['owner_image_url']?.toString();
+    String? assignedName = json['assigned_volunteer_name']?.toString();
+    String? assignedAvatar =
+        json['assigned_volunteer_image']?.toString() ??
+        json['assigned_volunteer_image_url']?.toString();
+    String? volunteerComment =
+        json['volunteer_comment']?.toString() ??
+        (json['review'] is Map ? null : json['review']?.toString()) ??
+        json['comment']?.toString();
 
     // Eğer ilan bilgisi bir alt objede geliyorsa (meal veya meal_share)
     Map<String, dynamic>? mealData;
@@ -63,6 +79,56 @@ class VolunteerActiveListingModel {
     } else if (json['meal_share'] != null && json['meal_share'] is Map) {
       mealData = json['meal_share'] as Map<String, dynamic>;
     }
+
+    final volunteerData = _firstMap(json, const [
+      'volunteer',
+      'assigned_volunteer',
+      'accepted_by',
+      'accepted_user',
+      'user',
+    ]);
+    if (volunteerData != null &&
+        (json.containsKey('meal') ||
+            json.containsKey('meal_share') ||
+            json.containsKey('task_id') ||
+            json.containsKey('volunteer_task_id'))) {
+      assignedName ??=
+          volunteerData['name']?.toString() ??
+          volunteerData['full_name']?.toString() ??
+          volunteerData['username']?.toString();
+      assignedAvatar ??=
+          volunteerData['image_url']?.toString() ??
+          volunteerData['imageUrl']?.toString() ??
+          volunteerData['avatar_url']?.toString() ??
+          volunteerData['profile_image']?.toString();
+    }
+
+    final reviewData = _firstMap(json, const [
+      'volunteer_review',
+      'review_data',
+      'task_review',
+      'review',
+    ]);
+    if (reviewData != null) {
+      volunteerComment ??=
+          reviewData['comment']?.toString() ??
+          reviewData['review']?.toString() ??
+          reviewData['text']?.toString();
+    }
+    final ownerProgress = _progressFromJson(json['owner_progress']);
+    final volunteerProgress =
+        _progressFromJson(json['volunteer_progress']) ??
+        _progressFromJson(json['progress']) ??
+        _progressFromJson(json['task_progress']);
+    final availableActions = _stringList(json['available_actions']);
+    final topLevelProgress = availableActions.isEmpty
+        ? null
+        : VolunteerTaskProgress(
+            status: (json['delivery_status'] ?? json['status'] ?? json['task_status'])
+                ?.toString(),
+            message: json['message']?.toString(),
+            availableActions: availableActions,
+          );
 
     // İlan bilgilerini öncelikle bu alt objeden çekmeye çalış
     String? listingTitle = (mealData?['title'] ?? json['title'])?.toString();
@@ -146,6 +212,15 @@ class VolunteerActiveListingModel {
       pImage = '${ApiConstants.baseUrl}$cleanPath';
     }
 
+    if (assignedAvatar != null &&
+        assignedAvatar.isNotEmpty &&
+        !assignedAvatar.startsWith('http')) {
+      final cleanPath = assignedAvatar.startsWith('/')
+          ? assignedAvatar
+          : '/$assignedAvatar';
+      assignedAvatar = '${ApiConstants.baseUrl}$cleanPath';
+    }
+
     if (listingImg != null &&
         listingImg.isNotEmpty &&
         !listingImg.startsWith('http')) {
@@ -155,10 +230,30 @@ class VolunteerActiveListingModel {
       listingImg = '${ApiConstants.baseUrl}$cleanPath';
     }
 
+    final parsedTopLevelId = json['id'] is int
+        ? json['id'] as int
+        : int.tryParse(json['id']?.toString() ?? '');
+    final parsedExplicitTaskId =
+        int.tryParse(
+          (json['task_id'] ??
+                  json['volunteer_task_id'] ??
+                  json['delivery_task_id'] ??
+                  json['active_task_id'])
+              ?.toString() ??
+              '',
+        );
+    final parsedMealId =
+        (json['meal_id'] is int ? json['meal_id'] as int : null) ??
+        int.tryParse(json['meal_id']?.toString() ?? '') ??
+        (mealData?['id'] is int ? mealData!['id'] as int : null) ??
+        int.tryParse(mealData?['id']?.toString() ?? '');
+    final effectiveTaskId =
+        parsedExplicitTaskId ?? (parsedMealId != null ? parsedTopLevelId : null);
+
     return VolunteerActiveListingModel(
-      id: json['id'] is int
-          ? json['id']
-          : int.tryParse(json['id'].toString()) ?? 0,
+      id: parsedMealId ?? parsedTopLevelId ?? 0,
+      taskId: effectiveTaskId,
+      mealId: parsedMealId,
       addressId: json['address_id'] is int
           ? json['address_id']
           : int.tryParse(json['address_id'].toString()),
@@ -193,15 +288,19 @@ class VolunteerActiveListingModel {
                   .toString(),
             )
           : null,
-      deliveryStatus: json['delivery_status']?.toString(),
+      deliveryStatus:
+          (json['delivery_status'] ??
+                  json['status'] ??
+                  json['task_status'] ??
+                  ownerProgress?.status ??
+                  volunteerProgress?.status)
+              ?.toString(),
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())
           : null,
       volunteerComment: json['id']?.toString() == "5"
           ? "Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var."
-          : (json['volunteer_comment']?.toString() ??
-                json['review']?.toString() ??
-                json['comment']?.toString()),
+          : volunteerComment,
       reviewImages: json['id']?.toString() == "5"
           ? [
               "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
@@ -213,19 +312,53 @@ class VolunteerActiveListingModel {
                 : []),
       volunteerRating: json['id']?.toString() == "5"
           ? 5.0
-          : (json['rating'] != null
-                ? double.tryParse(json['rating'].toString())
-                : null),
+          : (reviewData?['rating'] != null
+                ? double.tryParse(reviewData!['rating'].toString())
+                : json['rating'] != null
+                    ? double.tryParse(json['rating'].toString())
+                    : null),
       posterName: pName,
       posterImageUrl: pImage,
-      assignedVolunteerName: json['assigned_volunteer_name']?.toString(),
-      assignedVolunteerAvatar:
-          json['assigned_volunteer_image']?.toString() ??
-          json['assigned_volunteer_image_url']?.toString(),
-      acceptedByUserId: json['accepted_by_id'] != null
-          ? int.tryParse(json['accepted_by_id'].toString())
-          : null,
+      assignedVolunteerName: assignedName,
+      assignedVolunteerAvatar: assignedAvatar,
+      ownerProgress: ownerProgress,
+      volunteerProgress: volunteerProgress ?? topLevelProgress,
+      acceptedByUserId:
+          int.tryParse(
+            (json['accepted_by_id'] ??
+                    json['accepted_by_user_id'] ??
+                    json['volunteer_id'])
+                ?.toString() ??
+                '',
+          ),
     );
+  }
+
+  static Map<String, dynamic>? _firstMap(
+    Map<String, dynamic> json,
+    List<String> keys,
+  ) {
+    for (final key in keys) {
+      final value = json[key];
+      if (value is Map<String, dynamic>) return value;
+      if (value is Map) return Map<String, dynamic>.from(value);
+    }
+    return null;
+  }
+
+  static VolunteerTaskProgress? _progressFromJson(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return VolunteerTaskProgress.fromJson(value);
+    }
+    if (value is Map) {
+      return VolunteerTaskProgress.fromJson(Map<String, dynamic>.from(value));
+    }
+    return null;
+  }
+
+  static List<String> _stringList(dynamic value) {
+    if (value is List) return value.map((e) => e.toString()).toList();
+    return const [];
   }
 
   VolunteerListing toVolunteerListing() {
@@ -241,9 +374,16 @@ class VolunteerActiveListingModel {
       formattedTime = '$date | $start';
     }
 
+    final mappedStatus = _mapDeliveryStatus(deliveryStatus);
+    final effectiveStatus =
+        volunteerComment != null &&
+            mappedStatus == DeliveryStatus.deliveredPendingReview
+        ? DeliveryStatus.completed
+        : mappedStatus;
+
     return VolunteerListing(
       id: id.toString(),
-      taskId: id.toString(), // Task API'den geliyorsa id task_id'dir
+      taskId: taskId?.toString(),
       title: title,
       userName: posterName ?? 'Bilinmiyor',
       userLogoUrl: posterImageUrl,
@@ -269,7 +409,9 @@ class VolunteerActiveListingModel {
       isAvailable: isAvailable,
       ownerId: createdByUserId?.toString(),
       acceptedByUserId: acceptedByUserId,
-      deliveryStatus: _mapDeliveryStatus(deliveryStatus),
+      deliveryStatus: effectiveStatus,
+      ownerProgress: ownerProgress,
+      volunteerProgress: volunteerProgress,
       pickupStartTime: pickupStartTime,
       pickupEndTime: pickupEndTime,
     );

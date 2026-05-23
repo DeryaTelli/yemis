@@ -486,6 +486,7 @@ abstract class LocaleKeys {
   static const volunteerOrderTab_detailTitle = 'volunteerOrderTab.detailTitle';
   static const volunteerOrderTab_detailSubtitle = 'volunteerOrderTab.detailSubtitle';
   static const volunteerOrderTab_descriptionTitle = 'volunteerOrderTab.descriptionTitle';
+  static const volunteerOrderTab_descriptionText = 'volunteerOrderTab.descriptionText';
   static const volunteerOrderTab_ingredientsText = 'volunteerOrderTab.ingredientsText';
   static const volunteerOrderTab_packagingText = 'volunteerOrderTab.packagingText';
 

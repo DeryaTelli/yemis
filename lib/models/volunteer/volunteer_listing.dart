@@ -17,6 +17,66 @@ enum DeliveryStatus {
   cancelled,                   // İptal edildi
 }
 
+class VolunteerProgressStep {
+  const VolunteerProgressStep({
+    required this.index,
+    required this.key,
+    required this.label,
+    required this.state,
+  });
+
+  final int index;
+  final String key;
+  final String label;
+  final String state;
+
+  factory VolunteerProgressStep.fromJson(Map<String, dynamic> json) {
+    return VolunteerProgressStep(
+      index: int.tryParse(json['index']?.toString() ?? '') ?? 0,
+      key: json['key']?.toString() ?? '',
+      label: json['label']?.toString() ?? '',
+      state: json['state']?.toString() ?? '',
+    );
+  }
+}
+
+class VolunteerTaskProgress {
+  const VolunteerTaskProgress({
+    this.status,
+    this.message,
+    this.currentStep,
+    this.steps = const [],
+    this.availableActions = const [],
+  });
+
+  final String? status;
+  final String? message;
+  final int? currentStep;
+  final List<VolunteerProgressStep> steps;
+  final List<String> availableActions;
+
+  factory VolunteerTaskProgress.fromJson(Map<String, dynamic> json) {
+    return VolunteerTaskProgress(
+      status: json['status']?.toString(),
+      message: json['message']?.toString(),
+      currentStep: int.tryParse(json['current_step']?.toString() ?? ''),
+      steps: json['steps'] is List
+          ? (json['steps'] as List)
+              .whereType<Map>()
+              .map((e) => VolunteerProgressStep.fromJson(
+                    Map<String, dynamic>.from(e),
+                  ))
+              .toList()
+          : const [],
+      availableActions: json['available_actions'] is List
+          ? (json['available_actions'] as List)
+              .map((e) => e.toString())
+              .toList()
+          : const [],
+    );
+  }
+}
+
 /// Bir gönüllü ilanını temsil eder.
 class VolunteerListing {
   const VolunteerListing({
@@ -53,6 +113,8 @@ class VolunteerListing {
     this.ownerId,
     this.acceptedByUserId,
     this.deliveryStatus = DeliveryStatus.pendingOwnerApproval,
+    this.ownerProgress,
+    this.volunteerProgress,
     this.taskId,
     this.pickupStartTime,
     this.pickupEndTime,
@@ -97,6 +159,8 @@ class VolunteerListing {
   final String? ownerId;
   final int? acceptedByUserId;
   final DeliveryStatus deliveryStatus;
+  final VolunteerTaskProgress? ownerProgress;
+  final VolunteerTaskProgress? volunteerProgress;
 
   VolunteerListing copyWith({
     String? title,
@@ -128,8 +192,13 @@ class VolunteerListing {
     String? assignedVolunteerAvatar,
     bool? isAvailable,
     String? ownerId,
+    int? acceptedByUserId,
     DeliveryStatus? deliveryStatus,
+    VolunteerTaskProgress? ownerProgress,
+    VolunteerTaskProgress? volunteerProgress,
     String? taskId,
+    DateTime? pickupStartTime,
+    DateTime? pickupEndTime,
   }) {
     return VolunteerListing(
       id: id,
@@ -163,7 +232,10 @@ class VolunteerListing {
       assignedVolunteerAvatar: assignedVolunteerAvatar ?? this.assignedVolunteerAvatar,
       isAvailable: isAvailable ?? this.isAvailable,
       ownerId: ownerId ?? this.ownerId,
+      acceptedByUserId: acceptedByUserId ?? this.acceptedByUserId,
       deliveryStatus: deliveryStatus ?? this.deliveryStatus,
+      ownerProgress: ownerProgress ?? this.ownerProgress,
+      volunteerProgress: volunteerProgress ?? this.volunteerProgress,
       pickupStartTime: pickupStartTime ?? this.pickupStartTime,
       pickupEndTime: pickupEndTime ?? this.pickupEndTime,
     );

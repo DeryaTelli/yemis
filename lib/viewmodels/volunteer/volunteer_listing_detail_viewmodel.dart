@@ -41,8 +41,31 @@ class VolunteerListingDetailViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final updated = await _volunteerService!.getVolunteerDetail(_listing.id);
-      _listing = updated;
+      final previous = _listing;
+      var updated = await _volunteerService!.getVolunteerDetail(_listing.id);
+      if (updated.taskId == null &&
+          updated.ownerProgress == null &&
+          previous.taskId != null) {
+        final ownerListings = await _volunteerService!.getActiveListings();
+        updated = ownerListings.firstWhere(
+          (item) => item.id == previous.id,
+          orElse: () => updated,
+        );
+      }
+      final keepCurrentTask = updated.taskId == null && previous.taskId != null;
+      _listing = keepCurrentTask
+          ? updated.copyWith(
+              taskId: previous.taskId,
+              deliveryStatus: previous.deliveryStatus,
+              assignedVolunteerName: previous.assignedVolunteerName,
+              assignedVolunteerAvatar: previous.assignedVolunteerAvatar,
+              acceptedByUserId: previous.acceptedByUserId,
+              volunteerComment: previous.volunteerComment,
+              volunteerRating: previous.volunteerRating,
+              ownerProgress: previous.ownerProgress,
+              volunteerProgress: previous.volunteerProgress,
+            )
+          : updated;
     } catch (e) {
       debugPrint('Error refreshing volunteer listing detail: $e');
     }
@@ -59,6 +82,7 @@ class VolunteerListingDetailViewModel extends ChangeNotifier {
     try {
       final success = await _volunteerService!.acceptVolunteer(int.parse(_listing.taskId!));
       if (success) {
+        _listing = _listing.copyWith(deliveryStatus: DeliveryStatus.accepted);
         await refreshListing();
       }
       return success;
@@ -79,6 +103,7 @@ class VolunteerListingDetailViewModel extends ChangeNotifier {
     try {
       final success = await _volunteerService!.rejectVolunteer(int.parse(_listing.taskId!));
       if (success) {
+        _listing = _listing.copyWith(deliveryStatus: DeliveryStatus.cancelled);
         await refreshListing();
       }
       return success;
@@ -99,6 +124,7 @@ class VolunteerListingDetailViewModel extends ChangeNotifier {
     try {
       final success = await _volunteerService!.ownerHandover(int.parse(_listing.taskId!));
       if (success) {
+        _listing = _listing.copyWith(deliveryStatus: DeliveryStatus.ownerHandedOver);
         await refreshListing();
       }
       return success;

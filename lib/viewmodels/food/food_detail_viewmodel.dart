@@ -106,28 +106,32 @@ class FoodDetailViewModel extends ChangeNotifier {
     _isLoading = true;
     _safeNotify();
 
-    final results = await Future.wait([
-      _service.getFoodDetail(_listingId),
-      _service.getFoodReviews(_listingId),
-    ]);
+    try {
+      final results = await Future.wait([
+        _service.getFoodDetail(_listingId),
+        _service.getFoodReviews(_listingId),
+      ]);
 
-    final fetchedListing = results[0] as FoodListing;
-    _reviews = results[1] as List<FoodReview>;
+      final fetchedListing = results[0] as FoodListing;
+      _reviews = results[1] as List<FoodReview>;
 
-    // API'den gelen veride koordinatlar eksikse, başlangıçtaki koordinatları koru
-    if (fetchedListing.latitude == null || fetchedListing.longitude == null) {
-      _listing = fetchedListing.copyWith(
-        latitude: _listing?.latitude,
-        longitude: _listing?.longitude,
-      );
-    } else {
-      _listing = fetchedListing;
+      // API'den gelen veride koordinatlar eksikse, başlangıçtaki koordinatları koru
+      if (fetchedListing.latitude == null || fetchedListing.longitude == null) {
+        _listing = fetchedListing.copyWith(
+          latitude: _listing?.latitude,
+          longitude: _listing?.longitude,
+        );
+      } else {
+        _listing = fetchedListing;
+      }
+
+      await _fetchUserLocation();
+    } catch (e) {
+      debugPrint('Error initializing food detail: $e');
+    } finally {
+      _isLoading = false;
+      _safeNotify();
     }
-
-    await _fetchUserLocation();
-
-    _isLoading = false;
-    _safeNotify();
   }
 
   Future<void> _fetchUserLocation() async {

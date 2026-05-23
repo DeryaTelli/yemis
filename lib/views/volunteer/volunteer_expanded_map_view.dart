@@ -6,6 +6,7 @@ import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
+import '../../widgets/common/app_tile_layer.dart';
 import '../../widgets/volunteer/volunteer_listing_card.dart';
 
 class VolunteerExpandedMapView extends StatefulWidget {
@@ -42,10 +43,7 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
               initialZoom: 16.5,
             ),
             children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.yemis.app',
-              ),
+              const AppTileLayer(),
               MarkerLayer(
                 markers: [
                   ...widget.listings.where((l) => l.latitude != null).map(

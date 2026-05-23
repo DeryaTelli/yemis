@@ -20,7 +20,9 @@ class ApiReviewService implements IReviewService {
   Future<dynamic> _get(String endpoint) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
     if (kDebugMode) print('[Review GET] $url');
-    final response = await http.get(url, headers: _headers);
+    final response = await http
+        .get(url, headers: _headers)
+        .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review GET Response] ${response.statusCode} ${response.body}');
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return jsonDecode(response.body);
@@ -31,7 +33,9 @@ class ApiReviewService implements IReviewService {
   Future<dynamic> _post(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
     if (kDebugMode) print('[Review POST] $url body: $body');
-    final response = await http.post(url, headers: _headers, body: jsonEncode(body));
+    final response = await http
+        .post(url, headers: _headers, body: jsonEncode(body))
+        .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review POST Response] ${response.statusCode} ${response.body}');
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return jsonDecode(response.body);
@@ -42,7 +46,9 @@ class ApiReviewService implements IReviewService {
   Future<dynamic> _put(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
     if (kDebugMode) print('[Review PUT] $url body: $body');
-    final response = await http.put(url, headers: _headers, body: jsonEncode(body));
+    final response = await http
+        .put(url, headers: _headers, body: jsonEncode(body))
+        .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review PUT Response] ${response.statusCode} ${response.body}');
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return jsonDecode(response.body);
@@ -53,7 +59,9 @@ class ApiReviewService implements IReviewService {
   Future<bool> _delete(String endpoint) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
     if (kDebugMode) print('[Review DELETE] $url');
-    final response = await http.delete(url, headers: _headers);
+    final response = await http
+        .delete(url, headers: _headers)
+        .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review DELETE Response] ${response.statusCode}');
     return response.statusCode >= 200 && response.statusCode < 300;
   }

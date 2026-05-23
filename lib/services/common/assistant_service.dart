@@ -25,11 +25,13 @@ class ApiAssistantService implements IAssistantService {
     print('Message: $message');
 
     try {
-      final response = await http.post(
-        url,
-        headers: _headers,
-        body: jsonEncode({'message': message}),
-      );
+      final response = await http
+          .post(
+            url,
+            headers: _headers,
+            body: jsonEncode({'message': message}),
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       print('--- AI ASSISTANT RESPONSE ---');
       print('Status: ${response.statusCode}');

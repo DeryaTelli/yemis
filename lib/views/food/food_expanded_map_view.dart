@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../widgets/common/app_tile_layer.dart';
 import '../../widgets/food/food_listing_card.dart';
 
 class FoodExpandedMapView extends StatefulWidget {
@@ -30,10 +31,7 @@ class _FoodExpandedMapViewState extends State<FoodExpandedMapView> {
               initialZoom: 16.5,
             ),
             children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.yemis.app',
-              ),
+              const AppTileLayer(),
               MarkerLayer(
                 markers: [
                   ...widget.listings.where((l) => l.latitude != null).map(

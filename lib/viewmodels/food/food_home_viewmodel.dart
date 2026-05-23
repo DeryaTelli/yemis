@@ -89,10 +89,8 @@ class FoodHomeViewModel extends ChangeNotifier {
 
   Future<void> init() async {
     debugPrint('🚀 [FoodHomeVM] Başlatılıyor...');
-    Future.microtask(() {
-      _isLoading = true;
-      _safeNotify();
-    });
+    _isLoading = true;
+    _safeNotify();
 
     try {
       final results = await Future.wait([
@@ -118,10 +116,10 @@ class FoodHomeViewModel extends ChangeNotifier {
       debugPrint('✨ [FoodHomeVM] İlanlar başarıyla yüklendi ve favoriler eşleşti.');
     } catch (e) {
       debugPrint('❌ [FoodHomeVM] Hata: $e');
+    } finally {
+      _isLoading = false;
+      _safeNotify();
     }
-
-    _isLoading = false;
-    _safeNotify();
   }
 
   // ─── Arama ────────────────────────────────────────────

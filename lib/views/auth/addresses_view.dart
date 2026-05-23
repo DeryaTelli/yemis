@@ -26,10 +26,14 @@ class AddressesView extends StatelessWidget {
         : AppColors.volunteerColor;
 
     return ChangeNotifierProvider(
-      create: (_) => AddressesViewModel(
-        authService: context.read<IAuthService>(),
-        userSession: context.read<UserSession>(),
-      )..init(),
+      create: (_) {
+        final vm = AddressesViewModel(
+          authService: context.read<IAuthService>(),
+          userSession: context.read<UserSession>(),
+        );
+        WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
+        return vm;
+      },
       child: Consumer<AddressesViewModel>(
         builder: (context, vm, child) {
           final section =

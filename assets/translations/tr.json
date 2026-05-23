@@ -574,8 +574,8 @@
         "volunteer": "Gönüllü",
         "deliveredExclamation": "Teslim edildi!",
         "waitingApproval": "Onay Bekliyor",
-        "given": "Verildi",
-        "delivering": "Götürülüyor",
+        "given": "Gönüllüye Verildi",
+        "delivering": "Barınağa Götürülüyor",
         "stepApproval": "Onay",
         "stepPickup": "Alım",
         "stepDelivery": "Teslimat",
@@ -637,6 +637,12 @@
         "confirm": "Bu gönüllü görevinden vazgeçmek istediğinize emin misiniz? Bu işlem geri alınamaz."
     },
     "volunteerOrderTab": {
+        "detailTitle": "Gönüllü Bilgilendirmesi",
+        "detailSubtitle": "Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.",
+        "descriptionTitle": "İlan Açıklaması",
+        "descriptionText": "Bu paketler insan tüketimi için değildir. Tamamen sokak hayvanlarına veya barınaklara gönüllü olarak ulaştırılması amacıyla hazırlanmıştır.",
+        "ingredientsText": "Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.",
+        "packagingText": "Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.",
         "noShelterNearby": "Yakında barınak bulunamadı"
     },
     "volunteerListing": {

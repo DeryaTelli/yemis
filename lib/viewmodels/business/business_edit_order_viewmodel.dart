@@ -8,6 +8,7 @@ import '../../models/business/business_listing_model.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/business/i_business_service.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/constants/api_constants.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../models/app_module_type.dart';
 
@@ -285,7 +286,9 @@ class BusinessEditOrderViewModel extends ChangeNotifier {
           'limit': '1',
           'accept-language': 'tr',
         });
-        final res = await http.get(uri, headers: {'User-Agent': 'YemisApp/1.0'});
+        final res = await http
+            .get(uri, headers: {'User-Agent': 'YemisApp/1.0'})
+            .timeout(ApiConstants.requestTimeout);
         if (res.statusCode == 200) {
           final List<dynamic> data = jsonDecode(res.body);
           if (data.isNotEmpty) {

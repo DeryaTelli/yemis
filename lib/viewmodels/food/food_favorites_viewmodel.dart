@@ -45,10 +45,10 @@ class FoodFavoritesViewModel extends ChangeNotifier {
       _favorites = await _service.getFavorites();
     } catch (e) {
       debugPrint('❌ [FoodFavoritesVM] Yükleme hatası: $e');
+    } finally {
+      _isLoading = false;
+      _safeNotify();
     }
-
-    _isLoading = false;
-    _safeNotify();
   }
 
   /// Favoriler ekranına her dönüldüğünde çağrılır.

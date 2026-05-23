@@ -61,10 +61,10 @@ class BusinessListingsViewModel extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint('Error fetching listings: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<bool> deleteListing(int id) async {

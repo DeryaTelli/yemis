@@ -5,6 +5,7 @@ import '../../models/auth/address_model.dart';
 import '../../models/location/location_model.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/location/i_location_data_service.dart';
+import '../../utils/constants/api_constants.dart';
 
 class FoodAddAddressViewModel extends ChangeNotifier {
   final IAuthService _authService;
@@ -284,7 +285,9 @@ class FoodAddAddressViewModel extends ChangeNotifier {
         'limit': '1',
         'accept-language': 'tr',
       });
-      final res = await http.get(uri, headers: {'User-Agent': 'YemisApp/1.0'});
+      final res = await http
+          .get(uri, headers: {'User-Agent': 'YemisApp/1.0'})
+          .timeout(ApiConstants.requestTimeout);
       if (res.statusCode == 200) {
         final List<dynamic> data = jsonDecode(res.body);
         if (data.isNotEmpty) {

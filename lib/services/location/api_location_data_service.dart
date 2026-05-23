@@ -8,7 +8,9 @@ class ApiLocationDataService implements ILocationDataService {
   @override
   Future<List<LocationModel>> getProvinces() async {
     try {
-      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}${ApiConstants.provinces}'));
+      final response = await http
+          .get(Uri.parse('${ApiConstants.baseUrl}${ApiConstants.provinces}'))
+          .timeout(ApiConstants.requestTimeout);
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         if (decoded['success'] == true) {
@@ -25,7 +27,9 @@ class ApiLocationDataService implements ILocationDataService {
   @override
   Future<List<LocationModel>> getDistricts(int provinceId) async {
     try {
-      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}${ApiConstants.districts(provinceId)}'));
+      final response = await http
+          .get(Uri.parse('${ApiConstants.baseUrl}${ApiConstants.districts(provinceId)}'))
+          .timeout(ApiConstants.requestTimeout);
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         if (decoded['success'] == true) {
@@ -42,7 +46,9 @@ class ApiLocationDataService implements ILocationDataService {
   @override
   Future<List<LocationModel>> getNeighborhoods(int districtId) async {
     try {
-      final response = await http.get(Uri.parse('${ApiConstants.baseUrl}${ApiConstants.neighborhoods(districtId)}'));
+      final response = await http
+          .get(Uri.parse('${ApiConstants.baseUrl}${ApiConstants.neighborhoods(districtId)}'))
+          .timeout(ApiConstants.requestTimeout);
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         if (decoded['success'] == true) {

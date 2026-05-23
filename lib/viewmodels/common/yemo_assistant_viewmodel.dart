@@ -19,6 +19,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
   final IAssistantService _service;
 
   YemoAssistantViewModel({required IAssistantService service}) : _service = service;
+  bool _isDisposed = false;
 
   final List<ChatMessage> _messages = [];
   List<ChatMessage> get messages => _messages;
@@ -44,6 +45,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
 
     try {
       final response = await _service.askQuestion(text);
+      if (_isDisposed) return;
       if (response != null) {
         _messages.add(ChatMessage(text: response, isUser: false));
       } else {
@@ -58,6 +60,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
         isUser: false,
       ));
     } finally {
+      if (_isDisposed) return;
       _isLoading = false;
       notifyListeners();
     }
@@ -101,7 +104,19 @@ class YemoAssistantViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     messageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_isDisposed) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future<void>.delayed(Duration.zero, () {
+        if (!_isDisposed) super.notifyListeners();
+      });
+    });
+    WidgetsBinding.instance.scheduleFrame();
   }
 }

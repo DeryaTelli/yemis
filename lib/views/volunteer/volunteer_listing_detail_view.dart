@@ -316,7 +316,7 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                       item.description ??
                           LocaleKeys.volunteerListingDetail_noContent.tr(),
                     ),
-                    if (isEditable && item.assignedVolunteerName != null) ...[
+                    if (isEditable && _hasVolunteerTask(item)) ...[
                       const SizedBox(height: 24),
                       _sectionTitle(LocaleKeys.volunteerListingDetail_volunteerSection.tr()),
                       const SizedBox(height: 12),
@@ -393,5 +393,14 @@ class _VolunteerListingDetailBody extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool _hasVolunteerTask(VolunteerListing item) {
+    return item.taskId != null ||
+        item.ownerProgress != null ||
+        item.volunteerProgress != null ||
+        item.assignedVolunteerName != null ||
+        item.acceptedByUserId != null ||
+        item.volunteerComment != null;
   }
 }

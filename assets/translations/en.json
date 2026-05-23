@@ -574,8 +574,8 @@
                          "volunteer":  "Volunteer",
                          "deliveredExclamation":  "Delivered!",
                          "waitingApproval":  "Waiting for Approval",
-                         "given":  "Given",
-                         "delivering":  "Delivering",
+                         "given":  "Given to Volunteer",
+                         "delivering":  "Going to Shelter",
                          "stepApproval":  "Approval",
                          "stepPickup":  "Pickup",
                          "stepDelivery":  "Delivery",
@@ -637,6 +637,12 @@
                                   "confirm":  "Are you sure you want to cancel this volunteer task? This action cannot be undone."
                               },
     "volunteerOrderTab":  {
+                              "detailTitle":  "Volunteer Information",
+                              "detailSubtitle":  "These packages are not intended for human consumption. They are prepared solely to be voluntarily delivered to street animals or shelters.",
+                              "descriptionTitle":  "Listing Description",
+                              "descriptionText":  "These packages are not intended for human consumption. They are prepared solely to be voluntarily delivered to street animals or shelters.",
+                              "ingredientsText":  "There may be inconsistencies in the ingredient or allergen information of the products. If you would like detailed information about whether the contents and allergens are suitable for street animals, please contact the venue directly.",
+                              "packagingText":  "To deliver the volunteer meal to a shelter or street animals, please remember to bring a bag or carrying package with you.",
                               "noShelterNearby":  "No shelters found nearby"
                           },
     "volunteerListing":  {

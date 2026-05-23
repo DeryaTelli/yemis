@@ -33,7 +33,10 @@ class _FoodSearchViewState extends State<FoodSearchView> {
     _vm = FoodSearchViewModel(
       service: context.read<IFoodService>(),
       userSession: context.read<UserSession>(),
-    )..init();
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _vm.init();
+    });
 
     // Arama çubuğundaki değişiklikler her zaman ViewModel ile senkron kalır.
     _searchController.addListener(() {
@@ -44,6 +47,7 @@ class _FoodSearchViewState extends State<FoodSearchView> {
   @override
   void dispose() {
     _searchController.dispose();
+    _vm.dispose();
     super.dispose();
   }
 

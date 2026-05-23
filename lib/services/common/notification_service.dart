@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
+import 'package:yemis/utils/constants/api_constants.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -124,17 +125,8 @@ class NotificationService {
       }
     });
 
-    // 8. Get Token
-    try {
-      String? token = await _fcm.getToken();
-      if (kDebugMode) {
-        print('FCM Token: $token');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error getting FCM token: $e');
-      }
-    }
+    // Token registration is handled after the session is loaded. Do not block
+    // app startup when Firebase Messaging is temporarily unavailable.
   }
 
   Future<void> showLocalNotification({
@@ -171,14 +163,35 @@ class NotificationService {
     );
   }
 
-  Future<String?> getToken() async {
-    try {
-      return await _fcm.getToken();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error getting FCM token: $e');
+  Future<String?> getToken({
+    int retries = 1,
+    Duration timeout = ApiConstants.notificationTokenTimeout,
+  }) async {
+    Duration delay = const Duration(seconds: 2);
+
+    for (int i = 0; i < retries; i++) {
+      try {
+        if (kDebugMode) {
+          print('Fetching FCM token (Attempt ${i + 1}/$retries)...');
+        }
+        final token = await _fcm.getToken().timeout(timeout);
+        if (token != null) {
+          if (kDebugMode) {
+            print('Successfully fetched FCM token.');
+          }
+          return token;
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('Attempt ${i + 1} failed to get FCM token: $e');
+        }
+        if (i == retries - 1) {
+          return null;
+        }
+        await Future.delayed(delay);
+        delay = delay * 2; // Exponential backoff
       }
-      return null;
     }
+    return null;
   }
 }

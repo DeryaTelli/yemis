@@ -27,11 +27,15 @@ class VolunteerDetailView extends StatelessWidget {
     return Theme(
       data: AppTheme.themeFor(AppSection.volunteer),
       child: ChangeNotifierProvider(
-        create: (_) => VolunteerDetailViewModel(
-          service: context.read<IVolunteerService>(),
-          listingId: listing.id,
-          userSession: context.read<UserSession>(),
-        )..init(),
+        create: (_) {
+          final vm = VolunteerDetailViewModel(
+            service: context.read<IVolunteerService>(),
+            listingId: listing.id,
+            userSession: context.read<UserSession>(),
+          );
+          WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
+          return vm;
+        },
         child: _VolunteerDetailBody(listing: listing),
       ),
     );

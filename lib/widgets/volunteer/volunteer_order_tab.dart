@@ -57,15 +57,16 @@ class VolunteerOrderTab extends StatelessWidget {
           const SizedBox(height: 8),
 
           // ── Açıklama ──────────────────────────────────────
-          if (listing.description != null)
-            Text(
-              listing.description!,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.hintTextColor,
-                height: 1.5,
-              ),
+          Text(
+            (listing.description?.trim().isNotEmpty ?? false)
+                ? listing.description!.trim()
+                : LocaleKeys.volunteerListingDetail_noContent.tr(),
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.hintTextColor,
+              height: 1.5,
             ),
+          ),
           const SizedBox(height: 16),
 
           // ── Harita: İlan Lokasyonu ─────────────────────────

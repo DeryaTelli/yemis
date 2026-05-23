@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
+import 'package:yemis/utils/constants/api_constants.dart';
 
 // ─────────────────────────────────────────────
 // Nominatim arama sonucu modeli
@@ -125,10 +126,12 @@ class MapPickerViewModel extends ChangeNotifier {
         'limit': '5',
         'accept-language': 'tr',
       });
-      final res = await http.get(
-        uri,
-        headers: {'User-Agent': 'YemisApp/1.0'},
-      );
+      final res = await http
+          .get(
+            uri,
+            headers: {'User-Agent': 'YemisApp/1.0'},
+          )
+          .timeout(ApiConstants.requestTimeout);
       if (res.statusCode == 200) {
         final List<dynamic> data = jsonDecode(res.body) as List<dynamic>;
         _searchResults = data
@@ -152,10 +155,12 @@ class MapPickerViewModel extends ChangeNotifier {
         'addressdetails': '1',
         'accept-language': 'tr',
       });
-      final res = await http.get(
-        uri,
-        headers: {'User-Agent': 'YemisApp/1.0'},
-      );
+      final res = await http
+          .get(
+            uri,
+            headers: {'User-Agent': 'YemisApp/1.0'},
+          )
+          .timeout(ApiConstants.requestTimeout);
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body) as Map<String, dynamic>;
         _currentAddress = data['display_name'] as String? ?? '';

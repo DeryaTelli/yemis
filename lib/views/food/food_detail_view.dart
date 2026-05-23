@@ -25,11 +25,15 @@ class FoodDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     final userSession = context.read<UserSession>();
     return ChangeNotifierProvider(
-      create: (_) => FoodDetailViewModel(
-        service: ApiFoodService()..setToken(userSession.token ?? ''),
-        listingId: listing.id,
-        initialListing: listing,
-      )..init(),
+      create: (_) {
+        final vm = FoodDetailViewModel(
+          service: ApiFoodService()..setToken(userSession.token ?? ''),
+          listingId: listing.id,
+          initialListing: listing,
+        );
+        WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
+        return vm;
+      },
       child: _FoodDetailBody(listing: listing),
     );
   }

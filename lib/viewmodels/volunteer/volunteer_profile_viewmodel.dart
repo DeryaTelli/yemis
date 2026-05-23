@@ -10,6 +10,7 @@ import 'package:lottie/lottie.dart';
 class VolunteerProfileViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final UserSession _userSession;
+  bool _isDisposed = false;
 
   int _selectedIndex = 4;
   int get selectedIndex => _selectedIndex;
@@ -25,6 +26,23 @@ class VolunteerProfileViewModel extends ChangeNotifier {
 
   VolunteerProfileViewModel(this._authService, this._userSession) {
     Future.microtask(() => fetchProfile());
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_isDisposed) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future<void>.delayed(Duration.zero, () {
+        if (!_isDisposed) super.notifyListeners();
+      });
+    });
+    WidgetsBinding.instance.scheduleFrame();
   }
 
   Future<void> fetchProfile() async {

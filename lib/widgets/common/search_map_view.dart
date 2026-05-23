@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../../utils/constants/app_colors.dart';
+import 'app_tile_layer.dart';
 
 /// Harita üzerinde ilanları gösteren bileşen.
 class SearchMapView extends StatefulWidget {
@@ -52,10 +53,7 @@ class _SearchMapViewState extends State<SearchMapView> {
         initialZoom: 13,
       ),
       children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.yemis.app',
-        ),
+        const AppTileLayer(),
         MarkerLayer(
           markers:
               widget.listings

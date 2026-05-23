@@ -21,6 +21,9 @@ abstract class IVolunteerService {
   /// Kullanıcının gönüllü olarak katıldığı ilanları getirir.
   Future<List<VolunteerListing>> getAttendedListings();
 
+  /// Gönüllünün devam eden görevlerini getirir.
+  Future<List<VolunteerListing>> getMyActiveTasks();
+
   /// Yeni bir gönüllü ilanı oluşturur.
   Future<bool> createMeal(Map<String, dynamic> data);
 

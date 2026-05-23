@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../views/food/food_expanded_map_view.dart';
+import '../common/app_tile_layer.dart';
 
 /// Harita alanını gösterir.
 /// Fotoğraftaki gibi gerçekçi bir harita görünümü sunar.
@@ -91,10 +92,7 @@ class _FoodMapSectionState extends State<FoodMapSection> {
                     ),
                   ),
                   children: [
-                    TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'com.yemis.app',
-                    ),
+                    const AppTileLayer(),
                     MarkerLayer(
                       markers: [
                         ...widget.listings

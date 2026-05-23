@@ -35,9 +35,14 @@ class LocationView extends StatelessWidget {
         : AppColors.volunteerColor;
 
     return ChangeNotifierProvider(
-      create: (_) =>
-          LocationViewModel(userSession: userSession, authService: authService)
-            ..init(),
+      create: (_) {
+        final vm = LocationViewModel(
+          userSession: userSession,
+          authService: authService,
+        );
+        WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
+        return vm;
+      },
       child: _LocationBody(
         returnToSender: returnToSender,
         moduleType: moduleType,

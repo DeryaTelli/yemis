@@ -32,13 +32,15 @@ class ApiAuthService implements IAuthService {
     }
 
     try {
-      final response = await _client.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-        },
-      );
+      final response = await _client
+          .get(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+            },
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE ---');
@@ -74,14 +76,16 @@ class ApiAuthService implements IAuthService {
     }
 
     try {
-      final response = await _client.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-        },
-        body: body != null ? jsonEncode(body) : null,
-      );
+      final response = await _client
+          .post(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+            },
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE ---');
@@ -270,7 +274,9 @@ class ApiAuthService implements IAuthService {
         contentType: MediaType.parse(mimeType),
       ));
 
-      final streamedResponse = await request.send();
+      final streamedResponse = await request
+          .send()
+          .timeout(ApiConstants.requestTimeout);
       final response = await http.Response.fromStream(streamedResponse);
 
       if (kDebugMode) {
@@ -324,14 +330,16 @@ class ApiAuthService implements IAuthService {
     }
 
     try {
-      final response = await _client.patch(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-        },
-        body: body != null ? jsonEncode(body) : null,
-      );
+      final response = await _client
+          .patch(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+            },
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       return _processResponse(response);
     } catch (e) {
@@ -355,14 +363,16 @@ class ApiAuthService implements IAuthService {
     }
 
     try {
-      final response = await _client.put(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-        },
-        body: body != null ? jsonEncode(body) : null,
-      );
+      final response = await _client
+          .put(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+            },
+            body: body != null ? jsonEncode(body) : null,
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       return _processResponse(response);
     } catch (e) {
@@ -381,13 +391,15 @@ class ApiAuthService implements IAuthService {
     }
 
     try {
-      final response = await _client.delete(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-        },
-      );
+      final response = await _client
+          .delete(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+            },
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       return _processResponse(response);
     } catch (e) {

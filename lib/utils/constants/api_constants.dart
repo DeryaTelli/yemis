@@ -2,6 +2,8 @@ class ApiConstants {
   ApiConstants._();
 
   static const String baseUrl = 'https://yemisback.onrender.com';
+  static const Duration requestTimeout = Duration(seconds: 30);
+  static const Duration notificationTokenTimeout = Duration(seconds: 3);
 
   // --- Auth ---
   static const String login = '/api/auth/login';
@@ -44,6 +46,7 @@ class ApiConstants {
   static const String myMeals = '/api/meals/my';
   static const String myActiveMeals = '/api/meals/my/active';
   static const String myPastMeals = '/api/meals/my/past';
+  static const String ownerVolunteerTasks = '/api/volunteer/tasks/owner';
   static const String myActiveTasks = '/api/volunteer/tasks/my/active';
   static const String attendedTasks = '/api/volunteer/tasks/my/attended';
   static String mealById(int id) => '/api/meals/$id';
@@ -69,9 +72,9 @@ class ApiConstants {
   static String markPickedUp(int id) => '/api/volunteer/tasks/$id/mark-picked-up';
   static String startDelivery(int id) => '/api/volunteer/tasks/$id/start-delivery';
   static String confirmDelivery(int id) => '/api/volunteer/tasks/$id/confirm-delivery';
-  static String acceptVolunteer(int id) => '/api/volunteer/tasks/$id/accept';
+  static String acceptVolunteer(int id) => '/api/volunteer/tasks/$id/approve';
   static String rejectVolunteer(int id) => '/api/volunteer/tasks/$id/reject';
-  static String ownerHandover(int id) => '/api/volunteer/tasks/$id/handover';
+  static String ownerHandover(int id) => '/api/volunteer/tasks/$id/hand-over';
   static String volunteerReview(int id) => '/api/reviews/volunteer-tasks/$id';
   static String ownerReview(int id) => '/api/reviews/volunteer-tasks/$id/owner';
 

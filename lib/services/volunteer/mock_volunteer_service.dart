@@ -56,6 +56,12 @@ class MockVolunteerService implements IVolunteerService {
   }
 
   @override
+  Future<List<VolunteerListing>> getMyActiveTasks() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    return [_listings.last];
+  }
+
+  @override
   Future<bool> createMeal(Map<String, dynamic> data) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
     return true;

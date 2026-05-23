@@ -28,7 +28,9 @@ class ApiNotificationService {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notifications}';
     _log('GET NOTIFICATIONS', url);
     try {
-      final response = await _client.get(Uri.parse(url), headers: _headers);
+      final response = await _client
+          .get(Uri.parse(url), headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       _log('GET NOTIFICATIONS', url, statusCode: response.statusCode, body: response.body);
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -44,7 +46,9 @@ class ApiNotificationService {
   Future<int> getUnreadCount() async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notificationsUnreadCount}';
     try {
-      final response = await _client.get(Uri.parse(url), headers: _headers);
+      final response = await _client
+          .get(Uri.parse(url), headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['unread_count'] as int? ?? 0;
@@ -59,7 +63,9 @@ class ApiNotificationService {
   Future<bool> markAsRead(int notificationId) async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notificationRead(notificationId)}';
     try {
-      final response = await _client.put(Uri.parse(url), headers: _headers);
+      final response = await _client
+          .put(Uri.parse(url), headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode == 200;
     } catch (e) {
       debugPrint('markAsRead error: $e');
@@ -71,7 +77,9 @@ class ApiNotificationService {
   Future<bool> markAllAsRead() async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notificationsReadAll}';
     try {
-      final response = await _client.put(Uri.parse(url), headers: _headers);
+      final response = await _client
+          .put(Uri.parse(url), headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode == 200;
     } catch (e) {
       debugPrint('markAllAsRead error: $e');
@@ -83,7 +91,9 @@ class ApiNotificationService {
   Future<bool> deleteNotification(int notificationId) async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notificationById(notificationId)}';
     try {
-      final response = await _client.delete(Uri.parse(url), headers: _headers);
+      final response = await _client
+          .delete(Uri.parse(url), headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode == 200;
     } catch (e) {
       debugPrint('deleteNotification error: $e');
@@ -95,7 +105,9 @@ class ApiNotificationService {
   Future<NotificationPreferences?> getPreferences() async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notificationPreferences}';
     try {
-      final response = await _client.get(Uri.parse(url), headers: _headers);
+      final response = await _client
+          .get(Uri.parse(url), headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return NotificationPreferences.fromJson(data);
@@ -110,11 +122,13 @@ class ApiNotificationService {
   Future<NotificationPreferences?> updatePreferences(NotificationPreferences prefs) async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notificationPreferences}';
     try {
-      final response = await _client.put(
-        Uri.parse(url),
-        headers: _headers,
-        body: jsonEncode(prefs.toJson()),
-      );
+      final response = await _client
+          .put(
+            Uri.parse(url),
+            headers: _headers,
+            body: jsonEncode(prefs.toJson()),
+          )
+          .timeout(ApiConstants.requestTimeout);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return NotificationPreferences.fromJson(data);
@@ -129,11 +143,13 @@ class ApiNotificationService {
   Future<bool> registerDeviceToken(String token, String platform) async {
     final url = '${ApiConstants.baseUrl}${ApiConstants.notificationDeviceToken}';
     try {
-      final response = await _client.post(
-        Uri.parse(url),
-        headers: _headers,
-        body: jsonEncode({'token': token, 'platform': platform}),
-      );
+      final response = await _client
+          .post(
+            Uri.parse(url),
+            headers: _headers,
+            body: jsonEncode({'token': token, 'platform': platform}),
+          )
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       debugPrint('registerDeviceToken error: $e');

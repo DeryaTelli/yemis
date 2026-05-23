@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/auth/user_model.dart';
 
@@ -27,6 +28,16 @@ class UserSession extends ChangeNotifier {
   static const String _lngKey = 'current_lng';
   static const String _persistKey = 'auth_persist';
 
+  void _notifyListenersSafely() {
+    if (!hasListeners) return;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Future<void>.delayed(Duration.zero, () {
+        if (hasListeners) notifyListeners();
+      });
+    });
+    SchedulerBinding.instance.scheduleFrame();
+  }
+
   /// Kayıtlı oturumu yükler.
   Future<void> loadSession() async {
     final prefs = await SharedPreferences.getInstance();
@@ -46,7 +57,7 @@ class UserSession extends ChangeNotifier {
     _currentLng = prefs.getDouble(_lngKey);
     _shouldPersist = prefs.getBool(_persistKey) ?? true;
     
-    notifyListeners();
+    _notifyListenersSafely();
   }
 
   /// Giriş yapan kullanıcıyı kaydeder ve dinleyicileri bilgilendirir.
@@ -61,7 +72,7 @@ class UserSession extends ChangeNotifier {
     if (token != null && token.isNotEmpty) {
       _token = token;
     }
-    notifyListeners();
+    _notifyListenersSafely();
     
     // Sadece persist true ise sakla
     if (_shouldPersist) {
@@ -87,7 +98,7 @@ class UserSession extends ChangeNotifier {
     _currentAddress = address;
     if (lat != null) _currentLat = lat;
     if (lng != null) _currentLng = lng;
-    notifyListeners();
+    _notifyListenersSafely();
 
     _persistLocation(address, lat, lng);
   }
@@ -107,7 +118,7 @@ class UserSession extends ChangeNotifier {
     _currentAddress = null;
     _currentLat = null;
     _currentLng = null;
-    notifyListeners();
+    _notifyListenersSafely();
 
     _clearPersistedSession();
   }

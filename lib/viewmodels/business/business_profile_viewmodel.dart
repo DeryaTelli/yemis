@@ -15,6 +15,7 @@ import 'package:lottie/lottie.dart';
 class BusinessProfileViewModel extends ChangeNotifier {
   final IAuthService _authService;
   final UserSession _userSession;
+  bool _isDisposed = false;
 
   int _selectedIndex = 4;
   int get selectedIndex => _selectedIndex;
@@ -83,10 +84,22 @@ class BusinessProfileViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isDisposed = true;
     fullNameController.dispose();
     emailController.dispose();
     phoneController.dispose();
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_isDisposed) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future<void>.delayed(Duration.zero, () {
+        if (!_isDisposed) super.notifyListeners();
+      });
+    });
+    WidgetsBinding.instance.scheduleFrame();
   }
 
   // ── Daily stats ──────────────────────────────

@@ -8,6 +8,7 @@ import '../utils/constants/app_colors.dart';
 import '../utils/locale_keys.dart';
 import '../utils/theme/text_styles_custom.dart';
 import '../viewmodels/map_picker_viewmodel.dart';
+import '../widgets/common/app_tile_layer.dart';
 import '../widgets/map/map_picker_bottom_panel.dart';
 import '../utils/theme/app_theme.dart';
 
@@ -23,7 +24,11 @@ class MapPickerView extends StatelessWidget {
     final section = accentColor == AppColors.volunteerColor ? AppSection.volunteer : AppSection.food;
 
     return ChangeNotifierProvider(
-      create: (_) => MapPickerViewModel()..init(),
+      create: (_) {
+        final vm = MapPickerViewModel();
+        WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
+        return vm;
+      },
       child: Theme(
         data: AppTheme.themeFor(section),
         child: _MapPickerBody(
@@ -97,10 +102,7 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
               },
             ),
             children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.yemis.app',
-              ),
+              const AppTileLayer(),
             ],
           ),
 

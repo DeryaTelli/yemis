@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/auth/address_model.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
+import '../../utils/constants/api_constants.dart';
 import '../../utils/locale_keys.dart';
 
 enum LocationPermissionState { unknown, granted, denied }
@@ -247,7 +248,9 @@ class LocationViewModel extends ChangeNotifier {
         'addressdetails': '1',
         'accept-language': 'tr',
       });
-      final res = await http.get(uri, headers: {'User-Agent': 'YemisApp/1.0'});
+      final res = await http
+          .get(uri, headers: {'User-Agent': 'YemisApp/1.0'})
+          .timeout(ApiConstants.requestTimeout);
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         final address = data['address'];

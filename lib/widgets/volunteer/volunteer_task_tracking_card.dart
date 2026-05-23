@@ -6,7 +6,6 @@ import 'package:yemis/utils/constants/app_colors.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 import 'package:yemis/viewmodels/home/volunteer_home_viewmodel.dart';
-import 'package:yemis/utils/routes/app_routes.dart';
 import 'package:yemis/widgets/volunteer/volunteer_cancel_dialog.dart';
 import '../../viewmodels/volunteer/volunteer_listing_detail_viewmodel.dart';
 
@@ -22,7 +21,7 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.read<VolunteerHomeViewModel>();
+    final vm = isOwner ? null : context.read<VolunteerHomeViewModel>();
     final status = task.deliveryStatus;
     final isCompleted = status == DeliveryStatus.completed;
 
@@ -58,8 +57,8 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
           _buildActionBox(context, vm, status),
 
           // ── Volunteer Review (Only if completed) ──────────
-          if (status == DeliveryStatus.completed &&
-              task.volunteerComment != null) ...[
+          if (task.volunteerComment != null &&
+              task.volunteerComment!.trim().isNotEmpty) ...[
             const SizedBox(height: 16),
             _buildVolunteerReviewBox(),
           ],
@@ -283,10 +282,52 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
   }
 
   Widget _buildStepper(DeliveryStatus status) {
+    final progress = _progressForSide;
+    if (progress != null && progress.steps.isNotEmpty) {
+      return _buildBackendStepper(progress.steps);
+    }
+
     if (isOwner) {
       return _buildOwnerStepper(status);
     }
     return _buildVolunteerStepper(status);
+  }
+
+  VolunteerTaskProgress? get _progressForSide {
+    return isOwner ? task.ownerProgress : task.volunteerProgress;
+  }
+
+  Widget _buildBackendStepper(List<VolunteerProgressStep> steps) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(steps.length * 2 - 1, (index) {
+        if (index.isOdd) {
+          final previousStep = steps[index ~/ 2];
+          return Expanded(
+            child: _buildConnector(_isBackendStepCompleted(previousStep)),
+          );
+        }
+
+        final stepIndex = index ~/ 2;
+        final step = steps[stepIndex];
+        return _buildStepCircle(
+          step.index > 0 ? step.index : stepIndex + 1,
+          _isBackendStepCompleted(step),
+          _isBackendStepCurrent(step),
+          step.label,
+        );
+      }),
+    );
+  }
+
+  bool _isBackendStepCompleted(VolunteerProgressStep step) {
+    final state = step.state.toLowerCase();
+    return state == 'completed' || state == 'done' || state == 'passed';
+  }
+
+  bool _isBackendStepCurrent(VolunteerProgressStep step) {
+    final state = step.state.toLowerCase();
+    return state == 'current' || state == 'active';
   }
 
   Widget _buildOwnerStepper(DeliveryStatus status) {
@@ -298,78 +339,46 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
       LocaleKeys.taskTracking_stepCompleted.tr(),
       LocaleKeys.taskTracking_stepReview.tr(),
     ];
+    final currentStep = _ownerStepIndex(status);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(steps.length * 2 - 1, (index) {
         if (index.isOdd) {
-          // Bağlayıcı çizgi
           final stepIndex = index ~/ 2;
-          bool isActive = false;
-          switch (stepIndex) {
-            case 0:
-              isActive =
-                  status.index > DeliveryStatus.pendingOwnerApproval.index;
-              break;
-            case 1:
-              isActive = status.index > DeliveryStatus.goingToPickUp.index;
-              break;
-            case 2:
-              isActive = status.index > DeliveryStatus.ownerHandedOver.index;
-              break;
-            case 3:
-              isActive = status.index > DeliveryStatus.goingToShelter.index;
-              break;
-            case 4:
-              isActive = status == DeliveryStatus.completed;
-              break;
-          }
-          return Expanded(child: _buildConnector(isActive));
+          return Expanded(child: _buildConnector(currentStep > stepIndex));
         } else {
-          // Çember
           final stepIndex = index ~/ 2;
-          bool isCompleted = false;
-          bool isCurrent = false;
-
-          switch (stepIndex) {
-            case 0:
-              isCurrent = status == DeliveryStatus.pendingOwnerApproval;
-              isCompleted =
-                  status.index > DeliveryStatus.pendingOwnerApproval.index;
-              break;
-            case 1:
-              isCurrent =
-                  status == DeliveryStatus.accepted ||
-                  status == DeliveryStatus.goingToPickUp;
-              isCompleted = status.index > DeliveryStatus.goingToPickUp.index;
-              break;
-            case 2:
-              isCurrent = status == DeliveryStatus.ownerHandedOver;
-              isCompleted = status.index > DeliveryStatus.ownerHandedOver.index;
-              break;
-            case 3:
-              isCurrent =
-                  status == DeliveryStatus.goingToShelter ||
-                  status == DeliveryStatus.pickedUp;
-              isCompleted = status.index > DeliveryStatus.goingToShelter.index;
-              break;
-            case 4:
-              isCurrent = status == DeliveryStatus.deliveredPendingReview;
-              isCompleted = status == DeliveryStatus.completed;
-              break;
-            case 5:
-              isCurrent = status == DeliveryStatus.completed;
-              isCompleted = status == DeliveryStatus.completed;
-              break;
-          }
           return _buildStepCircle(
             stepIndex + 1,
-            isCompleted,
-            isCurrent,
+            currentStep > stepIndex,
+            currentStep == stepIndex,
             steps[stepIndex],
           );
         }
       }),
     );
+  }
+
+  int _ownerStepIndex(DeliveryStatus status) {
+    switch (status) {
+      case DeliveryStatus.pendingOwnerApproval:
+        return 0;
+      case DeliveryStatus.accepted:
+      case DeliveryStatus.goingToPickUp:
+        return 1;
+      case DeliveryStatus.ownerHandedOver:
+      case DeliveryStatus.pickedUp:
+        return 2;
+      case DeliveryStatus.goingToShelter:
+        return 3;
+      case DeliveryStatus.deliveredPendingReview:
+        return 4;
+      case DeliveryStatus.completed:
+        return 5;
+      case DeliveryStatus.cancelled:
+        return 0;
+    }
   }
 
   Widget _buildVolunteerStepper(DeliveryStatus status) {
@@ -575,11 +584,12 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
 
   Widget _buildActionBox(
     BuildContext context,
-    VolunteerHomeViewModel vm,
+    VolunteerHomeViewModel? vm,
     DeliveryStatus status,
   ) {
     String iconPath = 'assets/volunteerIcon/home1.png';
     String message = '';
+    final backendMessage = _progressForSide?.message;
 
     switch (status) {
       case DeliveryStatus.completed:
@@ -632,6 +642,9 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
         break;
       default:
     }
+    if (backendMessage != null && backendMessage.trim().isNotEmpty) {
+      message = backendMessage;
+    }
 
     return Container(
       padding: const EdgeInsets.all(8),
@@ -681,23 +694,28 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
 
   Widget _buildPrimaryAction(
     BuildContext context,
-    VolunteerHomeViewModel vm,
+    VolunteerHomeViewModel? vm,
     DeliveryStatus status,
   ) {
+    final progress = _progressForSide;
+    if (progress != null && progress.availableActions.isNotEmpty) {
+      return _buildBackendActions(context, vm, progress.availableActions);
+    }
+
     if (status == DeliveryStatus.completed) {
+      return const SizedBox.shrink();
+    }
+
+    if (!isOwner && status == DeliveryStatus.deliveredPendingReview) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           ElevatedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                AppRoutes.volunteerDetail,
-                arguments: task,
-              ).then((_) {
-                vm.onReviewSubmitted();
-              });
-            },
+            onPressed: task.taskId == null
+                ? null
+                : vm == null
+                    ? null
+                    : () => _showVolunteerReviewDialog(context, vm, task),
             icon: const Icon(Icons.chat_bubble_outline_rounded, size: 12),
             label: Text(LocaleKeys.taskTracking_btnLeaveReview.tr()),
             style: ElevatedButton.styleFrom(
@@ -758,25 +776,31 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    if (task.taskId == null) {
+      return const SizedBox.shrink();
+    }
+
     if (status == DeliveryStatus.accepted) {
       advanceBtn = _buildAdvanceButton(
         label: LocaleKeys.taskTracking_btnGoPickup.tr(),
-        onPressed: () => vm.startPickup(task.taskId!),
+        onPressed: vm == null ? () {} : () => vm.startPickup(task.taskId!),
       );
     } else if (status == DeliveryStatus.ownerHandedOver) {
       advanceBtn = _buildAdvanceButton(
         label: LocaleKeys.taskTracking_btnPickedUp.tr(),
-        onPressed: () => vm.confirmPickedUp(task.taskId!),
+        onPressed: vm == null ? () {} : () => vm.confirmPickedUp(task.taskId!),
       );
     } else if (status == DeliveryStatus.pickedUp) {
       advanceBtn = _buildAdvanceButton(
         label: LocaleKeys.taskTracking_btnGoShelter.tr(),
-        onPressed: () => vm.startDelivery(task.taskId!),
+        onPressed: vm == null ? () {} : () => vm.startDelivery(task.taskId!),
       );
     } else if (status == DeliveryStatus.goingToShelter) {
       advanceBtn = _buildAdvanceButton(
         label: LocaleKeys.taskTracking_btnComplete.tr(),
-        onPressed: () => vm.completeVolunteerTask(task.taskId!),
+        onPressed: vm == null
+            ? () {}
+            : () => vm.completeVolunteerTask(task.taskId!),
       );
     }
 
@@ -784,6 +808,129 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         if (advanceBtn != null) ...[advanceBtn, const SizedBox(width: 8)],
+        OutlinedButton.icon(
+          onPressed: vm == null ? null : () => _showCancelDialog(context, vm, task),
+          icon: const Icon(Icons.close, size: 12, color: Colors.red),
+          label: Text(LocaleKeys.taskTracking_btnCancel.tr()),
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.red,
+            side: const BorderSide(color: Colors.red, width: 1),
+            backgroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            minimumSize: const Size(100, 32),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            textStyle: CustomTextStyles.semiBold13White.copyWith(
+              color: Colors.red,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBackendActions(
+    BuildContext context,
+    VolunteerHomeViewModel? vm,
+    List<String> actions,
+  ) {
+    final normalizedActions = actions.map((e) => e.toLowerCase()).toSet();
+    if (task.taskId == null) return const SizedBox.shrink();
+
+    if (isOwner) {
+      final detailVm = context.read<VolunteerListingDetailViewModel>();
+      final buttons = <Widget>[];
+
+      if (normalizedActions.contains('reject')) {
+        buttons.add(
+          OutlinedButton(
+            onPressed: () => detailVm.rejectVolunteer(),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.red,
+              side: const BorderSide(color: Colors.red),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              minimumSize: const Size(80, 32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Text(
+              LocaleKeys.taskTracking_btnReject.tr(),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ),
+        );
+      }
+
+      if (normalizedActions.contains('approve')) {
+        buttons.add(
+          _buildAdvanceButton(
+            label: LocaleKeys.taskTracking_btnApprove.tr(),
+            onPressed: () => detailVm.acceptVolunteer(),
+          ),
+        );
+      }
+
+      if (normalizedActions.contains('mark_handed_over') ||
+          normalizedActions.contains('hand_over') ||
+          normalizedActions.contains('handover')) {
+        buttons.add(
+          _buildAdvanceButton(
+            label: LocaleKeys.taskTracking_btnHandover.tr(),
+            onPressed: () => detailVm.ownerHandover(),
+          ),
+        );
+      }
+
+      return _buildActionRow(buttons);
+    }
+
+    final buttons = <Widget>[];
+    if (vm == null) return const SizedBox.shrink();
+
+    if (normalizedActions.contains('start_pickup')) {
+      buttons.add(
+        _buildAdvanceButton(
+          label: LocaleKeys.taskTracking_btnGoPickup.tr(),
+          onPressed: () => vm.startPickup(task.taskId!),
+        ),
+      );
+    }
+    if (normalizedActions.contains('mark_picked_up')) {
+      buttons.add(
+        _buildAdvanceButton(
+          label: LocaleKeys.taskTracking_btnPickedUp.tr(),
+          onPressed: () => vm.confirmPickedUp(task.taskId!),
+        ),
+      );
+    }
+    if (normalizedActions.contains('start_delivery')) {
+      buttons.add(
+        _buildAdvanceButton(
+          label: LocaleKeys.taskTracking_btnGoShelter.tr(),
+          onPressed: () => vm.startDelivery(task.taskId!),
+        ),
+      );
+    }
+    if (normalizedActions.contains('complete')) {
+      buttons.add(
+        _buildAdvanceButton(
+          label: LocaleKeys.taskTracking_btnComplete.tr(),
+          onPressed: () => vm.completeVolunteerTask(task.taskId!),
+        ),
+      );
+    }
+    if (normalizedActions.contains('review')) {
+      buttons.add(
+        _buildAdvanceButton(
+          label: LocaleKeys.taskTracking_btnLeaveReview.tr(),
+          onPressed: () => _showVolunteerReviewDialog(context, vm, task),
+        ),
+      );
+    }
+    if (normalizedActions.contains('cancel')) {
+      buttons.add(
         OutlinedButton.icon(
           onPressed: () => _showCancelDialog(context, vm, task),
           icon: const Icon(Icons.close, size: 12, color: Colors.red),
@@ -802,6 +949,21 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
             ),
           ),
         ),
+      );
+    }
+
+    return _buildActionRow(buttons);
+  }
+
+  Widget _buildActionRow(List<Widget> buttons) {
+    if (buttons.isEmpty) return const SizedBox.shrink();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        for (var i = 0; i < buttons.length; i++) ...[
+          if (i > 0) const SizedBox(width: 8),
+          Flexible(child: buttons[i]),
+        ],
       ],
     );
   }
@@ -836,5 +998,106 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
         vm.cancelVolunteerTask(task.taskId!);
       },
     );
+  }
+
+  void _showVolunteerReviewDialog(
+    BuildContext context,
+    VolunteerHomeViewModel vm,
+    VolunteerListing task,
+  ) {
+    final controller = TextEditingController();
+    int rating = 5;
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        bool isSubmitting = false;
+        String? errorText;
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text(LocaleKeys.taskTracking_btnLeaveReview.tr()),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: List.generate(5, (index) {
+                      final value = index + 1;
+                      return IconButton(
+                        visualDensity: VisualDensity.compact,
+                        onPressed: isSubmitting
+                            ? null
+                            : () => setState(() => rating = value),
+                        icon: Icon(
+                          value <= rating ? Icons.star : Icons.star_border,
+                          color: Colors.amber,
+                        ),
+                      );
+                    }),
+                  ),
+                  TextField(
+                    controller: controller,
+                    enabled: !isSubmitting,
+                    minLines: 3,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: LocaleKeys.taskTracking_volunteerComment.tr(),
+                      errorText: errorText,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () => Navigator.pop(dialogContext),
+                  child: Text(LocaleKeys.common_cancel.tr()),
+                ),
+                ElevatedButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () async {
+                          final comment = controller.text.trim();
+                          if (comment.isEmpty) {
+                            setState(() {
+                              errorText = LocaleKeys.taskTracking_volunteerComment.tr();
+                            });
+                            return;
+                          }
+
+                          setState(() => isSubmitting = true);
+                          final success = await vm.submitVolunteerReview(
+                            task.taskId!,
+                            rating: rating,
+                            comment: comment,
+                          );
+                          if (!dialogContext.mounted) return;
+                          if (success) {
+                            Navigator.pop(dialogContext);
+                          } else {
+                            setState(() {
+                              isSubmitting = false;
+                              errorText = 'Yorum gönderilemedi.';
+                            });
+                          }
+                        },
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(LocaleKeys.common_save.tr()),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    ).whenComplete(controller.dispose);
   }
 }

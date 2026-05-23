@@ -5,6 +5,7 @@ import '../../models/volunteer/shelter_model.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../views/volunteer/volunteer_expanded_map_view.dart';
+import '../common/app_tile_layer.dart';
 
 /// Gönüllü harita alanını gösterir.
 class VolunteerMapSection extends StatefulWidget {
@@ -84,10 +85,7 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
                 ),
               ),
               children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.yemis.app',
-                ),
+                const AppTileLayer(),
                 MarkerLayer(
                   markers: [
                     ...widget.listings

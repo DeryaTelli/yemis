@@ -114,15 +114,17 @@ void main() async {
     assistantService.setToken(token);
     notificationService.setToken(token);
 
-    // Uygulama açılışında token kaydı (login halindeyse)
-    NotificationService().getToken().then((fcmToken) {
+    // Uygulama açılışını FCM'e bağlama; servis geçici olarak kapalıysa
+    // ekranların yüklenmesini etkilemesin.
+    Future<void>.delayed(const Duration(seconds: 10), () async {
+      final fcmToken = await NotificationService().getToken();
       if (fcmToken != null) {
         final platform = kIsWeb
             ? 'web'
             : (defaultTargetPlatform == TargetPlatform.android
                   ? 'android'
                   : 'ios');
-        notificationService.registerDeviceToken(fcmToken, platform);
+        await notificationService.registerDeviceToken(fcmToken, platform);
       }
     });
   }
@@ -225,9 +227,14 @@ class MyApp extends StatelessWidget {
           create: (_) => BusinessProfileViewModel(authService, userSession),
         ),
         ChangeNotifierProvider(
-          create: (_) =>
-              FoodHomeViewModel(service: foodService, userSession: userSession)
-                ..init(),
+          create: (_) {
+            final vm = FoodHomeViewModel(
+              service: foodService,
+              userSession: userSession,
+            );
+            WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
+            return vm;
+          },
         ),
         ChangeNotifierProvider(
           create: (_) => FoodFavoritesViewModel(foodService),

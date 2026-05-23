@@ -36,19 +36,22 @@ class NotificationViewModel extends ChangeNotifier {
       _unreadCount = results[1] as int;
     } catch (e) {
       _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<void> loadPreferences() async {
     _isPrefsLoading = true;
     notifyListeners();
-    final prefs = await _service.getPreferences();
-    if (prefs != null) _preferences = prefs;
-    _isPrefsLoading = false;
-    notifyListeners();
+    try {
+      final prefs = await _service.getPreferences();
+      if (prefs != null) _preferences = prefs;
+    } finally {
+      _isPrefsLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> markAsRead(int notificationId) async {
@@ -84,10 +87,13 @@ class NotificationViewModel extends ChangeNotifier {
   Future<void> updatePreferences(NotificationPreferences prefs) async {
     _isPrefsLoading = true;
     notifyListeners();
-    final updated = await _service.updatePreferences(prefs);
-    if (updated != null) _preferences = updated;
-    _isPrefsLoading = false;
-    notifyListeners();
+    try {
+      final updated = await _service.updatePreferences(prefs);
+      if (updated != null) _preferences = updated;
+    } finally {
+      _isPrefsLoading = false;
+      notifyListeners();
+    }
   }
 
   /// Returns a relative human-readable time string or date

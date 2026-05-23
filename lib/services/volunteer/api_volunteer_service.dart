@@ -47,7 +47,23 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<List<VolunteerListing>> getActiveListings() async {
-    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveMeals}');
+    final meals = await _tryFetchVolunteerListingsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.myActiveMeals}',
+    );
+    final ownerTasks = await _tryFetchVolunteerListingsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.ownerVolunteerTasks}',
+    );
+
+    if (ownerTasks.isEmpty) return meals;
+    if (meals.isEmpty) return ownerTasks;
+
+    final mergedByMealId = {
+      for (final meal in meals) meal.id: meal,
+    };
+    for (final ownerTask in ownerTasks) {
+      mergedByMealId[ownerTask.id] = ownerTask;
+    }
+    return mergedByMealId.values.toList();
   }
 
   @override
@@ -60,6 +76,11 @@ class ApiVolunteerService implements IVolunteerService {
     return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.attendedTasks}');
   }
 
+  @override
+  Future<List<VolunteerListing>> getMyActiveTasks() async {
+    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}');
+  }
+
   Future<List<VolunteerListing>> _fetchVolunteerListingsFromUrl(String urlString) async {
     final url = Uri.parse(urlString);
 
@@ -70,7 +91,9 @@ class ApiVolunteerService implements IVolunteerService {
     }
 
     try {
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       
       if (kDebugMode) {
         print('--- API RESPONSE (GET MEALS) ---');
@@ -86,7 +109,17 @@ class ApiVolunteerService implements IVolunteerService {
         if (decoded is List) {
           data = decoded;
         } else if (decoded is Map && decoded.containsKey('data')) {
-          data = decoded['data'] as List;
+          final value = decoded['data'];
+          if (value is List) data = value;
+          if (value is Map && value['results'] is List) {
+            data = value['results'] as List;
+          }
+        } else if (decoded is Map && decoded['results'] is List) {
+          data = decoded['results'] as List;
+        } else if (decoded is Map && decoded['items'] is List) {
+          data = decoded['items'] as List;
+        } else if (decoded is Map && decoded['meals'] is List) {
+          data = decoded['meals'] as List;
         } else if (decoded is Map) {
           // Tekil nesne dönmüş olabilir
           data = [decoded];
@@ -107,6 +140,19 @@ class ApiVolunteerService implements IVolunteerService {
     }
   }
 
+  Future<List<VolunteerListing>> _tryFetchVolunteerListingsFromUrl(
+    String urlString,
+  ) async {
+    try {
+      return await _fetchVolunteerListingsFromUrl(urlString);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Optional volunteer listing fetch failed: $urlString -> $e');
+      }
+      return [];
+    }
+  }
+
   @override
   Future<bool> createMeal(Map<String, dynamic> data) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.meals}');
@@ -120,11 +166,13 @@ class ApiVolunteerService implements IVolunteerService {
     }
 
     try {
-      final response = await _client.post(
-        url,
-        headers: _headers,
-        body: jsonEncode(data),
-      );
+      final response = await _client
+          .post(
+            url,
+            headers: _headers,
+            body: jsonEncode(data),
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE (POST MEAL) ---');
@@ -151,7 +199,9 @@ class ApiVolunteerService implements IVolunteerService {
     }
 
     try {
-      final response = await _client.delete(url, headers: _headers);
+      final response = await _client
+          .delete(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE (DELETE MEAL) ---');
@@ -180,11 +230,13 @@ class ApiVolunteerService implements IVolunteerService {
     }
 
     try {
-      final response = await _client.put(
-        url,
-        headers: _headers,
-        body: jsonEncode(data),
-      );
+      final response = await _client
+          .put(
+            url,
+            headers: _headers,
+            body: jsonEncode(data),
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE (PUT MEAL) ---');
@@ -214,7 +266,9 @@ class ApiVolunteerService implements IVolunteerService {
     }
 
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE (POST VOLUNTEER) ---');
@@ -251,7 +305,9 @@ class ApiVolunteerService implements IVolunteerService {
     }
 
     try {
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE (GET NEARBY SHELTERS) ---');
@@ -274,7 +330,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> startPickup(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.startPickup(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error starting pickup: $e');
@@ -286,7 +344,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> markPickedUp(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.markPickedUp(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error marking picked up: $e');
@@ -298,7 +358,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> startDelivery(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.startDelivery(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error starting delivery: $e');
@@ -310,7 +372,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> confirmDelivery(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.confirmDelivery(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error confirming delivery: $e');
@@ -322,7 +386,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> acceptVolunteer(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.acceptVolunteer(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error accepting volunteer: $e');
@@ -334,7 +400,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> rejectVolunteer(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.rejectVolunteer(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error rejecting volunteer: $e');
@@ -346,7 +414,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> ownerHandover(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.ownerHandover(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error in owner handover: $e');
@@ -358,7 +428,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> submitVolunteerReview(int taskId, Map<String, dynamic> data) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.volunteerReview(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers, body: jsonEncode(data));
+      final response = await _client
+          .post(url, headers: _headers, body: jsonEncode(data))
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error submitting volunteer review: $e');
@@ -370,7 +442,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> submitOwnerReview(int taskId, Map<String, dynamic> data) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.ownerReview(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers, body: jsonEncode(data));
+      final response = await _client
+          .post(url, headers: _headers, body: jsonEncode(data))
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error submitting owner review: $e');
@@ -382,7 +456,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> completeTask(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.completeTask(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error completing task: $e');
@@ -394,7 +470,9 @@ class ApiVolunteerService implements IVolunteerService {
   Future<bool> cancelTask(int taskId) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.cancelTask(taskId)}');
     try {
-      final response = await _client.post(url, headers: _headers);
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error cancelling task: $e');

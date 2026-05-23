@@ -138,15 +138,17 @@ class LoginViewModel extends ChangeNotifier {
         }
 
         // --- Register Device Token ---
-        try {
-          final fcmToken = await NotificationService().getToken();
-          if (fcmToken != null) {
-            final platform = Platform.isAndroid ? 'android' : 'ios';
-            await _notificationService.registerDeviceToken(fcmToken, platform);
+        Future<void>(() async {
+          try {
+            final fcmToken = await NotificationService().getToken();
+            if (fcmToken != null) {
+              final platform = Platform.isAndroid ? 'android' : 'ios';
+              await _notificationService.registerDeviceToken(fcmToken, platform);
+            }
+          } catch (e) {
+            debugPrint('Error registering device token: $e');
           }
-        } catch (e) {
-          debugPrint('Error registering device token: $e');
-        }
+        });
 
         onSuccess();
       } else {

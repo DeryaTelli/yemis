@@ -29,11 +29,13 @@ class ApiBusinessService implements IBusinessService {
     }
 
     try {
-      final response = await _client.post(
-        url,
-        headers: _headers,
-        body: jsonEncode(data),
-      );
+      final response = await _client
+          .post(
+            url,
+            headers: _headers,
+            body: jsonEncode(data),
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE ---');
@@ -74,7 +76,9 @@ class ApiBusinessService implements IBusinessService {
     }
 
     try {
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
       
       if (kDebugMode) {
         print('--- API RESPONSE (GET BAGS) ---');
@@ -125,7 +129,9 @@ class ApiBusinessService implements IBusinessService {
     }
 
     try {
-      final response = await _client.delete(url, headers: headers);
+      final response = await _client
+          .delete(url, headers: headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE ---');
@@ -153,11 +159,13 @@ class ApiBusinessService implements IBusinessService {
     }
 
     try {
-      final response = await _client.put(
-        url,
-        headers: _headers,
-        body: jsonEncode(data),
-      );
+      final response = await _client
+          .put(
+            url,
+            headers: _headers,
+            body: jsonEncode(data),
+          )
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE ---');
@@ -184,7 +192,9 @@ class ApiBusinessService implements IBusinessService {
     }
 
     try {
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
         print('--- API RESPONSE ---');

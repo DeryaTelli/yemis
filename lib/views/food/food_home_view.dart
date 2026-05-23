@@ -54,7 +54,10 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
     // Sayfaya gelindiğinde favorileri güncelle
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        context.read<FoodHomeViewModel>().refreshFavorites();
+        final vm = context.read<FoodHomeViewModel>();
+        if (!vm.isLoading) {
+          vm.refreshFavorites();
+        }
       }
     });
   }
