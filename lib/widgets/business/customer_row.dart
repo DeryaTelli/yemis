@@ -46,35 +46,60 @@ class CustomerRow extends StatelessWidget {
           const SizedBox(width: 10),
           // İsim
           Expanded(
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: reservation.customerName,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryTextColor,
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: reservation.customerName,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primaryTextColor,
+                        ),
+                      ),
+                      TextSpan(
+                        text:
+                            ' ${LocaleKeys.businessApprovals_reservedBy.tr()}',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF555555),
+                        ),
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: ' ${LocaleKeys.businessApprovals_reservedBy.tr()}',
+                ),
+                if (reservation.listingTitle.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    reservation.listingTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF555555),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF777777),
                     ),
                   ),
                 ],
-              ),
+              ],
             ),
           ),
           const SizedBox(width: 10),
           // Butonlar
           if (isApproved)
-            StatusChip(label: LocaleKeys.businessApprovals_approved.tr(), color: Colors.green)
+            StatusChip(
+              label: LocaleKeys.businessApprovals_approved.tr(),
+              color: Colors.green,
+            )
           else if (isRejected)
-            StatusChip(label: LocaleKeys.businessApprovals_rejected.tr(), color: Colors.red)
+            StatusChip(
+              label: LocaleKeys.businessApprovals_rejected.tr(),
+              color: Colors.red,
+            )
           else ...[
             ActionBtn(
               label: LocaleKeys.businessApprovals_approveButton.tr(),

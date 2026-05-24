@@ -59,12 +59,17 @@ class HomeCard extends StatelessWidget {
           ),
 
           // ── PNG — Kartın Üstüne Taşan ────────────────────
-          Positioned(
-            top: -60,
-            left: item.imageOnLeft ? -10 : null,
-            right: item.imageOnLeft ? null : -10,
-            child: Image.asset(item.imagePath, width: 140, fit: BoxFit.contain),
-          ),
+          if (item.showDecorationImage)
+            Positioned(
+              top: -60,
+              left: item.imageOnLeft ? -10 : null,
+              right: item.imageOnLeft ? null : -10,
+              child: Image.asset(
+                item.imagePath,
+                width: 140,
+                fit: BoxFit.contain,
+              ),
+            ),
         ],
       ),
     );

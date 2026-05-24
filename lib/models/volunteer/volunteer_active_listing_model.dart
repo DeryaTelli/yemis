@@ -108,8 +108,8 @@ class VolunteerActiveListingModel {
     final reviewData = json['volunteer_review'] is Map
         ? Map<String, dynamic>.from(json['volunteer_review'] as Map)
         : (json['review'] is Map
-            ? Map<String, dynamic>.from(json['review'] as Map)
-            : null);
+              ? Map<String, dynamic>.from(json['review'] as Map)
+              : null);
 
     final parsedReviewImages = <String>[];
     String? reviewCreatedAt;
@@ -119,13 +119,16 @@ class VolunteerActiveListingModel {
           reviewData['review']?.toString() ??
           reviewData['text']?.toString();
 
-      if (reviewData['image_url_1'] != null && reviewData['image_url_1'].toString().isNotEmpty) {
+      if (reviewData['image_url_1'] != null &&
+          reviewData['image_url_1'].toString().isNotEmpty) {
         parsedReviewImages.add(reviewData['image_url_1'].toString());
       }
-      if (reviewData['image_url_2'] != null && reviewData['image_url_2'].toString().isNotEmpty) {
+      if (reviewData['image_url_2'] != null &&
+          reviewData['image_url_2'].toString().isNotEmpty) {
         parsedReviewImages.add(reviewData['image_url_2'].toString());
       }
-      if (reviewData['image_url_3'] != null && reviewData['image_url_3'].toString().isNotEmpty) {
+      if (reviewData['image_url_3'] != null &&
+          reviewData['image_url_3'].toString().isNotEmpty) {
         parsedReviewImages.add(reviewData['image_url_3'].toString());
       }
 
@@ -134,7 +137,9 @@ class VolunteerActiveListingModel {
         try {
           final dt = DateTime.parse(rawCreatedAt).toLocal();
           final now = DateTime.now();
-          if (dt.year == now.year && dt.month == now.month && dt.day == now.day) {
+          if (dt.year == now.year &&
+              dt.month == now.month &&
+              dt.day == now.day) {
             reviewCreatedAt = 'Bugün, ${DateFormat('HH:mm').format(dt)}';
           } else {
             reviewCreatedAt = DateFormat('dd.MM.yyyy, HH:mm').format(dt);
@@ -153,8 +158,11 @@ class VolunteerActiveListingModel {
     final topLevelProgress = availableActions.isEmpty
         ? null
         : VolunteerTaskProgress(
-            status: (json['delivery_status'] ?? json['status'] ?? json['task_status'])
-                ?.toString(),
+            status:
+                (json['delivery_status'] ??
+                        json['status'] ??
+                        json['task_status'])
+                    ?.toString(),
             message: json['message']?.toString(),
             availableActions: availableActions,
           );
@@ -189,17 +197,6 @@ class VolunteerActiveListingModel {
           mealData['owner_image']?.toString();
     }
 
-    if (json['id']?.toString() == "5") {
-      pName = "Yemek Dünyası"; // Restoran ismi
-      pImage =
-          "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=200";
-    }
-
-    if (json['id']?.toString() == "11") {
-      pName = "Derya Tel";
-      pImage =
-          "https://res.cloudinary.com/dwgpcnvcf/image/upload/v1777629067/yemis/profile_images/user_5_59b9c949.jpg";
-    }
 
     if (json['user'] != null && json['user'] is Map) {
       final user = json['user'] as Map<String, dynamic>;
@@ -262,22 +259,24 @@ class VolunteerActiveListingModel {
     final parsedTopLevelId = json['id'] is int
         ? json['id'] as int
         : int.tryParse(json['id']?.toString() ?? '');
-    final parsedExplicitTaskId =
-        int.tryParse(
-          (json['task_id'] ??
+    final parsedExplicitTaskId = int.tryParse(
+      (json['task_id'] ??
                   json['volunteer_task_id'] ??
                   json['delivery_task_id'] ??
                   json['active_task_id'])
               ?.toString() ??
-              '',
-        );
+          '',
+    );
     final parsedMealId =
         (json['meal_id'] is int ? json['meal_id'] as int : null) ??
         int.tryParse(json['meal_id']?.toString() ?? '') ??
+        (json['meal_share_id'] is int ? json['meal_share_id'] as int : null) ??
+        int.tryParse(json['meal_share_id']?.toString() ?? '') ??
         (mealData?['id'] is int ? mealData!['id'] as int : null) ??
         int.tryParse(mealData?['id']?.toString() ?? '');
     final effectiveTaskId =
-        parsedExplicitTaskId ?? (parsedMealId != null ? parsedTopLevelId : null);
+        parsedExplicitTaskId ??
+        (parsedMealId != null ? parsedTopLevelId : null);
 
     return VolunteerActiveListingModel(
       id: parsedMealId ?? parsedTopLevelId ?? 0,
@@ -327,42 +326,31 @@ class VolunteerActiveListingModel {
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())
           : null,
-      volunteerComment: json['id']?.toString() == "5"
-          ? "Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var."
-          : volunteerComment,
+      volunteerComment: volunteerComment,
       reviewCreatedAt: reviewCreatedAt,
-      reviewImages: json['id']?.toString() == "5"
-          ? [
-              "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",
-              "https://images.unsplash.com/photo-1586816001966-79b736744398?w=400",
-              "https://images.unsplash.com/photo-1550547660-d9450f859349?w=400",
-            ]
-          : parsedReviewImages.isNotEmpty
-              ? parsedReviewImages
-              : (json['review_images'] != null
-                    ? List<String>.from(json['review_images'])
-                    : []),
-      volunteerRating: json['id']?.toString() == "5"
-          ? 5.0
-          : (reviewData?['rating'] != null
-                ? double.tryParse(reviewData!['rating'].toString())
-                : json['rating'] != null
-                    ? double.tryParse(json['rating'].toString())
-                    : null),
+      reviewImages: parsedReviewImages.isNotEmpty
+          ? parsedReviewImages
+          : (json['review_images'] != null
+                ? List<String>.from(json['review_images'])
+                : []),
+      volunteerRating: reviewData?['rating'] != null
+          ? double.tryParse(reviewData!['rating'].toString())
+          : json['rating'] != null
+          ? double.tryParse(json['rating'].toString())
+          : null,
       posterName: pName,
       posterImageUrl: pImage,
       assignedVolunteerName: assignedName,
       assignedVolunteerAvatar: assignedAvatar,
       ownerProgress: ownerProgress,
       volunteerProgress: volunteerProgress ?? topLevelProgress,
-      acceptedByUserId:
-          int.tryParse(
-            (json['accepted_by_id'] ??
+      acceptedByUserId: int.tryParse(
+        (json['accepted_by_id'] ??
                     json['accepted_by_user_id'] ??
                     json['volunteer_id'])
                 ?.toString() ??
-                '',
-          ),
+            '',
+      ),
     );
   }
 
@@ -433,10 +421,8 @@ class VolunteerActiveListingModel {
       isAttended: volunteerComment != null || acceptedByUserId != null,
       reviewImages: reviewImages,
       volunteerRating: volunteerRating ?? 5.0,
-      volunteerName: id.toString() == "5" ? "Derya Telli" : posterName,
-      volunteerAvatar: id.toString() == "5"
-          ? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200"
-          : posterImageUrl,
+      volunteerName: posterName,
+      volunteerAvatar: posterImageUrl,
       assignedVolunteerName: assignedVolunteerName,
       assignedVolunteerAvatar: assignedVolunteerAvatar,
       isAvailable: isAvailable,
@@ -452,7 +438,7 @@ class VolunteerActiveListingModel {
 
   DeliveryStatus _mapDeliveryStatus(String? status) {
     if (status == null) return DeliveryStatus.pendingOwnerApproval;
-    
+
     switch (status.toLowerCase()) {
       case 'pending_owner_approval':
       case 'requested':

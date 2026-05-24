@@ -64,7 +64,23 @@ class FoodReservationConfirmView extends StatelessWidget {
 
             // ── Harita ─────────────────────────────────────
             if (businessLatLng != null)
-              OrderLocationMap(businessLocation: businessLatLng, height: 160),
+              OrderLocationMap(
+                businessLocation: businessLatLng,
+                height: 160,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => NavigationView(
+                        latitude: businessLatLng.latitude,
+                        longitude: businessLatLng.longitude,
+                        businessName: listing.shopName,
+                        address: listing.location,
+                      ),
+                    ),
+                  );
+                },
+              ),
             const SizedBox(height: 12),
 
             // ── Lokasyona Git ───────────────────────────────

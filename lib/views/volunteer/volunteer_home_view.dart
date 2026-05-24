@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/services/auth/i_auth_service.dart';
 import 'package:yemis/services/auth/user_session.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import 'package:yemis/models/app_module_type.dart';
@@ -15,7 +16,6 @@ import 'package:yemis/widgets/volunteer/volunteer_map_section.dart';
 import 'package:yemis/widgets/volunteer/volunteer_search_bar.dart';
 import 'package:yemis/widgets/volunteer/volunteer_task_tracking_card.dart';
 import 'package:yemis/widgets/common/loading_overlay.dart';
-import 'package:yemis/widgets/common/draggable_chat_head.dart';
 
 /// Gönüllü ana sayfası — API entegrasyonu ile ilanları çeker.
 class VolunteerHomeView extends StatelessWidget {
@@ -27,6 +27,7 @@ class VolunteerHomeView extends StatelessWidget {
       data: AppTheme.themeFor(AppSection.volunteer),
       child: ChangeNotifierProvider(
         create: (ctx) => VolunteerHomeViewModel(
+          authService: ctx.read<IAuthService>(),
           userSession: ctx.read<UserSession>(),
           volunteerService: ctx.read<IVolunteerService>(),
         ),
@@ -95,6 +96,10 @@ class _VolunteerHomeBodyState extends State<_VolunteerHomeBody> {
                 const SizedBox(height: 12),
 
                 // ── Görev Takip Kartları ────────────────────
+                ...vm.ownerTasks.map(
+                  (task) =>
+                      VolunteerTaskTrackingCard(task: task, isOwner: true),
+                ),
                 ...vm.activeTasks.map(
                   (task) => VolunteerTaskTrackingCard(task: task),
                 ),

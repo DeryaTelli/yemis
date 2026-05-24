@@ -2,6 +2,7 @@ import 'package:yemis/utils/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/services/auth/i_auth_service.dart';
 import 'package:yemis/models/volunteer/shelter_model.dart';
 import 'package:yemis/services/auth/user_session.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
@@ -10,15 +11,18 @@ import 'package:yemis/utils/routes/app_routes.dart';
 /// VolunteerHome ekranının ViewModel'i.
 class VolunteerHomeViewModel extends ChangeNotifier {
   VolunteerHomeViewModel({
+    required IAuthService authService,
     required UserSession userSession,
     required IVolunteerService volunteerService,
-  })  : _userSession = userSession,
-        _service = volunteerService {
+  }) : _authService = authService,
+       _userSession = userSession,
+       _service = volunteerService {
     _userSession.addListener(_onUserSessionChanged);
     init();
   }
 
   final IVolunteerService _service;
+  final IAuthService _authService;
   final UserSession _userSession;
 
   // ─── State ────────────────────────────────────────────
@@ -34,6 +38,9 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
   List<VolunteerListing> _activeTasks = [];
   List<VolunteerListing> get activeTasks => _activeTasks;
+
+  List<VolunteerListing> _ownerTasks = [];
+  List<VolunteerListing> get ownerTasks => _ownerTasks;
 
   List<ShelterModel> _nearbyShelters = [];
   List<ShelterModel> get nearbyShelters => _nearbyShelters;
@@ -65,6 +72,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       await Future.wait([
         _fetchListings(),
         _fetchActiveTasks(),
+        _fetchOwnerTasks(),
         _fetchNearbyShelters(),
       ]);
     } catch (e) {
@@ -91,10 +99,16 @@ class VolunteerHomeViewModel extends ChangeNotifier {
           if (a.latitude == null || a.longitude == null) return 1;
           if (b.latitude == null || b.longitude == null) return -1;
 
-          final distA = (a.latitude! - _userSession.currentLat!) * (a.latitude! - _userSession.currentLat!) +
-                        (a.longitude! - _userSession.currentLng!) * (a.longitude! - _userSession.currentLng!);
-          final distB = (b.latitude! - _userSession.currentLat!) * (b.latitude! - _userSession.currentLat!) +
-                        (b.longitude! - _userSession.currentLng!) * (b.longitude! - _userSession.currentLng!);
+          final distA =
+              (a.latitude! - _userSession.currentLat!) *
+                  (a.latitude! - _userSession.currentLat!) +
+              (a.longitude! - _userSession.currentLng!) *
+                  (a.longitude! - _userSession.currentLng!);
+          final distB =
+              (b.latitude! - _userSession.currentLat!) *
+                  (b.latitude! - _userSession.currentLat!) +
+              (b.longitude! - _userSession.currentLng!) *
+                  (b.longitude! - _userSession.currentLng!);
           return distA.compareTo(distB);
         });
       }
@@ -103,13 +117,14 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       _allListings = sortedListings.asMap().entries.map((entry) {
         final index = entry.key;
         final listing = entry.value;
-        
+
         // İlk 10 ilan yakında (horizontal scroll için), kalanlar popüler
         return listing.copyWith(
-          section: index < 10 ? VolunteerSection.nearYou : VolunteerSection.todayPopular,
+          section: index < 10
+              ? VolunteerSection.nearYou
+              : VolunteerSection.todayPopular,
         );
       }).toList();
-
     } catch (e) {
       debugPrint('Error fetching home listings: $e');
     }
@@ -126,23 +141,58 @@ class VolunteerHomeViewModel extends ChangeNotifier {
         if (t.deliveryStatus == DeliveryStatus.completed) return false;
 
         // Süresi dolmuş mu kontrolü
-        final isExpired = t.pickupEndTime != null && t.pickupEndTime!.isBefore(now);
-        
+        final isExpired =
+            t.pickupEndTime != null && t.pickupEndTime!.isBefore(now);
+
         // Eğer süresi dolmuşsa ve henüz yemeği teslim almamışsa (pickedUp öncesi tüm aşamalar) gösterme
-        if (isExpired && t.deliveryStatus.index < DeliveryStatus.pickedUp.index) {
+        if (isExpired &&
+            t.deliveryStatus.index < DeliveryStatus.pickedUp.index) {
           return false;
         }
 
         return true;
       }).toList();
+      _pendingReviewTask = null;
     } catch (e) {
       debugPrint('Error fetching active tasks: $e');
     }
   }
 
+  Future<void> _fetchOwnerTasks() async {
+    try {
+      final tasks = await _service.getOwnerVolunteerTasks();
+      final now = DateTime.now();
+
+      _ownerTasks = tasks.where((t) {
+        if (t.ownerProgress == null) return false;
+        final ownerStatus = t.ownerProgress?.status?.toLowerCase();
+        if (ownerStatus == 'available' ||
+            ownerStatus == 'cancelled' ||
+            ownerStatus == 'expired') {
+          return false;
+        }
+        if (t.deliveryStatus == DeliveryStatus.completed ||
+            t.deliveryStatus == DeliveryStatus.cancelled) {
+          return false;
+        }
+        final isExpired =
+            t.pickupEndTime != null && t.pickupEndTime!.isBefore(now);
+        if (isExpired &&
+            t.deliveryStatus.index < DeliveryStatus.pickedUp.index) {
+          return false;
+        }
+        return true;
+      }).toList();
+    } catch (e) {
+      debugPrint('Error fetching owner tasks: $e');
+    }
+  }
+
   Future<void> _fetchNearbyShelters() async {
-    if (_userSession.currentLat == null || _userSession.currentLng == null) return;
-    
+    if (_userSession.currentLat == null || _userSession.currentLng == null) {
+      return;
+    }
+
     try {
       _nearbyShelters = await _service.getNearbyShelters(
         lat: _userSession.currentLat!,
@@ -160,9 +210,13 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.startPickup(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
+      final index = _activeTasks.indexWhere(
+        (t) => (t.taskId ?? t.id) == taskId,
+      );
       if (index != -1) {
-        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToPickUp);
+        _activeTasks[index] = _activeTasks[index].copyWith(
+          deliveryStatus: DeliveryStatus.goingToPickUp,
+        );
       }
       await _fetchActiveTasks();
     }
@@ -175,9 +229,13 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.markPickedUp(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
+      final index = _activeTasks.indexWhere(
+        (t) => (t.taskId ?? t.id) == taskId,
+      );
       if (index != -1) {
-        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
+        _activeTasks[index] = _activeTasks[index].copyWith(
+          deliveryStatus: DeliveryStatus.pickedUp,
+        );
       }
       await _fetchActiveTasks();
     }
@@ -190,9 +248,13 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.markPickedUp(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
+      final index = _activeTasks.indexWhere(
+        (t) => (t.taskId ?? t.id) == taskId,
+      );
       if (index != -1) {
-        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.pickedUp);
+        _activeTasks[index] = _activeTasks[index].copyWith(
+          deliveryStatus: DeliveryStatus.pickedUp,
+        );
       }
       await _fetchActiveTasks();
     }
@@ -205,9 +267,13 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     notifyListeners();
     final success = await _service.startDelivery(int.parse(taskId));
     if (success) {
-      final index = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
+      final index = _activeTasks.indexWhere(
+        (t) => (t.taskId ?? t.id) == taskId,
+      );
       if (index != -1) {
-        _activeTasks[index] = _activeTasks[index].copyWith(deliveryStatus: DeliveryStatus.goingToShelter);
+        _activeTasks[index] = _activeTasks[index].copyWith(
+          deliveryStatus: DeliveryStatus.goingToShelter,
+        );
       }
       await _fetchActiveTasks();
     }
@@ -218,7 +284,9 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
   /// Görevi tamamla (Backend API)
   Future<void> completeVolunteerTask(String taskId) async {
-    final taskIndex = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
+    final taskIndex = _activeTasks.indexWhere(
+      (t) => (t.taskId ?? t.id) == taskId,
+    );
     if (taskIndex == -1) return;
 
     final task = _activeTasks[taskIndex];
@@ -228,7 +296,9 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     final success = await _service.completeTask(int.parse(taskId));
     if (success) {
       // Aktiflerden çıkar, inceleme bekleyenlere ekle (Onay bekliyor durumunda)
-      _activeTasks[taskIndex] = task.copyWith(deliveryStatus: DeliveryStatus.deliveredPendingReview);
+      _activeTasks[taskIndex] = task.copyWith(
+        deliveryStatus: DeliveryStatus.deliveredPendingReview,
+      );
       await _fetchActiveTasks();
     }
 
@@ -240,35 +310,44 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     String taskId, {
     required int rating,
     required String comment,
-    String? imageUrl1,
-    String? imageUrl2,
-    String? imageUrl3,
+    required List<String> imagePaths,
   }) async {
-    final taskIndex = _activeTasks.indexWhere((t) => (t.taskId ?? t.id) == taskId);
+    final taskIndex = _activeTasks.indexWhere(
+      (t) => (t.taskId ?? t.id) == taskId,
+    );
     if (taskIndex == -1) return false;
 
     _isLoading = true;
     notifyListeners();
 
     try {
+      if (imagePaths.isEmpty) {
+        return false;
+      }
+
+      final uploadedImages = <String>[];
+      for (final imagePath in imagePaths.take(3)) {
+        final uploadedUrl = await _authService.uploadImage(imagePath);
+        if (uploadedUrl == null || uploadedUrl.isEmpty) {
+          debugPrint('Error uploading volunteer review image: $imagePath');
+          return false;
+        }
+        uploadedImages.add(uploadedUrl);
+      }
+
       final success = await _service.submitVolunteerReview(int.parse(taskId), {
         'rating': rating,
         'comment': comment,
-        'image_url_1': imageUrl1 ?? 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
-        'image_url_2': imageUrl2 ?? 'https://images.unsplash.com/photo-1586816001966-79b736744398?w=400',
-        'image_url_3': imageUrl3 ?? 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400',
+        'image_url_1': uploadedImages[0],
+        if (uploadedImages.length > 1) 'image_url_2': uploadedImages[1],
+        if (uploadedImages.length > 2) 'image_url_3': uploadedImages[2],
       });
       if (success) {
-        _activeTasks[taskIndex] = _activeTasks[taskIndex].copyWith(
-          deliveryStatus: DeliveryStatus.completed,
-          volunteerComment: comment,
-          volunteerRating: rating.toDouble(),
-          reviewImages: [
-            imageUrl1 ?? 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
-            imageUrl2 ?? 'https://images.unsplash.com/photo-1586816001966-79b736744398?w=400',
-            imageUrl3 ?? 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400',
-          ],
-        );
+        _activeTasks.removeAt(taskIndex);
+        if (_pendingReviewTask != null &&
+            (_pendingReviewTask!.taskId ?? _pendingReviewTask!.id) == taskId) {
+          _pendingReviewTask = null;
+        }
         await _fetchActiveTasks();
       }
       return success;
@@ -295,6 +374,81 @@ class VolunteerHomeViewModel extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<bool> approveOwnerTask(String taskId) async {
+    final taskIndex = _ownerTasks.indexWhere(
+      (t) => (t.taskId ?? t.id) == taskId,
+    );
+    if (taskIndex == -1) return false;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _service.acceptVolunteer(int.parse(taskId));
+      if (success) {
+        _ownerTasks[taskIndex] = _ownerTasks[taskIndex].copyWith(
+          deliveryStatus: DeliveryStatus.accepted,
+        );
+        await _fetchOwnerTasks();
+      }
+      return success;
+    } catch (e) {
+      debugPrint('Error approving owner task: $e');
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> rejectOwnerTask(String taskId) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _service.rejectVolunteer(int.parse(taskId));
+      if (success) {
+        _ownerTasks.removeWhere((t) => (t.taskId ?? t.id) == taskId);
+        await _fetchOwnerTasks();
+        await _fetchListings();
+      }
+      return success;
+    } catch (e) {
+      debugPrint('Error rejecting owner task: $e');
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> handOverOwnerTask(String taskId) async {
+    final taskIndex = _ownerTasks.indexWhere(
+      (t) => (t.taskId ?? t.id) == taskId,
+    );
+    if (taskIndex == -1) return false;
+
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final success = await _service.ownerHandover(int.parse(taskId));
+      if (success) {
+        _ownerTasks[taskIndex] = _ownerTasks[taskIndex].copyWith(
+          deliveryStatus: DeliveryStatus.ownerHandedOver,
+        );
+        await _fetchOwnerTasks();
+      }
+      return success;
+    } catch (e) {
+      debugPrint('Error handing over owner task: $e');
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   /// İnceleme bekleyen görevler için
@@ -398,4 +552,3 @@ class VolunteerHomeViewModel extends ChangeNotifier {
     super.dispose();
   }
 }
-

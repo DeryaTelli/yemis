@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
+import 'package:yemis/services/auth/i_auth_service.dart';
 import 'package:yemis/services/auth/user_session.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import 'package:yemis/utils/locale_keys.dart';
@@ -21,6 +22,7 @@ class VolunteerHomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (ctx) => VolunteerHomeViewModel(
+        authService: ctx.read<IAuthService>(),
         userSession: ctx.read<UserSession>(),
         volunteerService: ctx.read<IVolunteerService>(),
       ),

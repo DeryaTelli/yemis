@@ -7,21 +7,28 @@ class ChatMessage {
   final String text;
   final bool isUser;
   final DateTime timestamp;
+  final List<AssistantActionModel> actions;
+  final String? topic;
 
   ChatMessage({
     required this.text,
     required this.isUser,
     DateTime? timestamp,
+    this.actions = const [],
+    this.topic,
   }) : timestamp = timestamp ?? DateTime.now();
 }
 
 class YemoAssistantViewModel extends ChangeNotifier {
   final IAssistantService _service;
 
-  YemoAssistantViewModel({required IAssistantService service}) : _service = service;
-  bool _isDisposed = false;
+  YemoAssistantViewModel({required IAssistantService service})
+    : _service = service;
 
+  bool _isDisposed = false;
   final List<ChatMessage> _messages = [];
+  final TextEditingController messageController = TextEditingController();
+
   List<ChatMessage> get messages => _messages;
 
   bool _isChatStarted = false;
@@ -30,44 +37,54 @@ class YemoAssistantViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  final TextEditingController messageController = TextEditingController();
-
   Future<void> sendMessage(String text) async {
-    if (text.trim().isEmpty) return;
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) return;
 
     _isChatStarted = true;
-
-    // Add user message
-    _messages.add(ChatMessage(text: text, isUser: true));
+    _messages.add(ChatMessage(text: trimmed, isUser: true));
     messageController.clear();
     _isLoading = true;
     notifyListeners();
 
     try {
-      final response = await _service.askQuestion(text);
+      final reply = await _service.askQuestion(trimmed);
       if (_isDisposed) return;
-      if (response != null) {
-        _messages.add(ChatMessage(text: response, isUser: false));
+
+      if (reply != null && reply.response.trim().isNotEmpty) {
+        _messages.add(
+          ChatMessage(
+            text: reply.response.trim(),
+            isUser: false,
+            actions: reply.actions,
+            topic: reply.intent,
+          ),
+        );
       } else {
-        _messages.add(ChatMessage(
-          text: LocaleKeys.yemoAssistant_errorBusy.tr(),
-          isUser: false,
-        ));
+        _messages.add(
+          ChatMessage(
+            text: LocaleKeys.yemoAssistant_errorBusy.tr(),
+            isUser: false,
+          ),
+        );
       }
-    } catch (e) {
-      _messages.add(ChatMessage(
-        text: LocaleKeys.yemoAssistant_errorNetwork.tr(),
-        isUser: false,
-      ));
+    } catch (_) {
+      _messages.add(
+        ChatMessage(
+          text: LocaleKeys.yemoAssistant_errorNetwork.tr(),
+          isUser: false,
+        ),
+      );
     } finally {
-      if (_isDisposed) return;
-      _isLoading = false;
-      notifyListeners();
+      if (!_isDisposed) {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
   }
 
-  void startGuidance(String topic) {
-    String message = '';
+  Future<void> startGuidance(String topic) async {
+    String message;
     switch (topic) {
       case 'find_food':
         message = 'Yakınımda nasıl yemek bulabilirim?';
@@ -82,7 +99,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
         message = 'Satışlarımı nasıl takip edebilirim?';
         break;
       case 'add_order':
-        message = 'Yeni bir sipariş nasıl eklerim?';
+        message = 'Yeni bir ilan nasıl eklerim?';
         break;
       case 'co2':
         message = 'CO2 etkimi nasıl görebilirim?';
@@ -99,7 +116,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
       default:
         message = topic;
     }
-    sendMessage(message);
+    await sendMessage(message);
   }
 
   @override
@@ -107,16 +124,5 @@ class YemoAssistantViewModel extends ChangeNotifier {
     _isDisposed = true;
     messageController.dispose();
     super.dispose();
-  }
-
-  @override
-  void notifyListeners() {
-    if (_isDisposed) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future<void>.delayed(Duration.zero, () {
-        if (!_isDisposed) super.notifyListeners();
-      });
-    });
-    WidgetsBinding.instance.scheduleFrame();
   }
 }

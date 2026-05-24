@@ -98,6 +98,19 @@ class FoodOrderTab extends StatelessWidget {
               businessLocation: vm.businessLatLng!,
               userLocation: vm.userLatLng,
               height: 180,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NavigationView(
+                      latitude: listing.latitude ?? 41.0082,
+                      longitude: listing.longitude ?? 28.9784,
+                      businessName: listing.shopName,
+                      address: listing.fullAddress ?? listing.location,
+                    ),
+                  ),
+                );
+              },
             )
           else
             Container(

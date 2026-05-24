@@ -31,6 +31,7 @@ class HomeViewModel extends ChangeNotifier {
       route: AppRoutes.volunteerHome,
       gradient: AppColors.volunteerBackgroundGradient,
       imageOnLeft: false,
+      showDecorationImage: false,
     );
 
     if (userType == UserType.food) {
@@ -42,6 +43,7 @@ class HomeViewModel extends ChangeNotifier {
           route: AppRoutes.foodHome,
           gradient: AppColors.mainAppTransitionBackgroundGradient,
           imageOnLeft: true,
+          showDecorationImage: false,
         ),
         volunteerCard,
       ];
@@ -54,6 +56,7 @@ class HomeViewModel extends ChangeNotifier {
           route: AppRoutes.businessHome,
           gradient: AppColors.mainAppTransitionBackgroundGradient,
           imageOnLeft: true,
+          showDecorationImage: false,
         ),
         volunteerCard,
       ];

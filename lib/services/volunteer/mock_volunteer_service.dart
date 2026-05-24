@@ -42,6 +42,12 @@ class MockVolunteerService implements IVolunteerService {
   }
 
   @override
+  Future<List<VolunteerListing>> getOwnerVolunteerTasks() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    return const [];
+  }
+
+  @override
   Future<List<VolunteerListing>> getPastListings() async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     // İkinci ilanı geçmiş ilanmış gibi döndürüyoruz
@@ -278,7 +284,10 @@ class MockVolunteerService implements IVolunteerService {
   }
 
   @override
-  Future<bool> submitVolunteerReview(int taskId, Map<String, dynamic> data) async {
+  Future<bool> submitVolunteerReview(
+    int taskId,
+    Map<String, dynamic> data,
+  ) async {
     await Future.delayed(const Duration(milliseconds: 300));
     return true;
   }
