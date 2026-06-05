@@ -56,17 +56,6 @@ class ApiVolunteerService implements IVolunteerService {
     return _fetchVolunteerListingsFromUrl(
       '${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}',
     );
-
-    if (ownerTasks.isEmpty) return meals;
-    if (meals.isEmpty) return ownerTasks;
-
-    final mergedByMealId = {
-      for (final meal in meals) meal.id: meal,
-    };
-    for (final ownerTask in ownerTasks) {
-      mergedByMealId[ownerTask.id] = ownerTask;
-    }
-    return mergedByMealId.values.toList();
   }
 
   @override
@@ -98,14 +87,17 @@ class ApiVolunteerService implements IVolunteerService {
           id: '5',
           title: 'Yemek Dünyası',
           userName: 'Derya Telli',
-          userLogoUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=200',
+          userLogoUrl:
+              'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=200',
           location: 'yemek',
           timeRange: '10.05.2026 | 10:53 - 20:50',
-          imageUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
+          imageUrl:
+              'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
           rating: 4.8,
           section: VolunteerSection.nearYou,
           isAttended: true,
-          volunteerComment: 'Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var.',
+          volunteerComment:
+              'Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var.',
           reviewCreatedAt: 'Bugün, 09:12',
           reviewImages: [
             'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
@@ -114,7 +106,8 @@ class ApiVolunteerService implements IVolunteerService {
           ],
           volunteerRating: 5.0,
           volunteerName: 'Derya Telli',
-          volunteerAvatar: 'https://res.cloudinary.com/dwgpcnvcf/image/upload/v1777629067/yemis/profile_images/user_5_59b9c949.jpg',
+          volunteerAvatar:
+              'https://res.cloudinary.com/dwgpcnvcf/image/upload/v1777629067/yemis/profile_images/user_5_59b9c949.jpg',
           isAvailable: false,
           deliveryStatus: DeliveryStatus.completed,
           isNetworkImage: true,
@@ -122,7 +115,6 @@ class ApiVolunteerService implements IVolunteerService {
       ];
     }
   }
-
 
   @override
   Future<List<VolunteerListing>> getMyActiveTasks() async {
@@ -366,10 +358,12 @@ class ApiVolunteerService implements IVolunteerService {
     String? city,
     String? district,
   }) async {
-    String urlString = '${ApiConstants.baseUrl}${ApiConstants.sheltersNearby}?lat=$lat&lng=$lng&radius_km=$radiusKm';
+    String urlString =
+        '${ApiConstants.baseUrl}${ApiConstants.sheltersNearby}?lat=$lat&lng=$lng&radius_km=$radiusKm';
     if (city != null && city.isNotEmpty) urlString += '&city=$city';
-    if (district != null && district.isNotEmpty) urlString += '&district=$district';
-    
+    if (district != null && district.isNotEmpty)
+      urlString += '&district=$district';
+
     final url = Uri.parse(urlString);
 
     if (kDebugMode) {

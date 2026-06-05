@@ -115,6 +115,13 @@ class MockFoodService implements IFoodService {
     return _listings.where((l) => l.isFavorite).toList();
   }
 
+  /// Mock sipariş oluşturma — her zaman başarılı döner.
+  @override
+  Future<bool> createOrder(int bagId, int quantity) async {
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    return true;
+  }
+
   // ─── Listings (mutable) ──────────────────────────────────────────────
 
   static final List<FoodListing> _listings = [

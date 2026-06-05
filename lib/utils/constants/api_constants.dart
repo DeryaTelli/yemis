@@ -16,6 +16,7 @@ class ApiConstants {
   static const String profile = '/api/users/me';
   static const String changePassword = '/api/auth/change-password';
   static const String uploadImage = '/api/upload/image';
+  static const String businessDashboard = '/api/stats/business/dashboard';
 
   // --- Reviews ---
   static String reviewsForStore(int storeId) => '/api/reviews/stores/$storeId';
@@ -81,5 +82,8 @@ class ApiConstants {
   static String ownerReview(int id) => '/api/reviews/volunteer-tasks/$id/owner';
 
   // --- Stats ---
-  static const String businessDashboard = '/api/stats/business/dashboard';
+
+  // --- Orders ---
+  static const String orders = '/api/orders';
+  static const String myOrders = '/api/orders/my';
 }

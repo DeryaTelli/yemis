@@ -54,4 +54,13 @@ abstract class IAuthService {
 
   /// Şifre değiştirir.
   Future<AuthResponse> changePassword(String oldPassword, String newPassword);
+
+  /// İşletme istatistiklerini getirir.
+  Future<Map<String, dynamic>?> getBusinessDashboardStats();
+
+  /// Kullanıcının kayıtlı kartlarını listeler.
+  Future<List<Map<String, dynamic>>?> getCards();
+
+  /// Kullanıcıya yeni kart kaydeder.
+  Future<AuthResponse> addCard(Map<String, dynamic> cardData);
 }

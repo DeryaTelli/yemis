@@ -456,4 +456,29 @@ class ApiAuthService implements IAuthService {
       return const AuthResponse(success: true, message: 'İşlem başarılı.');
     }
   }
+
+  @override
+  Future<Map<String, dynamic>?> getBusinessDashboardStats() async {
+    final data = await _get(ApiConstants.businessDashboard);
+    if (data is Map<String, dynamic>) {
+      return data;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>?> getCards() async {
+    final data = await _get('/api/users/me/cards');
+    if (data is List) {
+      return List<Map<String, dynamic>>.from(
+        data.map((item) => item as Map<String, dynamic>),
+      );
+    }
+    return null;
+  }
+
+  @override
+  Future<AuthResponse> addCard(Map<String, dynamic> cardData) async {
+    return _post('/api/users/me/cards', cardData);
+  }
 }

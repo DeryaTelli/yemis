@@ -172,7 +172,8 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                         ),
                         ProfileMenuTile(
                           icon: Icons.check_circle_outline_rounded,
-                          title: LocaleKeys.businessProfile_soldOrdersTitle.tr(),
+                          title: LocaleKeys.businessProfile_soldOrdersTitle
+                              .tr(),
                           onTap: () => Navigator.pushNamed(
                             context,
                             AppRoutes.businessListings,
@@ -181,7 +182,8 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                         ),
                         ProfileMenuTile(
                           icon: Icons.unpublished_outlined,
-                          title: LocaleKeys.businessProfile_expiredListings.tr(),
+                          title: LocaleKeys.businessProfile_expiredListings
+                              .tr(),
                           onTap: () => Navigator.pushNamed(
                             context,
                             AppRoutes.businessListings,

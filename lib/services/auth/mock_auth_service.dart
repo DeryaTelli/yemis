@@ -19,6 +19,45 @@ class MockAuthService implements IAuthService {
     _businessEmail: _businessPassword,
   };
 
+  final List<Map<String, dynamic>> _mockCards = [
+    {
+      "id": 1,
+      "card_holder_name": "BANKKART kartım",
+      "card_number_masked": "434528******7936",
+      "expiry_date": "12/29",
+      "card_type": "VISA",
+      "is_default": false,
+      "user_id": 1
+    },
+    {
+      "id": 2,
+      "card_holder_name": "BANKKART COMBO kartım",
+      "card_number_masked": "523529******0082",
+      "expiry_date": "06/32",
+      "card_type": "MasterCard",
+      "is_default": true,
+      "user_id": 1
+    },
+    {
+      "id": 3,
+      "card_holder_name": "İş Bankası kartım",
+      "card_number_masked": "403998******6621",
+      "expiry_date": "09/30",
+      "card_type": "VISA",
+      "is_default": false,
+      "user_id": 1
+    },
+    {
+      "id": 4,
+      "card_holder_name": "Ziraat Bankası kartım",
+      "card_number_masked": "476619******6029",
+      "expiry_date": "04/31",
+      "card_type": "VISA",
+      "is_default": false,
+      "user_id": 1
+    }
+  ];
+
   @override
   Future<AuthResponse> login(LoginRequest request) async {
     await _simulateDelay();
@@ -175,6 +214,39 @@ class MockAuthService implements IAuthService {
   ) async {
     await _simulateDelay();
     return const AuthResponse(success: true, message: 'Password changed');
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getBusinessDashboardStats() async {
+    await _simulateDelay();
+    return {
+      "weekly_sales": [],
+      "summary": {
+        "sold_out_bags": 2,
+        "total_revenue": 150.0,
+        "meals_saved": 10,
+        "sell_through_rate": 75.0
+      }
+    };
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>?> getCards() async {
+    await _simulateDelay();
+    return _mockCards;
+  }
+
+  @override
+  Future<AuthResponse> addCard(Map<String, dynamic> cardData) async {
+    await _simulateDelay();
+    final newCard = {
+      ...cardData,
+      "id": _mockCards.length + 1,
+      "user_id": 1,
+      "created_at": DateTime.now().toIso8601String(),
+    };
+    _mockCards.add(newCard);
+    return const AuthResponse(success: true, message: 'Card added successfully');
   }
 
   Future<void> _simulateDelay() =>

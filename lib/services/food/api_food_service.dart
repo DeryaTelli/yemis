@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../models/business/business_listing_model.dart';
@@ -393,16 +394,12 @@ class ApiFoodService implements IFoodService {
 
         // Her bir ID için detayları çek
         final List<FoodListing> listings = [];
-        final results = await Future.wait(
-          bagIds.map((id) => getFoodDetail(id).catchError((e) {
-                debugPrint('❌ [ApiFoodService] Detay çekme hatası ($id): $e');
-                return null;
-              })),
-        );
-
-        for (var res in results) {
-          if (res != null) {
-            listings.add(res.copyWith(isFavorite: true));
+        for (final id in bagIds) {
+          try {
+            final detail = await getFoodDetail(id);
+            listings.add(detail.copyWith(isFavorite: true));
+          } catch (e) {
+            debugPrint('❌ [ApiFoodService] Detay çekme hatası ($id): $e');
           }
         }
 
@@ -417,4 +414,50 @@ class ApiFoodService implements IFoodService {
       return [];
     }
   }
+
+  /// Her sipariş için tekil Idempotency-Key üretir (UUID v4 formatı).
+  String _generateIdempotencyKey() {
+    final rng = Random.secure();
+    final bytes = List<int>.generate(16, (_) => rng.nextInt(256));
+    // UUID v4: version bits ve variant bits
+    bytes[6] = (bytes[6] & 0x0f) | 0x40;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    final hex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+    return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-'
+        '${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20)}';
+  }
+
+  @override
+  Future<bool> createOrder(int bagId, int quantity) async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.orders}');
+      final body = jsonEncode({'bag_id': bagId, 'quantity_reserved': quantity});
+      final idempotencyKey = _generateIdempotencyKey();
+
+      final headers = {
+        ..._headers,
+        'Idempotency-Key': idempotencyKey,
+      };
+
+      debugPrint('📡 [ApiFoodService] POST Order: $url | Body: $body | Idempotency-Key: $idempotencyKey');
+
+      final response = await _client
+          .post(url, headers: headers, body: body)
+          .timeout(ApiConstants.requestTimeout);
+
+      debugPrint('📥 [ApiFoodService] Order Response: ${response.statusCode} | ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        debugPrint('✅ [ApiFoodService] Sipariş oluşturuldu');
+        return true;
+      } else {
+        debugPrint('❌ [ApiFoodService] Sipariş hatası: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] createOrder hatası: $e');
+      return false;
+    }
+  }
 }
+

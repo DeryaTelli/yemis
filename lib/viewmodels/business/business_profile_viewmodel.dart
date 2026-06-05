@@ -11,6 +11,7 @@ import '../../utils/routes/app_routes.dart';
 import '../../widgets/common/error_dialog_custom.dart';
 import '../../widgets/common/success_dialog_custom.dart';
 import 'package:lottie/lottie.dart';
+import '../../models/auth/user_model.dart';
 
 class BusinessProfileViewModel extends ChangeNotifier {
   final IAuthService _authService;
@@ -41,10 +42,16 @@ class BusinessProfileViewModel extends ChangeNotifier {
   final TextEditingController emailController;
   final TextEditingController phoneController;
 
+  int _mealsSaved = 0;
+  double _totalRevenue = 0.0;
+
+  int get dailySoldCount => _mealsSaved;
+  String get dailyTotalEarnings => "${_totalRevenue.toStringAsFixed(0)} TL";
+
   BusinessProfileViewModel(this._authService, this._userSession)
-    : fullNameController = TextEditingController(),
-      emailController = TextEditingController(),
-      phoneController = TextEditingController() {
+      : fullNameController = TextEditingController(),
+        emailController = TextEditingController(),
+        phoneController = TextEditingController() {
     _remoteImageUrl = _userSession.currentUser?.imageUrl;
     _resetControllers();
     Future.microtask(() => fetchProfile());
@@ -55,13 +62,25 @@ class BusinessProfileViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final user = await _authService.getProfile();
+      final results = await Future.wait([
+        _authService.getProfile(),
+        _authService.getBusinessDashboardStats(),
+      ]);
+
+      final user = results[0] as UserModel?;
       if (user != null) {
         _userSession.setUser(user);
         _resetControllers();
       }
+
+      final stats = results[1] as Map<String, dynamic>?;
+      if (stats != null && stats['summary'] != null) {
+        final summary = stats['summary'];
+        _mealsSaved = (summary['meals_saved'] as num?)?.toInt() ?? 0;
+        _totalRevenue = (summary['total_revenue'] as num?)?.toDouble() ?? 0.0;
+      }
     } catch (e) {
-      debugPrint('Fetch profile error: $e');
+      debugPrint('Fetch profile/stats error: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -102,16 +121,6 @@ class BusinessProfileViewModel extends ChangeNotifier {
     WidgetsBinding.instance.scheduleFrame();
   }
 
-  // ── Daily stats ──────────────────────────────
-  int get dailySoldCount => 10;
-  String get dailyTotalEarnings => '%25';
-
-  void onTabSelected(int index) {
-    if (_selectedIndex == index) return;
-    _selectedIndex = index;
-    notifyListeners();
-  }
-
   // ─── Fotoğraf Seçme ──────────────────────────────────
   Future<void> pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -130,11 +139,9 @@ class BusinessProfileViewModel extends ChangeNotifier {
     final currentUser = _userSession.currentUser;
     if (currentUser == null) return;
 
-    // --- Değişiklik Kontrolü ---
     final String newName = fullNameController.text.trim();
     final String newEmail = emailController.text.trim();
 
-    // Telefonu temizle
     String cleanPhone = phoneController.text.replaceAll(RegExp(r'\D'), '');
     if (cleanPhone.isNotEmpty && !cleanPhone.startsWith('90')) {
       cleanPhone = '90$cleanPhone';
@@ -238,6 +245,12 @@ class BusinessProfileViewModel extends ChangeNotifier {
       _isUpdating = false;
       notifyListeners();
     }
+  }
+
+  void onTabSelected(int index) {
+    if (_selectedIndex == index) return;
+    _selectedIndex = index;
+    notifyListeners();
   }
 
   Future<void> logout(BuildContext context) async {

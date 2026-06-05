@@ -28,4 +28,8 @@ abstract class IFoodService {
 
   /// Favori olan ilanları döner.
   Future<List<FoodListing>> getFavorites();
+
+  /// Sipariş oluşturur. [bagId] ilan ID'si, [quantity] adet sayısıdır.
+  Future<bool> createOrder(int bagId, int quantity);
 }
+
