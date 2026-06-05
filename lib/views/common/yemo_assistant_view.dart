@@ -154,7 +154,8 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                           icon: Icons.location_on,
                           iconColor: themeColor,
                           title: LocaleKeys.yemoAssistant_foodFindTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_foodFindSubtitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_foodFindSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('find_food'),
                         ),
                         const SizedBox(height: 12),
@@ -162,7 +163,8 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                           icon: Icons.shopping_basket,
                           iconColor: themeColor,
                           title: LocaleKeys.yemoAssistant_foodReserveTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_foodReserveSubtitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_foodReserveSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('reserve'),
                         ),
                         const SizedBox(height: 12),
@@ -170,7 +172,8 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                           icon: Icons.auto_awesome,
                           iconColor: themeColor,
                           title: LocaleKeys.yemoAssistant_foodAiTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_foodAiSubtitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_foodAiSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('ai_suggestions'),
                         ),
                       ] else if (widget.moduleType ==
@@ -178,16 +181,22 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                         _buildActionCard(
                           icon: Icons.bar_chart,
                           iconColor: themeColor,
-                          title: LocaleKeys.yemoAssistant_businessSalesTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_businessSalesSubtitle.tr(),
+                          title: LocaleKeys.yemoAssistant_businessSalesTitle
+                              .tr(),
+                          subtitle: LocaleKeys
+                              .yemoAssistant_businessSalesSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('sales'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.add_box,
                           iconColor: themeColor,
-                          title: LocaleKeys.yemoAssistant_businessAddOrderTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_businessAddOrderSubtitle.tr(),
+                          title: LocaleKeys.yemoAssistant_businessAddOrderTitle
+                              .tr(),
+                          subtitle: LocaleKeys
+                              .yemoAssistant_businessAddOrderSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('add_order'),
                         ),
                         const SizedBox(height: 12),
@@ -195,31 +204,41 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                           icon: Icons.eco,
                           iconColor: themeColor,
                           title: LocaleKeys.yemoAssistant_businessCo2Title.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_businessCo2Subtitle.tr(),
+                          subtitle: LocaleKeys.yemoAssistant_businessCo2Subtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('co2'),
                         ),
                       ] else ...[
                         _buildActionCard(
                           icon: Icons.volunteer_activism,
                           iconColor: themeColor,
-                          title: LocaleKeys.yemoAssistant_volunteerListingsTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_volunteerListingsSubtitle.tr(),
+                          title: LocaleKeys.yemoAssistant_volunteerListingsTitle
+                              .tr(),
+                          subtitle: LocaleKeys
+                              .yemoAssistant_volunteerListingsSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('volunteer_listings'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.favorite,
                           iconColor: themeColor,
-                          title: LocaleKeys.yemoAssistant_volunteerBecomeTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_volunteerBecomeSubtitle.tr(),
+                          title: LocaleKeys.yemoAssistant_volunteerBecomeTitle
+                              .tr(),
+                          subtitle: LocaleKeys
+                              .yemoAssistant_volunteerBecomeSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('become_volunteer'),
                         ),
                         const SizedBox(height: 12),
                         _buildActionCard(
                           icon: Icons.map,
                           iconColor: themeColor,
-                          title: LocaleKeys.yemoAssistant_volunteerRegionTitle.tr(),
-                          subtitle: LocaleKeys.yemoAssistant_volunteerRegionSubtitle.tr(),
+                          title: LocaleKeys.yemoAssistant_volunteerRegionTitle
+                              .tr(),
+                          subtitle: LocaleKeys
+                              .yemoAssistant_volunteerRegionSubtitle
+                              .tr(),
                           onTap: () => vm.startGuidance('select_region'),
                         ),
                       ],
@@ -227,8 +246,11 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                       _buildActionCard(
                         icon: Icons.chat_bubble,
                         iconColor: themeColor,
-                        title: LocaleKeys.yemoAssistant_commonQuestionsTitle.tr(),
-                        subtitle: LocaleKeys.yemoAssistant_commonQuestionsSubtitle.tr(),
+                        title: LocaleKeys.yemoAssistant_commonQuestionsTitle
+                            .tr(),
+                        subtitle: LocaleKeys
+                            .yemoAssistant_commonQuestionsSubtitle
+                            .tr(),
                         onTap: () => vm.startGuidance('Sorularını sor'),
                       ),
                       const SizedBox(height: 24),
@@ -269,7 +291,8 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                             child: TextField(
                               controller: vm.messageController,
                               decoration: InputDecoration(
-                                hintText: LocaleKeys.yemoAssistant_hintText.tr(),
+                                hintText: LocaleKeys.yemoAssistant_hintText
+                                    .tr(),
                                 border: InputBorder.none,
                                 hintStyle: const TextStyle(
                                   color: Colors.black38,
@@ -279,7 +302,6 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                               onSubmitted: (val) => vm.sendMessage(val),
                             ),
                           ),
-                          const Icon(Icons.mic_none, color: Colors.black54),
                         ],
                       ),
                     ),
