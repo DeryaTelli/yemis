@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../../models/business/business_listing_model.dart';
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_review.dart';
+import '../../models/food/order_model.dart';
 import '../../utils/constants/api_constants.dart';
 import 'i_food_service.dart';
 
@@ -272,6 +273,46 @@ class ApiFoodService implements IFoodService {
       return [];
     } catch (e) {
       debugPrint('🚨 [ApiFoodService] getFavorites hatası: $e');
+      return [];
+    }
+  }
+
+  @override
+  Future<List<OrderModel>> getMyOrders() async {
+    try {
+      final url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.myOrders}',
+      );
+      debugPrint('📡 [ApiFoodService] GET Request: $url');
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      debugPrint('📥 [ApiFoodService] getMyOrders Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        List<dynamic> data = [];
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'] as List;
+        }
+
+        final List<OrderModel> orders = [];
+        for (var item in data) {
+          try {
+            if (item is Map<String, dynamic>) {
+              orders.add(OrderModel.fromJson(item));
+            }
+          } catch (itemError) {
+            debugPrint('❌ [ApiFoodService] Sipariş işleme hatası: $itemError | Item: $item');
+          }
+        }
+        return orders;
+      }
+      return [];
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] getMyOrders hatası: $e');
       return [];
     }
   }

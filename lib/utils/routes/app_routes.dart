@@ -14,6 +14,7 @@ class AppRoutes {
   static const String foodSearch = '/food-search';
   static const String foodFavorites = '/food-favorites';
   static const String foodProfile = '/food-profile';
+  static const String foodOrdersHistory = '/food-orders-history';
   static const String volunteerHome = '/volunteer-home';
   static const String volunteerMap = '/volunteer/map';
   static const String volunteerSearch = '/volunteer/search';

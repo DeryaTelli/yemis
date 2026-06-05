@@ -80,4 +80,8 @@ class ApiConstants {
 
   // --- Stats ---
   static const String businessDashboard = '/api/stats/business/dashboard';
+
+  // --- Orders ---
+  static const String orders = '/api/orders';
+  static const String myOrders = '/api/orders/my';
 }

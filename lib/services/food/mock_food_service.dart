@@ -1,5 +1,6 @@
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_review.dart';
+import '../../models/food/order_model.dart';
 import '../auth/user_session.dart';
 import 'i_food_service.dart';
 
@@ -17,6 +18,12 @@ class MockFoodService implements IFoodService {
   /// UserSession'ı dışarıdan set etmek için (ViewModel'lerde kolaylık sağlar)
   void setUserSession(UserSession session) {
     _userSession = session;
+  }
+
+  @override
+  Future<List<OrderModel>> getMyOrders() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    return [];
   }
 
   @override

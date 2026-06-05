@@ -1,5 +1,6 @@
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_review.dart';
+import '../../models/food/order_model.dart';
 
 /// Yemek servisinin soyut arayüzü.
 ///
@@ -22,4 +23,7 @@ abstract class IFoodService {
 
   /// Favori olan ilanları döner.
   Future<List<FoodListing>> getFavorites();
+
+  /// Kullanıcının sipariş geçmişini döner.
+  Future<List<OrderModel>> getMyOrders();
 }
