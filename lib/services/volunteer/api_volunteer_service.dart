@@ -14,9 +14,9 @@ class ApiVolunteerService implements IVolunteerService {
   void setToken(String? token) => _authToken = token;
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   @override
   Future<String> getUserLocationName() async {
@@ -24,41 +24,53 @@ class ApiVolunteerService implements IVolunteerService {
   }
 
   @override
-  Future<List<VolunteerListing>> getFeaturedListings({double? lat, double? lng, double? radius}) async {
+  Future<List<VolunteerListing>> getFeaturedListings({
+    double? lat,
+    double? lng,
+    double? radius,
+  }) async {
     String url = '${ApiConstants.baseUrl}${ApiConstants.meals}';
     List<String> params = [];
     if (lat != null) params.add('lat=$lat');
     if (lng != null) params.add('lng=$lng');
     if (radius != null) params.add('radius=$radius');
-    
+
     if (params.isNotEmpty) {
       url += '?${params.join('&')}';
     }
-    
+
     return _fetchVolunteerListingsFromUrl(url);
   }
 
   @override
   Future<VolunteerListing> getVolunteerDetail(String id) async {
-    final list = await _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.mealById(int.parse(id))}');
+    final list = await _fetchVolunteerListingsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.mealById(int.parse(id))}',
+    );
     if (list.isNotEmpty) return list.first;
     throw Exception('Listing not found');
   }
 
   @override
   Future<List<VolunteerListing>> getActiveListings() async {
-    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}');
+    return _fetchVolunteerListingsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}',
+    );
   }
 
   @override
   Future<List<VolunteerListing>> getPastListings() async {
-    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myPastMeals}');
+    return _fetchVolunteerListingsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.myPastMeals}',
+    );
   }
 
   @override
   Future<List<VolunteerListing>> getAttendedListings() async {
     try {
-      return await _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.attendedTasks}');
+      return await _fetchVolunteerListingsFromUrl(
+        '${ApiConstants.baseUrl}${ApiConstants.attendedTasks}',
+      );
     } catch (e) {
       if (kDebugMode) {
         print('Error fetching attended tasks from API, using fallback: $e');
@@ -68,14 +80,17 @@ class ApiVolunteerService implements IVolunteerService {
           id: '5',
           title: 'Yemek Dünyası',
           userName: 'Derya Telli',
-          userLogoUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=200',
+          userLogoUrl:
+              'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=200',
           location: 'yemek',
           timeRange: '10.05.2026 | 10:53 - 20:50',
-          imageUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
+          imageUrl:
+              'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
           rating: 4.8,
           section: VolunteerSection.nearYou,
           isAttended: true,
-          volunteerComment: 'Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var.',
+          volunteerComment:
+              'Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var.',
           reviewCreatedAt: 'Bugün, 09:12',
           reviewImages: [
             'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
@@ -84,7 +99,8 @@ class ApiVolunteerService implements IVolunteerService {
           ],
           volunteerRating: 5.0,
           volunteerName: 'Derya Telli',
-          volunteerAvatar: 'https://res.cloudinary.com/dwgpcnvcf/image/upload/v1777629067/yemis/profile_images/user_5_59b9c949.jpg',
+          volunteerAvatar:
+              'https://res.cloudinary.com/dwgpcnvcf/image/upload/v1777629067/yemis/profile_images/user_5_59b9c949.jpg',
           isAvailable: false,
           deliveryStatus: DeliveryStatus.completed,
           isNetworkImage: true,
@@ -95,10 +111,14 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<List<VolunteerListing>> getMyActiveTasks() async {
-    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}');
+    return _fetchVolunteerListingsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}',
+    );
   }
 
-  Future<List<VolunteerListing>> _fetchVolunteerListingsFromUrl(String urlString) async {
+  Future<List<VolunteerListing>> _fetchVolunteerListingsFromUrl(
+    String urlString,
+  ) async {
     final url = Uri.parse(urlString);
 
     if (kDebugMode) {
@@ -111,7 +131,7 @@ class ApiVolunteerService implements IVolunteerService {
       final response = await _client
           .get(url, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
-      
+
       if (kDebugMode) {
         print('--- API RESPONSE (GET MEALS) ---');
         print('Status Code: ${response.statusCode}');
@@ -122,7 +142,7 @@ class ApiVolunteerService implements IVolunteerService {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final decoded = jsonDecode(response.body);
         List<dynamic> data = [];
-        
+
         if (decoded is List) {
           data = decoded;
         } else if (decoded is Map && decoded.containsKey('data')) {
@@ -142,14 +162,21 @@ class ApiVolunteerService implements IVolunteerService {
           data = [decoded];
         }
 
-        return data.map((e) {
-          if (e is Map<String, dynamic>) {
-            return VolunteerActiveListingModel.fromJson(e).toVolunteerListing();
-          }
-          return null;
-        }).whereType<VolunteerListing>().toList();
+        return data
+            .map((e) {
+              if (e is Map<String, dynamic>) {
+                return VolunteerActiveListingModel.fromJson(
+                  e,
+                ).toVolunteerListing();
+              }
+              return null;
+            })
+            .whereType<VolunteerListing>()
+            .toList();
       } else {
-        throw Exception('Failed to fetch meals: ${response.statusCode} ${response.body}');
+        throw Exception(
+          'Failed to fetch meals: ${response.statusCode} ${response.body}',
+        );
       }
     } catch (e) {
       if (kDebugMode) print('Error fetching meals from $urlString: $e');
@@ -184,11 +211,7 @@ class ApiVolunteerService implements IVolunteerService {
 
     try {
       final response = await _client
-          .post(
-            url,
-            headers: _headers,
-            body: jsonEncode(data),
-          )
+          .post(url, headers: _headers, body: jsonEncode(data))
           .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
@@ -207,7 +230,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> deleteMeal(int id) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.mealById(id)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.mealById(id)}',
+    );
 
     if (kDebugMode) {
       print('--- API REQUEST (DELETE MEAL) ---');
@@ -236,7 +261,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> updateMeal(int id, Map<String, dynamic> data) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.mealById(id)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.mealById(id)}',
+    );
 
     if (kDebugMode) {
       print('--- API REQUEST (PUT MEAL) ---');
@@ -248,11 +275,7 @@ class ApiVolunteerService implements IVolunteerService {
 
     try {
       final response = await _client
-          .put(
-            url,
-            headers: _headers,
-            body: jsonEncode(data),
-          )
+          .put(url, headers: _headers, body: jsonEncode(data))
           .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
@@ -309,10 +332,12 @@ class ApiVolunteerService implements IVolunteerService {
     String? city,
     String? district,
   }) async {
-    String urlString = '${ApiConstants.baseUrl}${ApiConstants.sheltersNearby}?lat=$lat&lng=$lng&radius_km=$radiusKm';
+    String urlString =
+        '${ApiConstants.baseUrl}${ApiConstants.sheltersNearby}?lat=$lat&lng=$lng&radius_km=$radiusKm';
     if (city != null && city.isNotEmpty) urlString += '&city=$city';
-    if (district != null && district.isNotEmpty) urlString += '&district=$district';
-    
+    if (district != null && district.isNotEmpty)
+      urlString += '&district=$district';
+
     final url = Uri.parse(urlString);
 
     if (kDebugMode) {
@@ -345,7 +370,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> startPickup(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.startPickup(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.startPickup(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -359,7 +386,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> markPickedUp(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.markPickedUp(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.markPickedUp(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -373,7 +402,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> startDelivery(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.startDelivery(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.startDelivery(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -387,7 +418,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> confirmDelivery(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.confirmDelivery(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.confirmDelivery(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -401,7 +434,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> acceptVolunteer(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.acceptVolunteer(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.acceptVolunteer(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -415,7 +450,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> rejectVolunteer(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.rejectVolunteer(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.rejectVolunteer(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -429,7 +466,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> ownerHandover(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.ownerHandover(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.ownerHandover(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -442,8 +481,13 @@ class ApiVolunteerService implements IVolunteerService {
   }
 
   @override
-  Future<bool> submitVolunteerReview(int taskId, Map<String, dynamic> data) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.volunteerReview(taskId)}');
+  Future<bool> submitVolunteerReview(
+    int taskId,
+    Map<String, dynamic> data,
+  ) async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.volunteerReview(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers, body: jsonEncode(data))
@@ -457,7 +501,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> submitOwnerReview(int taskId, Map<String, dynamic> data) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.ownerReview(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.ownerReview(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers, body: jsonEncode(data))
@@ -471,7 +517,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> completeTask(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.completeTask(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.completeTask(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)
@@ -485,7 +533,9 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<bool> cancelTask(int taskId) async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.cancelTask(taskId)}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.cancelTask(taskId)}',
+    );
     try {
       final response = await _client
           .post(url, headers: _headers)

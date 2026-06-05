@@ -39,7 +39,7 @@ class FoodReservationConfirmView extends StatelessWidget {
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        title:  Text(
+        title: Text(
           LocaleKeys.foodReservationConfirm_title.tr(),
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
         ),
@@ -227,7 +227,8 @@ class _ReservationCard extends StatelessWidget {
         now.year == start.year &&
         now.month == start.month &&
         now.day == start.day;
-    if (isToday) return '${LocaleKeys.common_pickupToday.tr()}  ${listing.timeRange}';
+    if (isToday)
+      return '${LocaleKeys.common_pickupToday.tr()}  ${listing.timeRange}';
     final months = [
       '',
       LocaleKeys.foodReservationConfirm_months_jan.tr(),
@@ -254,6 +255,8 @@ class _ReservationCard extends StatelessWidget {
         return LocaleKeys.foodReservationConfirm_sectionBuyNow.tr();
       case FoodSection.todayPopular:
         return LocaleKeys.foodReservationConfirm_sectionTodayPopular.tr();
+      case FoodSection.todayPopularAll:
+        return LocaleKeys.foodReservationConfirm_sectionTodayPopularAll.tr();
     }
   }
 
@@ -360,7 +363,7 @@ class _ReservationCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               alignment: Alignment.center,
-              child:  Text(
+              child: Text(
                 LocaleKeys.foodReservationConfirm_cancel.tr(),
                 style: TextStyle(
                   color: AppColors.primaryColor,

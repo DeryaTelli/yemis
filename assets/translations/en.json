@@ -98,7 +98,8 @@
                  "seeAll":  "See All",
                  "surpriseBox":  "Surprise Box",
                  "buyNow":  "Buy Now",
-                 "todayPopular":  "Today\u0027s Popular",
+                 "todayPopular":  "Popular",
+                 "todayPopularAll": "Today's Popular",
                  "locationLoading":  "Loading locationâ€¦",
                  "volunteerSubtitle":  "Share leftover food at home!",
                  "foodTitle":  "Food",
@@ -485,7 +486,8 @@
                                               },
                                    "sectionNearby":  "Nearby Places",
                                    "sectionBuyNow":  "Buy Now",
-                                   "sectionTodayPopular":  "Today Popular"
+                                   "sectionTodayPopular":  "Popular",
+                                   "sectionTodayPopularAll":  "Today's Popular"
                                },
     "foodOrderTab":  {
                          "categoryBreadPastry":  "Bread \u0026 Pastry",

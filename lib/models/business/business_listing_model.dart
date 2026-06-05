@@ -147,6 +147,7 @@ class BusinessListingModel {
       section: FoodSection.nearYou,
       isNetworkImage: imageUrl != null && imageUrl!.startsWith('http'),
       shopLogoUrl: businessLogoUrl,
+      isSoldOut: isSold,
       description: description,
       allergens: allergens,
       latitude: latitude,

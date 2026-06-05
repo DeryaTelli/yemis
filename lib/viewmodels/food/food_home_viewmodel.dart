@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,15 @@ class FoodHomeViewModel extends ChangeNotifier {
   bool _isDisposed = false;
 
   void _safeNotify() {
-    if (!_isDisposed) notifyListeners();
+    if (_isDisposed) return;
+    final binding = WidgetsBinding.instance;
+    if (binding.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+      binding.addPostFrameCallback((_) {
+        if (!_isDisposed) notifyListeners();
+      });
+    } else {
+      notifyListeners();
+    }
   }
 
   // ─── State ────────────────────────────────────────────
@@ -40,6 +49,8 @@ class FoodHomeViewModel extends ChangeNotifier {
   FoodFilter get selectedFilter => _selectedFilter;
 
   List<FoodListing> _allListings = [];
+  List<FoodListing> _popularListings = [];
+  List<FoodListing> _popularTodayListings = [];
 
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
@@ -97,18 +108,34 @@ class FoodHomeViewModel extends ChangeNotifier {
         _service.getUserLocationName(),
         _service.getFeaturedListings(),
         _service.getFavorites(), // Favorileri de çek
+        _service.getPopularListings(), // Popülerleri de çek
+        _service.getPopularTodayListings(), // Bugünün Popülerlerini (tükendiler dahil) çek
       ]);
 
       _locationName = results[0] as String;
       final listings = results[1] as List<FoodListing>;
       final favorites = results[2] as List<FoodListing>;
+      final populars = results[3] as List<FoodListing>;
+      final popularTodays = results[4] as List<FoodListing>;
 
       debugPrint('📊 [FoodHomeVM] Çekilen Toplam İlan: ${listings.length}');
+      debugPrint('📊 [FoodHomeVM] Çekilen Popüler İlan: ${populars.length}');
+      debugPrint('📊 [FoodHomeVM] Çekilen Popüler Bugün İlan: ${popularTodays.length}');
 
       // Favori olanların isFavorite flag'ini güncelle
       final favoriteIds = favorites.map((f) => f.id).toSet();
 
       _allListings = listings.map((l) {
+        final isFav = favoriteIds.contains(l.id);
+        return l.copyWith(isFavorite: isFav);
+      }).toList();
+
+      _popularListings = populars.map((l) {
+        final isFav = favoriteIds.contains(l.id);
+        return l.copyWith(isFavorite: isFav);
+      }).toList();
+
+      _popularTodayListings = popularTodays.map((l) {
         final isFav = favoriteIds.contains(l.id);
         return l.copyWith(isFavorite: isFav);
       }).toList();
@@ -138,6 +165,64 @@ class FoodHomeViewModel extends ChangeNotifier {
   }
 
   // ─── Filtrelenmiş İlanlar ─────────────────────────────
+
+  List<FoodListing> get filteredPopularTodayListings {
+    var list = _popularTodayListings;
+    if (_selectedFilter != FoodFilter.all) {
+      list = list.where((l) {
+        switch (_selectedFilter) {
+          case FoodFilter.food:
+            return l.category.toLowerCase() == 'yemek';
+          case FoodFilter.breadPastry:
+            return l.category.toLowerCase() == 'patiseri';
+          case FoodFilter.market:
+            return l.category.toLowerCase() == 'market';
+          case FoodFilter.buyNow:
+            return l.section == FoodSection.buyNow;
+          case FoodFilter.all:
+            return true;
+        }
+      }).toList();
+    }
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      list = list.where((l) {
+        return l.title.toLowerCase().contains(q) ||
+            l.shopName.toLowerCase().contains(q) ||
+            l.category.toLowerCase().contains(q);
+      }).toList();
+    }
+    return list;
+  }
+
+  List<FoodListing> get filteredPopularListings {
+    var list = _popularListings;
+    if (_selectedFilter != FoodFilter.all) {
+      list = list.where((l) {
+        switch (_selectedFilter) {
+          case FoodFilter.food:
+            return l.category.toLowerCase() == 'yemek';
+          case FoodFilter.breadPastry:
+            return l.category.toLowerCase() == 'patiseri';
+          case FoodFilter.market:
+            return l.category.toLowerCase() == 'market';
+          case FoodFilter.buyNow:
+            return l.section == FoodSection.buyNow;
+          case FoodFilter.all:
+            return true;
+        }
+      }).toList();
+    }
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      list = list.where((l) {
+        return l.title.toLowerCase().contains(q) ||
+            l.shopName.toLowerCase().contains(q) ||
+            l.category.toLowerCase().contains(q);
+      }).toList();
+    }
+    return list;
+  }
 
   List<FoodListing> get filteredListings {
     var list = _allListings;
@@ -169,10 +254,9 @@ class FoodHomeViewModel extends ChangeNotifier {
   }
 
   List<FoodListing> sectionListings(FoodSection section) {
-    final list = List<FoodListing>.from(filteredListings);
-    
     switch (section) {
       case FoodSection.nearYou:
+        final list = List<FoodListing>.from(filteredListings);
         // Kullanıcı konumuna göre sırala (En yakın en üstte)
         final userLat = _userSession.currentLat;
         final userLng = _userSession.currentLng;
@@ -187,6 +271,7 @@ class FoodHomeViewModel extends ChangeNotifier {
         return list;
 
       case FoodSection.buyNow:
+        final list = List<FoodListing>.from(filteredListings);
         // Süresi az kalanları göster (Şimdi Al)
         // Bitiş saatine göre sırala (En yakın biten en üstte)
         final now = DateTime.now();
@@ -200,8 +285,10 @@ class FoodHomeViewModel extends ChangeNotifier {
         return buyNowList;
 
       case FoodSection.todayPopular:
-        // Şimdilik hepsi (Gelecekte popülerlik puanına göre sıralanacak)
-        return list.reversed.toList();
+        return filteredPopularListings;
+
+      case FoodSection.todayPopularAll:
+        return filteredPopularTodayListings;
     }
   }
 
@@ -223,8 +310,22 @@ class FoodHomeViewModel extends ChangeNotifier {
         ..[index] = _allListings[index].copyWith(
           isFavorite: !_allListings[index].isFavorite,
         );
-      _safeNotify();
     }
+    final popIndex = _popularListings.indexWhere((l) => l.id == id);
+    if (popIndex != -1) {
+      _popularListings = List.of(_popularListings)
+        ..[popIndex] = _popularListings[popIndex].copyWith(
+          isFavorite: !_popularListings[popIndex].isFavorite,
+        );
+    }
+    final popTodayIndex = _popularTodayListings.indexWhere((l) => l.id == id);
+    if (popTodayIndex != -1) {
+      _popularTodayListings = List.of(_popularTodayListings)
+        ..[popTodayIndex] = _popularTodayListings[popTodayIndex].copyWith(
+          isFavorite: !_popularTodayListings[popTodayIndex].isFavorite,
+        );
+    }
+    _safeNotify();
 
     // API'ye gönder
     try {
@@ -236,8 +337,20 @@ class FoodHomeViewModel extends ChangeNotifier {
           ..[index] = _allListings[index].copyWith(
             isFavorite: !_allListings[index].isFavorite,
           );
-        _safeNotify();
       }
+      if (popIndex != -1) {
+        _popularListings = List.of(_popularListings)
+          ..[popIndex] = _popularListings[popIndex].copyWith(
+            isFavorite: !_popularListings[popIndex].isFavorite,
+          );
+      }
+      if (popTodayIndex != -1) {
+        _popularTodayListings = List.of(_popularTodayListings)
+          ..[popTodayIndex] = _popularTodayListings[popTodayIndex].copyWith(
+            isFavorite: !_popularTodayListings[popTodayIndex].isFavorite,
+          );
+      }
+      _safeNotify();
       debugPrint('❌ [FoodHomeVM] Favori toggle hatası: $e');
     }
   }
@@ -258,8 +371,28 @@ class FoodHomeViewModel extends ChangeNotifier {
         return l;
       }).toList();
 
+      final newPopListings = _popularListings.map((l) {
+        final isFav = favoriteIds.contains(l.id);
+        if (l.isFavorite != isFav) {
+          changed = true;
+          return l.copyWith(isFavorite: isFav);
+        }
+        return l;
+      }).toList();
+
+      final newPopTodayListings = _popularTodayListings.map((l) {
+        final isFav = favoriteIds.contains(l.id);
+        if (l.isFavorite != isFav) {
+          changed = true;
+          return l.copyWith(isFavorite: isFav);
+        }
+        return l;
+      }).toList();
+
       if (changed) {
         _allListings = newListings;
+        _popularListings = newPopListings;
+        _popularTodayListings = newPopTodayListings;
         _safeNotify();
       }
     } catch (e) {

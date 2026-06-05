@@ -11,6 +11,12 @@ abstract class IFoodService {
   /// Öne çıkan yemek ilanlarını döner.
   Future<List<FoodListing>> getFeaturedListings();
 
+  /// Popüler yemek ilanlarını döner.
+  Future<List<FoodListing>> getPopularListings({int? limit, String? category});
+
+  /// Bugünün popüler ilanlarını (tükendiler dahil) döner.
+  Future<List<FoodListing>> getPopularTodayListings({int? limit, String? category});
+
   /// Belirtilen id'ye sahip ilan detayını döner.
   Future<FoodListing> getFoodDetail(String id);
 

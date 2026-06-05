@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import '../../models/food/food_listing.dart';
@@ -35,7 +36,15 @@ class FoodDetailViewModel extends ChangeNotifier {
   }
 
   void _safeNotify() {
-    if (!_isDisposed) notifyListeners();
+    if (_isDisposed) return;
+    final binding = WidgetsBinding.instance;
+    if (binding.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+      binding.addPostFrameCallback((_) {
+        if (!_isDisposed) notifyListeners();
+      });
+    } else {
+      notifyListeners();
+    }
   }
 
   // ─── State ──────────────────────────────────────────────

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import '../../models/food/food_listing.dart';
 import '../../services/food/i_food_service.dart';
 import '../../services/food/mock_food_service.dart';
@@ -23,7 +24,15 @@ class FoodFavoritesViewModel extends ChangeNotifier {
   }
 
   void _safeNotify() {
-    if (!_isDisposed) notifyListeners();
+    if (_isDisposed) return;
+    final binding = WidgetsBinding.instance;
+    if (binding.schedulerPhase == SchedulerPhase.persistentCallbacks) {
+      binding.addPostFrameCallback((_) {
+        if (!_isDisposed) notifyListeners();
+      });
+    } else {
+      notifyListeners();
+    }
   }
 
   // ─── Nav ──────────────────────────────────────────────

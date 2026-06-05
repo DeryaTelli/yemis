@@ -34,6 +34,8 @@ class ApiConstants {
   static const String myBags = '/api/bags/my';
   static const String myUnsoldBags = '/api/bags/my/unsold';
   static const String mySoldBags = '/api/bags/my/sold';
+  static const String popularBags = '/api/bags/popular';
+  static const String popularTodayBags = '/api/bags/popular/today';
   static String bagById(int id) => '/api/bags/$id';
 
   // --- Favourites ---

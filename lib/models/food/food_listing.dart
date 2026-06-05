@@ -14,6 +14,7 @@ class FoodListing {
     this.shopLogoUrl,
     this.isFavorite = false,
     this.isNetworkImage = false,
+    this.isSoldOut = false,
     // ─── Detay alanları (opsiyonel) ───────────────────────
     this.description,
     this.ingredients,
@@ -39,6 +40,7 @@ class FoodListing {
   final String? shopLogoUrl;
   final bool isFavorite;
   final bool isNetworkImage;
+  final bool isSoldOut;
 
   // Detay ekranında kullanılır
   final String? description;
@@ -65,6 +67,7 @@ class FoodListing {
     String? shopLogoUrl,
     bool? isFavorite,
     bool? isNetworkImage,
+    bool? isSoldOut,
     String? description,
     String? ingredients,
     String? allergens,
@@ -89,6 +92,7 @@ class FoodListing {
       shopLogoUrl: shopLogoUrl ?? this.shopLogoUrl,
       isFavorite: isFavorite ?? this.isFavorite,
       isNetworkImage: isNetworkImage ?? this.isNetworkImage,
+      isSoldOut: isSoldOut ?? this.isSoldOut,
       description: description ?? this.description,
       ingredients: ingredients ?? this.ingredients,
       allergens: allergens ?? this.allergens,
@@ -107,4 +111,5 @@ enum FoodSection {
   nearYou, // Sana Yakın Yerler
   buyNow, // Şimdi Al
   todayPopular, // Bugün Popüler
+  todayPopularAll, // Bugün Popüler (Tümü)
 }

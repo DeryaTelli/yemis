@@ -51,13 +51,10 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
       }
     });
 
-    // Sayfaya gelindiğinde favorileri güncelle
+    // Sayfaya gelindiğinde verileri yükle/güncelle
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        final vm = context.read<FoodHomeViewModel>();
-        if (!vm.isLoading) {
-          vm.refreshFavorites();
-        }
+        context.read<FoodHomeViewModel>().init();
       }
     });
   }
@@ -134,6 +131,13 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
               FoodListingSection(
                 title: LocaleKeys.home_todayPopular.tr(),
                 section: FoodSection.todayPopular,
+              ),
+              const SizedBox(height: 24),
+
+              // ── Bugün Popüler (Tümü) ─────────────────────
+              FoodListingSection(
+                title: LocaleKeys.home_todayPopularAll.tr(),
+                section: FoodSection.todayPopularAll,
               ),
               const SizedBox(height: 32),
             ],

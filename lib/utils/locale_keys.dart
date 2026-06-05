@@ -97,6 +97,7 @@ abstract class LocaleKeys {
   static const home_surpriseBox = 'home.surpriseBox';
   static const home_buyNow = 'home.buyNow';
   static const home_todayPopular = 'home.todayPopular';
+  static const home_todayPopularAll = 'home.todayPopularAll';
   static const home_locationLoading = 'home.locationLoading';
   
   // foodProfile
@@ -529,6 +530,7 @@ abstract class LocaleKeys {
   static const foodReservationConfirm_sectionNearby = 'foodReservationConfirm.sectionNearby';
   static const foodReservationConfirm_sectionBuyNow = 'foodReservationConfirm.sectionBuyNow';
   static const foodReservationConfirm_sectionTodayPopular = 'foodReservationConfirm.sectionTodayPopular';
+  static const foodReservationConfirm_sectionTodayPopularAll = 'foodReservationConfirm.sectionTodayPopularAll';
 
   static const foodOrderTab_categoryBreadPastry = 'foodOrderTab.categoryBreadPastry';
   static const foodOrderTab_surpriseBoxDesc = 'foodOrderTab.surpriseBoxDesc';

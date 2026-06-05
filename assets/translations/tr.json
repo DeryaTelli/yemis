@@ -98,7 +98,8 @@
         "seeAll": "Tümü",
         "surpriseBox": "Sürpriz Kutu",
         "buyNow": "Şimdi Al",
-        "todayPopular": "Bugün Popüler Olanlar",
+        "todayPopular": "Popüler Olanlar",
+        "todayPopularAll": "Bugün Popüler Olanlar",
         "locationLoading": "Konum yükleniyor…",
         "volunteerSubtitle": "Evde kalan yemekleri paylaş!",
         "foodTitle": "Yemek",
@@ -531,7 +532,8 @@
         },
         "sectionNearby": "Sana Yakın Yerler",
         "sectionBuyNow": "Şimdi Al",
-        "sectionTodayPopular": "Bugün Popüler"
+        "sectionTodayPopular": "Popüler Olanlar",
+        "sectionTodayPopularAll": "Bugün Popüler Olanlar"
     },
     "foodOrderTab": {
         "categoryBreadPastry": "Ekmek & Pasta",

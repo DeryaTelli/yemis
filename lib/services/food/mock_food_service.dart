@@ -32,6 +32,56 @@ class MockFoodService implements IFoodService {
   }
 
   @override
+  Future<List<FoodListing>> getPopularListings({int? limit, String? category}) async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    var list = _listings.where((l) => l.section == FoodSection.todayPopular).toList();
+    if (category != null) {
+      final catLower = category.toLowerCase();
+      if (catLower == 'patiseri') {
+        list = list.where((l) => l.category.toLowerCase().contains('pasta') || l.category.toLowerCase().contains('ekmek')).toList();
+      } else {
+        list = list.where((l) => l.category.toLowerCase().contains(catLower)).toList();
+      }
+    }
+    if (limit != null && list.length > limit) {
+      list = list.sublist(0, limit);
+    }
+    return list;
+  }
+
+  @override
+  Future<List<FoodListing>> getPopularTodayListings({int? limit, String? category}) async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    var list = _listings.where((l) => l.section == FoodSection.todayPopular).toList();
+    
+    // Test amaçlı bazılarını tükendi ve süresi doldu yapalım
+    list = list.map((l) {
+      if (l.id == 'tp_1') {
+        return l.copyWith(isSoldOut: true, section: FoodSection.todayPopularAll);
+      } else if (l.id == 'tp_2') {
+        return l.copyWith(
+          deliveryEndTime: DateTime.now().subtract(const Duration(hours: 1)),
+          section: FoodSection.todayPopularAll,
+        );
+      }
+      return l.copyWith(section: FoodSection.todayPopularAll);
+    }).toList();
+
+    if (category != null) {
+      final catLower = category.toLowerCase();
+      if (catLower == 'patiseri') {
+        list = list.where((l) => l.category.toLowerCase().contains('pasta') || l.category.toLowerCase().contains('ekmek')).toList();
+      } else {
+        list = list.where((l) => l.category.toLowerCase().contains(catLower)).toList();
+      }
+    }
+    if (limit != null && list.length > limit) {
+      list = list.sublist(0, limit);
+    }
+    return list;
+  }
+
+  @override
   Future<FoodListing> getFoodDetail(String id) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     return _listings.firstWhere(

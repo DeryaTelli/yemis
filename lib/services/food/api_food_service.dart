@@ -93,6 +93,148 @@ class ApiFoodService implements IFoodService {
   }
 
   @override
+  Future<List<FoodListing>> getPopularListings({int? limit, String? category}) async {
+    try {
+      final queryParameters = <String, String>{};
+      if (limit != null) {
+        queryParameters['limit'] = limit.toString();
+      }
+      if (category != null) {
+        queryParameters['category'] = category;
+      }
+
+      final baseUrlUri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.popularBags}');
+      final uri = queryParameters.isNotEmpty 
+          ? baseUrlUri.replace(queryParameters: queryParameters) 
+          : baseUrlUri;
+
+      debugPrint('📡 [ApiFoodService] GET Popular Request: $uri');
+
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      debugPrint('📥 [ApiFoodService] Popular Response Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        List<dynamic> data = [];
+
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'] as List;
+        } else if (decoded is Map && decoded.containsKey('bags')) {
+          data = decoded['bags'] as List;
+        } else {
+          debugPrint('⚠️ [ApiFoodService] Beklenmeyen popüler yanıt formatı: $decoded');
+          return [];
+        }
+
+        debugPrint('📦 [ApiFoodService] İşlenecek popüler ilan sayısı: ${data.length}');
+
+        final List<FoodListing> listings = [];
+        for (var item in data) {
+          try {
+            if (item is Map<String, dynamic>) {
+              final businessModel = BusinessListingModel.fromJson(item);
+              final foodListing = businessModel.toFoodListing().copyWith(
+                section: FoodSection.todayPopular,
+              );
+              listings.add(foodListing);
+            } else {
+              debugPrint('⚠️ [ApiFoodService] Popüler öğe bir Map değil: $item');
+            }
+          } catch (itemError) {
+            debugPrint(
+              '❌ [ApiFoodService] Popüler öğe işleme hatası: $itemError | Item: $item',
+            );
+          }
+        }
+        return listings;
+      } else {
+        debugPrint(
+          '❌ [ApiFoodService] Popüler API Hatası (${response.statusCode}): ${response.body}',
+        );
+        return [];
+      }
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] Popüler Genel Hata: $e');
+      return [];
+    }
+  }
+
+  @override
+  Future<List<FoodListing>> getPopularTodayListings({int? limit, String? category}) async {
+    try {
+      final queryParameters = <String, String>{};
+      if (limit != null) {
+        queryParameters['limit'] = limit.toString();
+      }
+      if (category != null) {
+        queryParameters['category'] = category;
+      }
+
+      final baseUrlUri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.popularTodayBags}');
+      final uri = queryParameters.isNotEmpty 
+          ? baseUrlUri.replace(queryParameters: queryParameters) 
+          : baseUrlUri;
+
+      debugPrint('📡 [ApiFoodService] GET Popular Today Request: $uri');
+
+      final response = await _client
+          .get(uri, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      debugPrint('📥 [ApiFoodService] Popular Today Response Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        List<dynamic> data = [];
+
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'] as List;
+        } else if (decoded is Map && decoded.containsKey('bags')) {
+          data = decoded['bags'] as List;
+        } else {
+          debugPrint('⚠️ [ApiFoodService] Beklenmeyen popüler bugün yanıt formatı: $decoded');
+          return [];
+        }
+
+        debugPrint('📦 [ApiFoodService] İşlenecek popüler bugün ilan sayısı: ${data.length}');
+
+        final List<FoodListing> listings = [];
+        for (var item in data) {
+          try {
+            if (item is Map<String, dynamic>) {
+              final businessModel = BusinessListingModel.fromJson(item);
+              final foodListing = businessModel.toFoodListing().copyWith(
+                section: FoodSection.todayPopularAll,
+              );
+              listings.add(foodListing);
+            } else {
+              debugPrint('⚠️ [ApiFoodService] Popüler bugün öğe bir Map değil: $item');
+            }
+          } catch (itemError) {
+            debugPrint(
+              '❌ [ApiFoodService] Popüler bugün öğe işleme hatası: $itemError | Item: $item',
+            );
+          }
+        }
+        return listings;
+      } else {
+        debugPrint(
+          '❌ [ApiFoodService] Popüler Bugün API Hatası (${response.statusCode}): ${response.body}',
+        );
+        return [];
+      }
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] Popüler Bugün Genel Hata: $e');
+      return [];
+    }
+  }
+
+  @override
   Future<FoodListing> getFoodDetail(String id) async {
     try {
       final url = Uri.parse(
