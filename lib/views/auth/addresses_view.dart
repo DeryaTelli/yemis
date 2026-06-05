@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/auth/addresses_viewmodel.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../widgets/common/loading_overlay.dart';
+import '../../widgets/common/delete_confirmation_dialog.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/theme/app_theme.dart';
 
@@ -93,78 +92,16 @@ class AddressesView extends StatelessWidget {
                             key: ValueKey('dismiss_${address.id}'),
                             direction: DismissDirection.endToStart,
                             confirmDismiss: (direction) async {
-                              final confirmed = await showDialog<bool>(
-                                context: context,
-                                builder: (ctx) => AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  backgroundColor: const Color(0xFFFDF5F2),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Lottie.asset(
-                                            'assets/lottie/account_delete.json',
-                                            width: 60,
-                                            height: 60,
-                                            repeat: true,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Text(
-                                              LocaleKeys.addresses_deleteTitle.tr(),
-                                              style: CustomTextStyles
-                                                  .orelegaOne30Primary,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        LocaleKeys.addresses_deleteConfirm.tr(),
-                                        style: CustomTextStyles.semiBold16Grey,
-                                      ),
-                                      const SizedBox(height: 24),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(ctx, false),
-                                            child: Text(
-                                              LocaleKeys.common_no.tr(),
-                                              style: CustomTextStyles
-                                                  .semiBold16Grey,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(ctx, true),
-                                            child: Text(
-                                              LocaleKeys.common_yes.tr(),
-                                              style: const TextStyle(
-                                                color: Colors.redAccent,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                              final confirmed =
+                                  await DeleteConfirmationDialog.show(
+                                    context,
+                                    title: LocaleKeys.addresses_deleteTitle
+                                        .tr(),
+                                    message: LocaleKeys.addresses_deleteConfirm
+                                        .tr(),
+                                    cancelText: LocaleKeys.common_no.tr(),
+                                    confirmText: LocaleKeys.common_yes.tr(),
+                                  );
                               return confirmed;
                             },
                             onDismissed: (direction) {

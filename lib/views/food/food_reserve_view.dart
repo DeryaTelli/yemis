@@ -27,7 +27,7 @@ class FoodReserveView extends StatelessWidget {
         authService: ctx.read<IAuthService>(),
         foodService: ctx.read<IFoodService>(),
       ),
-      child: _FoodReserveBody(listing: listing),
+      child: const _FoodReserveBody(),
     );
   }
 }
@@ -36,9 +36,7 @@ class FoodReserveView extends StatelessWidget {
 // Body
 // ─────────────────────────────────────────────────────────────
 class _FoodReserveBody extends StatelessWidget {
-  const _FoodReserveBody({required this.listing});
-
-  final FoodListing listing;
+  const _FoodReserveBody();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +57,7 @@ class _FoodReserveBody extends StatelessWidget {
                   // Restoran bilgisi
                   Center(
                     child: FoodReserveInfoCard(
-                      listing: listing,
+                      listing: vm.listing,
                       deliveryText: vm.deliveryText,
                     ),
                   ),
@@ -87,7 +85,7 @@ class _FoodReserveBody extends StatelessWidget {
           ),
 
           // ── Alt Rezerve Butonu ───────────────────────────
-          _ReserveButton(vm: vm, listing: listing),
+          _ReserveButton(vm: vm),
         ],
       ),
     );
@@ -98,10 +96,9 @@ class _FoodReserveBody extends StatelessWidget {
 // Alt buton
 // ─────────────────────────────────────────────────────────────
 class _ReserveButton extends StatelessWidget {
-  const _ReserveButton({required this.vm, required this.listing});
+  const _ReserveButton({required this.vm});
 
   final FoodReserveViewModel vm;
-  final FoodListing listing;
 
   Future<void> _onReserve(BuildContext context) async {
     final success = await vm.reserve();
@@ -111,7 +108,9 @@ class _ReserveButton extends StatelessWidget {
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Rezervasyon sırasında bir hata oluştu. Lütfen tekrar deneyin.'),
+          content: Text(
+            'Rezervasyon sırasında bir hata oluştu. Lütfen tekrar deneyin.',
+          ),
           backgroundColor: Colors.red,
         ),
       );
@@ -129,7 +128,11 @@ class _ReserveButton extends StatelessWidget {
           ),
           title: const Row(
             children: [
-              Icon(Icons.check_circle_rounded, color: Color(0xFF4CAF50), size: 24),
+              Icon(
+                Icons.check_circle_rounded,
+                color: Color(0xFF4CAF50),
+                size: 24,
+              ),
               SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -148,7 +151,10 @@ class _ReserveButton extends StatelessWidget {
               onPressed: () => Navigator.pop(ctx, false),
               child: const Text(
                 'Hayır',
-                style: TextStyle(color: Color(0xFF888888), fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: Color(0xFF888888),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             ElevatedButton(
@@ -182,7 +188,7 @@ class _ReserveButton extends StatelessWidget {
       context,
       MaterialPageRoute<void>(
         builder: (_) => FoodReservationConfirmView(
-          listing: listing,
+          listing: vm.listing,
           quantity: vm.quantity,
           totalPrice: vm.totalPrice,
         ),

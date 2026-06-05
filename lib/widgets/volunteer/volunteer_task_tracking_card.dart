@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/utils/constants/app_colors.dart';
@@ -10,6 +7,7 @@ import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 import 'package:yemis/viewmodels/home/volunteer_home_viewmodel.dart';
 import 'package:yemis/widgets/volunteer/volunteer_cancel_dialog.dart';
+import 'package:yemis/views/volunteer/volunteer_review_view.dart';
 import '../../viewmodels/volunteer/volunteer_listing_detail_viewmodel.dart';
 
 class VolunteerTaskTrackingCard extends StatelessWidget {
@@ -789,16 +787,16 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final progress = _progressForSide;
-    if (progress != null && progress.availableActions.isNotEmpty) {
-      return _buildBackendActions(context, vm, progress.availableActions);
-    }
+    final hasReview =
+        task.volunteerComment != null &&
+        task.volunteerComment!.trim().isNotEmpty;
+    final isWaitingForReview =
+        !isOwner &&
+        !hasReview &&
+        (status == DeliveryStatus.deliveredPendingReview ||
+            status == DeliveryStatus.completed);
 
-    if (status == DeliveryStatus.completed) {
-      return const SizedBox.shrink();
-    }
-
-    if (!isOwner && status == DeliveryStatus.deliveredPendingReview) {
+    if (isWaitingForReview) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -807,7 +805,7 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
                 ? null
                 : vm == null
                 ? null
-                : () => _showVolunteerReviewDialog(context, vm, task),
+                : () => _openVolunteerReviewPage(context, vm, task),
             icon: const Icon(Icons.chat_bubble_outline_rounded, size: 12),
             label: Text(LocaleKeys.taskTracking_btnLeaveReview.tr()),
             style: ElevatedButton.styleFrom(
@@ -824,6 +822,15 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
           ),
         ],
       );
+    }
+
+    final progress = _progressForSide;
+    if (progress != null && progress.availableActions.isNotEmpty) {
+      return _buildBackendActions(context, vm, progress.availableActions);
+    }
+
+    if (status == DeliveryStatus.completed) {
+      return const SizedBox.shrink();
     }
 
     Widget? advanceBtn;
@@ -1020,7 +1027,7 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
       buttons.add(
         _buildAdvanceButton(
           label: LocaleKeys.taskTracking_btnLeaveReview.tr(),
-          onPressed: () => _showVolunteerReviewDialog(context, vm, task),
+          onPressed: () => _openVolunteerReviewPage(context, vm, task),
         ),
       );
     }
@@ -1223,247 +1230,15 @@ class VolunteerTaskTrackingCard extends StatelessWidget {
     );
   }
 
-  void _showVolunteerReviewDialog(
+  void _openVolunteerReviewPage(
     BuildContext context,
     VolunteerHomeViewModel vm,
     VolunteerListing task,
   ) {
-    showDialog<void>(
-      context: context,
-      builder: (_) => _VolunteerReviewDialog(vm: vm, task: task),
-    );
-  }
-}
-
-class _VolunteerReviewDialog extends StatefulWidget {
-  const _VolunteerReviewDialog({required this.vm, required this.task});
-
-  final VolunteerHomeViewModel vm;
-  final VolunteerListing task;
-
-  @override
-  State<_VolunteerReviewDialog> createState() => _VolunteerReviewDialogState();
-}
-
-class _VolunteerReviewDialogState extends State<_VolunteerReviewDialog> {
-  final TextEditingController _controller = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
-  final List<XFile> _selectedImages = [];
-
-  int _rating = 5;
-  bool _isSubmitting = false;
-  String? _errorText;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickReviewImage(ImageSource source) async {
-    if (_selectedImages.length >= 3 || _isSubmitting) return;
-    final picked = await _picker.pickImage(
-      source: source,
-      maxWidth: 1280,
-      maxHeight: 1280,
-      imageQuality: 85,
-    );
-    if (!mounted || picked == null) return;
-    setState(() {
-      _selectedImages.add(picked);
-      _errorText = null;
-    });
-  }
-
-  Future<void> _submit() async {
-    final comment = _controller.text.trim();
-    if (comment.isEmpty) {
-      setState(() {
-        _errorText = LocaleKeys.taskTracking_volunteerComment.tr();
-      });
-      return;
-    }
-    if (comment.length < 15) {
-      setState(() {
-        _errorText = 'Yorum en az 15 karakter olmali.';
-      });
-      return;
-    }
-    if (_selectedImages.isEmpty) {
-      setState(() {
-        _errorText = 'En az 1 foto eklemelisin.';
-      });
-      return;
-    }
-
-    setState(() => _isSubmitting = true);
-    final success = await widget.vm.submitVolunteerReview(
-      widget.task.taskId!,
-      rating: _rating,
-      comment: comment,
-      imagePaths: _selectedImages.map((image) => image.path).toList(),
-    );
-    if (!mounted) return;
-    if (success) {
-      Navigator.of(context).pop();
-      return;
-    }
-    setState(() {
-      _isSubmitting = false;
-      _errorText = 'Yorum gonderilemedi.';
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 360),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                LocaleKeys.taskTracking_btnLeaveReview.tr(),
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
-              ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 2,
-                children: List.generate(5, (index) {
-                  final value = index + 1;
-                  return IconButton(
-                    visualDensity: VisualDensity.compact,
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => setState(() => _rating = value),
-                    icon: Icon(
-                      value <= _rating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                    ),
-                  );
-                }),
-              ),
-              TextField(
-                controller: _controller,
-                enabled: !_isSubmitting,
-                minLines: 3,
-                maxLines: 5,
-                decoration: InputDecoration(
-                  hintText: LocaleKeys.taskTracking_volunteerComment.tr(),
-                  errorText: _errorText,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  OutlinedButton.icon(
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => _pickReviewImage(ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library_outlined, size: 18),
-                    label: const Text('Foto Ekle'),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => _pickReviewImage(ImageSource.camera),
-                    icon: const Icon(Icons.photo_camera_outlined, size: 18),
-                    label: const Text('Kamera'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              if (_selectedImages.isNotEmpty)
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: List.generate(_selectedImages.length, (index) {
-                    final image = _selectedImages[index];
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.file(
-                            File(image.path),
-                            width: 64,
-                            height: 64,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          top: -6,
-                          right: -6,
-                          child: GestureDetector(
-                            onTap: _isSubmitting
-                                ? null
-                                : () => setState(() {
-                                    _selectedImages.removeAt(index);
-                                  }),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.black87,
-                                shape: BoxShape.circle,
-                              ),
-                              padding: const EdgeInsets.all(2),
-                              child: const Icon(
-                                Icons.close,
-                                size: 14,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
-              const SizedBox(height: 6),
-              Text(
-                _selectedImages.isEmpty
-                    ? 'En az 1 foto zorunlu.'
-                    : '${_selectedImages.length}/3 foto secildi',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: _selectedImages.isEmpty
-                      ? Colors.red.shade400
-                      : Colors.grey.shade600,
-                ),
-              ),
-              const SizedBox(height: 18),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: _isSubmitting
-                        ? null
-                        : () => Navigator.of(context).pop(),
-                    child: Text(LocaleKeys.common_cancel.tr()),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _isSubmitting ? null : _submit,
-                    child: _isSubmitting
-                        ? const SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Text(LocaleKeys.common_save.tr()),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => VolunteerReviewView(viewModel: vm, task: task),
       ),
     );
   }

@@ -240,7 +240,7 @@ class ApiAuthService implements IAuthService {
       'new_password': newPassword,
     });
   }
-  
+
   @override
   Future<String?> uploadImage(String filePath) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.uploadImage}');
@@ -254,7 +254,7 @@ class ApiAuthService implements IAuthService {
 
     try {
       final request = http.MultipartRequest('POST', url);
-      
+
       if (_authToken != null) {
         request.headers['Authorization'] = 'Bearer $_authToken';
         if (kDebugMode) {
@@ -480,5 +480,10 @@ class ApiAuthService implements IAuthService {
   @override
   Future<AuthResponse> addCard(Map<String, dynamic> cardData) async {
     return _post('/api/users/me/cards', cardData);
+  }
+
+  @override
+  Future<AuthResponse> deleteCard(int cardId) async {
+    return _delete('/api/users/me/cards/$cardId');
   }
 }

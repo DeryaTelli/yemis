@@ -14,7 +14,9 @@ class FoodReviewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final timeStr =
         '${review.date.hour.toString().padLeft(2, '0')}:${review.date.minute.toString().padLeft(2, '0')}';
-    final dateStr = LocaleKeys.foodReviewItem_today.tr(namedArgs: {'time': timeStr});
+    final dateStr = LocaleKeys.foodReviewItem_today.tr(
+      namedArgs: {'time': timeStr},
+    );
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -143,11 +145,23 @@ class _StarRow extends StatelessWidget {
     return Row(
       children: List.generate(5, (i) {
         if (i < rating.floor()) {
-          return const Icon(Icons.star_rounded, color: Color(0xFFFFC107), size: 16);
+          return const Icon(
+            Icons.star_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
         } else if (i < rating) {
-          return const Icon(Icons.star_half_rounded, color: Color(0xFFFFC107), size: 16);
+          return const Icon(
+            Icons.star_half_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
         } else {
-          return const Icon(Icons.star_outline_rounded, color: Color(0xFFFFC107), size: 16);
+          return const Icon(
+            Icons.star_outline_rounded,
+            color: Color(0xFFFFC107),
+            size: 16,
+          );
         }
       }),
     );

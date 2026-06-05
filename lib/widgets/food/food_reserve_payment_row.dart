@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_reserve_viewmodel.dart';
+import '../common/card_date_picker_field.dart';
 import 'food_reserve_bottom_sheet.dart';
 
 /// Kart numarasını her 4 hanede bir boşluk koyarak formatlar.
@@ -163,7 +164,8 @@ class FoodReservePaymentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (vm.isNewCardMode || (vm.savedCards.isEmpty && vm.selectedSavedCard == null)) {
+    if (vm.isNewCardMode ||
+        (vm.savedCards.isEmpty && vm.selectedSavedCard == null)) {
       return _buildNewCardForm(context);
     } else if (vm.selectedSavedCard != null) {
       return _buildSavedCardSelectedView(context, vm.selectedSavedCard!);
@@ -179,7 +181,7 @@ class FoodReservePaymentRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E5E5)),
+        border: Border.all(color: AppColors.primaryBorderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,7 +224,7 @@ class FoodReservePaymentRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E5E5)),
+        border: Border.all(color: AppColors.primaryBorderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +261,7 @@ class FoodReservePaymentRow extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFFF8F9FA),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFE5E5E5)),
+                border: Border.all(color: AppColors.primaryBorderColor),
               ),
               child: Row(
                 children: [
@@ -293,15 +295,20 @@ class FoodReservePaymentRow extends StatelessWidget {
 
   // State 3: New Card Form View (Image 3)
   Widget _buildNewCardForm(BuildContext context) {
-    final List<String> months = ['Ay', ...List.generate(12, (index) => (index + 1).toString().padLeft(2, '0'))];
-    final List<String> years = ['Yıl', ...List.generate(15, (index) => (DateTime.now().year + index).toString())];
+    final List<String> months = [
+      'Ay',
+      ...List.generate(12, (index) => (index + 1).toString().padLeft(2, '0')),
+    ];
+    final List<String> years = [
+      'Yıl',
+      ...List.generate(15, (index) => (DateTime.now().year + index).toString()),
+    ];
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE5E5E5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,7 +364,7 @@ class FoodReservePaymentRow extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFF8F9FA),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFFE5E5E5)),
+              border: Border.all(color: AppColors.primaryBorderColor),
             ),
             child: TextField(
               controller: vm.cardNoController,
@@ -367,7 +374,10 @@ class FoodReservePaymentRow extends StatelessWidget {
                 border: InputBorder.none,
                 hintText: '0000 0000 0000 0000',
                 hintStyle: TextStyle(color: Color(0xFFBBBBBB), fontSize: 14),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
                 isDense: true,
               ),
               style: const TextStyle(
@@ -399,71 +409,25 @@ class FoodReservePaymentRow extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        // Month Dropdown
                         Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF8F9FA),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: const Color(0xFFE5E5E5)),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: vm.selectedExpiryMonth,
-                                isExpanded: true,
-                                icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 18),
-                                items: months.map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: value == 'Ay' ? Colors.grey.shade600 : AppColors.primaryTextColor,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (val) {
-                                  if (val != null) vm.setExpiryMonth(val);
-                                },
-                              ),
-                            ),
+                          child: CardDatePickerField(
+                            hint: 'Ay',
+                            value: vm.selectedExpiryMonth,
+                            items: months,
+                            compact: true,
+                            borderColor: AppColors.primaryBorderColor,
+                            onChanged: vm.setExpiryMonth,
                           ),
                         ),
                         const SizedBox(width: 8),
-                        // Year Dropdown
                         Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF8F9FA),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: const Color(0xFFE5E5E5)),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: vm.selectedExpiryYear,
-                                isExpanded: true,
-                                icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 18),
-                                items: years.map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: value == 'Yıl' ? Colors.grey.shade600 : AppColors.primaryTextColor,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (val) {
-                                  if (val != null) vm.setExpiryYear(val);
-                                },
-                              ),
-                            ),
+                          child: CardDatePickerField(
+                            hint: 'Yıl',
+                            value: vm.selectedExpiryYear,
+                            items: years,
+                            compact: true,
+                            borderColor: AppColors.primaryBorderColor,
+                            onChanged: vm.setExpiryYear,
                           ),
                         ),
                       ],
@@ -495,11 +459,18 @@ class FoodReservePaymentRow extends StatelessWidget {
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('CVV Nedir?'),
-                                content: const Text('CVV, kartınızın arkasında bulunan 3 haneli güvenlik kodudur.'),
+                                content: const Text(
+                                  'CVV, kartınızın arkasında bulunan 3 haneli güvenlik kodudur.',
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx),
-                                    child: const Text('Kapat', style: TextStyle(color: Color(0xFFF58220))),
+                                    child: const Text(
+                                      'Kapat',
+                                      style: TextStyle(
+                                        color: Color(0xFFF58220),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -509,7 +480,10 @@ class FoodReservePaymentRow extends StatelessWidget {
                             padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: const Color(0xFFF58220), width: 1),
+                              border: Border.all(
+                                color: const Color(0xFFF58220),
+                                width: 1,
+                              ),
                             ),
                             child: const Text(
                               '?',
@@ -528,7 +502,7 @@ class FoodReservePaymentRow extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: const Color(0xFFF8F9FA),
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFFE5E5E5)),
+                        border: Border.all(color: AppColors.primaryBorderColor),
                       ),
                       child: TextField(
                         controller: vm.cvvController,
@@ -538,10 +512,16 @@ class FoodReservePaymentRow extends StatelessWidget {
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           counterText: '',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 12,
+                          ),
                           isDense: true,
                         ),
-                        style: const TextStyle(fontSize: 14, color: AppColors.primaryTextColor),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.primaryTextColor,
+                        ),
                       ),
                     ),
                   ],

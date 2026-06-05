@@ -20,6 +20,7 @@ class CustomTextStyles {
 
   // Dark Grey (0xFF4F4F4F)
   static TextStyle get semiBold14DarkGrey => GoogleFonts.nunito(fontSize: 14, fontWeight: FontWeight.w600, color: const Color(0xFF4F4F4F), height: 20 / 14, letterSpacing: -0.24);
+  static TextStyle get semiBold15DarkGrey => GoogleFonts.nunito(fontSize: 15, fontWeight: FontWeight.w600, color: const Color(0xFF4F4F4F), height: 20 / 15, letterSpacing: -0.24);
   static TextStyle get regular16DarkGrey => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w400, color: const Color(0xFF4F4F4F));
   static TextStyle get semiBold16DarkGreyDense => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFF4F4F4F), height: 12 / 16, letterSpacing: -0.2);
   static TextStyle get semiBold16DarkGreyCompact => GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFF4F4F4F), height: 22 / 16, letterSpacing: -0.4);

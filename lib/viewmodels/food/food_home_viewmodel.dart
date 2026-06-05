@@ -44,6 +44,7 @@ class FoodHomeViewModel extends ChangeNotifier {
 
   String _searchQuery = '';
   String get searchQuery => _searchQuery;
+  bool get isSearching => _searchQuery.trim().isNotEmpty;
 
   FoodFilter _selectedFilter = FoodFilter.all;
   FoodFilter get selectedFilter => _selectedFilter;
@@ -109,7 +110,8 @@ class FoodHomeViewModel extends ChangeNotifier {
         _service.getFeaturedListings(),
         _service.getFavorites(), // Favorileri de çek
         _service.getPopularListings(), // Popülerleri de çek
-        _service.getPopularTodayListings(), // Bugünün Popülerlerini (tükendiler dahil) çek
+        _service
+            .getPopularTodayListings(), // Bugünün Popülerlerini (tükendiler dahil) çek
       ]);
 
       _locationName = results[0] as String;
@@ -120,7 +122,9 @@ class FoodHomeViewModel extends ChangeNotifier {
 
       debugPrint('📊 [FoodHomeVM] Çekilen Toplam İlan: ${listings.length}');
       debugPrint('📊 [FoodHomeVM] Çekilen Popüler İlan: ${populars.length}');
-      debugPrint('📊 [FoodHomeVM] Çekilen Popüler Bugün İlan: ${popularTodays.length}');
+      debugPrint(
+        '📊 [FoodHomeVM] Çekilen Popüler Bugün İlan: ${popularTodays.length}',
+      );
 
       // Favori olanların isFavorite flag'ini güncelle
       final favoriteIds = favorites.map((f) => f.id).toSet();
@@ -139,8 +143,10 @@ class FoodHomeViewModel extends ChangeNotifier {
         final isFav = favoriteIds.contains(l.id);
         return l.copyWith(isFavorite: isFav);
       }).toList();
-      
-      debugPrint('✨ [FoodHomeVM] İlanlar başarıyla yüklendi ve favoriler eşleşti.');
+
+      debugPrint(
+        '✨ [FoodHomeVM] İlanlar başarıyla yüklendi ve favoriler eşleşti.',
+      );
     } catch (e) {
       debugPrint('❌ [FoodHomeVM] Hata: $e');
     } finally {
@@ -253,6 +259,45 @@ class FoodHomeViewModel extends ChangeNotifier {
     return list;
   }
 
+  List<FoodListing> get searchResults {
+    if (!isSearching) return const [];
+
+    final uniqueListings = <String, FoodListing>{};
+    for (final listing in [
+      ..._allListings,
+      ..._popularListings,
+      ..._popularTodayListings,
+    ]) {
+      uniqueListings[listing.id] = listing;
+    }
+
+    final query = _searchQuery.trim().toLowerCase();
+    return uniqueListings.values.where((listing) {
+      if (!_matchesSelectedFilter(listing)) return false;
+
+      return listing.title.toLowerCase().contains(query) ||
+          listing.shopName.toLowerCase().contains(query) ||
+          listing.category.toLowerCase().contains(query) ||
+          (listing.description?.toLowerCase().contains(query) ?? false) ||
+          listing.location.toLowerCase().contains(query);
+    }).toList();
+  }
+
+  bool _matchesSelectedFilter(FoodListing listing) {
+    switch (_selectedFilter) {
+      case FoodFilter.food:
+        return listing.category.toLowerCase() == 'yemek';
+      case FoodFilter.breadPastry:
+        return listing.category.toLowerCase() == 'patiseri';
+      case FoodFilter.market:
+        return listing.category.toLowerCase() == 'market';
+      case FoodFilter.buyNow:
+        return listing.section == FoodSection.buyNow;
+      case FoodFilter.all:
+        return true;
+    }
+  }
+
   List<FoodListing> sectionListings(FoodSection section) {
     switch (section) {
       case FoodSection.nearYou:
@@ -260,11 +305,21 @@ class FoodHomeViewModel extends ChangeNotifier {
         // Kullanıcı konumuna göre sırala (En yakın en üstte)
         final userLat = _userSession.currentLat;
         final userLng = _userSession.currentLng;
-        
+
         if (userLat != null && userLng != null) {
           list.sort((a, b) {
-            final distA = _calculateDistance(userLat, userLng, a.latitude, a.longitude);
-            final distB = _calculateDistance(userLat, userLng, b.latitude, b.longitude);
+            final distA = _calculateDistance(
+              userLat,
+              userLng,
+              a.latitude,
+              a.longitude,
+            );
+            final distB = _calculateDistance(
+              userLat,
+              userLng,
+              b.latitude,
+              b.longitude,
+            );
             return distA.compareTo(distB);
           });
         }
@@ -280,8 +335,10 @@ class FoodHomeViewModel extends ChangeNotifier {
           // Sadece henüz bitmemiş olanları al
           return l.deliveryEndTime!.isAfter(now);
         }).toList();
-        
-        buyNowList.sort((a, b) => a.deliveryEndTime!.compareTo(b.deliveryEndTime!));
+
+        buyNowList.sort(
+          (a, b) => a.deliveryEndTime!.compareTo(b.deliveryEndTime!),
+        );
         return buyNowList;
 
       case FoodSection.todayPopular:
@@ -292,7 +349,12 @@ class FoodHomeViewModel extends ChangeNotifier {
     }
   }
 
-  double _calculateDistance(double lat1, double lon1, double? lat2, double? lon2) {
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double? lat2,
+    double? lon2,
+  ) {
     if (lat2 == null || lon2 == null) return 999999.0; // Konum yoksa en sona at
     // Basit bir mesafe yaklaşımı (daha doğru sonuç için haversine kullanılabilir)
     final dLat = lat1 - lat2;

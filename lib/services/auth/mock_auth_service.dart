@@ -249,6 +249,18 @@ class MockAuthService implements IAuthService {
     return const AuthResponse(success: true, message: 'Card added successfully');
   }
 
+  @override
+  Future<AuthResponse> deleteCard(int cardId) async {
+    await _simulateDelay();
+    final previousLength = _mockCards.length;
+    _mockCards.removeWhere((card) => card['id'] == cardId);
+    final removed = previousLength != _mockCards.length;
+    return AuthResponse(
+      success: removed,
+      message: removed ? 'Card deleted successfully' : 'Card not found',
+    );
+  }
+
   Future<void> _simulateDelay() =>
       Future.delayed(const Duration(milliseconds: 1200));
 }

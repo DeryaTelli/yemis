@@ -31,6 +31,7 @@ import 'package:yemis/services/volunteer/api_volunteer_service.dart';
 import 'package:yemis/services/common/assistant_service.dart';
 import 'package:yemis/services/notifications/api_notification_service.dart';
 import 'package:yemis/models/auth/address_model.dart';
+import 'package:yemis/models/auth/saved_card_model.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/models/food/food_listing.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
@@ -39,6 +40,7 @@ import 'package:yemis/viewmodels/auth/forgot_password_viewmodel.dart';
 import 'package:yemis/viewmodels/auth/login_viewmodel.dart';
 import 'package:yemis/viewmodels/auth/register_viewmodel.dart';
 import 'package:yemis/viewmodels/auth/verification_viewmodel.dart';
+import 'package:yemis/viewmodels/auth/cards_viewmodel.dart';
 import 'package:yemis/views/auth/forgot_password_view.dart';
 import 'package:yemis/views/auth/login_view.dart';
 import 'package:yemis/views/auth/register_view.dart';
@@ -67,6 +69,7 @@ import 'views/volunteer/volunteer_detail_view.dart';
 import 'views/volunteer/volunteer_edit_listing_view.dart';
 import 'views/volunteer/volunteer_listing_detail_view.dart';
 import 'views/auth/addresses_view.dart';
+import 'views/auth/cards_view.dart';
 import 'views/auth/food_add_address_view.dart';
 import 'views/common/language_select_view.dart';
 import 'views/business/business_profile_view.dart';
@@ -496,6 +499,26 @@ class MyApp extends StatelessWidget {
                   settings.arguments as AppModuleType? ?? AppModuleType.food;
               return MaterialPageRoute(
                 builder: (_) => AddressesView(moduleType: moduleType),
+                settings: settings,
+              );
+            case AppRoutes.cards:
+              return MaterialPageRoute(
+                builder: (_) => const CardsView(),
+                settings: settings,
+              );
+            case AppRoutes.addCard:
+              final viewModel = settings.arguments as CardsViewModel;
+              return MaterialPageRoute(
+                builder: (_) => AddCardView(viewModel: viewModel),
+                settings: settings,
+              );
+            case AppRoutes.cardDetail:
+              final args = settings.arguments as Map<String, dynamic>;
+              return MaterialPageRoute(
+                builder: (_) => CardDetailView(
+                  card: args['card'] as SavedCardModel,
+                  viewModel: args['viewModel'] as CardsViewModel,
+                ),
                 settings: settings,
               );
             case AppRoutes.foodAddAddress:

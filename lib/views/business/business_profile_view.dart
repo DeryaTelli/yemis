@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:yemis/utils/locale_keys.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/widgets/business/daily_stat_card.dart';
 import '../../models/app_module_type.dart';
@@ -193,7 +192,8 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                         ProfileMenuTile(
                           icon: Icons.credit_card_rounded,
                           title: LocaleKeys.businessProfile_savedCards.tr(),
-                          onTap: () {},
+                          onTap: () =>
+                              Navigator.pushNamed(context, AppRoutes.cards),
                         ),
                         ProfileMenuTile(
                           icon: Icons.location_on_outlined,

@@ -99,7 +99,7 @@ abstract class LocaleKeys {
   static const home_todayPopular = 'home.todayPopular';
   static const home_todayPopularAll = 'home.todayPopularAll';
   static const home_locationLoading = 'home.locationLoading';
-  
+
   // foodProfile
   static const foodProfile_title = 'foodProfile.title';
   static const foodProfile_notifications = 'foodProfile.notifications';
@@ -116,25 +116,42 @@ abstract class LocaleKeys {
 
   // yemoAssistant
   static const yemoAssistant_foodFindTitle = 'yemoAssistant.foodFindTitle';
-  static const yemoAssistant_foodFindSubtitle = 'yemoAssistant.foodFindSubtitle';
-  static const yemoAssistant_foodReserveTitle = 'yemoAssistant.foodReserveTitle';
-  static const yemoAssistant_foodReserveSubtitle = 'yemoAssistant.foodReserveSubtitle';
+  static const yemoAssistant_foodFindSubtitle =
+      'yemoAssistant.foodFindSubtitle';
+  static const yemoAssistant_foodReserveTitle =
+      'yemoAssistant.foodReserveTitle';
+  static const yemoAssistant_foodReserveSubtitle =
+      'yemoAssistant.foodReserveSubtitle';
   static const yemoAssistant_foodAiTitle = 'yemoAssistant.foodAiTitle';
   static const yemoAssistant_foodAiSubtitle = 'yemoAssistant.foodAiSubtitle';
-  static const yemoAssistant_businessSalesTitle = 'yemoAssistant.businessSalesTitle';
-  static const yemoAssistant_businessSalesSubtitle = 'yemoAssistant.businessSalesSubtitle';
-  static const yemoAssistant_businessAddOrderTitle = 'yemoAssistant.businessAddOrderTitle';
-  static const yemoAssistant_businessAddOrderSubtitle = 'yemoAssistant.businessAddOrderSubtitle';
-  static const yemoAssistant_businessCo2Title = 'yemoAssistant.businessCo2Title';
-  static const yemoAssistant_businessCo2Subtitle = 'yemoAssistant.businessCo2Subtitle';
-  static const yemoAssistant_volunteerListingsTitle = 'yemoAssistant.volunteerListingsTitle';
-  static const yemoAssistant_volunteerListingsSubtitle = 'yemoAssistant.volunteerListingsSubtitle';
-  static const yemoAssistant_volunteerBecomeTitle = 'yemoAssistant.volunteerBecomeTitle';
-  static const yemoAssistant_volunteerBecomeSubtitle = 'yemoAssistant.volunteerBecomeSubtitle';
-  static const yemoAssistant_volunteerRegionTitle = 'yemoAssistant.volunteerRegionTitle';
-  static const yemoAssistant_volunteerRegionSubtitle = 'yemoAssistant.volunteerRegionSubtitle';
-  static const yemoAssistant_commonQuestionsTitle = 'yemoAssistant.commonQuestionsTitle';
-  static const yemoAssistant_commonQuestionsSubtitle = 'yemoAssistant.commonQuestionsSubtitle';
+  static const yemoAssistant_businessSalesTitle =
+      'yemoAssistant.businessSalesTitle';
+  static const yemoAssistant_businessSalesSubtitle =
+      'yemoAssistant.businessSalesSubtitle';
+  static const yemoAssistant_businessAddOrderTitle =
+      'yemoAssistant.businessAddOrderTitle';
+  static const yemoAssistant_businessAddOrderSubtitle =
+      'yemoAssistant.businessAddOrderSubtitle';
+  static const yemoAssistant_businessCo2Title =
+      'yemoAssistant.businessCo2Title';
+  static const yemoAssistant_businessCo2Subtitle =
+      'yemoAssistant.businessCo2Subtitle';
+  static const yemoAssistant_volunteerListingsTitle =
+      'yemoAssistant.volunteerListingsTitle';
+  static const yemoAssistant_volunteerListingsSubtitle =
+      'yemoAssistant.volunteerListingsSubtitle';
+  static const yemoAssistant_volunteerBecomeTitle =
+      'yemoAssistant.volunteerBecomeTitle';
+  static const yemoAssistant_volunteerBecomeSubtitle =
+      'yemoAssistant.volunteerBecomeSubtitle';
+  static const yemoAssistant_volunteerRegionTitle =
+      'yemoAssistant.volunteerRegionTitle';
+  static const yemoAssistant_volunteerRegionSubtitle =
+      'yemoAssistant.volunteerRegionSubtitle';
+  static const yemoAssistant_commonQuestionsTitle =
+      'yemoAssistant.commonQuestionsTitle';
+  static const yemoAssistant_commonQuestionsSubtitle =
+      'yemoAssistant.commonQuestionsSubtitle';
   static const yemoAssistant_hintText = 'yemoAssistant.hintText';
   static const yemoAssistant_errorBusy = 'yemoAssistant.errorBusy';
   static const yemoAssistant_errorNetwork = 'yemoAssistant.errorNetwork';
@@ -157,10 +174,12 @@ abstract class LocaleKeys {
   static const notifications_promoTitle = 'notifications.promoTitle';
   static const notifications_promoSubtitle = 'notifications.promoSubtitle';
   static const notifications_volunteerTitle = 'notifications.volunteerTitle';
-  static const notifications_volunteerSubtitle = 'notifications.volunteerSubtitle';
+  static const notifications_volunteerSubtitle =
+      'notifications.volunteerSubtitle';
 
   // changePassword
-  static const changePassword_currentPassword = 'changePassword.currentPassword';
+  static const changePassword_currentPassword =
+      'changePassword.currentPassword';
   static const changePassword_newPassword = 'changePassword.newPassword';
 
   // register
@@ -258,7 +277,8 @@ abstract class LocaleKeys {
   static const volunteerListings_emptyMessage =
       'volunteerListings.emptyMessage';
   static const volunteerListings_deleteError = 'volunteerListings.deleteError';
-  static const volunteerListings_deleteConfirm = 'volunteerListings.deleteConfirm';
+  static const volunteerListings_deleteConfirm =
+      'volunteerListings.deleteConfirm';
   static const volunteerListings_deleteTitle = 'volunteerListings.deleteTitle';
 
   // languageSelect
@@ -330,7 +350,8 @@ abstract class LocaleKeys {
       'businessAddOrder.categoryLabel';
   static const businessAddOrder_categoryPlaceholder =
       'businessAddOrder.categoryPlaceholder';
-  static const businessAddOrder_errorNoAddress = 'businessAddOrder.errorNoAddress';
+  static const businessAddOrder_errorNoAddress =
+      'businessAddOrder.errorNoAddress';
 
   // businessApprovals
   static const businessApprovals_title = 'businessApprovals.title';
@@ -410,16 +431,21 @@ abstract class LocaleKeys {
   static const auth_changePassword_title = 'auth.changePassword.title';
   static const auth_fields_fullNameHint = 'auth.fields.fullNameHint';
   static const auth_fields_emailHint = 'auth.fields.emailHint';
-  static const auth_verification_successMessage = 'auth.verification.successMessage';
+  static const auth_verification_successMessage =
+      'auth.verification.successMessage';
 
   static const businessProfile_editTitle = 'businessProfile.editTitle';
   static const businessProfile_addedListings = 'businessProfile.addedListings';
-  static const businessProfile_soldOrdersTitle = 'businessProfile.soldOrdersTitle';
-  static const businessProfile_expiredListings = 'businessProfile.expiredListings';
+  static const businessProfile_soldOrdersTitle =
+      'businessProfile.soldOrdersTitle';
+  static const businessProfile_expiredListings =
+      'businessProfile.expiredListings';
 
   static const businessAddOrder_titleHint = 'businessAddOrder.titleHint';
-  static const businessAddOrder_descriptionHint = 'businessAddOrder.descriptionHint';
-  static const businessAddOrder_allergensHint = 'businessAddOrder.allergensHint';
+  static const businessAddOrder_descriptionHint =
+      'businessAddOrder.descriptionHint';
+  static const businessAddOrder_allergensHint =
+      'businessAddOrder.allergensHint';
 
   static const home_volunteerSubtitle = 'home.volunteerSubtitle';
   static const home_foodTitle = 'home.foodTitle';
@@ -436,10 +462,14 @@ abstract class LocaleKeys {
 
   static const foodFavorites_title = 'foodFavorites.title';
   static const businessListings_deleteError = 'businessListings.deleteError';
-  static const volunteerEditListing_successTitle = 'volunteerEditListing.successTitle';
-  static const volunteerEditListing_successMessage = 'volunteerEditListing.successMessage';
-  static const businessEditOrder_successTitle = 'businessEditOrder.successTitle';
-  static const businessEditOrder_successMessage = 'businessEditOrder.successMessage';
+  static const volunteerEditListing_successTitle =
+      'volunteerEditListing.successTitle';
+  static const volunteerEditListing_successMessage =
+      'volunteerEditListing.successMessage';
+  static const businessEditOrder_successTitle =
+      'businessEditOrder.successTitle';
+  static const businessEditOrder_successMessage =
+      'businessEditOrder.successMessage';
   static const common_selectLocation = 'common.selectLocation';
   static const common_selectLocationFromMap = 'common.selectLocationFromMap';
   static const common_noResults = 'common.noResults';
@@ -480,86 +510,145 @@ abstract class LocaleKeys {
   static const onboarding_buttons_start = 'onboarding.buttons.start';
 
   // Additional Keys
-  static const volunteerListingDetail_activeBadge = 'volunteerListingDetail.activeBadge';
-  static const volunteerListingDetail_freeLabel = 'volunteerListingDetail.freeLabel';
-  static const volunteerListingDetail_deliveryRange = 'volunteerListingDetail.deliveryRange';
-  static const volunteerListingDetail_locationSection = 'volunteerListingDetail.locationSection';
-  static const volunteerListingDetail_address = 'volunteerListingDetail.address';
-  static const volunteerListingDetail_descriptionSection = 'volunteerListingDetail.descriptionSection';
-  static const volunteerListingDetail_noContent = 'volunteerListingDetail.noContent';
-  static const volunteerListingDetail_volunteerSection = 'volunteerListingDetail.volunteerSection';
+  static const volunteerListingDetail_activeBadge =
+      'volunteerListingDetail.activeBadge';
+  static const volunteerListingDetail_freeLabel =
+      'volunteerListingDetail.freeLabel';
+  static const volunteerListingDetail_deliveryRange =
+      'volunteerListingDetail.deliveryRange';
+  static const volunteerListingDetail_locationSection =
+      'volunteerListingDetail.locationSection';
+  static const volunteerListingDetail_address =
+      'volunteerListingDetail.address';
+  static const volunteerListingDetail_descriptionSection =
+      'volunteerListingDetail.descriptionSection';
+  static const volunteerListingDetail_noContent =
+      'volunteerListingDetail.noContent';
+  static const volunteerListingDetail_volunteerSection =
+      'volunteerListingDetail.volunteerSection';
 
-  static const volunteerListingCard_freeLabel = 'volunteerListingCard.freeLabel';
+  static const volunteerListingCard_freeLabel =
+      'volunteerListingCard.freeLabel';
 
   static const volunteerOrderTab_detailTitle = 'volunteerOrderTab.detailTitle';
-  static const volunteerOrderTab_detailSubtitle = 'volunteerOrderTab.detailSubtitle';
-  static const volunteerOrderTab_descriptionTitle = 'volunteerOrderTab.descriptionTitle';
-  static const volunteerOrderTab_descriptionText = 'volunteerOrderTab.descriptionText';
-  static const volunteerOrderTab_ingredientsText = 'volunteerOrderTab.ingredientsText';
-  static const volunteerOrderTab_packagingText = 'volunteerOrderTab.packagingText';
+  static const volunteerOrderTab_detailSubtitle =
+      'volunteerOrderTab.detailSubtitle';
+  static const volunteerOrderTab_descriptionTitle =
+      'volunteerOrderTab.descriptionTitle';
+  static const volunteerOrderTab_descriptionText =
+      'volunteerOrderTab.descriptionText';
+  static const volunteerOrderTab_ingredientsText =
+      'volunteerOrderTab.ingredientsText';
+  static const volunteerOrderTab_packagingText =
+      'volunteerOrderTab.packagingText';
 
-  static const volunteerAddListingForm_titleLabel = 'volunteerAddListingForm.titleLabel';
-  static const volunteerAddListingForm_titleHint = 'volunteerAddListingForm.titleHint';
-  static const volunteerAddListingForm_descriptionLabel = 'volunteerAddListingForm.descriptionLabel';
-  static const volunteerAddListingForm_descriptionHint = 'volunteerAddListingForm.descriptionHint';
-  static const volunteerAddListingForm_photoLabel = 'volunteerAddListingForm.photoLabel';
-  static const volunteerAddListingForm_endTimeLabel = 'volunteerAddListingForm.endTimeLabel';
-  static const volunteerAddListingForm_locationLabel = 'volunteerAddListingForm.locationLabel';
-  static const volunteerAddListingForm_priceLabel = 'volunteerAddListingForm.priceLabel';
-  static const volunteerAddListingForm_addressPlaceholder = 'volunteerAddListingForm.addressPlaceholder';
-  static const volunteerAddListingForm_noSavedAddress = 'volunteerAddListingForm.noSavedAddress';
+  static const volunteerAddListingForm_titleLabel =
+      'volunteerAddListingForm.titleLabel';
+  static const volunteerAddListingForm_titleHint =
+      'volunteerAddListingForm.titleHint';
+  static const volunteerAddListingForm_descriptionLabel =
+      'volunteerAddListingForm.descriptionLabel';
+  static const volunteerAddListingForm_descriptionHint =
+      'volunteerAddListingForm.descriptionHint';
+  static const volunteerAddListingForm_photoLabel =
+      'volunteerAddListingForm.photoLabel';
+  static const volunteerAddListingForm_endTimeLabel =
+      'volunteerAddListingForm.endTimeLabel';
+  static const volunteerAddListingForm_locationLabel =
+      'volunteerAddListingForm.locationLabel';
+  static const volunteerAddListingForm_priceLabel =
+      'volunteerAddListingForm.priceLabel';
+  static const volunteerAddListingForm_addressPlaceholder =
+      'volunteerAddListingForm.addressPlaceholder';
+  static const volunteerAddListingForm_noSavedAddress =
+      'volunteerAddListingForm.noSavedAddress';
 
   static const foodFavoritesPage_empty = 'foodFavoritesPage.empty';
   static const foodFavoritesPage_emptyHint = 'foodFavoritesPage.emptyHint';
 
   static const foodReservationConfirm_title = 'foodReservationConfirm.title';
-  static const foodReservationConfirm_goToLocation = 'foodReservationConfirm.goToLocation';
+  static const foodReservationConfirm_goToLocation =
+      'foodReservationConfirm.goToLocation';
   static const foodReservationConfirm_cancel = 'foodReservationConfirm.cancel';
-  static const foodReservationConfirm_months_jan = 'foodReservationConfirm.months.jan';
-  static const foodReservationConfirm_months_feb = 'foodReservationConfirm.months.feb';
-  static const foodReservationConfirm_months_mar = 'foodReservationConfirm.months.mar';
-  static const foodReservationConfirm_months_apr = 'foodReservationConfirm.months.apr';
-  static const foodReservationConfirm_months_may = 'foodReservationConfirm.months.may';
-  static const foodReservationConfirm_months_jun = 'foodReservationConfirm.months.jun';
-  static const foodReservationConfirm_months_jul = 'foodReservationConfirm.months.jul';
-  static const foodReservationConfirm_months_aug = 'foodReservationConfirm.months.aug';
-  static const foodReservationConfirm_months_sep = 'foodReservationConfirm.months.sep';
-  static const foodReservationConfirm_months_oct = 'foodReservationConfirm.months.oct';
-  static const foodReservationConfirm_months_nov = 'foodReservationConfirm.months.nov';
-  static const foodReservationConfirm_months_dec = 'foodReservationConfirm.months.dec';
-  static const foodReservationConfirm_sectionNearby = 'foodReservationConfirm.sectionNearby';
-  static const foodReservationConfirm_sectionBuyNow = 'foodReservationConfirm.sectionBuyNow';
-  static const foodReservationConfirm_sectionTodayPopular = 'foodReservationConfirm.sectionTodayPopular';
-  static const foodReservationConfirm_sectionTodayPopularAll = 'foodReservationConfirm.sectionTodayPopularAll';
+  static const foodReservationConfirm_months_jan =
+      'foodReservationConfirm.months.jan';
+  static const foodReservationConfirm_months_feb =
+      'foodReservationConfirm.months.feb';
+  static const foodReservationConfirm_months_mar =
+      'foodReservationConfirm.months.mar';
+  static const foodReservationConfirm_months_apr =
+      'foodReservationConfirm.months.apr';
+  static const foodReservationConfirm_months_may =
+      'foodReservationConfirm.months.may';
+  static const foodReservationConfirm_months_jun =
+      'foodReservationConfirm.months.jun';
+  static const foodReservationConfirm_months_jul =
+      'foodReservationConfirm.months.jul';
+  static const foodReservationConfirm_months_aug =
+      'foodReservationConfirm.months.aug';
+  static const foodReservationConfirm_months_sep =
+      'foodReservationConfirm.months.sep';
+  static const foodReservationConfirm_months_oct =
+      'foodReservationConfirm.months.oct';
+  static const foodReservationConfirm_months_nov =
+      'foodReservationConfirm.months.nov';
+  static const foodReservationConfirm_months_dec =
+      'foodReservationConfirm.months.dec';
+  static const foodReservationConfirm_sectionNearby =
+      'foodReservationConfirm.sectionNearby';
+  static const foodReservationConfirm_sectionBuyNow =
+      'foodReservationConfirm.sectionBuyNow';
+  static const foodReservationConfirm_sectionTodayPopular =
+      'foodReservationConfirm.sectionTodayPopular';
+  static const foodReservationConfirm_sectionTodayPopularAll =
+      'foodReservationConfirm.sectionTodayPopularAll';
 
-  static const foodOrderTab_categoryBreadPastry = 'foodOrderTab.categoryBreadPastry';
+  static const foodOrderTab_categoryBreadPastry =
+      'foodOrderTab.categoryBreadPastry';
   static const foodOrderTab_surpriseBoxDesc = 'foodOrderTab.surpriseBoxDesc';
   static const foodOrderTab_listingDetail = 'foodOrderTab.listingDetail';
   static const foodOrderTab_distanceText = 'foodOrderTab.distanceText';
   static const foodOrderTab_category = 'foodOrderTab.category';
-  static const foodOrderTab_ingredientsAllergens = 'foodOrderTab.ingredientsAllergens';
-  static const foodOrderTab_surpriseIngredients = 'foodOrderTab.surpriseIngredients';
+  static const foodOrderTab_ingredientsAllergens =
+      'foodOrderTab.ingredientsAllergens';
+  static const foodOrderTab_surpriseIngredients =
+      'foodOrderTab.surpriseIngredients';
   static const foodOrderTab_allergens = 'foodOrderTab.allergens';
   static const foodOrderTab_categoryDetail = 'foodOrderTab.categoryDetail';
   static const foodOrderTab_categoryDesc = 'foodOrderTab.categoryDesc';
   static const foodReviewItem_today = 'foodReviewItem.today';
 
-  static const businessListingDetail_approvedBadge = 'businessListingDetail.approvedBadge';
-  static const businessListingDetail_businessNameFallback = 'businessListingDetail.businessNameFallback';
-  static const businessListingDetail_createdAt = 'businessListingDetail.createdAt';
-  static const businessListingDetail_lastPickupTime = 'businessListingDetail.lastPickupTime';
-  static const businessListingDetail_category = 'businessListingDetail.category';
-  static const businessListingDetail_breadPastry = 'businessListingDetail.breadPastry';
-  static const businessListingDetail_notSpecified = 'businessListingDetail.notSpecified';
-  static const businessListingDetail_locationSection = 'businessListingDetail.locationSection';
+  static const businessListingDetail_approvedBadge =
+      'businessListingDetail.approvedBadge';
+  static const businessListingDetail_businessNameFallback =
+      'businessListingDetail.businessNameFallback';
+  static const businessListingDetail_createdAt =
+      'businessListingDetail.createdAt';
+  static const businessListingDetail_lastPickupTime =
+      'businessListingDetail.lastPickupTime';
+  static const businessListingDetail_category =
+      'businessListingDetail.category';
+  static const businessListingDetail_breadPastry =
+      'businessListingDetail.breadPastry';
+  static const businessListingDetail_notSpecified =
+      'businessListingDetail.notSpecified';
+  static const businessListingDetail_locationSection =
+      'businessListingDetail.locationSection';
   static const businessListingDetail_address = 'businessListingDetail.address';
-  static const businessListingDetail_noAddress = 'businessListingDetail.noAddress';
-  static const businessListingDetail_contentSection = 'businessListingDetail.contentSection';
-  static const businessListingDetail_noContent = 'businessListingDetail.noContent';
-  static const businessListingDetail_allergensSection = 'businessListingDetail.allergensSection';
-  static const businessListingDetail_noAllergens = 'businessListingDetail.noAllergens';
-  static const businessListingDetail_stockStatus = 'businessListingDetail.stockStatus';
-  static const businessListingDetail_remaining = 'businessListingDetail.remaining';
+  static const businessListingDetail_noAddress =
+      'businessListingDetail.noAddress';
+  static const businessListingDetail_contentSection =
+      'businessListingDetail.contentSection';
+  static const businessListingDetail_noContent =
+      'businessListingDetail.noContent';
+  static const businessListingDetail_allergensSection =
+      'businessListingDetail.allergensSection';
+  static const businessListingDetail_noAllergens =
+      'businessListingDetail.noAllergens';
+  static const businessListingDetail_stockStatus =
+      'businessListingDetail.stockStatus';
+  static const businessListingDetail_remaining =
+      'businessListingDetail.remaining';
 
   static const businessListings_allTitle = 'businessListings.allTitle';
   static const businessListings_soldTitle = 'businessListings.soldTitle';
@@ -569,25 +658,36 @@ abstract class LocaleKeys {
   static const businessListings_emptySold = 'businessListings.emptySold';
   static const businessListings_emptyActive = 'businessListings.emptyActive';
   static const businessListings_emptyExpired = 'businessListings.emptyExpired';
-  static const businessListings_deleteDialogTitle = 'businessListings.deleteDialogTitle';
-  static const businessListings_deleteDialogMessage = 'businessListings.deleteDialogMessage';
+  static const businessListings_deleteDialogTitle =
+      'businessListings.deleteDialogTitle';
+  static const businessListings_deleteDialogMessage =
+      'businessListings.deleteDialogMessage';
   static const businessListings_soldOut = 'businessListings.soldOut';
   static const businessListings_expired = 'businessListings.expired';
   static const businessListings_remaining = 'businessListings.remaining';
   static const businessListings_noLocation = 'businessListings.noLocation';
 
-  static const businessProfileEdit_fullNameLabel = 'businessProfileEdit.fullNameLabel';
-  static const businessProfileEdit_fullNameHint = 'businessProfileEdit.fullNameHint';
-  static const businessProfileEdit_emailLabel = 'businessProfileEdit.emailLabel';
+  static const businessProfileEdit_fullNameLabel =
+      'businessProfileEdit.fullNameLabel';
+  static const businessProfileEdit_fullNameHint =
+      'businessProfileEdit.fullNameHint';
+  static const businessProfileEdit_emailLabel =
+      'businessProfileEdit.emailLabel';
   static const businessProfileEdit_emailHint = 'businessProfileEdit.emailHint';
-  static const businessProfileEdit_phoneLabel = 'businessProfileEdit.phoneLabel';
-  static const businessProfileEdit_updateButton = 'businessProfileEdit.updateButton';
-  static const businessProfileEdit_deleteAccountButton = 'businessProfileEdit.deleteAccountButton';
-  static const businessProfileEdit_cameraOption = 'businessProfileEdit.cameraOption';
-  static const businessProfileEdit_galleryOption = 'businessProfileEdit.galleryOption';
+  static const businessProfileEdit_phoneLabel =
+      'businessProfileEdit.phoneLabel';
+  static const businessProfileEdit_updateButton =
+      'businessProfileEdit.updateButton';
+  static const businessProfileEdit_deleteAccountButton =
+      'businessProfileEdit.deleteAccountButton';
+  static const businessProfileEdit_cameraOption =
+      'businessProfileEdit.cameraOption';
+  static const businessProfileEdit_galleryOption =
+      'businessProfileEdit.galleryOption';
 
   static const businessCard_noLocation = 'businessCard.noLocation';
-  static const businessLocationButton_placeholder = 'businessLocationButton.placeholder';
+  static const businessLocationButton_placeholder =
+      'businessLocationButton.placeholder';
 
   static const weeklySales_days_mon = 'weeklySales.days.mon';
   static const weeklySales_days_tue = 'weeklySales.days.tue';
@@ -625,43 +725,69 @@ abstract class LocaleKeys {
 
   // taskTracking – messages
   static const taskTracking_completedOwner = 'taskTracking.completedOwner';
-  static const taskTracking_completedVolunteer = 'taskTracking.completedVolunteer';
-  static const taskTracking_deliveredPendingReviewOwner = 'taskTracking.deliveredPendingReviewOwner';
-  static const taskTracking_deliveredPendingReviewVolunteer = 'taskTracking.deliveredPendingReviewVolunteer';
-  static const taskTracking_goingToShelterOwner = 'taskTracking.goingToShelterOwner';
-  static const taskTracking_goingToShelterVolunteer = 'taskTracking.goingToShelterVolunteer';
+  static const taskTracking_completedVolunteer =
+      'taskTracking.completedVolunteer';
+  static const taskTracking_deliveredPendingReviewOwner =
+      'taskTracking.deliveredPendingReviewOwner';
+  static const taskTracking_deliveredPendingReviewVolunteer =
+      'taskTracking.deliveredPendingReviewVolunteer';
+  static const taskTracking_goingToShelterOwner =
+      'taskTracking.goingToShelterOwner';
+  static const taskTracking_goingToShelterVolunteer =
+      'taskTracking.goingToShelterVolunteer';
   static const taskTracking_pickedUpOwner = 'taskTracking.pickedUpOwner';
-  static const taskTracking_pickedUpVolunteer = 'taskTracking.pickedUpVolunteer';
-  static const taskTracking_ownerHandedOverOwner = 'taskTracking.ownerHandedOverOwner';
-  static const taskTracking_ownerHandedOverVolunteer = 'taskTracking.ownerHandedOverVolunteer';
-  static const taskTracking_goingToPickUpOwner = 'taskTracking.goingToPickUpOwner';
-  static const taskTracking_goingToPickUpVolunteer = 'taskTracking.goingToPickUpVolunteer';
+  static const taskTracking_pickedUpVolunteer =
+      'taskTracking.pickedUpVolunteer';
+  static const taskTracking_ownerHandedOverOwner =
+      'taskTracking.ownerHandedOverOwner';
+  static const taskTracking_ownerHandedOverVolunteer =
+      'taskTracking.ownerHandedOverVolunteer';
+  static const taskTracking_goingToPickUpOwner =
+      'taskTracking.goingToPickUpOwner';
+  static const taskTracking_goingToPickUpVolunteer =
+      'taskTracking.goingToPickUpVolunteer';
   static const taskTracking_acceptedOwner = 'taskTracking.acceptedOwner';
-  static const taskTracking_acceptedVolunteer = 'taskTracking.acceptedVolunteer';
+  static const taskTracking_acceptedVolunteer =
+      'taskTracking.acceptedVolunteer';
   static const taskTracking_pendingOwner = 'taskTracking.pendingOwner';
   static const taskTracking_pendingVolunteer = 'taskTracking.pendingVolunteer';
 
-  static const taskTracking_statusPendingOwner = 'taskTracking.statusPendingOwner';
-  static const taskTracking_statusPendingVolunteer = 'taskTracking.statusPendingVolunteer';
-  static const taskTracking_statusApprovedOwner = 'taskTracking.statusApprovedOwner';
-  static const taskTracking_statusApprovedVolunteer = 'taskTracking.statusApprovedVolunteer';
-  static const taskTracking_statusInProgressOwner = 'taskTracking.statusInProgressOwner';
-  static const taskTracking_statusInProgressVolunteer = 'taskTracking.statusInProgressVolunteer';
-  static const taskTracking_statusDeliveredOwner = 'taskTracking.statusDeliveredOwner';
-  static const taskTracking_statusDeliveredVolunteer = 'taskTracking.statusDeliveredVolunteer';
-  static const taskTracking_statusCompletedOwner = 'taskTracking.statusCompletedOwner';
-  static const taskTracking_statusCompletedVolunteer = 'taskTracking.statusCompletedVolunteer';
-  static const taskTracking_statusCancelledOwner = 'taskTracking.statusCancelledOwner';
-  static const taskTracking_statusCancelledVolunteer = 'taskTracking.statusCancelledVolunteer';
+  static const taskTracking_statusPendingOwner =
+      'taskTracking.statusPendingOwner';
+  static const taskTracking_statusPendingVolunteer =
+      'taskTracking.statusPendingVolunteer';
+  static const taskTracking_statusApprovedOwner =
+      'taskTracking.statusApprovedOwner';
+  static const taskTracking_statusApprovedVolunteer =
+      'taskTracking.statusApprovedVolunteer';
+  static const taskTracking_statusInProgressOwner =
+      'taskTracking.statusInProgressOwner';
+  static const taskTracking_statusInProgressVolunteer =
+      'taskTracking.statusInProgressVolunteer';
+  static const taskTracking_statusDeliveredOwner =
+      'taskTracking.statusDeliveredOwner';
+  static const taskTracking_statusDeliveredVolunteer =
+      'taskTracking.statusDeliveredVolunteer';
+  static const taskTracking_statusCompletedOwner =
+      'taskTracking.statusCompletedOwner';
+  static const taskTracking_statusCompletedVolunteer =
+      'taskTracking.statusCompletedVolunteer';
+  static const taskTracking_statusCancelledOwner =
+      'taskTracking.statusCancelledOwner';
+  static const taskTracking_statusCancelledVolunteer =
+      'taskTracking.statusCancelledVolunteer';
   static const taskTracking_buttonReject = 'taskTracking.buttonReject';
   static const taskTracking_buttonApprove = 'taskTracking.buttonApprove';
   static const taskTracking_buttonCancel = 'taskTracking.buttonCancel';
   static const taskTracking_buttonHandover = 'taskTracking.buttonHandover';
-  static const taskTracking_buttonConfirmDelivery = 'taskTracking.buttonConfirmDelivery';
+  static const taskTracking_buttonConfirmDelivery =
+      'taskTracking.buttonConfirmDelivery';
   static const taskTracking_volunteerComment = 'taskTracking.volunteerComment';
-  static const taskTracking_assignedVolunteer = 'taskTracking.assignedVolunteer';
+  static const taskTracking_assignedVolunteer =
+      'taskTracking.assignedVolunteer';
   static const taskTracking_volunteer = 'taskTracking.volunteer';
-  static const taskTracking_deliveredExclamation = 'taskTracking.deliveredExclamation';
+  static const taskTracking_deliveredExclamation =
+      'taskTracking.deliveredExclamation';
   static const taskTracking_waitingApproval = 'taskTracking.waitingApproval';
   static const taskTracking_stepApproved = 'taskTracking.stepApproved';
   static const taskTracking_given = 'taskTracking.given';
@@ -674,15 +800,20 @@ abstract class LocaleKeys {
   static const taskTracking_stepResult = 'taskTracking.stepResult';
 
   // volunteerListingCard
-  static const volunteerListingCard_volunteered = 'volunteerListingCard.volunteered';
-  static const volunteerListingCard_noReviewYet = 'volunteerListingCard.noReviewYet';
-  static const volunteerListingCard_noVolunteerYet = 'volunteerListingCard.noVolunteerYet';
+  static const volunteerListingCard_volunteered =
+      'volunteerListingCard.volunteered';
+  static const volunteerListingCard_noReviewYet =
+      'volunteerListingCard.noReviewYet';
+  static const volunteerListingCard_noVolunteerYet =
+      'volunteerListingCard.noVolunteerYet';
 
   // volunteerListing
-  static const volunteerListing_volunteerFailed = 'volunteerListing.volunteerFailed';
+  static const volunteerListing_volunteerFailed =
+      'volunteerListing.volunteerFailed';
 
   // volunteerOrderTab
-  static const volunteerOrderTab_noShelterNearby = 'volunteerOrderTab.noShelterNearby';
+  static const volunteerOrderTab_noShelterNearby =
+      'volunteerOrderTab.noShelterNearby';
 
   // volunteerCancelDialog
   static const volunteerCancelDialog_confirm = 'volunteerCancelDialog.confirm';

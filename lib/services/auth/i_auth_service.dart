@@ -63,4 +63,7 @@ abstract class IAuthService {
 
   /// Kullanıcıya yeni kart kaydeder.
   Future<AuthResponse> addCard(Map<String, dynamic> cardData);
+
+  /// Kullanıcının kayıtlı kartını siler.
+  Future<AuthResponse> deleteCard(int cardId);
 }

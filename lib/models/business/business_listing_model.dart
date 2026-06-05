@@ -50,35 +50,76 @@ class BusinessListingModel {
 
   factory BusinessListingModel.fromJson(Map<String, dynamic> json) {
     return BusinessListingModel(
-      id: json['bag_id'] != null 
-          ? (json['bag_id'] is int ? json['bag_id'] : int.tryParse(json['bag_id'].toString()) ?? 0)
-          : (json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0),
-      userId: json['user_id'] is int ? json['user_id'] : int.tryParse(json['user_id'].toString()) ?? 0,
-      businessName: json['business_name']?.toString() ?? json['shop_name']?.toString() ?? json['business']?['name']?.toString(),
+      id: json['bag_id'] != null
+          ? (json['bag_id'] is int
+                ? json['bag_id']
+                : int.tryParse(json['bag_id'].toString()) ?? 0)
+          : (json['id'] is int
+                ? json['id']
+                : int.tryParse(json['id'].toString()) ?? 0),
+      userId: json['user_id'] is int
+          ? json['user_id']
+          : int.tryParse(json['user_id'].toString()) ?? 0,
+      businessName:
+          json['business_name']?.toString() ??
+          json['shop_name']?.toString() ??
+          json['business']?['name']?.toString(),
       ownerImageUrl: json['owner_image_url'] ?? json['business']?['image_url'],
-      businessLogoUrl: json['business_logo_url']?.toString() ?? json['shop_logo_url']?.toString() ?? json['business']?['logo_url']?.toString(),
-      title: json['title']?.toString() ?? json['bag_title']?.toString() ?? json['name']?.toString() ?? '',
-      description: json['description']?.toString() ?? json['content']?.toString(),
-      addressId: json['address_id'] is int ? json['address_id'] : int.tryParse(json['address_id'].toString()),
-      address: json['address']?.toString() ?? json['full_address']?.toString() ?? json['location_address']?.toString(),
-      originalPrice: (json['original_price'] as num?)?.toDouble() ?? (json['price'] as num?)?.toDouble() ?? 0.0,
-      discountedPrice: (json['discounted_price'] as num?)?.toDouble() ?? (json['price'] as num?)?.toDouble() ?? 0.0,
+      businessLogoUrl:
+          json['business_logo_url']?.toString() ??
+          json['shop_logo_url']?.toString() ??
+          json['business']?['logo_url']?.toString(),
+      title:
+          json['title']?.toString() ??
+          json['bag_title']?.toString() ??
+          json['name']?.toString() ??
+          '',
+      description:
+          json['description']?.toString() ?? json['content']?.toString(),
+      addressId: json['address_id'] is int
+          ? json['address_id']
+          : int.tryParse(json['address_id'].toString()),
+      address:
+          json['address']?.toString() ??
+          json['full_address']?.toString() ??
+          json['location_address']?.toString(),
+      originalPrice:
+          (json['original_price'] as num?)?.toDouble() ??
+          (json['price'] as num?)?.toDouble() ??
+          0.0,
+      discountedPrice:
+          (json['discounted_price'] as num?)?.toDouble() ??
+          (json['price'] as num?)?.toDouble() ??
+          0.0,
       pickupStartTime: json['pickup_start_time'] != null
           ? DateTime.tryParse(json['pickup_start_time'].toString())
-          : (json['delivery_start_time'] != null ? DateTime.tryParse(json['delivery_start_time'].toString()) : null),
+          : (json['delivery_start_time'] != null
+                ? DateTime.tryParse(json['delivery_start_time'].toString())
+                : null),
       pickupEndTime: json['pickup_end_time'] != null
           ? DateTime.tryParse(json['pickup_end_time'].toString())
-          : (json['delivery_end_time'] != null ? DateTime.tryParse(json['delivery_end_time'].toString()) : null),
-      totalQuantity: (json['total_quantity'] as num?)?.toInt() ?? (json['quantity'] as num?)?.toInt() ?? 0,
-      availableQuantity: (json['available_quantity'] as num?)?.toInt() ?? (json['quantity'] as num?)?.toInt() ?? 0,
-      imageUrl: json['image_url']?.toString() ?? json['bag_image_url']?.toString() ?? json['image']?.toString(),
+          : (json['delivery_end_time'] != null
+                ? DateTime.tryParse(json['delivery_end_time'].toString())
+                : null),
+      totalQuantity:
+          (json['total_quantity'] as num?)?.toInt() ??
+          (json['quantity'] as num?)?.toInt() ??
+          0,
+      availableQuantity:
+          (json['available_quantity'] as num?)?.toInt() ??
+          (json['quantity'] as num?)?.toInt() ??
+          0,
+      imageUrl:
+          json['image_url']?.toString() ??
+          json['bag_image_url']?.toString() ??
+          json['image']?.toString(),
       allergens: json['allergens']?.toString(),
       category: json['category']?.toString(),
-      latitude: json['latitude'] != null 
-          ? (json['latitude'] as num).toDouble() 
+      latitude: json['latitude'] != null
+          ? (json['latitude'] as num).toDouble()
           : (json['lat'] != null ? (json['lat'] as num).toDouble() : null),
-      longitude: json['longitude'] != null 
-          ? (json['longitude'] as num).toDouble() 
+      longitude: json['longitude'] != null
+          ? (json['longitude'] as num).toDouble()
           : (json['lng'] != null ? (json['lng'] as num).toDouble() : null),
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())
@@ -87,7 +128,7 @@ class BusinessListingModel {
   }
 
   bool get isSold => availableQuantity == 0;
-  
+
   bool get isExpired {
     if (pickupEndTime == null) return false;
     return DateTime.now().isAfter(pickupEndTime!);
@@ -147,6 +188,7 @@ class BusinessListingModel {
       section: FoodSection.nearYou,
       isNetworkImage: imageUrl != null && imageUrl!.startsWith('http'),
       shopLogoUrl: businessLogoUrl,
+      ownerImageUrl: ownerImageUrl,
       isSoldOut: isSold,
       description: description,
       allergens: allergens,
@@ -156,6 +198,8 @@ class BusinessListingModel {
       deliveryEndTime: pickupEndTime,
       originalPrice: originalPrice,
       fullAddress: address,
+      totalQuantity: totalQuantity,
+      availableQuantity: availableQuantity,
     );
   }
 }

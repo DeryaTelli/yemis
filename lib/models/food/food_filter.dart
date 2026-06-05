@@ -9,8 +9,6 @@ enum FoodFilter {
   market,
   buyNow;
 
-  
-
   String get label {
     switch (this) {
       case FoodFilter.all:

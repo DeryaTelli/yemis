@@ -90,8 +90,7 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle:
-              hintStyle ??
-              CustomTextStyles.semiBold16Grey, // Default hint style
+              hintStyle ?? CustomTextStyles.regular16Grey, // Default hint style
           labelText: labelText,
           labelStyle: CustomTextStyles.regular16Grey,
           prefixIcon: prefixIcon,

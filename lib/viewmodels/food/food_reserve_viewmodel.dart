@@ -10,8 +10,8 @@ class SavedCard {
   final String cardName;
   final String bankName;
   final String cardNumber; // e.g., "523529******0082"
-  final String lastFour;   // "0082"
-  final String cardType;   // "VISA" or "MasterCard"
+  final String lastFour; // "0082"
+  final String cardType; // "VISA" or "MasterCard"
   final bool isFavorite;
 
   SavedCard({
@@ -28,17 +28,21 @@ class SavedCard {
 /// Rezervasyon onay & ödeme seçimi ViewModel'i.
 class FoodReserveViewModel extends ChangeNotifier {
   FoodReserveViewModel({
-    required this.listing,
+    required FoodListing listing,
     required IAuthService authService,
     required IFoodService foodService,
-  })  : _authService = authService,
-        _foodService = foodService {
+  }) : _listing = listing,
+       _authService = authService,
+       _foodService = foodService {
     cardNoController = TextEditingController();
     cvvController = TextEditingController();
-    Future.microtask(() => loadCards());
+    Future.microtask(() async {
+      await Future.wait([loadCards(), _refreshListingDetails()]);
+    });
   }
 
-  final FoodListing listing;
+  FoodListing _listing;
+  FoodListing get listing => _listing;
   final IAuthService _authService;
   final IFoodService _foodService;
 
@@ -52,6 +56,9 @@ class FoodReserveViewModel extends ChangeNotifier {
   // ─── State ──────────────────────────────────────────────
   int _quantity = 1;
   int get quantity => _quantity;
+
+  String? _quantityError;
+  String? get quantityError => _quantityError;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -81,7 +88,8 @@ class FoodReserveViewModel extends ChangeNotifier {
     if (listing.deliveryStartTime == null) return listing.timeRange;
     final now = DateTime.now();
     final start = listing.deliveryStartTime!;
-    final isToday = now.year == start.year &&
+    final isToday =
+        now.year == start.year &&
         now.month == start.month &&
         now.day == start.day;
     if (isToday) {
@@ -107,6 +115,19 @@ class FoodReserveViewModel extends ChangeNotifier {
   }
 
   // ─── Actions ─────────────────────────────────────────────
+  Future<void> _refreshListingDetails() async {
+    try {
+      _listing = await _foodService.getFoodDetail(_listing.id);
+      final availableQuantity = _listing.availableQuantity;
+      if (availableQuantity != null && _quantity > availableQuantity) {
+        _quantityError = 'İlan sayısını geçemezsiniz.';
+      }
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Load listing detail error: $e');
+    }
+  }
+
   Future<void> loadCards() async {
     _isLoading = true;
     notifyListeners();
@@ -133,7 +154,9 @@ class FoodReserveViewModel extends ChangeNotifier {
         // Select the favorite card or default to first/null
         if (_savedCards.isNotEmpty) {
           final favIndex = _savedCards.indexWhere((c) => c.isFavorite);
-          _selectedSavedCard = favIndex != -1 ? _savedCards[favIndex] : _savedCards.first;
+          _selectedSavedCard = favIndex != -1
+              ? _savedCards[favIndex]
+              : _savedCards.first;
           _isNewCardMode = false;
         } else {
           _selectedSavedCard = null;
@@ -149,7 +172,9 @@ class FoodReserveViewModel extends ChangeNotifier {
   }
 
   String _inferBankName(String cardNumber) {
-    if (cardNumber.startsWith('523529') || cardNumber.startsWith('434528') || cardNumber.startsWith('476619')) {
+    if (cardNumber.startsWith('523529') ||
+        cardNumber.startsWith('434528') ||
+        cardNumber.startsWith('476619')) {
       return 'Ziraat Bankası';
     } else if (cardNumber.startsWith('403998')) {
       return 'İş Bankası';
@@ -165,13 +190,22 @@ class FoodReserveViewModel extends ChangeNotifier {
   }
 
   void increment() {
+    final availableQuantity = listing.availableQuantity;
+    if (availableQuantity != null && _quantity >= availableQuantity) {
+      _quantityError = 'İlan sayısını geçemezsiniz.';
+      notifyListeners();
+      return;
+    }
+
     _quantity++;
+    _quantityError = null;
     notifyListeners();
   }
 
   void decrement() {
     if (_quantity <= 1) return;
     _quantity--;
+    _quantityError = null;
     notifyListeners();
   }
 
@@ -221,6 +255,15 @@ class FoodReserveViewModel extends ChangeNotifier {
 
   /// Rezervasyonu tamamlar — önce sipariş API'sini çağırır.
   Future<bool> reserve() async {
+    await _refreshListingDetails();
+
+    final availableQuantity = listing.availableQuantity;
+    if (availableQuantity != null && _quantity > availableQuantity) {
+      _quantityError = 'İlan sayısını geçemezsiniz.';
+      notifyListeners();
+      return false;
+    }
+
     _isLoading = true;
     _lastReserveWasNewCard = false;
     _pendingCardData = null;
@@ -236,13 +279,18 @@ class FoodReserveViewModel extends ChangeNotifier {
       }
 
       final cardType = cardNo.startsWith('5') ? 'MasterCard' : 'VISA';
-      final maskedCardNo = '${cardNo.substring(0, 6)}******${cardNo.substring(cardNo.length - 4)}';
+      final maskedCardNo =
+          '${cardNo.substring(0, 6)}******${cardNo.substring(cardNo.length - 4)}';
       final expMonth = selectedExpiryMonth == 'Ay' ? '12' : selectedExpiryMonth;
-      final expYear = selectedExpiryYear == 'Yıl' ? '30' : selectedExpiryYear.substring(selectedExpiryYear.length - 2);
+      final expYear = selectedExpiryYear == 'Yıl'
+          ? '30'
+          : selectedExpiryYear.substring(selectedExpiryYear.length - 2);
       final expiry = '$expMonth/$expYear';
 
       _pendingCardData = {
-        'card_holder_name': cardType == 'MasterCard' ? 'BANKKART COMBO kartım' : 'BANKKART kartım',
+        'card_holder_name': cardType == 'MasterCard'
+            ? 'BANKKART COMBO kartım'
+            : 'BANKKART kartım',
         'card_number_masked': maskedCardNo,
         'expiry_date': expiry,
         'card_type': cardType,

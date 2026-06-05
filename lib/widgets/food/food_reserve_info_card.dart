@@ -15,21 +15,41 @@ class FoodReserveInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final logoUrl = listing.shopLogoUrl?.trim().isNotEmpty == true
+        ? listing.shopLogoUrl!
+        : listing.ownerImageUrl;
+
     return Column(
       children: [
-        // İşletme ikonu
         Container(
           width: 72,
           height: 72,
-          decoration: BoxDecoration(
+          padding: const EdgeInsets.all(2),
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFFF5ECD7),
-            border: Border.all(color: AppColors.primaryColor, width: 2),
-          ),
-          child: const Icon(
-            Icons.storefront_rounded,
-            size: 36,
             color: AppColors.primaryColor,
+          ),
+          child: ClipOval(
+            child: ColoredBox(
+              color: const Color(0xFFF5ECD7),
+              child: logoUrl != null && logoUrl.isNotEmpty
+                  ? Image.network(
+                      logoUrl,
+                      width: 68,
+                      height: 68,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.storefront_rounded,
+                        size: 36,
+                        color: AppColors.primaryColor,
+                      ),
+                    )
+                  : const Icon(
+                      Icons.storefront_rounded,
+                      size: 36,
+                      color: AppColors.primaryColor,
+                    ),
+            ),
           ),
         ),
         const SizedBox(height: 10),

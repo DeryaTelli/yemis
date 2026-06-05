@@ -12,6 +12,7 @@ class FoodListing {
     required this.rating,
     required this.section,
     this.shopLogoUrl,
+    this.ownerImageUrl,
     this.isFavorite = false,
     this.isNetworkImage = false,
     this.isSoldOut = false,
@@ -25,6 +26,8 @@ class FoodListing {
     this.deliveryEndTime,
     this.originalPrice,
     this.fullAddress,
+    this.totalQuantity,
+    this.availableQuantity,
   });
 
   final String id;
@@ -38,6 +41,7 @@ class FoodListing {
   final double rating;
   final FoodSection section;
   final String? shopLogoUrl;
+  final String? ownerImageUrl;
   final bool isFavorite;
   final bool isNetworkImage;
   final bool isSoldOut;
@@ -52,6 +56,8 @@ class FoodListing {
   final DateTime? deliveryEndTime;
   final double? originalPrice;
   final String? fullAddress;
+  final int? totalQuantity;
+  final int? availableQuantity;
 
   FoodListing copyWith({
     String? id,
@@ -65,6 +71,7 @@ class FoodListing {
     double? rating,
     FoodSection? section,
     String? shopLogoUrl,
+    String? ownerImageUrl,
     bool? isFavorite,
     bool? isNetworkImage,
     bool? isSoldOut,
@@ -77,6 +84,8 @@ class FoodListing {
     DateTime? deliveryEndTime,
     double? originalPrice,
     String? fullAddress,
+    int? totalQuantity,
+    int? availableQuantity,
   }) {
     return FoodListing(
       id: id ?? this.id,
@@ -90,6 +99,7 @@ class FoodListing {
       rating: rating ?? this.rating,
       section: section ?? this.section,
       shopLogoUrl: shopLogoUrl ?? this.shopLogoUrl,
+      ownerImageUrl: ownerImageUrl ?? this.ownerImageUrl,
       isFavorite: isFavorite ?? this.isFavorite,
       isNetworkImage: isNetworkImage ?? this.isNetworkImage,
       isSoldOut: isSoldOut ?? this.isSoldOut,
@@ -102,6 +112,8 @@ class FoodListing {
       deliveryEndTime: deliveryEndTime ?? this.deliveryEndTime,
       originalPrice: originalPrice ?? this.originalPrice,
       fullAddress: fullAddress ?? this.fullAddress,
+      totalQuantity: totalQuantity ?? this.totalQuantity,
+      availableQuantity: availableQuantity ?? this.availableQuantity,
     );
   }
 }

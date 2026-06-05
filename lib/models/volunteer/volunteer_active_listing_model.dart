@@ -197,7 +197,6 @@ class VolunteerActiveListingModel {
           mealData['owner_image']?.toString();
     }
 
-
     if (json['user'] != null && json['user'] is Map) {
       final user = json['user'] as Map<String, dynamic>;
       pName ??=
@@ -421,8 +420,8 @@ class VolunteerActiveListingModel {
       isAttended: volunteerComment != null || acceptedByUserId != null,
       reviewImages: reviewImages,
       volunteerRating: volunteerRating ?? 5.0,
-      volunteerName: posterName,
-      volunteerAvatar: posterImageUrl,
+      volunteerName: assignedVolunteerName ?? posterName,
+      volunteerAvatar: assignedVolunteerAvatar ?? posterImageUrl,
       assignedVolunteerName: assignedVolunteerName,
       assignedVolunteerAvatar: assignedVolunteerAvatar,
       isAvailable: isAvailable,

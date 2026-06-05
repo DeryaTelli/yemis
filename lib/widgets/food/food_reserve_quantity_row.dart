@@ -12,38 +12,45 @@ class FoodReserveQuantityRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          LocaleKeys.foodReserve_quantity.tr(),
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primaryTextColor,
+        Row(
+          children: [
+            Text(
+              LocaleKeys.foodReserve_quantity.tr(),
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primaryTextColor,
+              ),
+            ),
+            const Spacer(),
+            _StepperButton(icon: Icons.remove, onTap: vm.decrement),
+            const SizedBox(width: 16),
+            Text(
+              '${vm.quantity}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primaryTextColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            _StepperButton(icon: Icons.add, onTap: vm.increment),
+          ],
+        ),
+        if (vm.quantityError != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            vm.quantityError!,
+            style: const TextStyle(
+              color: Colors.red,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const Spacer(),
-        // Azalt
-        _StepperButton(
-          icon: Icons.remove,
-          onTap: vm.decrement,
-        ),
-        const SizedBox(width: 16),
-        // Adet
-        Text(
-          '${vm.quantity}',
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primaryTextColor,
-          ),
-        ),
-        const SizedBox(width: 16),
-        // Artır
-        _StepperButton(
-          icon: Icons.add,
-          onTap: vm.increment,
-        ),
+        ],
       ],
     );
   }

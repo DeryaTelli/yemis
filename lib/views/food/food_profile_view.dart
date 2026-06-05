@@ -2,10 +2,8 @@
 import 'dart:io'; // Required for Image.file() which takes dart:io.File
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:yemis/utils/locale_keys.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
-import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
@@ -187,7 +185,7 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.credit_card_rounded,
                     title: LocaleKeys.foodProfile_cards.tr(),
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(context, AppRoutes.cards),
                   ),
                   ProfileMenuTile(
                     icon: Icons.person_outline_rounded,

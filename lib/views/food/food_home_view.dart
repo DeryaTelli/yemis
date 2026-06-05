@@ -4,18 +4,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../../models/food/food_listing.dart';
 import '../../services/auth/user_session.dart';
-import '../../services/food/api_food_service.dart';
 import '../../utils/constants/app_colors.dart';
+import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/food/food_home_viewmodel.dart';
 import '../../widgets/food/food_filter_chips.dart';
 import '../../widgets/food/food_listing_section.dart';
+import '../../widgets/food/food_listing_card.dart';
 import '../../widgets/food/food_map_section.dart';
 import '../../widgets/food/food_search_bar.dart';
 import '../../models/app_module_type.dart';
 import '../../widgets/common/home_app_bar.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/common/loading_overlay.dart';
-import '../../widgets/common/draggable_chat_head.dart';
 
 /// Yemek ana sayfası — tam MVVM ile uygulanmıştır.
 class FoodHomeView extends StatelessWidget {
@@ -45,11 +45,6 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      if (mounted) {
-        context.read<FoodHomeViewModel>().onSearchChanged(_searchController.text);
-      }
-    });
 
     // Sayfaya gelindiğinde verileri yükle/güncelle
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -106,6 +101,11 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
               ),
               const SizedBox(height: 16),
 
+              if (vm.isSearching) ...[
+                _FoodSearchResults(vm: vm),
+                const SizedBox(height: 20),
+              ],
+
               // ── Filtre Chip'leri ────────────────────────
               FoodFilterChips(
                 selectedFilter: vm.selectedFilter,
@@ -113,32 +113,27 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
               ),
               const SizedBox(height: 20),
 
-              // ── Sana Yakın Yerler ──────────────────────────
-              FoodListingSection(
-                title: LocaleKeys.home_nearbyPlaces.tr(),
-                section: FoodSection.nearYou,
-              ),
-              const SizedBox(height: 24),
-
-              // ── Sekarang Al ────────────────────────────────
-              FoodListingSection(
-                title: LocaleKeys.home_buyNow.tr(),
-                section: FoodSection.buyNow,
-              ),
-              const SizedBox(height: 24),
-
-              // ── Bugün Popüler Olanlar ────────────────────
-              FoodListingSection(
-                title: LocaleKeys.home_todayPopular.tr(),
-                section: FoodSection.todayPopular,
-              ),
-              const SizedBox(height: 24),
-
-              // ── Bugün Popüler (Tümü) ─────────────────────
-              FoodListingSection(
-                title: LocaleKeys.home_todayPopularAll.tr(),
-                section: FoodSection.todayPopularAll,
-              ),
+              if (!vm.isSearching) ...[
+                FoodListingSection(
+                  title: LocaleKeys.home_nearbyPlaces.tr(),
+                  section: FoodSection.nearYou,
+                ),
+                const SizedBox(height: 24),
+                FoodListingSection(
+                  title: LocaleKeys.home_buyNow.tr(),
+                  section: FoodSection.buyNow,
+                ),
+                const SizedBox(height: 24),
+                FoodListingSection(
+                  title: LocaleKeys.home_todayPopular.tr(),
+                  section: FoodSection.todayPopular,
+                ),
+                const SizedBox(height: 24),
+                FoodListingSection(
+                  title: LocaleKeys.home_todayPopularAll.tr(),
+                  section: FoodSection.todayPopularAll,
+                ),
+              ],
               const SizedBox(height: 32),
             ],
           ),
@@ -167,6 +162,71 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
           moduleType: AppModuleType.food,
         ),
       ),
+    );
+  }
+}
+
+class _FoodSearchResults extends StatelessWidget {
+  const _FoodSearchResults({required this.vm});
+
+  final FoodHomeViewModel vm;
+
+  @override
+  Widget build(BuildContext context) {
+    final results = vm.searchResults;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Arama Sonuçları (${results.length})',
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: AppColors.primaryTextColor,
+          ),
+        ),
+        const SizedBox(height: 10),
+        if (results.isEmpty)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: AppColors.primaryColor.withValues(alpha: 0.25),
+              ),
+            ),
+            child: const Text(
+              'Aramanızla eşleşen ilan bulunamadı.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.hintTextColor, fontSize: 14),
+            ),
+          )
+        else
+          SizedBox(
+            height: 240,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              clipBehavior: Clip.none,
+              itemCount: results.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                final listing = results[index];
+                return FoodListingCard(
+                  listing: listing,
+                  onFavoriteTap: () => vm.toggleFavorite(listing.id),
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    AppRoutes.foodDetail,
+                    arguments: listing,
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
     );
   }
 }
