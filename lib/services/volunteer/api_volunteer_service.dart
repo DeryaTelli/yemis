@@ -47,23 +47,7 @@ class ApiVolunteerService implements IVolunteerService {
 
   @override
   Future<List<VolunteerListing>> getActiveListings() async {
-    final meals = await _tryFetchVolunteerListingsFromUrl(
-      '${ApiConstants.baseUrl}${ApiConstants.myActiveMeals}',
-    );
-    final ownerTasks = await _tryFetchVolunteerListingsFromUrl(
-      '${ApiConstants.baseUrl}${ApiConstants.ownerVolunteerTasks}',
-    );
-
-    if (ownerTasks.isEmpty) return meals;
-    if (meals.isEmpty) return ownerTasks;
-
-    final mergedByMealId = {
-      for (final meal in meals) meal.id: meal,
-    };
-    for (final ownerTask in ownerTasks) {
-      mergedByMealId[ownerTask.id] = ownerTask;
-    }
-    return mergedByMealId.values.toList();
+    return _fetchVolunteerListingsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}');
   }
 
   @override
