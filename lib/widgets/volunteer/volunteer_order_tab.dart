@@ -77,6 +77,13 @@ class VolunteerOrderTab extends StatelessWidget {
               height: 180,
               accentColor: AppColors.volunteerColor,
               markerIcon: Icons.volunteer_activism,
+              onTap: () => _push(
+                context,
+                lat: vm.listingLatLng?.latitude ?? 41.0082,
+                lng: vm.listingLatLng?.longitude ?? 28.9784,
+                name: listing.title,
+                address: listing.location,
+              ),
             )
           else
             SizedBox(
@@ -146,6 +153,13 @@ class VolunteerOrderTab extends StatelessWidget {
                 height: 180,
                 accentColor: AppColors.volunteerColor,
                 markerIcon: Icons.pets, // Hayvan barınağı için pati ikonu
+                onTap: () => _push(
+                  context,
+                  lat: vm.shelterLatLng!.latitude,
+                  lng: vm.shelterLatLng!.longitude,
+                  name: vm.shelterName,
+                  address: vm.shelterAddress,
+                ),
               ),
             const SizedBox(height: 12),
 

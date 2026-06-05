@@ -9,6 +9,7 @@ class HomeCardItem {
   final String imagePath;
   final String route;
   final LinearGradient gradient;
+  final bool showDecorationImage;
 
   /// true  → PNG sol tarafta taşar, metin sağda (Yemek / İşletme)
   /// false → PNG sağ tarafta taşar, metin solda (Gönüllü Ol)
@@ -21,5 +22,6 @@ class HomeCardItem {
     required this.route,
     required this.gradient,
     required this.imageOnLeft,
+    this.showDecorationImage = true,
   });
 }

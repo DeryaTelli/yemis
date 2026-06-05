@@ -14,6 +14,7 @@ import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
 import '../../widgets/food/order_location_map.dart';
 import '../../widgets/volunteer/volunteer_task_tracking_card.dart';
+import '../location/navigation_view.dart';
 
 class VolunteerListingDetailView extends StatelessWidget {
   final VolunteerListing listing;
@@ -300,6 +301,22 @@ class _VolunteerListingDetailBody extends StatelessWidget {
                         child: OrderLocationMap(
                           businessLocation: displayLocation,
                           height: 200,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => NavigationView(
+                                  latitude: displayLocation.latitude,
+                                  longitude: displayLocation.longitude,
+                                  businessName: item.title,
+                                  address: item.location,
+                                  accentGradient:
+                                      AppColors.volunteerBackgroundGradient,
+                                  accentColor: AppColors.volunteerColor,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),

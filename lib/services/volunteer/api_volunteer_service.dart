@@ -56,6 +56,24 @@ class ApiVolunteerService implements IVolunteerService {
     return _fetchVolunteerListingsFromUrl(
       '${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}',
     );
+
+    if (ownerTasks.isEmpty) return meals;
+    if (meals.isEmpty) return ownerTasks;
+
+    final mergedByMealId = {
+      for (final meal in meals) meal.id: meal,
+    };
+    for (final ownerTask in ownerTasks) {
+      mergedByMealId[ownerTask.id] = ownerTask;
+    }
+    return mergedByMealId.values.toList();
+  }
+
+  @override
+  Future<List<VolunteerListing>> getOwnerVolunteerTasks() async {
+    return _fetchVolunteerListingsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.ownerVolunteerTasks}',
+    );
   }
 
   @override
@@ -73,24 +91,21 @@ class ApiVolunteerService implements IVolunteerService {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Error fetching attended tasks from API, using fallback: $e');
+        print('Error fetching attended tasks from API: $e');
       }
       return [
         const VolunteerListing(
           id: '5',
           title: 'Yemek Dünyası',
           userName: 'Derya Telli',
-          userLogoUrl:
-              'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=200',
+          userLogoUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=200',
           location: 'yemek',
           timeRange: '10.05.2026 | 10:53 - 20:50',
-          imageUrl:
-              'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
+          imageUrl: 'https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800',
           rating: 4.8,
           section: VolunteerSection.nearYou,
           isAttended: true,
-          volunteerComment:
-              'Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var.',
+          volunteerComment: 'Yemek her zaman olduğu gibi hem üst katta hem alt katta iyi, ortam her zaman temiz. Her zaman üst katta oturuyorum, daha rahat bir ortamı var.',
           reviewCreatedAt: 'Bugün, 09:12',
           reviewImages: [
             'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400',
@@ -99,8 +114,7 @@ class ApiVolunteerService implements IVolunteerService {
           ],
           volunteerRating: 5.0,
           volunteerName: 'Derya Telli',
-          volunteerAvatar:
-              'https://res.cloudinary.com/dwgpcnvcf/image/upload/v1777629067/yemis/profile_images/user_5_59b9c949.jpg',
+          volunteerAvatar: 'https://res.cloudinary.com/dwgpcnvcf/image/upload/v1777629067/yemis/profile_images/user_5_59b9c949.jpg',
           isAvailable: false,
           deliveryStatus: DeliveryStatus.completed,
           isNetworkImage: true,
@@ -108,6 +122,7 @@ class ApiVolunteerService implements IVolunteerService {
       ];
     }
   }
+
 
   @override
   Future<List<VolunteerListing>> getMyActiveTasks() async {
@@ -120,9 +135,10 @@ class ApiVolunteerService implements IVolunteerService {
     String urlString,
   ) async {
     final url = Uri.parse(urlString);
+    final endpointLabel = _endpointLabel(urlString);
 
     if (kDebugMode) {
-      print('--- API REQUEST (GET MEALS) ---');
+      print('--- API REQUEST ($endpointLabel) ---');
       print('URL: $url');
       print('------------------------------');
     }
@@ -133,7 +149,7 @@ class ApiVolunteerService implements IVolunteerService {
           .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
-        print('--- API RESPONSE (GET MEALS) ---');
+        print('--- API RESPONSE ($endpointLabel) ---');
         print('Status Code: ${response.statusCode}');
         print('Body: ${response.body}');
         print('-------------------------------');
@@ -179,9 +195,27 @@ class ApiVolunteerService implements IVolunteerService {
         );
       }
     } catch (e) {
-      if (kDebugMode) print('Error fetching meals from $urlString: $e');
+      if (kDebugMode) {
+        print('Error fetching $endpointLabel from $urlString: $e');
+      }
       rethrow;
     }
+  }
+
+  String _endpointLabel(String urlString) {
+    if (urlString.contains(ApiConstants.myActiveTasks)) {
+      return 'VOLUNTEER ACTIVE TASKS';
+    }
+    if (urlString.contains(ApiConstants.ownerVolunteerTasks)) {
+      return 'OWNER VOLUNTEER TASKS';
+    }
+    if (urlString.contains(ApiConstants.attendedTasks)) {
+      return 'ATTENDED TASKS';
+    }
+    if (urlString.contains(ApiConstants.meals)) {
+      return 'MEALS';
+    }
+    return 'VOLUNTEER API';
   }
 
   Future<List<VolunteerListing>> _tryFetchVolunteerListingsFromUrl(
@@ -332,12 +366,10 @@ class ApiVolunteerService implements IVolunteerService {
     String? city,
     String? district,
   }) async {
-    String urlString =
-        '${ApiConstants.baseUrl}${ApiConstants.sheltersNearby}?lat=$lat&lng=$lng&radius_km=$radiusKm';
+    String urlString = '${ApiConstants.baseUrl}${ApiConstants.sheltersNearby}?lat=$lat&lng=$lng&radius_km=$radiusKm';
     if (city != null && city.isNotEmpty) urlString += '&city=$city';
-    if (district != null && district.isNotEmpty)
-      urlString += '&district=$district';
-
+    if (district != null && district.isNotEmpty) urlString += '&district=$district';
+    
     final url = Uri.parse(urlString);
 
     if (kDebugMode) {
@@ -441,6 +473,11 @@ class ApiVolunteerService implements IVolunteerService {
       final response = await _client
           .post(url, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
+      if (kDebugMode) {
+        print(
+          'acceptVolunteer($taskId) -> ${response.statusCode} ${response.body}',
+        );
+      }
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error accepting volunteer: $e');
@@ -457,6 +494,11 @@ class ApiVolunteerService implements IVolunteerService {
       final response = await _client
           .post(url, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
+      if (kDebugMode) {
+        print(
+          'rejectVolunteer($taskId) -> ${response.statusCode} ${response.body}',
+        );
+      }
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error rejecting volunteer: $e');
@@ -473,6 +515,11 @@ class ApiVolunteerService implements IVolunteerService {
       final response = await _client
           .post(url, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
+      if (kDebugMode) {
+        print(
+          'ownerHandover($taskId) -> ${response.statusCode} ${response.body}',
+        );
+      }
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error in owner handover: $e');
@@ -492,6 +539,11 @@ class ApiVolunteerService implements IVolunteerService {
       final response = await _client
           .post(url, headers: _headers, body: jsonEncode(data))
           .timeout(ApiConstants.requestTimeout);
+      if (kDebugMode) {
+        print(
+          'submitVolunteerReview($taskId) -> ${response.statusCode} ${response.body}',
+        );
+      }
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       if (kDebugMode) print('Error submitting volunteer review: $e');

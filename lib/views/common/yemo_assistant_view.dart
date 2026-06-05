@@ -5,6 +5,7 @@ import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/services/common/assistant_service.dart';
 import 'package:yemis/utils/constants/app_colors.dart';
 import 'package:yemis/utils/locale_keys.dart';
+import 'package:yemis/utils/routes/app_routes.dart';
 import 'package:yemis/viewmodels/common/yemo_assistant_viewmodel.dart';
 
 class YemoAssistantView extends StatelessWidget {
@@ -33,6 +34,8 @@ class _YemoAssistantBody extends StatefulWidget {
 
 class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
   final ScrollController _scrollController = ScrollController();
+  int _lastMessageCount = 0;
+  bool _lastLoadingState = false;
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
@@ -44,19 +47,94 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
     }
   }
 
+  void _scheduleScrollIfNeeded(YemoAssistantViewModel vm) {
+    final shouldScroll =
+        vm.messages.length != _lastMessageCount ||
+        vm.isLoading != _lastLoadingState;
+
+    if (!shouldScroll) return;
+
+    _lastMessageCount = vm.messages.length;
+    _lastLoadingState = vm.isLoading;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _scrollToBottom();
+    });
+  }
+
+  Future<void> _handleAssistantAction(AssistantActionModel action) async {
+    final route = _resolveAssistantRoute(action);
+    if (route == null) return;
+
+    Object? arguments;
+    if (route == AppRoutes.location) {
+      arguments = {'moduleType': widget.moduleType};
+    } else if (route == AppRoutes.addresses) {
+      arguments = widget.moduleType;
+    }
+
+    await Navigator.pushNamed(context, route, arguments: arguments);
+  }
+
+  String? _resolveAssistantRoute(AssistantActionModel action) {
+    final route = action.route?.trim();
+    final topic = action.topic?.trim().toLowerCase();
+
+    switch (route) {
+      case '/food-home':
+        return AppRoutes.foodHome;
+      case '/location':
+        return AppRoutes.location;
+      case '/volunteer/listings':
+        return topic == 'my_volunteer_tasks'
+            ? AppRoutes.volunteerListings
+            : AppRoutes.volunteerHome;
+      case '/business-add-order':
+        return AppRoutes.businessAddOrder;
+      case '/business/listings':
+        return AppRoutes.businessListings;
+      case '/addresses':
+        return AppRoutes.addresses;
+      case '/food-reserve':
+        return AppRoutes.foodHome;
+    }
+
+    switch (topic) {
+      case 'find_food':
+      case 'reserve':
+      case 'ai_suggestions':
+        return AppRoutes.foodHome;
+      case 'select_region':
+        return AppRoutes.location;
+      case 'volunteer_listings':
+      case 'become_volunteer':
+        return AppRoutes.volunteerHome;
+      case 'my_volunteer_tasks':
+        return AppRoutes.volunteerListings;
+      case 'add_order':
+        return AppRoutes.businessAddOrder;
+      case 'business_listings':
+        return AppRoutes.businessListings;
+      case 'addresses':
+        return AppRoutes.addresses;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<YemoAssistantViewModel>();
-    final bool isVolunteer = widget.moduleType == AppModuleType.volunteer;
-    final Color themeColor = isVolunteer
+    final isVolunteer = widget.moduleType == AppModuleType.volunteer;
+    final themeColor = isVolunteer
         ? AppColors.volunteerColor
         : AppColors.primaryColor;
-    final String titleImage = isVolunteer
+    final titleImage = isVolunteer
         ? 'assets/common/yemo_volunteer_title.png'
         : 'assets/common/yemo_food_business_title.png';
 
-    // Mesaj geldiğinde aşağı kaydır
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+    _scheduleScrollIfNeeded(vm);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -78,12 +156,11 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
             Expanded(
               child: SingleChildScrollView(
                 controller: _scrollController,
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
                     if (!vm.isChatStarted) ...[
                       const SizedBox(height: 10),
-                      // Yemo Image
                       Center(
                         child: Image.asset(
                           'assets/foodIcon/yemo.png',
@@ -92,7 +169,6 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      // Title Image
                       Center(
                         child: Image.asset(
                           titleImage,
@@ -101,7 +177,6 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      // Subtitle
                       const Text(
                         'Akıllı Asistan',
                         style: TextStyle(
@@ -121,8 +196,6 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                       ),
                       const SizedBox(height: 32),
                     ],
-
-                    // Chat Messages
                     if (vm.messages.isNotEmpty) ...[
                       const SizedBox(height: 16),
                       ...vm.messages.map(
@@ -130,7 +203,7 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                       ),
                       if (vm.isLoading)
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Center(
                             child: SizedBox(
                               width: 24,
@@ -146,8 +219,6 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                         ),
                       const SizedBox(height: 20),
                     ],
-
-                    // Cards based on moduleType (Only show if chat NOT started)
                     if (!vm.isChatStarted) ...[
                       if (widget.moduleType == AppModuleType.food) ...[
                         _buildActionCard(
@@ -259,13 +330,8 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                 ),
               ),
             ),
-
-            // Bottom Input Field
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 12.0,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -299,7 +365,7 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                                   fontSize: 15,
                                 ),
                               ),
-                              onSubmitted: (val) => vm.sendMessage(val),
+                              onSubmitted: vm.sendMessage,
                             ),
                           ),
                         ],
@@ -332,7 +398,7 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
   }
 
   Widget _buildChatMessage(ChatMessage msg, Color themeColor) {
-    final bool isUser = msg.isUser;
+    final isUser = msg.isUser;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -371,33 +437,100 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
             const SizedBox(width: 8),
           ],
           Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.72,
-              ),
-              decoration: BoxDecoration(
-                color: isUser ? themeColor : const Color(0xFFF2F2F2),
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(18),
-                  topRight: const Radius.circular(18),
-                  bottomLeft: Radius.circular(isUser ? 18 : 4),
-                  bottomRight: Radius.circular(isUser ? 4 : 18),
+            child: Column(
+              crossAxisAlignment: isUser
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.72,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isUser ? themeColor : const Color(0xFFF2F2F2),
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(18),
+                      topRight: const Radius.circular(18),
+                      bottomLeft: Radius.circular(isUser ? 18 : 4),
+                      bottomRight: Radius.circular(isUser ? 4 : 18),
+                    ),
+                  ),
+                  child: Text(
+                    msg.text,
+                    style: TextStyle(
+                      color: isUser ? Colors.white : Colors.black87,
+                      fontSize: 14,
+                      height: 1.4,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
-              ),
-              child: Text(
-                msg.text,
-                style: TextStyle(
-                  color: isUser ? Colors.white : Colors.black87,
-                  fontSize: 14,
-                  height: 1.4,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+                if (!isUser && msg.actions.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: msg.actions
+                        .map(
+                          (action) => _buildActionChip(
+                            action: action,
+                            themeColor: themeColor,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
+              ],
             ),
           ),
-          if (isUser) const SizedBox(width: 12), // User tarafında minimal pay
+          if (isUser) const SizedBox(width: 12),
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionChip({
+    required AssistantActionModel action,
+    required Color themeColor,
+  }) {
+    final canNavigate = _resolveAssistantRoute(action) != null;
+
+    return GestureDetector(
+      onTap: canNavigate ? () => _handleAssistantAction(action) : null,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: canNavigate
+              ? themeColor.withValues(alpha: 0.1)
+              : Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: canNavigate
+                ? themeColor.withValues(alpha: 0.25)
+                : Colors.grey.shade300,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              action.label,
+              style: TextStyle(
+                color: canNavigate ? themeColor : Colors.black54,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            if (canNavigate) ...[
+              const SizedBox(width: 6),
+              Icon(Icons.arrow_forward_rounded, size: 16, color: themeColor),
+            ],
+          ],
+        ),
       ),
     );
   }

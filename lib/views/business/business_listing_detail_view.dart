@@ -268,6 +268,21 @@ class _BusinessListingDetailBody extends StatelessWidget {
                         child: OrderLocationMap(
                           businessLocation: displayLocation,
                           height: 200,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => NavigationView(
+                                  latitude: displayLocation.latitude,
+                                  longitude: displayLocation.longitude,
+                                  businessName: item.businessName ??
+                                      LocaleKeys.businessListingDetail_businessNameFallback.tr(),
+                                  address: item.address ??
+                                      LocaleKeys.businessListingDetail_noAddress.tr(),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),

@@ -14,6 +14,7 @@ abstract class IVolunteerService {
 
   /// Kullanıcının aktif oluşturduğu ilanları getirir.
   Future<List<VolunteerListing>> getActiveListings();
+  Future<List<VolunteerListing>> getOwnerVolunteerTasks();
 
   /// Kullanıcının geçmiş (süresi dolmuş/kapanmış) ilanlarını getirir.
   Future<List<VolunteerListing>> getPastListings();

@@ -12,6 +12,7 @@ class OrderLocationMap extends StatelessWidget {
     this.height = 150,
     this.accentColor,
     this.markerIcon,
+    this.onTap,
   });
 
   final LatLng businessLocation;
@@ -19,10 +20,11 @@ class OrderLocationMap extends StatelessWidget {
   final double height;
   final Color? accentColor;
   final IconData? markerIcon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
+    final mapContent = ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: SizedBox(
         height: height,
@@ -92,5 +94,11 @@ class OrderLocationMap extends StatelessWidget {
         ),
       ),
     );
+
+    if (onTap == null) {
+      return mapContent;
+    }
+
+    return GestureDetector(onTap: onTap, child: mapContent);
   }
 }

@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import 'package:yemis/widgets/business/reservation_card.dart';
 import '../../models/app_module_type.dart';
-import '../../models/business/reservation_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/locale_keys.dart';
-import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/business/business_approvals_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 
@@ -16,7 +15,9 @@ class BusinessApprovalsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => BusinessApprovalsViewModel(),
+      create: (ctx) => BusinessApprovalsViewModel(
+        volunteerService: ctx.read<IVolunteerService>(),
+      ),
       child: Consumer<BusinessApprovalsViewModel>(
         builder: (context, vm, _) {
           return Scaffold(
@@ -24,10 +25,16 @@ class BusinessApprovalsView extends StatelessWidget {
             appBar: AppBar(
               title: Text(LocaleKeys.businessApprovals_title.tr()),
             ),
-            body: vm.reservations.isEmpty
+            body: vm.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
+                  )
+                : vm.reservations.isEmpty
                 ? Center(
                     child: Text(
-                      LocaleKeys.businessApprovals_noPending.tr(),
+                      vm.error ?? LocaleKeys.businessApprovals_noPending.tr(),
                       style: TextStyle(fontSize: 15, color: Color(0xFF888888)),
                     ),
                   )
