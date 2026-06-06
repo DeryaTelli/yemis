@@ -171,7 +171,10 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.history_rounded,
                     title: LocaleKeys.foodProfile_history.tr(),
-                    onTap: () {},
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.foodOrdersHistory,
+                    ),
                   ),
                   ProfileMenuTile(
                     icon: Icons.location_on_outlined,

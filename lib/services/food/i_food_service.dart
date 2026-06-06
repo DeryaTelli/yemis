@@ -1,5 +1,6 @@
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_review.dart';
+import '../../models/food/order_model.dart';
 
 /// Yemek servisinin soyut arayüzü.
 ///
@@ -31,5 +32,7 @@ abstract class IFoodService {
 
   /// Sipariş oluşturur. [bagId] ilan ID'si, [quantity] adet sayısıdır.
   Future<bool> createOrder(int bagId, int quantity);
+  /// Kullanıcının sipariş geçmişini döner.
+  Future<List<OrderModel>> getMyOrders();
 }
 

@@ -16,7 +16,6 @@ class ApiConstants {
   static const String profile = '/api/users/me';
   static const String changePassword = '/api/auth/change-password';
   static const String uploadImage = '/api/upload/image';
-  static const String businessDashboard = '/api/stats/business/dashboard';
 
   // --- Reviews ---
   static String reviewsForStore(int storeId) => '/api/reviews/stores/$storeId';
@@ -63,18 +62,24 @@ class ApiConstants {
 
   // --- Notifications ---
   static const String notifications = '/api/notifications/my';
-  static const String notificationsUnreadCount = '/api/notifications/unread-count';
+  static const String notificationsUnreadCount =
+      '/api/notifications/unread-count';
   static const String notificationsReadAll = '/api/notifications/read-all';
-  static const String notificationPreferences = '/api/notifications/preferences';
-  static const String notificationDeviceToken = '/api/notifications/device-token';
+  static const String notificationPreferences =
+      '/api/notifications/preferences';
+  static const String notificationDeviceToken =
+      '/api/notifications/device-token';
   static String notificationRead(int id) => '/api/notifications/$id/read';
   static String notificationById(int id) => '/api/notifications/$id';
   static String completeTask(int id) => '/api/volunteer/tasks/$id/complete';
   static String cancelTask(int id) => '/api/volunteer/tasks/$id/cancel';
   static String startPickup(int id) => '/api/volunteer/tasks/$id/start-pickup';
-  static String markPickedUp(int id) => '/api/volunteer/tasks/$id/mark-picked-up';
-  static String startDelivery(int id) => '/api/volunteer/tasks/$id/start-delivery';
-  static String confirmDelivery(int id) => '/api/volunteer/tasks/$id/confirm-delivery';
+  static String markPickedUp(int id) =>
+      '/api/volunteer/tasks/$id/mark-picked-up';
+  static String startDelivery(int id) =>
+      '/api/volunteer/tasks/$id/start-delivery';
+  static String confirmDelivery(int id) =>
+      '/api/volunteer/tasks/$id/confirm-delivery';
   static String acceptVolunteer(int id) => '/api/volunteer/tasks/$id/approve';
   static String rejectVolunteer(int id) => '/api/volunteer/tasks/$id/reject';
   static String ownerHandover(int id) => '/api/volunteer/tasks/$id/hand-over';
@@ -82,6 +87,7 @@ class ApiConstants {
   static String ownerReview(int id) => '/api/reviews/volunteer-tasks/$id/owner';
 
   // --- Stats ---
+  static const String businessDashboard = '/api/stats/business/dashboard';
 
   // --- Orders ---
   static const String orders = '/api/orders';

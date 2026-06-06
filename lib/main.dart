@@ -11,6 +11,7 @@ import 'package:yemis/services/food/i_food_service.dart';
 import 'package:yemis/viewmodels/business/business_profile_viewmodel.dart';
 import 'package:yemis/viewmodels/food/food_home_viewmodel.dart';
 import 'package:yemis/viewmodels/food/food_profile_viewmodel.dart';
+import 'package:yemis/viewmodels/food/food_orders_history_viewmodel.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_add_listing_viewmodel.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_profile_viewmodel.dart';
 import 'package:yemis/viewmodels/food/food_favorites_viewmodel.dart';
@@ -53,6 +54,7 @@ import 'views/food/food_favorites_view.dart';
 import 'views/food/food_home_view.dart';
 import 'views/food/food_profile_edit_view.dart';
 import 'views/food/food_profile_view.dart';
+import 'views/food/food_orders_history_view.dart';
 import 'views/food/food_reserve_view.dart';
 import 'views/food/food_search_view.dart';
 import 'views/food/food_all_listings_view.dart';
@@ -224,6 +226,9 @@ class MyApp extends StatelessWidget {
           create: (_) => FoodProfileViewModel(authService, userSession),
         ),
         ChangeNotifierProvider(
+          create: (ctx) => FoodOrdersHistoryViewModel(ctx.read<IFoodService>()),
+        ),
+        ChangeNotifierProvider(
           create: (_) => VolunteerProfileViewModel(authService, userSession),
         ),
         ChangeNotifierProvider(
@@ -351,6 +356,11 @@ class MyApp extends StatelessWidget {
             case AppRoutes.foodProfile:
               return MaterialPageRoute(
                 builder: (ctx) => const FoodProfileView(),
+                settings: settings,
+              );
+            case AppRoutes.foodOrdersHistory:
+              return MaterialPageRoute(
+                builder: (_) => const FoodOrdersHistoryView(),
                 settings: settings,
               );
             case AppRoutes.foodAllListings:

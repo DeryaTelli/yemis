@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../../models/business/business_listing_model.dart';
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_review.dart';
+import '../../models/food/order_model.dart';
 import '../../utils/constants/api_constants.dart';
 import 'i_food_service.dart';
 
@@ -60,12 +61,14 @@ class ApiFoodService implements IFoodService {
               // Detaylı log bastırma
               debugPrint('--- 📦 İlan Detayı (Ham Veri) ---');
               debugPrint(const JsonEncoder.withIndent('  ').convert(item));
-              
+
               final businessModel = BusinessListingModel.fromJson(item);
               final foodListing = businessModel.toFoodListing();
               listings.add(foodListing);
-              
-              debugPrint('✅ İşlenen Model: ${foodListing.title} | Kat: ${foodListing.category} | Fiyat: ${foodListing.price}');
+
+              debugPrint(
+                '✅ İşlenen Model: ${foodListing.title} | Kat: ${foodListing.category} | Fiyat: ${foodListing.price}',
+              );
               debugPrint('---------------------------------');
             } else {
               debugPrint('⚠️ [ApiFoodService] Öğe bir Map değil: $item');
@@ -94,7 +97,10 @@ class ApiFoodService implements IFoodService {
   }
 
   @override
-  Future<List<FoodListing>> getPopularListings({int? limit, String? category}) async {
+  Future<List<FoodListing>> getPopularListings({
+    int? limit,
+    String? category,
+  }) async {
     try {
       final queryParameters = <String, String>{};
       if (limit != null) {
@@ -104,9 +110,11 @@ class ApiFoodService implements IFoodService {
         queryParameters['category'] = category;
       }
 
-      final baseUrlUri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.popularBags}');
-      final uri = queryParameters.isNotEmpty 
-          ? baseUrlUri.replace(queryParameters: queryParameters) 
+      final baseUrlUri = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.popularBags}',
+      );
+      final uri = queryParameters.isNotEmpty
+          ? baseUrlUri.replace(queryParameters: queryParameters)
           : baseUrlUri;
 
       debugPrint('📡 [ApiFoodService] GET Popular Request: $uri');
@@ -114,7 +122,9 @@ class ApiFoodService implements IFoodService {
       final response = await _client
           .get(uri, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
-      debugPrint('📥 [ApiFoodService] Popular Response Status: ${response.statusCode}');
+      debugPrint(
+        '📥 [ApiFoodService] Popular Response Status: ${response.statusCode}',
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -127,11 +137,15 @@ class ApiFoodService implements IFoodService {
         } else if (decoded is Map && decoded.containsKey('bags')) {
           data = decoded['bags'] as List;
         } else {
-          debugPrint('⚠️ [ApiFoodService] Beklenmeyen popüler yanıt formatı: $decoded');
+          debugPrint(
+            '⚠️ [ApiFoodService] Beklenmeyen popüler yanıt formatı: $decoded',
+          );
           return [];
         }
 
-        debugPrint('📦 [ApiFoodService] İşlenecek popüler ilan sayısı: ${data.length}');
+        debugPrint(
+          '📦 [ApiFoodService] İşlenecek popüler ilan sayısı: ${data.length}',
+        );
 
         final List<FoodListing> listings = [];
         for (var item in data) {
@@ -143,7 +157,9 @@ class ApiFoodService implements IFoodService {
               );
               listings.add(foodListing);
             } else {
-              debugPrint('⚠️ [ApiFoodService] Popüler öğe bir Map değil: $item');
+              debugPrint(
+                '⚠️ [ApiFoodService] Popüler öğe bir Map değil: $item',
+              );
             }
           } catch (itemError) {
             debugPrint(
@@ -165,7 +181,10 @@ class ApiFoodService implements IFoodService {
   }
 
   @override
-  Future<List<FoodListing>> getPopularTodayListings({int? limit, String? category}) async {
+  Future<List<FoodListing>> getPopularTodayListings({
+    int? limit,
+    String? category,
+  }) async {
     try {
       final queryParameters = <String, String>{};
       if (limit != null) {
@@ -175,9 +194,11 @@ class ApiFoodService implements IFoodService {
         queryParameters['category'] = category;
       }
 
-      final baseUrlUri = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.popularTodayBags}');
-      final uri = queryParameters.isNotEmpty 
-          ? baseUrlUri.replace(queryParameters: queryParameters) 
+      final baseUrlUri = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.popularTodayBags}',
+      );
+      final uri = queryParameters.isNotEmpty
+          ? baseUrlUri.replace(queryParameters: queryParameters)
           : baseUrlUri;
 
       debugPrint('📡 [ApiFoodService] GET Popular Today Request: $uri');
@@ -185,7 +206,9 @@ class ApiFoodService implements IFoodService {
       final response = await _client
           .get(uri, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
-      debugPrint('📥 [ApiFoodService] Popular Today Response Status: ${response.statusCode}');
+      debugPrint(
+        '📥 [ApiFoodService] Popular Today Response Status: ${response.statusCode}',
+      );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
@@ -198,11 +221,15 @@ class ApiFoodService implements IFoodService {
         } else if (decoded is Map && decoded.containsKey('bags')) {
           data = decoded['bags'] as List;
         } else {
-          debugPrint('⚠️ [ApiFoodService] Beklenmeyen popüler bugün yanıt formatı: $decoded');
+          debugPrint(
+            '⚠️ [ApiFoodService] Beklenmeyen popüler bugün yanıt formatı: $decoded',
+          );
           return [];
         }
 
-        debugPrint('📦 [ApiFoodService] İşlenecek popüler bugün ilan sayısı: ${data.length}');
+        debugPrint(
+          '📦 [ApiFoodService] İşlenecek popüler bugün ilan sayısı: ${data.length}',
+        );
 
         final List<FoodListing> listings = [];
         for (var item in data) {
@@ -214,7 +241,9 @@ class ApiFoodService implements IFoodService {
               );
               listings.add(foodListing);
             } else {
-              debugPrint('⚠️ [ApiFoodService] Popüler bugün öğe bir Map değil: $item');
+              debugPrint(
+                '⚠️ [ApiFoodService] Popüler bugün öğe bir Map değil: $item',
+              );
             }
           } catch (itemError) {
             debugPrint(
@@ -383,9 +412,10 @@ class ApiFoodService implements IFoodService {
         final List<String> bagIds = [];
         for (var item in data) {
           if (item is Map<String, dynamic>) {
-            final id = (item['bag_id'] ??
-                    (item['bag'] != null ? item['bag']['id'] : null))
-                ?.toString();
+            final id =
+                (item['bag_id'] ??
+                        (item['bag'] != null ? item['bag']['id'] : null))
+                    ?.toString();
             if (id != null) bagIds.add(id);
           }
         }
@@ -434,18 +464,19 @@ class ApiFoodService implements IFoodService {
       final body = jsonEncode({'bag_id': bagId, 'quantity_reserved': quantity});
       final idempotencyKey = _generateIdempotencyKey();
 
-      final headers = {
-        ..._headers,
-        'Idempotency-Key': idempotencyKey,
-      };
+      final headers = {..._headers, 'Idempotency-Key': idempotencyKey};
 
-      debugPrint('📡 [ApiFoodService] POST Order: $url | Body: $body | Idempotency-Key: $idempotencyKey');
+      debugPrint(
+        '📡 [ApiFoodService] POST Order: $url | Body: $body | Idempotency-Key: $idempotencyKey',
+      );
 
       final response = await _client
           .post(url, headers: headers, body: body)
           .timeout(ApiConstants.requestTimeout);
 
-      debugPrint('📥 [ApiFoodService] Order Response: ${response.statusCode} | ${response.body}');
+      debugPrint(
+        '📥 [ApiFoodService] Order Response: ${response.statusCode} | ${response.body}',
+      );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         debugPrint('✅ [ApiFoodService] Sipariş oluşturuldu');
@@ -459,5 +490,46 @@ class ApiFoodService implements IFoodService {
       return false;
     }
   }
-}
 
+  @override
+  Future<List<OrderModel>> getMyOrders() async {
+    try {
+      final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.myOrders}');
+      debugPrint('📡 [ApiFoodService] GET Request: $url');
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      debugPrint(
+        '📥 [ApiFoodService] getMyOrders Status: ${response.statusCode}',
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        List<dynamic> data = [];
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'] as List;
+        }
+
+        final List<OrderModel> orders = [];
+        for (var item in data) {
+          try {
+            if (item is Map<String, dynamic>) {
+              orders.add(OrderModel.fromJson(item));
+            }
+          } catch (itemError) {
+            debugPrint(
+              '❌ [ApiFoodService] Sipariş işleme hatası: $itemError | Item: $item',
+            );
+          }
+        }
+        return orders;
+      }
+      return [];
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] getMyOrders hatası: $e');
+      return [];
+    }
+  }
+}

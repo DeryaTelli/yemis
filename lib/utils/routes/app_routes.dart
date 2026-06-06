@@ -17,6 +17,7 @@ class AppRoutes {
   static const String cards = '/cards';
   static const String addCard = '/cards/add';
   static const String cardDetail = '/cards/detail';
+  static const String foodOrdersHistory = '/food-orders-history';
   static const String volunteerHome = '/volunteer-home';
   static const String volunteerMap = '/volunteer/map';
   static const String volunteerSearch = '/volunteer/search';
