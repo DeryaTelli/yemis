@@ -49,9 +49,9 @@ class BusinessProfileViewModel extends ChangeNotifier {
   String get dailyTotalEarnings => "${_totalRevenue.toStringAsFixed(0)} TL";
 
   BusinessProfileViewModel(this._authService, this._userSession)
-      : fullNameController = TextEditingController(),
-        emailController = TextEditingController(),
-        phoneController = TextEditingController() {
+    : fullNameController = TextEditingController(),
+      emailController = TextEditingController(),
+      phoneController = TextEditingController() {
     _remoteImageUrl = _userSession.currentUser?.imageUrl;
     _resetControllers();
     Future.microtask(() => fetchProfile());
@@ -90,7 +90,7 @@ class BusinessProfileViewModel extends ChangeNotifier {
   void _resetControllers() {
     fullNameController.text = fullName;
     emailController.text = email;
-    
+
     // Telefon numarasını temizleyerek göster (maske ile uyumlu olması için)
     String displayPhone = _userSession.currentUser?.phoneNumber ?? '';
     if (displayPhone.startsWith('+90')) {
@@ -152,29 +152,41 @@ class BusinessProfileViewModel extends ChangeNotifier {
 
     final bool isNameChanged = newName != (currentUser.name ?? '');
     final bool isEmailChanged = newEmail != (currentUser.email ?? '');
-    
+
     // Mevcut telefonu da temizleyerek karşılaştır
-    String currentPhoneClean = (currentUser.phoneNumber ?? '').replaceAll(RegExp(r'\D'), '');
+    String currentPhoneClean = (currentUser.phoneNumber ?? '').replaceAll(
+      RegExp(r'\D'),
+      '',
+    );
     if (currentPhoneClean.isNotEmpty && !currentPhoneClean.startsWith('90')) {
       currentPhoneClean = '90$currentPhoneClean';
     }
     if (currentPhoneClean.isNotEmpty && !currentPhoneClean.startsWith('+')) {
       currentPhoneClean = '+$currentPhoneClean';
     }
-    
+
     final bool isPhoneChanged = cleanPhone != currentPhoneClean;
     final bool isImageChanged = _selectedImageFile != null;
 
     if (kDebugMode) {
       print('--- Profile Change Debug ---');
-      print('Name: "$newName" vs "${currentUser.name}" (Changed: $isNameChanged)');
-      print('Email: "$newEmail" vs "${currentUser.email}" (Changed: $isEmailChanged)');
-      print('Phone: "$cleanPhone" vs "$currentPhoneClean" (Changed: $isPhoneChanged)');
+      print(
+        'Name: "$newName" vs "${currentUser.name}" (Changed: $isNameChanged)',
+      );
+      print(
+        'Email: "$newEmail" vs "${currentUser.email}" (Changed: $isEmailChanged)',
+      );
+      print(
+        'Phone: "$cleanPhone" vs "$currentPhoneClean" (Changed: $isPhoneChanged)',
+      );
       print('Image Changed: $isImageChanged');
       print('----------------------------');
     }
 
-    if (!isNameChanged && !isEmailChanged && !isPhoneChanged && !isImageChanged) {
+    if (!isNameChanged &&
+        !isEmailChanged &&
+        !isPhoneChanged &&
+        !isImageChanged) {
       if (context.mounted) {
         ErrorDialogCustom.show(
           context,
@@ -228,18 +240,12 @@ class BusinessProfileViewModel extends ChangeNotifier {
             },
           );
         } else {
-          ErrorDialogCustom.show(
-            context,
-            message: response.message,
-          );
+          ErrorDialogCustom.show(context, message: response.message);
         }
       }
     } catch (e) {
       if (context.mounted) {
-        ErrorDialogCustom.show(
-          context,
-          message: e.toString(),
-        );
+        ErrorDialogCustom.show(context, message: e.toString());
       }
     } finally {
       _isUpdating = false;
@@ -254,19 +260,19 @@ class BusinessProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> logout(BuildContext context) async {
-    _authService.logout().catchError((e) {
-      debugPrint('Logout API error: $e');
-    });
+    _authService.logout().then<void>(
+      (_) {},
+      onError: (Object e, StackTrace _) {
+        debugPrint('Logout API error: $e');
+      },
+    );
 
     _userSession.clear();
 
-    if (context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRoutes.login,
-        (route) => false,
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (_) => false);
+    });
   }
 
   void deleteAccount(BuildContext context) {
@@ -329,10 +335,10 @@ class BusinessProfileViewModel extends ChangeNotifier {
                   TextButton(
                     onPressed: () async {
                       Navigator.pop(ctx);
-                      
+
                       // API üzerinden hesabı sil
                       final response = await _authService.deleteAccount();
-                      
+
                       if (context.mounted) {
                         if (response.success) {
                           SuccessDialogCustom.show(

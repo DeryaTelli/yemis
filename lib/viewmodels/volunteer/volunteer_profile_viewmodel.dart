@@ -20,8 +20,7 @@ class VolunteerProfileViewModel extends ChangeNotifier {
 
   // ─── Profile Data ──────────────────────────────────
   String get fullName => _userSession.currentUser?.name ?? '';
-  String get email =>
-      _userSession.currentUser?.email ?? '';
+  String get email => _userSession.currentUser?.email ?? '';
   String? get remoteImageUrl => _userSession.currentUser?.imageUrl;
 
   VolunteerProfileViewModel(this._authService, this._userSession) {
@@ -70,21 +69,20 @@ class VolunteerProfileViewModel extends ChangeNotifier {
 
   Future<void> logout(BuildContext context) async {
     // API çağrısını arka planda başlatıyoruz, cevabı beklemiyoruz (yavaşlığı engellemek için)
-    _authService.logout().catchError((e) {
-      debugPrint('Logout API error: $e');
-    });
+    _authService.logout().then<void>(
+      (_) {},
+      onError: (Object e, StackTrace _) {
+        debugPrint('Logout API error: $e');
+      },
+    );
 
     // Yerel verileri anında temizliyoruz
     _userSession.clear();
 
-    // Kullanıcıyı hemen giriş ekranına yönlendiriyoruz
-    if (context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRoutes.login,
-        (route) => false,
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (_) => false);
+    });
   }
 
   void deleteAccount(BuildContext context) {
@@ -147,10 +145,10 @@ class VolunteerProfileViewModel extends ChangeNotifier {
                   TextButton(
                     onPressed: () async {
                       Navigator.pop(ctx);
-                      
+
                       // API üzerinden hesabı sil
                       final response = await _authService.deleteAccount();
-                      
+
                       if (context.mounted) {
                         if (response.success) {
                           SuccessDialogCustom.show(

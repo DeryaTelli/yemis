@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../models/business/business_listing_model.dart';
 import '../../models/business/business_dashboard_model.dart';
+import '../../models/business/business_order_approval_model.dart';
 import '../../utils/constants/api_constants.dart';
 import 'i_business_service.dart';
 
@@ -209,5 +210,76 @@ class ApiBusinessService implements IBusinessService {
       if (kDebugMode) print('Error fetching dashboard stats: $e');
     }
     return null;
+  }
+
+  @override
+  Future<List<BusinessOrderApprovalModel>> getOrderApprovals() async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.businessOrderApprovals}',
+    );
+
+    try {
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      if (response.statusCode < 200 || response.statusCode >= 300) return [];
+
+      final decoded = jsonDecode(response.body);
+      dynamic rawData = decoded;
+      if (decoded is Map) {
+        rawData =
+            decoded['data'] ??
+            decoded['orders'] ??
+            decoded['approvals'] ??
+            decoded['results'] ??
+            const [];
+      }
+      if (rawData is Map) {
+        rawData =
+            rawData['orders'] ??
+            rawData['approvals'] ??
+            rawData['results'] ??
+            const [];
+      }
+      if (rawData is! List) return [];
+
+      return rawData
+          .map((item) {
+            if (item is Map<String, dynamic>) {
+              return BusinessOrderApprovalModel.fromJson(item);
+            }
+            if (item is Map) {
+              return BusinessOrderApprovalModel.fromJson(
+                Map<String, dynamic>.from(item),
+              );
+            }
+            return null;
+          })
+          .whereType<BusinessOrderApprovalModel>()
+          .where((order) {
+            final status = order.status.toLowerCase();
+            return status == 'pending' || status == 'arrived';
+          })
+          .toList();
+    } catch (e) {
+      if (kDebugMode) print('Error fetching business order approvals: $e');
+      return [];
+    }
+  }
+
+  @override
+  Future<bool> confirmOrderPickup(int orderId) async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.confirmOrderPickup(orderId)}',
+    );
+    try {
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      if (kDebugMode) print('Error confirming order pickup: $e');
+      return false;
+    }
   }
 }

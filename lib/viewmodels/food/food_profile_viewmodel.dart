@@ -230,7 +230,10 @@ class FoodProfileViewModel extends ChangeNotifier {
     final int? userId = int.tryParse(currentUser.id);
     if (userId == null) {
       if (context.mounted) {
-        ErrorDialogCustom.show(context, message: LocaleKeys.common_invalidUserId.tr());
+        ErrorDialogCustom.show(
+          context,
+          message: LocaleKeys.common_invalidUserId.tr(),
+        );
       }
       return;
     }
@@ -302,14 +305,10 @@ class FoodProfileViewModel extends ChangeNotifier {
     // Yerel verileri anında temizliyoruz
     _userSession.clear();
 
-    // Kullanıcıyı hemen giriş ekranına yönlendiriyoruz
-    if (context.mounted) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppRoutes.login,
-        (route) => false,
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (_) => false);
+    });
   }
 
   void deleteAccount(BuildContext context) {
