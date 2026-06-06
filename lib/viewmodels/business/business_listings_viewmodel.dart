@@ -55,8 +55,8 @@ class BusinessListingsViewModel extends ChangeNotifier {
           break;
         case ListingType.expired:
           // Stoku olup süresi dolanlar
-          final allSoldOrExpired = await _businessService!.getMySoldBags();
-          _listings = allSoldOrExpired.where((item) => !item.isSold && item.isExpired).toList();
+          final allUnsold = await _businessService!.getMyUnsoldBags();
+          _listings = allUnsold.where((item) => item.isExpired).toList();
           break;
       }
     } catch (e) {
