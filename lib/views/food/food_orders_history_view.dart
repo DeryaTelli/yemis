@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../models/food/order_model.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../utils/locale_keys.dart';
-import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/food/food_orders_history_viewmodel.dart';
 
 class FoodOrdersHistoryView extends StatelessWidget {
@@ -39,20 +37,7 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        title: const Text(
-          'Geçmiş Rezervasyonlarım',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        foregroundColor: AppColors.primaryTextColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      appBar: AppBar(title: const Text('Rezervasyonlarım')),
       body: RefreshIndicator(
         onRefresh: () => vm.fetchOrders(),
         color: AppColors.primaryColor,
@@ -77,7 +62,11 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline_rounded, color: Colors.red, size: 48),
+              const Icon(
+                Icons.error_outline_rounded,
+                color: Colors.red,
+                size: 48,
+              ),
               const SizedBox(height: 16),
               Text(
                 'Bir hata oluştu:\n${vm.errorMessage}',
@@ -89,9 +78,14 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                 onPressed: () => vm.fetchOrders(),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text('Tekrar Dene', style: TextStyle(color: Colors.white)),
+                child: const Text(
+                  'Tekrar Dene',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -108,7 +102,7 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
               width: 90,
               height: 90,
               decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.08),
+                color: AppColors.primaryColor.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -144,7 +138,7 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: vm.orders.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 14),
+      separatorBuilder: (_, _) => const SizedBox(height: 14),
       itemBuilder: (context, index) {
         final order = vm.orders[index];
         return _buildOrderCard(order);
@@ -156,7 +150,9 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
     final bag = order.bag;
     final shopName = bag?.shopName ?? 'Bilinmeyen İşletme';
     final bagTitle = bag?.title ?? 'Sürpriz Kutu';
-    final formattedDate = DateFormat('dd.MM.yyyy, HH:mm').format(order.orderTime);
+    final formattedDate = DateFormat(
+      'dd.MM.yyyy, HH:mm',
+    ).format(order.orderTime);
     final status = order.orderStatus.toLowerCase();
 
     Color statusColor;
@@ -191,12 +187,12 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: Colors.grey.withOpacity(0.08)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.08)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -210,12 +206,20 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundColor: AppColors.primaryColor.withOpacity(0.1),
-                    backgroundImage: bag?.shopLogoUrl != null && bag!.shopLogoUrl!.startsWith('http')
+                    backgroundColor: AppColors.primaryColor.withValues(
+                      alpha: 0.1,
+                    ),
+                    backgroundImage:
+                        bag?.shopLogoUrl != null &&
+                            bag!.shopLogoUrl!.startsWith('http')
                         ? NetworkImage(bag.shopLogoUrl!)
                         : null,
                     child: bag?.shopLogoUrl == null
-                        ? const Icon(Icons.storefront_rounded, color: AppColors.primaryColor, size: 20)
+                        ? const Icon(
+                            Icons.storefront_rounded,
+                            color: AppColors.primaryColor,
+                            size: 20,
+                          )
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -245,9 +249,12 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
+                      color: statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -281,9 +288,15 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                       borderRadius: BorderRadius.circular(10),
                       child: bag?.imageUrl != null && bag!.imageUrl!.isNotEmpty
                           ? (bag.imageUrl!.startsWith('http')
-                              ? Image.network(bag.imageUrl!, fit: BoxFit.cover)
-                              : Image.asset(bag.imageUrl!, fit: BoxFit.cover))
-                          : const Icon(Icons.shopping_bag_outlined, color: Colors.grey),
+                                ? Image.network(
+                                    bag.imageUrl!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(bag.imageUrl!, fit: BoxFit.cover))
+                          : const Icon(
+                              Icons.shopping_bag_outlined,
+                              color: Colors.grey,
+                            ),
                     ),
                   ),
                   const SizedBox(width: 14),
@@ -344,7 +357,10 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
             if (status == 'pending' || status == 'arrived') ...[
               const Divider(height: 1, color: Color(0xFFF1F1F1)),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -380,7 +396,10 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                         const SizedBox(width: 8),
                         if (order.pickupQrToken != null)
                           IconButton(
-                            icon: const Icon(Icons.qr_code_2_rounded, color: AppColors.primaryColor),
+                            icon: const Icon(
+                              Icons.qr_code_2_rounded,
+                              color: AppColors.primaryColor,
+                            ),
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
                             onPressed: () => _showQrDialog(order),
