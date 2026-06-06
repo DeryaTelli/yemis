@@ -492,6 +492,26 @@ class ApiFoodService implements IFoodService {
   }
 
   @override
+  Future<bool> cancelOrder(int orderId) async {
+    try {
+      final url = Uri.parse(
+        '${ApiConstants.baseUrl}${ApiConstants.cancelOrder(orderId)}',
+      );
+      final response = await _client
+          .post(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+
+      debugPrint(
+        '📥 [ApiFoodService] Cancel Order: ${response.statusCode} | ${response.body}',
+      );
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] cancelOrder hatası: $e');
+      return false;
+    }
+  }
+
+  @override
   Future<List<OrderModel>> getMyOrders() async {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.myOrders}');

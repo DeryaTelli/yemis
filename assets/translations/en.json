@@ -117,7 +117,7 @@
     "foodProfile":  {
                         "title":  "Profile",
                         "notifications":  "Notifications",
-                        "history":  "My Past Reservations",
+                        "history":  "My Reservations",
                         "addresses":  "My Saved Addresses",
                         "cards":  "My Saved Cards",
                         "updateProfile":  "Update Profile",

@@ -39,15 +39,28 @@ class MockFoodService implements IFoodService {
   }
 
   @override
-  Future<List<FoodListing>> getPopularListings({int? limit, String? category}) async {
+  Future<List<FoodListing>> getPopularListings({
+    int? limit,
+    String? category,
+  }) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    var list = _listings.where((l) => l.section == FoodSection.todayPopular).toList();
+    var list = _listings
+        .where((l) => l.section == FoodSection.todayPopular)
+        .toList();
     if (category != null) {
       final catLower = category.toLowerCase();
       if (catLower == 'patiseri') {
-        list = list.where((l) => l.category.toLowerCase().contains('pasta') || l.category.toLowerCase().contains('ekmek')).toList();
+        list = list
+            .where(
+              (l) =>
+                  l.category.toLowerCase().contains('pasta') ||
+                  l.category.toLowerCase().contains('ekmek'),
+            )
+            .toList();
       } else {
-        list = list.where((l) => l.category.toLowerCase().contains(catLower)).toList();
+        list = list
+            .where((l) => l.category.toLowerCase().contains(catLower))
+            .toList();
       }
     }
     if (limit != null && list.length > limit) {
@@ -57,14 +70,22 @@ class MockFoodService implements IFoodService {
   }
 
   @override
-  Future<List<FoodListing>> getPopularTodayListings({int? limit, String? category}) async {
+  Future<List<FoodListing>> getPopularTodayListings({
+    int? limit,
+    String? category,
+  }) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
-    var list = _listings.where((l) => l.section == FoodSection.todayPopular).toList();
-    
+    var list = _listings
+        .where((l) => l.section == FoodSection.todayPopular)
+        .toList();
+
     // Test amaçlı bazılarını tükendi ve süresi doldu yapalım
     list = list.map((l) {
       if (l.id == 'tp_1') {
-        return l.copyWith(isSoldOut: true, section: FoodSection.todayPopularAll);
+        return l.copyWith(
+          isSoldOut: true,
+          section: FoodSection.todayPopularAll,
+        );
       } else if (l.id == 'tp_2') {
         return l.copyWith(
           deliveryEndTime: DateTime.now().subtract(const Duration(hours: 1)),
@@ -77,9 +98,17 @@ class MockFoodService implements IFoodService {
     if (category != null) {
       final catLower = category.toLowerCase();
       if (catLower == 'patiseri') {
-        list = list.where((l) => l.category.toLowerCase().contains('pasta') || l.category.toLowerCase().contains('ekmek')).toList();
+        list = list
+            .where(
+              (l) =>
+                  l.category.toLowerCase().contains('pasta') ||
+                  l.category.toLowerCase().contains('ekmek'),
+            )
+            .toList();
       } else {
-        list = list.where((l) => l.category.toLowerCase().contains(catLower)).toList();
+        list = list
+            .where((l) => l.category.toLowerCase().contains(catLower))
+            .toList();
       }
     }
     if (limit != null && list.length > limit) {
@@ -125,6 +154,12 @@ class MockFoodService implements IFoodService {
   /// Mock sipariş oluşturma — her zaman başarılı döner.
   @override
   Future<bool> createOrder(int bagId, int quantity) async {
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    return true;
+  }
+
+  @override
+  Future<bool> cancelOrder(int orderId) async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
     return true;
   }

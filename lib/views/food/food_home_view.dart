@@ -8,6 +8,7 @@ import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../viewmodels/food/food_home_viewmodel.dart';
 import '../../widgets/food/food_filter_chips.dart';
+import '../../widgets/food/food_active_order_card.dart';
 import '../../widgets/food/food_listing_section.dart';
 import '../../widgets/food/food_listing_card.dart';
 import '../../widgets/food/food_map_section.dart';
@@ -100,6 +101,14 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
                 userLng: vm.userLng,
               ),
               const SizedBox(height: 16),
+
+              if (vm.latestActiveOrder != null) ...[
+                FoodActiveOrderCard(
+                  order: vm.latestActiveOrder!,
+                  onCancel: vm.cancelLatestOrder,
+                ),
+                const SizedBox(height: 18),
+              ],
 
               if (vm.isSearching) ...[
                 _FoodSearchResults(vm: vm),

@@ -92,4 +92,5 @@ class ApiConstants {
   // --- Orders ---
   static const String orders = '/api/orders';
   static const String myOrders = '/api/orders/my';
+  static String cancelOrder(int id) => '/api/orders/$id/cancel';
 }

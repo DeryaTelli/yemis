@@ -181,7 +181,6 @@ class FoodReservePaymentRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryBorderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +223,6 @@ class FoodReservePaymentRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryBorderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -16,7 +16,10 @@ abstract class IFoodService {
   Future<List<FoodListing>> getPopularListings({int? limit, String? category});
 
   /// Bugünün popüler ilanlarını (tükendiler dahil) döner.
-  Future<List<FoodListing>> getPopularTodayListings({int? limit, String? category});
+  Future<List<FoodListing>> getPopularTodayListings({
+    int? limit,
+    String? category,
+  });
 
   /// Belirtilen id'ye sahip ilan detayını döner.
   Future<FoodListing> getFoodDetail(String id);
@@ -32,7 +35,10 @@ abstract class IFoodService {
 
   /// Sipariş oluşturur. [bagId] ilan ID'si, [quantity] adet sayısıdır.
   Future<bool> createOrder(int bagId, int quantity);
+
+  /// Siparişi iptal eder. İade işlemi backend tarafından gerçekleştirilir.
+  Future<bool> cancelOrder(int orderId);
+
   /// Kullanıcının sipariş geçmişini döner.
   Future<List<OrderModel>> getMyOrders();
 }
-

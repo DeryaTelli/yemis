@@ -49,6 +49,9 @@ class OrderBagModel {
   final DateTime pickupEndTime;
   final String? shopName;
   final String? shopLogoUrl;
+  final String? address;
+  final double? latitude;
+  final double? longitude;
 
   OrderBagModel({
     required this.id,
@@ -61,20 +64,69 @@ class OrderBagModel {
     required this.pickupEndTime,
     this.shopName,
     this.shopLogoUrl,
+    this.address,
+    this.latitude,
+    this.longitude,
   });
 
   factory OrderBagModel.fromJson(Map<String, dynamic> json) {
+    final store = json['store'] is Map
+        ? Map<String, dynamic>.from(json['store'] as Map)
+        : null;
+    final business = json['business'] is Map
+        ? Map<String, dynamic>.from(json['business'] as Map)
+        : null;
+
     return OrderBagModel(
       id: json['id'] as int,
       title: json['title'] as String,
       description: json['description'] as String,
-      imageUrl: json['image_url'] as String?,
+      imageUrl: (json['image_url'] ?? json['bag_image_url'] ?? json['image'])
+          ?.toString(),
       discountedPrice: (json['discounted_price'] as num).toDouble(),
       originalPrice: (json['original_price'] as num).toDouble(),
-      pickupStartTime: DateTime.parse(json['pickup_start_time'] as String).toLocal(),
-      pickupEndTime: DateTime.parse(json['pickup_end_time'] as String).toLocal(),
-      shopName: json['shop_name'] as String?,
-      shopLogoUrl: json['shop_logo_url'] as String?,
+      pickupStartTime: DateTime.parse(
+        json['pickup_start_time'] as String,
+      ).toLocal(),
+      pickupEndTime: DateTime.parse(
+        json['pickup_end_time'] as String,
+      ).toLocal(),
+      shopName:
+          (json['business_name'] ??
+                  json['shop_name'] ??
+                  business?['name'] ??
+                  store?['name'])
+              ?.toString(),
+      shopLogoUrl:
+          (json['business_logo_url'] ??
+                  json['shop_logo_url'] ??
+                  business?['logo_url'] ??
+                  store?['logo_url'])
+              ?.toString(),
+      address:
+          (json['address'] ??
+                  json['full_address'] ??
+                  json['location_address'] ??
+                  business?['address'] ??
+                  store?['address'])
+              ?.toString(),
+      latitude: _toDouble(
+        json['latitude'] ??
+            json['lat'] ??
+            business?['latitude'] ??
+            store?['latitude'],
+      ),
+      longitude: _toDouble(
+        json['longitude'] ??
+            json['lng'] ??
+            business?['longitude'] ??
+            store?['longitude'],
+      ),
     );
+  }
+
+  static double? _toDouble(dynamic value) {
+    if (value is num) return value.toDouble();
+    return double.tryParse(value?.toString() ?? '');
   }
 }
