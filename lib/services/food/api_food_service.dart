@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
@@ -17,13 +18,25 @@ class ApiFoodService implements IFoodService {
     _token = token;
   }
 
-  Map<String, String> get _headers {
-    final headers = {
-      'Content-Type': 'application/json',
-      if (_token != null) 'Authorization': 'Bearer $_token',
-    };
-    debugPrint('🔑 [ApiFoodService] Headers: $headers');
-    return headers;
+  Map<String, String> get _headers => {
+    'Content-Type': 'application/json',
+    if (_token != null) 'Authorization': 'Bearer $_token',
+  };
+
+  Future<http.Response> _getWithSingleTimeoutRetry(Uri url) async {
+    try {
+      return await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+    } on TimeoutException {
+      debugPrint(
+        '⏱️ [ApiFoodService] GET zaman aşımına uğradı, bir kez tekrar deneniyor: ${url.path}',
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 750));
+      return _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+    }
   }
 
   @override
@@ -58,18 +71,9 @@ class ApiFoodService implements IFoodService {
         for (var item in data) {
           try {
             if (item is Map<String, dynamic>) {
-              // Detaylı log bastırma
-              debugPrint('--- 📦 İlan Detayı (Ham Veri) ---');
-              debugPrint(const JsonEncoder.withIndent('  ').convert(item));
-
               final businessModel = BusinessListingModel.fromJson(item);
               final foodListing = businessModel.toFoodListing();
               listings.add(foodListing);
-
-              debugPrint(
-                '✅ İşlenen Model: ${foodListing.title} | Kat: ${foodListing.category} | Fiyat: ${foodListing.price}',
-              );
-              debugPrint('---------------------------------');
             } else {
               debugPrint('⚠️ [ApiFoodService] Öğe bir Map değil: $item');
             }
@@ -86,7 +90,7 @@ class ApiFoodService implements IFoodService {
         return listings;
       } else {
         debugPrint(
-          '❌ [ApiFoodService] API Hatası (${response.statusCode}): ${response.body}',
+          '❌ [ApiFoodService] API isteği başarısız: ${response.statusCode}',
         );
         return [];
       }
@@ -170,7 +174,7 @@ class ApiFoodService implements IFoodService {
         return listings;
       } else {
         debugPrint(
-          '❌ [ApiFoodService] Popüler API Hatası (${response.statusCode}): ${response.body}',
+          '❌ [ApiFoodService] Popüler API isteği başarısız: ${response.statusCode}',
         );
         return [];
       }
@@ -254,7 +258,7 @@ class ApiFoodService implements IFoodService {
         return listings;
       } else {
         debugPrint(
-          '❌ [ApiFoodService] Popüler Bugün API Hatası (${response.statusCode}): ${response.body}',
+          '❌ [ApiFoodService] Popüler bugün isteği başarısız: ${response.statusCode}',
         );
         return [];
       }
@@ -379,7 +383,9 @@ class ApiFoodService implements IFoodService {
       if (response.statusCode == 200) {
         debugPrint('✅ [ApiFoodService] Favori silindi: $favoriteId');
       } else {
-        debugPrint('❌ [ApiFoodService] Favori silme hatası: ${response.body}');
+        debugPrint(
+          '❌ [ApiFoodService] Favori silme başarısız: ${response.statusCode}',
+        );
       }
     } catch (e) {
       debugPrint('🚨 [ApiFoodService] removeFavorite hatası: $e');
@@ -466,27 +472,28 @@ class ApiFoodService implements IFoodService {
 
       final headers = {..._headers, 'Idempotency-Key': idempotencyKey};
 
-      debugPrint(
-        '📡 [ApiFoodService] POST Order: $url | Body: $body | Idempotency-Key: $idempotencyKey',
-      );
+      debugPrint('📡 [ApiFoodService] POST Order: ${url.path}');
 
       final response = await _client
           .post(url, headers: headers, body: body)
           .timeout(ApiConstants.requestTimeout);
 
-      debugPrint(
-        '📥 [ApiFoodService] Order Response: ${response.statusCode} | ${response.body}',
-      );
+      debugPrint('📥 [ApiFoodService] Order Response: ${response.statusCode}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         debugPrint('✅ [ApiFoodService] Sipariş oluşturuldu');
         return true;
       } else {
-        debugPrint('❌ [ApiFoodService] Sipariş hatası: ${response.body}');
+        debugPrint(
+          '❌ [ApiFoodService] Sipariş isteği başarısız: ${response.statusCode}',
+        );
         return false;
       }
+    } on TimeoutException {
+      debugPrint('⏱️ [ApiFoodService] Sipariş isteği zaman aşımına uğradı');
+      return false;
     } catch (e) {
-      debugPrint('🚨 [ApiFoodService] createOrder hatası: $e');
+      debugPrint('🚨 [ApiFoodService] createOrder başarısız');
       return false;
     }
   }
@@ -501,12 +508,15 @@ class ApiFoodService implements IFoodService {
           .post(url, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
 
-      debugPrint(
-        '📥 [ApiFoodService] Cancel Order: ${response.statusCode} | ${response.body}',
-      );
+      debugPrint('📥 [ApiFoodService] Cancel Order: ${response.statusCode}');
       return response.statusCode >= 200 && response.statusCode < 300;
+    } on TimeoutException {
+      debugPrint(
+        '⏱️ [ApiFoodService] İptal isteği zaman aşımına uğradı; güvenlik nedeniyle otomatik tekrar gönderilmedi',
+      );
+      return false;
     } catch (e) {
-      debugPrint('🚨 [ApiFoodService] cancelOrder hatası: $e');
+      debugPrint('🚨 [ApiFoodService] cancelOrder başarısız');
       return false;
     }
   }
@@ -516,9 +526,7 @@ class ApiFoodService implements IFoodService {
     try {
       final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.myOrders}');
       debugPrint('📡 [ApiFoodService] GET Request: $url');
-      final response = await _client
-          .get(url, headers: _headers)
-          .timeout(ApiConstants.requestTimeout);
+      final response = await _getWithSingleTimeoutRetry(url);
       debugPrint(
         '📥 [ApiFoodService] getMyOrders Status: ${response.statusCode}',
       );
@@ -547,8 +555,13 @@ class ApiFoodService implements IFoodService {
         return orders;
       }
       return [];
+    } on TimeoutException {
+      debugPrint(
+        '⏱️ [ApiFoodService] Siparişler iki denemede de zaman aşımına uğradı',
+      );
+      return [];
     } catch (e) {
-      debugPrint('🚨 [ApiFoodService] getMyOrders hatası: $e');
+      debugPrint('🚨 [ApiFoodService] getMyOrders başarısız');
       return [];
     }
   }

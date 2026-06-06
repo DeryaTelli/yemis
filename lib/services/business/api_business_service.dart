@@ -13,9 +13,9 @@ class ApiBusinessService implements IBusinessService {
   void setToken(String? token) => _authToken = token;
 
   Map<String, String> get _headers => {
-        'Content-Type': 'application/json',
-        if (_authToken != null) 'Authorization': 'Bearer $_authToken',
-      };
+    'Content-Type': 'application/json',
+    if (_authToken != null) 'Authorization': 'Bearer $_authToken',
+  };
 
   @override
   Future<bool> createBag(Map<String, dynamic> data) async {
@@ -30,11 +30,7 @@ class ApiBusinessService implements IBusinessService {
 
     try {
       final response = await _client
-          .post(
-            url,
-            headers: _headers,
-            body: jsonEncode(data),
-          )
+          .post(url, headers: _headers, body: jsonEncode(data))
           .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
@@ -58,12 +54,16 @@ class ApiBusinessService implements IBusinessService {
 
   @override
   Future<List<BusinessListingModel>> getMyUnsoldBags() async {
-    return _fetchBagsFromUrl('${ApiConstants.baseUrl}${ApiConstants.myUnsoldBags}');
+    return _fetchBagsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.myUnsoldBags}',
+    );
   }
 
   @override
   Future<List<BusinessListingModel>> getMySoldBags() async {
-    return _fetchBagsFromUrl('${ApiConstants.baseUrl}${ApiConstants.mySoldBags}');
+    return _fetchBagsFromUrl(
+      '${ApiConstants.baseUrl}${ApiConstants.mySoldBags}',
+    );
   }
 
   Future<List<BusinessListingModel>> _fetchBagsFromUrl(String urlString) async {
@@ -79,7 +79,7 @@ class ApiBusinessService implements IBusinessService {
       final response = await _client
           .get(url, headers: _headers)
           .timeout(ApiConstants.requestTimeout);
-      
+
       if (kDebugMode) {
         print('--- API RESPONSE (GET BAGS) ---');
         print('Status Code: ${response.statusCode}');
@@ -90,7 +90,7 @@ class ApiBusinessService implements IBusinessService {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final decoded = jsonDecode(response.body);
         List<dynamic> data = [];
-        
+
         if (decoded is List) {
           data = decoded;
         } else if (decoded is Map && decoded.containsKey('data')) {
@@ -99,12 +99,15 @@ class ApiBusinessService implements IBusinessService {
           data = decoded['bags'] as List;
         }
 
-        return data.map((e) {
-          if (e is Map<String, dynamic>) {
-            return BusinessListingModel.fromJson(e);
-          }
-          return null;
-        }).whereType<BusinessListingModel>().toList();
+        return data
+            .map((e) {
+              if (e is Map<String, dynamic>) {
+                return BusinessListingModel.fromJson(e);
+              }
+              return null;
+            })
+            .whereType<BusinessListingModel>()
+            .toList();
       }
     } catch (e) {
       if (kDebugMode) print('Error fetching bags from $urlString: $e');
@@ -124,7 +127,6 @@ class ApiBusinessService implements IBusinessService {
       print('--- API REQUEST (DELETE BAG) ---');
       print('URL: $url');
       print('Method: DELETE');
-      print('Headers: $headers');
       print('------------------------------');
     }
 
@@ -136,7 +138,6 @@ class ApiBusinessService implements IBusinessService {
       if (kDebugMode) {
         print('--- API RESPONSE ---');
         print('Status Code: ${response.statusCode}');
-        print('Body: ${response.body}');
         print('--------------------');
       }
 
@@ -154,17 +155,12 @@ class ApiBusinessService implements IBusinessService {
     if (kDebugMode) {
       print('--- API REQUEST (PUT BAG) ---');
       print('URL: $url');
-      print('Body: ${jsonEncode(data)}');
       print('-----------------------------');
     }
 
     try {
       final response = await _client
-          .put(
-            url,
-            headers: _headers,
-            body: jsonEncode(data),
-          )
+          .put(url, headers: _headers, body: jsonEncode(data))
           .timeout(ApiConstants.requestTimeout);
 
       if (kDebugMode) {
@@ -183,7 +179,9 @@ class ApiBusinessService implements IBusinessService {
 
   @override
   Future<BusinessDashboardModel?> getDashboardStats() async {
-    final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.businessDashboard}');
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.businessDashboard}',
+    );
 
     if (kDebugMode) {
       print('--- API REQUEST (GET DASHBOARD) ---');

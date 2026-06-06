@@ -22,6 +22,7 @@ class FoodHomeViewModel extends ChangeNotifier {
   final IFoodService _service;
   final UserSession _userSession;
   bool _isDisposed = false;
+  bool _isInitializing = false;
 
   void _safeNotify() {
     if (_isDisposed) return;
@@ -103,6 +104,8 @@ class FoodHomeViewModel extends ChangeNotifier {
   // ─── Init ─────────────────────────────────────────────
 
   Future<void> init() async {
+    if (_isInitializing) return;
+    _isInitializing = true;
     debugPrint('🚀 [FoodHomeVM] Başlatılıyor...');
     _isLoading = true;
     _safeNotify();
@@ -154,6 +157,7 @@ class FoodHomeViewModel extends ChangeNotifier {
     } catch (e) {
       debugPrint('❌ [FoodHomeVM] Hata: $e');
     } finally {
+      _isInitializing = false;
       _isLoading = false;
       _safeNotify();
     }

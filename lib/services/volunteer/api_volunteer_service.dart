@@ -230,8 +230,6 @@ class ApiVolunteerService implements IVolunteerService {
     if (kDebugMode) {
       print('--- API REQUEST (POST MEAL) ---');
       print('URL: $url');
-      print('Headers: $_headers');
-      print('Body: ${jsonEncode(data)}');
       print('-------------------------------');
     }
 
@@ -243,7 +241,6 @@ class ApiVolunteerService implements IVolunteerService {
       if (kDebugMode) {
         print('--- API RESPONSE (POST MEAL) ---');
         print('Status Code: ${response.statusCode}');
-        print('Body: ${response.body}');
         print('--------------------------------');
       }
 
@@ -294,8 +291,6 @@ class ApiVolunteerService implements IVolunteerService {
     if (kDebugMode) {
       print('--- API REQUEST (PUT MEAL) ---');
       print('URL: $url');
-      print('Headers: $_headers');
-      print('Body: ${jsonEncode(data)}');
       print('------------------------------');
     }
 
@@ -307,7 +302,6 @@ class ApiVolunteerService implements IVolunteerService {
       if (kDebugMode) {
         print('--- API RESPONSE (PUT MEAL) ---');
         print('Status Code: ${response.statusCode}');
-        print('Body: ${response.body}');
         print('-------------------------------');
       }
 
@@ -327,7 +321,6 @@ class ApiVolunteerService implements IVolunteerService {
     if (kDebugMode) {
       print('--- API REQUEST (POST VOLUNTEER) ---');
       print('URL: $url');
-      print('Headers: $_headers');
       print('------------------------------------');
     }
 
@@ -339,7 +332,6 @@ class ApiVolunteerService implements IVolunteerService {
       if (kDebugMode) {
         print('--- API RESPONSE (POST VOLUNTEER) ---');
         print('Status Code: ${response.statusCode}');
-        print('Body: ${response.body}');
         print('-------------------------------------');
       }
 
