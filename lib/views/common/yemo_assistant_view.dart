@@ -10,6 +10,8 @@ import 'package:yemis/viewmodels/common/yemo_assistant_viewmodel.dart';
 import 'package:yemis/models/business/business_listing_model.dart';
 import 'package:yemis/models/food/food_listing.dart';
 import 'package:yemis/widgets/food/food_listing_card.dart';
+import 'package:yemis/models/volunteer/volunteer_active_listing_model.dart';
+import 'package:yemis/widgets/volunteer/volunteer_listing_card.dart';
 
 class YemoAssistantView extends StatelessWidget {
   final AppModuleType moduleType;
@@ -20,7 +22,10 @@ class YemoAssistantView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) =>
-          YemoAssistantViewModel(service: context.read<IAssistantService>()),
+          YemoAssistantViewModel(
+            service: context.read<IAssistantService>(),
+            moduleType: moduleType,
+          ),
       child: _YemoAssistantBody(moduleType: moduleType),
     );
   }
@@ -480,29 +485,55 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                     child: Column(
                       children: msg.nearbyListings.map((rawItem) {
                         try {
-                          final businessModel = BusinessListingModel.fromJson(rawItem);
-                          final listing = businessModel.toFoodListing();
-                          final distance = rawItem['distance'];
-                          final locationStr = distance != null 
-                              ? '${distance.toString()} km'
-                              : listing.location;
-                          final updatedListing = listing.copyWith(location: locationStr);
+                          final isVolModule = widget.moduleType == AppModuleType.volunteer;
+                          if (isVolModule) {
+                            final volunteerModel = VolunteerActiveListingModel.fromJson(rawItem);
+                            final listing = volunteerModel.toVolunteerListing();
+                            final distance = rawItem['distance'];
+                            final locationStr = distance != null 
+                                ? '${distance.toString()} km'
+                                : listing.location;
+                            final updatedListing = listing.copyWith(location: locationStr);
 
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: FoodListingCard(
-                              listing: updatedListing,
-                              width: double.infinity,
-                              onFavoriteTap: () {},
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  AppRoutes.foodDetail,
-                                  arguments: updatedListing,
-                                );
-                              },
-                            ),
-                          );
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: VolunteerListingCard(
+                                listing: updatedListing,
+                                width: double.infinity,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.volunteerDetail,
+                                    arguments: updatedListing,
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            final businessModel = BusinessListingModel.fromJson(rawItem);
+                            final listing = businessModel.toFoodListing();
+                            final distance = rawItem['distance'];
+                            final locationStr = distance != null 
+                                ? '${distance.toString()} km'
+                                : listing.location;
+                            final updatedListing = listing.copyWith(location: locationStr);
+
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: FoodListingCard(
+                                listing: updatedListing,
+                                width: double.infinity,
+                                onFavoriteTap: () {},
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.foodDetail,
+                                    arguments: updatedListing,
+                                  );
+                                },
+                              ),
+                            );
+                          }
                         } catch (e) {
                           debugPrint('Error mapping nearby listing card: $e');
                           return const SizedBox();

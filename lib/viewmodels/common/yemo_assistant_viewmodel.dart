@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import '../../services/common/assistant_service.dart';
 
@@ -25,9 +26,12 @@ class ChatMessage {
 
 class YemoAssistantViewModel extends ChangeNotifier {
   final IAssistantService _service;
+  final AppModuleType moduleType;
 
-  YemoAssistantViewModel({required IAssistantService service})
-    : _service = service;
+  YemoAssistantViewModel({
+    required IAssistantService service,
+    required this.moduleType,
+  }) : _service = service;
 
   bool _isDisposed = false;
   final List<ChatMessage> _messages = [];
@@ -56,6 +60,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
         trimmed,
         latitude: latitude,
         longitude: longitude,
+        module: moduleType.name,
       );
       if (_isDisposed) return;
 

@@ -71,6 +71,7 @@ abstract class IAssistantService {
     String message, {
     double? latitude,
     double? longitude,
+    String? module,
   });
 }
 
@@ -89,6 +90,7 @@ class ApiAssistantService implements IAssistantService {
     String message, {
     double? latitude,
     double? longitude,
+    String? module,
   }) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.assistantAsk}');
 
@@ -96,12 +98,14 @@ class ApiAssistantService implements IAssistantService {
     print('URL: $url');
     print('Message: $message');
     print('Location: $latitude, $longitude');
+    print('Module: $module');
 
     try {
       final bodyMap = {
         'message': message,
         if (latitude != null) 'latitude': latitude,
         if (longitude != null) 'longitude': longitude,
+        if (module != null) 'module': module,
       };
 
       final response = await http
