@@ -54,7 +54,7 @@ class ApiVolunteerService implements IVolunteerService {
   @override
   Future<List<VolunteerListing>> getActiveListings() async {
     return _fetchVolunteerListingsFromUrl(
-      '${ApiConstants.baseUrl}${ApiConstants.myActiveTasks}',
+      '${ApiConstants.baseUrl}${ApiConstants.myActiveMeals}',
     );
   }
 
