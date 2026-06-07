@@ -28,5 +28,9 @@ abstract class IBusinessService {
   Future<List<BusinessOrderApprovalModel>> getOrderApprovals();
 
   /// Müşteriye teslim edilen siparişi picked_up durumuna geçirir.
-  Future<bool> confirmOrderPickup(int orderId);
+  Future<bool> confirmOrderPickup(
+    int orderId, {
+    String? pickupCode,
+    String? pickupQrToken,
+  });
 }

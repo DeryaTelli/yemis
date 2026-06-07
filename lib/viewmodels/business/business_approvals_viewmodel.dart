@@ -75,7 +75,11 @@ class BusinessApprovalsViewModel extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    final success = await _businessService.confirmOrderPickup(order.id);
+    final success = await _businessService.confirmOrderPickup(
+      order.id,
+      pickupCode: order.pickupCode,
+      pickupQrToken: order.pickupQrToken,
+    );
     if (success) {
       _orders.removeWhere((item) => item.id == order.id);
       _matchedOrder = null;

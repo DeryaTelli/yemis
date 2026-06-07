@@ -268,13 +268,24 @@ class ApiBusinessService implements IBusinessService {
   }
 
   @override
-  Future<bool> confirmOrderPickup(int orderId) async {
+  Future<bool> confirmOrderPickup(
+    int orderId, {
+    String? pickupCode,
+    String? pickupQrToken,
+  }) async {
     final url = Uri.parse(
       '${ApiConstants.baseUrl}${ApiConstants.confirmOrderPickup(orderId)}',
     );
     try {
       final response = await _client
-          .post(url, headers: _headers)
+          .post(
+            url,
+            headers: _headers,
+            body: jsonEncode({
+              'pickup_code': pickupCode,
+              'pickup_qr_token': pickupQrToken,
+            }),
+          )
           .timeout(ApiConstants.requestTimeout);
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
