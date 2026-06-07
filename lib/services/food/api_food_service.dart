@@ -324,29 +324,38 @@ class ApiFoodService implements IFoodService {
         List<dynamic> data = [];
         if (decoded is List) {
           data = decoded;
-        } else if (decoded is Map && decoded.containsKey('data')) {
-          data = decoded['data'] as List;
+        } else if (decoded is Map) {
+          final nested = decoded['data'] ?? decoded['reviews'];
+          if (nested is List) data = nested;
         }
 
         final List<FoodReview> reviews = [];
         for (var item in data) {
           if (item is Map<String, dynamic>) {
+            final user = item['user'] is Map ? item['user'] as Map : const {};
             final List<String> photoUrls = [];
-            if (item['image_url_1'] != null && item['image_url_1'].toString().isNotEmpty) {
-              photoUrls.add(item['image_url_1'].toString());
-            }
-            if (item['image_url_2'] != null && item['image_url_2'].toString().isNotEmpty) {
-              photoUrls.add(item['image_url_2'].toString());
-            }
-            if (item['image_url_3'] != null && item['image_url_3'].toString().isNotEmpty) {
-              photoUrls.add(item['image_url_3'].toString());
+            for (final key in ['image_url_1', 'image_url_2', 'image_url_3']) {
+              final url = item[key]?.toString().trim();
+              if (url != null && url.isNotEmpty) photoUrls.add(url);
             }
 
             reviews.add(
               FoodReview(
                 id: item['id']?.toString() ?? '',
-                reviewerName: item['user_name']?.toString() ?? 'Kullanıcı',
-                avatarUrl: item['user_image_url']?.toString() ?? '',
+                reviewerName:
+                    (item['reviewer_name'] ??
+                            item['user_name'] ??
+                            user['full_name'] ??
+                            user['name'] ??
+                            'Kullanıcı')
+                        .toString(),
+                avatarUrl:
+                    (item['user_image_url'] ??
+                            item['reviewer_image_url'] ??
+                            user['profile_image_url'] ??
+                            user['image_url'] ??
+                            '')
+                        .toString(),
                 rating: double.tryParse(item['rating']?.toString() ?? '') ?? 0.0,
                 comment: item['comment']?.toString() ?? '',
                 date: item['created_at'] != null 

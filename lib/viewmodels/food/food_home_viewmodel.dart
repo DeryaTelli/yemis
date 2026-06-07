@@ -27,17 +27,22 @@ class FoodHomeViewModel extends ChangeNotifier {
   final UserSession _userSession;
   bool _isDisposed = false;
   bool _isInitializing = false;
+  bool _notificationScheduled = false;
 
   void _safeNotify() {
     if (_isDisposed) return;
     final binding = WidgetsBinding.instance;
-    if (binding.schedulerPhase == SchedulerPhase.persistentCallbacks) {
-      binding.addPostFrameCallback((_) {
-        if (!_isDisposed) notifyListeners();
-      });
-    } else {
+    if (binding.schedulerPhase == SchedulerPhase.idle) {
       notifyListeners();
+      return;
     }
+
+    if (_notificationScheduled) return;
+    _notificationScheduled = true;
+    binding.addPostFrameCallback((_) {
+      _notificationScheduled = false;
+      if (!_isDisposed) notifyListeners();
+    });
   }
 
   // ─── State ────────────────────────────────────────────

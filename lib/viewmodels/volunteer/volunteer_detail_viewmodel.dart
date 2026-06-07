@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../utils/locale_keys.dart';
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../models/volunteer/shelter_model.dart';
+import '../../models/food/food_review.dart';
 import '../../services/location/location_service.dart';
 import '../../services/volunteer/i_volunteer_service.dart';
 
@@ -48,6 +49,8 @@ class VolunteerDetailViewModel extends ChangeNotifier {
 
   VolunteerListing? _listing;
   VolunteerListing? get listing => _listing;
+  List<FoodReview> _reviews = [];
+  List<FoodReview> get reviews => _reviews;
 
   /// 0 = Sipariş, 1 = Yorum
   int _selectedTab = 0;
@@ -107,7 +110,13 @@ class VolunteerDetailViewModel extends ChangeNotifier {
     Future.microtask(() => notifyListeners());
 
     try {
-      final freshListing = await _service.getVolunteerDetail(_listingId);
+      final mealId = int.tryParse(_listingId);
+      final results = await Future.wait([
+        _service.getVolunteerDetail(_listingId),
+        if (mealId != null) _service.getMealReviews(mealId),
+      ]);
+      final freshListing = results.first as VolunteerListing;
+      _reviews = mealId == null ? [] : results[1] as List<FoodReview>;
       _listing = freshListing.copyWith(
         taskId: freshListing.taskId ?? _listing?.taskId,
         deliveryStatus: freshListing.deliveryStatus == DeliveryStatus.pendingOwnerApproval

@@ -34,8 +34,7 @@ class UserSession extends ChangeNotifier {
     if (!hasListeners) return;
 
     final phase = SchedulerBinding.instance.schedulerPhase;
-    if (phase == SchedulerPhase.idle ||
-        phase == SchedulerPhase.postFrameCallbacks) {
+    if (phase == SchedulerPhase.idle) {
       notifyListeners();
       return;
     }

@@ -6,6 +6,7 @@ import 'package:yemis/models/volunteer/volunteer_active_listing_model.dart';
 import 'package:yemis/models/volunteer/shelter_model.dart';
 import 'package:yemis/utils/constants/api_constants.dart';
 import 'package:yemis/services/volunteer/i_volunteer_service.dart';
+import '../../models/food/food_review.dart';
 
 class ApiVolunteerService implements IVolunteerService {
   final http.Client _client = http.Client();
@@ -49,6 +50,60 @@ class ApiVolunteerService implements IVolunteerService {
     );
     if (list.isNotEmpty) return list.first;
     throw Exception('Listing not found');
+  }
+
+  @override
+  Future<List<FoodReview>> getMealReviews(int mealId) async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.reviewsForMeal(mealId)}',
+    );
+    try {
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      if (response.statusCode < 200 || response.statusCode >= 300) return [];
+
+      final decoded = jsonDecode(response.body);
+      final dynamic nested = decoded is Map
+          ? decoded['data'] ?? decoded['reviews']
+          : decoded;
+      if (nested is! List) return [];
+
+      return nested.whereType<Map>().map((item) {
+        final user = item['user'] is Map ? item['user'] as Map : const {};
+        final photoUrls = <String>[
+          for (final key in ['image_url_1', 'image_url_2', 'image_url_3'])
+            if (item[key]?.toString().trim().isNotEmpty == true)
+              item[key].toString(),
+        ];
+        return FoodReview(
+          id: item['id']?.toString() ?? '',
+          reviewerName:
+              (item['reviewer_name'] ??
+                      item['user_name'] ??
+                      user['full_name'] ??
+                      user['name'] ??
+                      'Kullanıcı')
+                  .toString(),
+          avatarUrl:
+              (item['user_image_url'] ??
+                      item['reviewer_image_url'] ??
+                      user['profile_image_url'] ??
+                      user['image_url'] ??
+                      '')
+                  .toString(),
+          rating: double.tryParse(item['rating']?.toString() ?? '') ?? 0,
+          comment: item['comment']?.toString() ?? '',
+          date:
+              DateTime.tryParse(item['created_at']?.toString() ?? '') ??
+              DateTime.now(),
+          photoUrls: photoUrls,
+        );
+      }).toList();
+    } catch (e) {
+      debugPrint('Error fetching meal reviews: $e');
+      return [];
+    }
   }
 
   @override
