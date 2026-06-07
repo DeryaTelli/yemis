@@ -237,6 +237,22 @@
         "soldOrdersTitle": "Satılan Siparişler",
         "expiredListings": "Süresi Dolan İlanlar"
     },
+    "businessReports": {
+        "title": "Raporlar & Analiz",
+        "totalRevenue": "Toplam Gelir",
+        "mealsSaved": "Kurtarılan Öğün",
+        "sellThroughRate": "Satış Oranı",
+        "co2Saved": "Önlenen CO₂",
+        "wastePrevented": "Engellenen Atık",
+        "rating": "İşletme Puanı",
+        "activeListings": "Aktif İlanlar",
+        "soldOutListings": "Tükenen İlanlar",
+        "unsoldListings": "Süresi Dolanlar",
+        "totalOrders": "Toplam Sipariş",
+        "environmentalImpact": "Çevresel Etki Özeti",
+        "performanceSummary": "İlan Performans Özeti",
+        "noData": "Veri bulunamadı."
+    },
     "businessAddOrder": {
         "title": "Sipariş Ekle",
         "photoLabel": "İlan Fotoğrafı Ekle",

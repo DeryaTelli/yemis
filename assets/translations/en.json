@@ -237,6 +237,22 @@
                             "soldOrdersTitle":  "Sold Orders",
                             "expiredListings":  "Expired Listings"
                         },
+    "businessReports":  {
+                            "title":  "Reports & Analytics",
+                            "totalRevenue":  "Total Revenue",
+                            "mealsSaved":  "Meals Saved",
+                            "sellThroughRate":  "Sell-Through Rate",
+                            "co2Saved":  "CO2 Prevented",
+                            "wastePrevented":  "Waste Prevented",
+                            "rating":  "Business Rating",
+                            "activeListings":  "Active Listings",
+                            "soldOutListings":  "Sold Out Listings",
+                            "unsoldListings":  "Unsold/Expired",
+                            "totalOrders":  "Total Orders",
+                            "environmentalImpact":  "Environmental Impact Summary",
+                            "performanceSummary":  "Listing Performance Summary",
+                            "noData":  "No data available."
+                        },
     "businessAddOrder":  {
                              "title":  "Add Order",
                              "photoLabel":  "Add Listing Photo",

@@ -83,6 +83,8 @@ import 'views/business/business_approvals_view.dart';
 import 'views/business/business_listings_view.dart';
 import 'views/business/business_edit_order_view.dart';
 import 'views/business/business_listing_detail_view.dart';
+import 'views/business/business_reports_view.dart';
+import 'viewmodels/business/business_reports_viewmodel.dart';
 import 'views/common/notification_view.dart';
 import 'views/common/yemo_assistant_view.dart';
 import 'views/common/onboarding_view.dart';
@@ -595,6 +597,14 @@ class MyApp extends StatelessWidget {
                   settings.arguments as AppModuleType? ?? AppModuleType.food;
               return MaterialPageRoute(
                 builder: (_) => YemoAssistantView(moduleType: moduleType),
+                settings: settings,
+              );
+            case AppRoutes.businessReports:
+              return MaterialPageRoute(
+                builder: (ctx) => ChangeNotifierProvider(
+                  create: (_) => BusinessReportsViewModel(ctx.read<IBusinessService>()),
+                  child: const BusinessReportsView(),
+                ),
                 settings: settings,
               );
             default:

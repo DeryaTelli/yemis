@@ -47,4 +47,5 @@ class AppRoutes {
   static const String changePassword = '/change-password';
   static const String notification = '/notification';
   static const String yemoAssistant = '/yemo-assistant';
+  static const String businessReports = '/business/reports';
 }

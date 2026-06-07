@@ -307,7 +307,61 @@ class ApiFoodService implements IFoodService {
 
   @override
   Future<List<FoodReview>> getFoodReviews(String id) async {
-    // Şimdilik boş veya mock dönebiliriz, API'de reviews endpoint'i kontrol edilmeli
+    try {
+      final bagId = int.tryParse(id);
+      if (bagId == null) return [];
+
+      final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.reviewsForBag(bagId)}');
+      debugPrint('📡 [ApiFoodService] GET Bag Reviews Request: $url');
+
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+      debugPrint('📥 [ApiFoodService] Bag Reviews Response Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        List<dynamic> data = [];
+        if (decoded is List) {
+          data = decoded;
+        } else if (decoded is Map && decoded.containsKey('data')) {
+          data = decoded['data'] as List;
+        }
+
+        final List<FoodReview> reviews = [];
+        for (var item in data) {
+          if (item is Map<String, dynamic>) {
+            final List<String> photoUrls = [];
+            if (item['image_url_1'] != null && item['image_url_1'].toString().isNotEmpty) {
+              photoUrls.add(item['image_url_1'].toString());
+            }
+            if (item['image_url_2'] != null && item['image_url_2'].toString().isNotEmpty) {
+              photoUrls.add(item['image_url_2'].toString());
+            }
+            if (item['image_url_3'] != null && item['image_url_3'].toString().isNotEmpty) {
+              photoUrls.add(item['image_url_3'].toString());
+            }
+
+            reviews.add(
+              FoodReview(
+                id: item['id']?.toString() ?? '',
+                reviewerName: item['user_name']?.toString() ?? 'Kullanıcı',
+                avatarUrl: item['user_image_url']?.toString() ?? '',
+                rating: double.tryParse(item['rating']?.toString() ?? '') ?? 0.0,
+                comment: item['comment']?.toString() ?? '',
+                date: item['created_at'] != null 
+                    ? DateTime.tryParse(item['created_at'].toString()) ?? DateTime.now()
+                    : DateTime.now(),
+                photoUrls: photoUrls,
+              ),
+            );
+          }
+        }
+        return reviews;
+      }
+    } catch (e) {
+      debugPrint('🚨 [ApiFoodService] getFoodReviews error: $e');
+    }
     return [];
   }
 

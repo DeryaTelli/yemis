@@ -158,7 +158,10 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                         ProfileMenuTile(
                           icon: Icons.bar_chart_rounded,
                           title: LocaleKeys.businessProfile_reports.tr(),
-                          onTap: () {},
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.businessReports,
+                          ),
                         ),
                         ProfileMenuTile(
                           icon: Icons.list_alt_rounded,

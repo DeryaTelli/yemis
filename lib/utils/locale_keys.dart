@@ -828,4 +828,20 @@ abstract class LocaleKeys {
   static const taskTracking_btnGoShelter = 'taskTracking.btnGoShelter';
   static const taskTracking_btnComplete = 'taskTracking.btnComplete';
   static const taskTracking_btnCancel = 'taskTracking.btnCancel';
+
+  // businessReports
+  static const businessReports_title = 'businessReports.title';
+  static const businessReports_totalRevenue = 'businessReports.totalRevenue';
+  static const businessReports_mealsSaved = 'businessReports.mealsSaved';
+  static const businessReports_sellThroughRate = 'businessReports.sellThroughRate';
+  static const businessReports_co2Saved = 'businessReports.co2Saved';
+  static const businessReports_wastePrevented = 'businessReports.wastePrevented';
+  static const businessReports_rating = 'businessReports.rating';
+  static const businessReports_activeListings = 'businessReports.activeListings';
+  static const businessReports_soldOutListings = 'businessReports.soldOutListings';
+  static const businessReports_unsoldListings = 'businessReports.unsoldListings';
+  static const businessReports_totalOrders = 'businessReports.totalOrders';
+  static const businessReports_environmentalImpact = 'businessReports.environmentalImpact';
+  static const businessReports_performanceSummary = 'businessReports.performanceSummary';
+  static const businessReports_noData = 'businessReports.noData';
 }

@@ -93,7 +93,10 @@ class BusinessHomeView extends StatelessWidget {
                       title: LocaleKeys.businessHome_reportsTitle.tr(),
                       description: LocaleKeys.businessHome_reportsDescription
                           .tr(),
-                      onTap: () {},
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.businessReports,
+                      ),
                     ),
                     const SizedBox(height: 16),
 
