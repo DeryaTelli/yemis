@@ -142,13 +142,18 @@ class _BodyState extends State<_Body> {
                           const SizedBox(width: 10),
                           Text(
                             vm.selectedCategory != null
-                                ? (vm.selectedCategory!.toLowerCase() == 'patiseri'
-                                    ? LocaleKeys.businessListingDetail_breadPastry.tr()
-                                    : vm.selectedCategory!
-                                              .substring(0, 1)
-                                              .toUpperCase() +
-                                          vm.selectedCategory!.substring(1))
-                                : LocaleKeys.businessAddOrder_categoryPlaceholder.tr(),
+                                ? (vm.selectedCategory!.toLowerCase() ==
+                                          'patiseri'
+                                      ? LocaleKeys
+                                            .businessListingDetail_breadPastry
+                                            .tr()
+                                      : vm.selectedCategory!
+                                                .substring(0, 1)
+                                                .toUpperCase() +
+                                            vm.selectedCategory!.substring(1))
+                                : LocaleKeys
+                                      .businessAddOrder_categoryPlaceholder
+                                      .tr(),
                             style: TextStyle(
                               color: vm.selectedCategory != null
                                   ? AppColors.primaryTextColor
@@ -194,7 +199,10 @@ class _BodyState extends State<_Body> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [_label(LocaleKeys.businessAddOrder_quantityLabel.tr()), _buildQuantityRow(vm)],
+                children: [
+                  _label(LocaleKeys.businessAddOrder_quantityLabel.tr()),
+                  _buildQuantityRow(vm),
+                ],
               ),
               const SizedBox(height: 16),
 
@@ -271,7 +279,8 @@ class _BodyState extends State<_Body> {
                         SuccessDialogCustom.show(
                           context,
                           title: LocaleKeys.businessEditOrder_successTitle.tr(),
-                          message: LocaleKeys.businessEditOrder_successMessage.tr(),
+                          message: LocaleKeys.businessEditOrder_successMessage
+                              .tr(),
                           onConfirm: () {
                             Navigator.pop(context, true);
                           },
@@ -339,7 +348,9 @@ class _BodyState extends State<_Body> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                vm.locationAddress.isEmpty ? LocaleKeys.common_selectLocation.tr() : vm.locationAddress,
+                vm.locationAddress.isEmpty
+                    ? LocaleKeys.common_selectLocation.tr()
+                    : vm.locationAddress,
                 style: TextStyle(
                   color: vm.locationAddress.isEmpty
                       ? Colors.grey
