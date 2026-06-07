@@ -18,6 +18,7 @@ class ApiConstants {
   static const String uploadImage = '/api/upload/image';
 
   // --- Reviews ---
+  static const String reviews = '/api/reviews';
   static String reviewsForStore(int storeId) => '/api/reviews/stores/$storeId';
   static String reviewsForBag(int bagId) => '/api/reviews/bags/$bagId';
   static String reviewsForMeal(int mealId) => '/api/reviews/meals/$mealId';

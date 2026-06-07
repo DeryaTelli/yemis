@@ -7,6 +7,7 @@ import 'package:yemis/viewmodels/business/business_reports_viewmodel.dart';
 import 'package:yemis/widgets/business/weekly_sales_card.dart';
 import 'package:yemis/widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
+import '../../services/auth/user_session.dart';
 
 class BusinessReportsView extends StatelessWidget {
   const BusinessReportsView({super.key});
@@ -16,38 +17,36 @@ class BusinessReportsView extends StatelessWidget {
     return Consumer<BusinessReportsViewModel>(
       builder: (context, vm, child) {
         final stats = vm.stats;
+        final profileImageUrl = context
+            .watch<UserSession>()
+            .currentUser
+            ?.imageUrl;
 
         return LoadingOverlay(
           isLoading: vm.isLoading,
           moduleType: AppModuleType.business,
           child: Scaffold(
-            backgroundColor: const Color(0xFFFAFAFA),
-            appBar: AppBar(
-              title: Text(
-                LocaleKeys.businessReports_title.tr(),
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () => Navigator.pop(context),
-              ),
-              backgroundColor: AppColors.primaryColor,
-              foregroundColor: Colors.white,
-              elevation: 0,
-            ),
+            backgroundColor: const Color(0xFFFFFBF6),
+            appBar: AppBar(title: Text(LocaleKeys.businessReports_title.tr())),
             body: RefreshIndicator(
               color: AppColors.primaryColor,
               onRefresh: vm.fetchStats,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
                 child: stats == null
                     ? SizedBox(
                         height: MediaQuery.of(context).size.height * 0.6,
                         child: Center(
                           child: Text(
                             LocaleKeys.businessReports_noData.tr(),
-                            style: const TextStyle(color: Colors.grey, fontSize: 16),
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       )
@@ -57,6 +56,7 @@ class BusinessReportsView extends StatelessWidget {
                           // --- Weekly Sales summary chart ---
                           WeeklySalesCard(
                             salesData: stats.weeklySales,
+                            imageUrl: profileImageUrl,
                           ),
                           const SizedBox(height: 16),
 
@@ -65,23 +65,26 @@ class BusinessReportsView extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: _buildKpiCard(
-                                  title: LocaleKeys.businessReports_totalRevenue.tr(),
-                                  value: "${stats.totalRevenue.toStringAsFixed(2)} TL",
-                                  icon: Icons.account_balance_wallet_rounded,
-                                  startColor: const Color(0xFFE8F5E9),
-                                  endColor: const Color(0xFFC8E6C9),
+                                  title: LocaleKeys.businessReports_totalRevenue
+                                      .tr(),
+                                  value:
+                                      "${stats.totalRevenue.toStringAsFixed(2)} TL",
+                                  icon: Icons.payments_rounded,
+                                  startColor: const Color(0xFFFFFFFF),
+                                  endColor: const Color(0xFFFFF8EE),
                                   textColor: const Color(0xFF2E7D32),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: _buildKpiCard(
-                                  title: LocaleKeys.businessReports_mealsSaved.tr(),
+                                  title: LocaleKeys.businessReports_mealsSaved
+                                      .tr(),
                                   value: "${stats.mealsSaved} ${' adet'}",
-                                  icon: Icons.eco_rounded,
-                                  startColor: const Color(0xFFFFF3E0),
-                                  endColor: const Color(0xFFFFE0B2),
-                                  textColor: const Color(0xFFE65100),
+                                  icon: Icons.restaurant_rounded,
+                                  startColor: const Color(0xFFFFF7EC),
+                                  endColor: const Color(0xFFFFE1B8),
+                                  textColor: AppColors.primaryColor,
                                 ),
                               ),
                             ],
@@ -120,36 +123,32 @@ class BusinessReportsView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [startColor, endColor],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: endColor.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.28),
+          width: 1.1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(icon, color: textColor, size: 24),
-            ],
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: textColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(13),
+              border: Border.all(color: textColor.withValues(alpha: 0.2)),
+            ),
+            child: Icon(icon, color: textColor, size: 22),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 14),
           Text(
             title,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: textColor.withOpacity(0.8),
+              color: textColor.withValues(alpha: 0.78),
             ),
           ),
           const SizedBox(height: 4),
@@ -174,36 +173,57 @@ class BusinessReportsView extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.primaryColor.withValues(alpha: 0.07),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.22),
+        ),
       ),
       child: Row(
         children: [
           Expanded(
             child: Row(
               children: [
-                SizedBox(
-                  width: 50,
-                  height: 50,
+                Container(
+                  width: 58,
+                  height: 58,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.primaryColor.withValues(alpha: 0.07),
+                    border: Border.all(
+                      color: AppColors.primaryColor.withValues(alpha: 0.18),
+                    ),
+                  ),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      CircularProgressIndicator(
-                        value: stats.sellThroughRate / 100,
-                        backgroundColor: Colors.orange.shade50,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
-                        strokeWidth: 5,
+                      SizedBox.expand(
+                        child: CircularProgressIndicator(
+                          value: (stats.sellThroughRate / 100).clamp(0.0, 1.0),
+                          backgroundColor: AppColors.primaryColor.withValues(
+                            alpha: 0.13,
+                          ),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryColor,
+                          ),
+                          strokeWidth: 5,
+                          strokeCap: StrokeCap.round,
+                        ),
                       ),
-                      Text(
-                        "${stats.sellThroughRate.toStringAsFixed(0)}%",
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.orange,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "${stats.sellThroughRate.toStringAsFixed(0)}%",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.primaryColor,
+                            letterSpacing: -0.4,
+                          ),
                         ),
                       ),
                     ],
@@ -225,10 +245,7 @@ class BusinessReportsView extends StatelessWidget {
                       const SizedBox(height: 2),
                       const Text(
                         "Satılan / Toplam",
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -236,11 +253,7 @@ class BusinessReportsView extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            height: 40,
-            width: 1,
-            color: Colors.grey.shade200,
-          ),
+          Container(height: 40, width: 1, color: Colors.grey.shade200),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -251,7 +264,9 @@ class BusinessReportsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      stats.rating > 0 ? stats.rating.toStringAsFixed(1) : "0.0",
+                      stats.rating > 0
+                          ? stats.rating.toStringAsFixed(1)
+                          : "0.0",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
@@ -280,16 +295,38 @@ class BusinessReportsView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F5E9).withOpacity(0.5),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFC8E6C9), width: 1.2),
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.22),
+          width: 1.1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.wb_sunny_rounded, color: Color(0xFF2E7D32), size: 22),
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2E7D32).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: const Icon(
+                  Icons.eco_rounded,
+                  color: Color(0xFF2E7D32),
+                  size: 20,
+                ),
+              ),
               const SizedBox(width: 8),
               Text(
                 LocaleKeys.businessReports_environmentalImpact.tr(),
@@ -367,12 +404,14 @@ class BusinessReportsView extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.primaryColor.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.22),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,8 +471,9 @@ class BusinessReportsView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                shape: BoxShape.circle,
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(11),
+                border: Border.all(color: color.withValues(alpha: 0.18)),
               ),
               child: Icon(icon, color: color, size: 18),
             ),

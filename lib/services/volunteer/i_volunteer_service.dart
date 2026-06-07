@@ -1,5 +1,6 @@
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/models/volunteer/shelter_model.dart';
+import '../../models/food/food_review.dart';
 
 /// Gönüllü servisi için arayüz.
 abstract class IVolunteerService {
@@ -11,6 +12,7 @@ abstract class IVolunteerService {
 
   /// ID'ye göre tek bir ilan detayı getirir.
   Future<VolunteerListing> getVolunteerDetail(String id);
+  Future<List<FoodReview>> getMealReviews(int mealId);
 
   /// Kullanıcının aktif oluşturduğu ilanları getirir.
   Future<List<VolunteerListing>> getActiveListings();

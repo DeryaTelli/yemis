@@ -7,33 +7,42 @@ import '../../models/food/food_listing.dart';
 import '../../models/food/order_model.dart';
 import '../../services/auth/user_session.dart';
 import '../../services/food/i_food_service.dart';
+import '../../services/review/i_review_service.dart';
 import '../../utils/routes/app_routes.dart';
 
 /// FoodHome ekranının ViewModel'i.
 class FoodHomeViewModel extends ChangeNotifier {
   FoodHomeViewModel({
     required IFoodService service,
+    required IReviewService reviewService,
     required UserSession userSession,
   }) : _service = service,
+       _reviewService = reviewService,
        _userSession = userSession {
     _userSession.addListener(_onUserSessionChanged);
   }
 
   final IFoodService _service;
+  final IReviewService _reviewService;
   final UserSession _userSession;
   bool _isDisposed = false;
   bool _isInitializing = false;
+  bool _notificationScheduled = false;
 
   void _safeNotify() {
     if (_isDisposed) return;
     final binding = WidgetsBinding.instance;
-    if (binding.schedulerPhase == SchedulerPhase.persistentCallbacks) {
-      binding.addPostFrameCallback((_) {
-        if (!_isDisposed) notifyListeners();
-      });
-    } else {
+    if (binding.schedulerPhase == SchedulerPhase.idle) {
       notifyListeners();
+      return;
     }
+
+    if (_notificationScheduled) return;
+    _notificationScheduled = true;
+    binding.addPostFrameCallback((_) {
+      _notificationScheduled = false;
+      if (!_isDisposed) notifyListeners();
+    });
   }
 
   // ─── State ────────────────────────────────────────────
@@ -54,8 +63,11 @@ class FoodHomeViewModel extends ChangeNotifier {
   List<FoodListing> _allListings = [];
   List<FoodListing> _popularListings = [];
   List<FoodListing> _popularTodayListings = [];
-  OrderModel? _latestActiveOrder;
-  OrderModel? get latestActiveOrder => _latestActiveOrder;
+  List<OrderModel> _activeOrders = [];
+  List<OrderModel> get activeOrders => List.unmodifiable(_activeOrders);
+  OrderModel? _pendingReviewOrder;
+  OrderModel? get pendingReviewOrder => _pendingReviewOrder;
+  final Set<int> _submittedReviewOrderIds = {};
 
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
@@ -165,29 +177,62 @@ class FoodHomeViewModel extends ChangeNotifier {
 
   Future<void> _fetchLatestActiveOrder() async {
     try {
-      final orders = await _service.getMyOrders();
+      final results = await Future.wait([
+        _service.getMyOrders(),
+        _reviewService.getMyReviews(),
+      ]);
+      final orders = results[0] as List<OrderModel>;
+      final reviewedOrderIds = (results[1] as List)
+          .map((review) => review.orderId)
+          .whereType<int>()
+          .toSet();
+
+      final pendingReviews = orders.where((order) {
+        final status = order.orderStatus.toLowerCase().replaceAll('-', '_');
+        return status == 'picked_up' &&
+            !order.hasReview &&
+            !reviewedOrderIds.contains(order.id) &&
+            !_submittedReviewOrderIds.contains(order.id);
+      }).toList()..sort((a, b) => a.orderTime.compareTo(b.orderTime));
+
+      _pendingReviewOrder = pendingReviews.isEmpty ? null : pendingReviews.first;
+
       final activeOrders = orders.where((order) {
-        final status = order.orderStatus.toLowerCase();
+        final status = order.orderStatus.toLowerCase().replaceAll('-', '_');
         return status != 'cancelled' &&
             status != 'canceled' &&
             status != 'picked_up' &&
             status != 'completed';
       }).toList()..sort((a, b) => b.orderTime.compareTo(a.orderTime));
 
-      _latestActiveOrder = activeOrders.isEmpty ? null : activeOrders.first;
+      _activeOrders = activeOrders;
     } catch (e) {
-      _latestActiveOrder = null;
+      _activeOrders = [];
+      _pendingReviewOrder = null;
       debugPrint('❌ [FoodHomeVM] Aktif sipariş hatası: $e');
     }
   }
 
-  Future<bool> cancelLatestOrder() async {
-    final order = _latestActiveOrder;
-    if (order == null) return false;
+  Future<void> refreshOrders() async {
+    await _fetchLatestActiveOrder();
+    _safeNotify();
+  }
 
+  Future<void> onReviewSubmitted(int orderId) async {
+    _submittedReviewOrderIds.add(orderId);
+    if (_pendingReviewOrder?.id == orderId) {
+      _pendingReviewOrder = null;
+      _safeNotify();
+    }
+    await refreshOrders();
+  }
+
+  Future<bool> cancelOrder(OrderModel order) async {
     final success = await _service.cancelOrder(order.id);
     if (success) {
-      _latestActiveOrder = null;
+      _activeOrders = _activeOrders
+          .where((activeOrder) => activeOrder.id != order.id)
+          .toList();
       _safeNotify();
     }
     return success;

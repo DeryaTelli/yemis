@@ -24,15 +24,33 @@ class BarChart extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: List.generate(data.length, (i) {
                   final fraction = maxVal > 0 ? data[i] / maxVal : 0.0;
+                  final percentage = (fraction * 100).round();
                   return Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,
-                      child: Container(
-                        width: barWidth,
-                        height: chartHeight * fraction,
-                        decoration: BoxDecoration(
-                          gradient: AppColors.primaryButtonGradient,
-                          borderRadius: BorderRadius.circular(6),
+                      child: SizedBox(
+                        height: chartHeight,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              '$percentage%',
+                              style: const TextStyle(
+                                color: AppColors.primaryColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              width: barWidth,
+                              height: (chartHeight - 18) * fraction,
+                              decoration: BoxDecoration(
+                                gradient: AppColors.primaryButtonGradient,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

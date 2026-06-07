@@ -8,12 +8,7 @@ class WeeklySalesCard extends StatelessWidget {
   final List<double> salesData;
   final String? imageUrl;
 
-  const WeeklySalesCard({
-    super.key,
-    required this.salesData,
-    this.imageUrl,
-  });
-
+  const WeeklySalesCard({super.key, required this.salesData, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -50,11 +45,20 @@ class WeeklySalesCard extends StatelessWidget {
               ),
               // Mascot character or Business Profile Image
               Container(
-                width: 44,
-                height: 44,
+                width: 48,
+                height: 48,
+                padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withValues(alpha: 0.12),
+                  color: Colors.white,
                   shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.primaryColor, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primaryColor.withValues(alpha: 0.18),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: imageUrl != null && imageUrl!.isNotEmpty
                     ? ClipOval(
@@ -63,14 +67,14 @@ class WeeklySalesCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(
-                            Icons.store_rounded,
-                            color: AppColors.primaryColor,
-                            size: 24,
-                          ),
+                                Icons.store_rounded,
+                                color: AppColors.primaryColor,
+                                size: 24,
+                              ),
                         ),
                       )
                     : const Icon(
-                        Icons.store_rounded,
+                        Icons.storefront_rounded,
                         color: AppColors.primaryColor,
                         size: 24,
                       ),
@@ -81,10 +85,10 @@ class WeeklySalesCard extends StatelessWidget {
           SizedBox(
             height: 140,
             child: BarChart(
-              data: salesData, 
-              days: context.locale.languageCode == 'en' 
-                ? const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                : const ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cts', 'Paz'],
+              data: salesData,
+              days: context.locale.languageCode == 'en'
+                  ? const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                  : const ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cts', 'Paz'],
             ),
           ),
         ],

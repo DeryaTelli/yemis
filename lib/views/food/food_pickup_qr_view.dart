@@ -15,7 +15,7 @@ class FoodPickupQrView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('QR Kod')),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 28),

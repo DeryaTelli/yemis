@@ -1,9 +1,13 @@
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../models/volunteer/shelter_model.dart';
+import '../../models/food/food_review.dart';
 import 'i_volunteer_service.dart';
 
 /// Sahte gönüllü servisi — backend hazır olunca [ApiVolunteerService] ile değiştirilir.
 class MockVolunteerService implements IVolunteerService {
+  @override
+  Future<List<FoodReview>> getMealReviews(int mealId) async => [];
+
   MockVolunteerService._internal();
   static final MockVolunteerService _instance =
       MockVolunteerService._internal();

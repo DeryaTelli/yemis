@@ -6,17 +6,27 @@ import '../../utils/locale_keys.dart';
 
 /// Tek bir yorum kartı.
 class FoodReviewItem extends StatelessWidget {
-  const FoodReviewItem({super.key, required this.review});
+  const FoodReviewItem({
+    super.key,
+    required this.review,
+    this.accentColor = AppColors.primaryColor,
+  });
 
   final FoodReview review;
+  final Color accentColor;
 
   @override
   Widget build(BuildContext context) {
     final timeStr =
         '${review.date.hour.toString().padLeft(2, '0')}:${review.date.minute.toString().padLeft(2, '0')}';
-    final dateStr = LocaleKeys.foodReviewItem_today.tr(
-      namedArgs: {'time': timeStr},
-    );
+    final now = DateTime.now();
+    final isToday =
+        now.year == review.date.year &&
+        now.month == review.date.month &&
+        now.day == review.date.day;
+    final dateStr = isToday
+        ? LocaleKeys.foodReviewItem_today.tr(namedArgs: {'time': timeStr})
+        : DateFormat('dd.MM.yyyy, HH:mm').format(review.date);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -33,16 +43,21 @@ class FoodReviewItem extends StatelessWidget {
                 backgroundColor: AppColors.commentAndSettingsBackground,
                 child: review.avatarUrl.isNotEmpty
                     ? ClipOval(
-                        child: Image.asset(
+                        child: Image.network(
                           review.avatarUrl,
                           width: 40,
                           height: 40,
                           fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Icon(
+                            Icons.person_rounded,
+                            color: accentColor,
+                            size: 22,
+                          ),
                         ),
                       )
-                    : const Icon(
+                    : Icon(
                         Icons.person_rounded,
-                        color: AppColors.primaryColor,
+                          color: accentColor,
                         size: 22,
                       ),
               ),
@@ -96,40 +111,74 @@ class FoodReviewItem extends StatelessWidget {
           // ── Fotoğraflar ──────────────────────────────
           if (review.photoUrls.isNotEmpty) ...[
             const SizedBox(height: 10),
-            SizedBox(
-              height: 70,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: review.photoUrls.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemBuilder: (context, index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      review.photoUrls[index],
-                      width: 70,
-                      height: 70,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stack) => Container(
-                        width: 70,
-                        height: 70,
-                        color: const Color(0xFFFFE0B2),
-                        child: const Icon(
-                          Icons.restaurant_rounded,
-                          color: AppColors.primaryColor,
-                          size: 28,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                const spacing = 9.0;
+                final size = (constraints.maxWidth - spacing * 2) / 3;
+                return Row(
+                  children: List.generate(review.photoUrls.take(3).length, (
+                    index,
+                  ) {
+                    final photoUrl = review.photoUrls[index];
+                    return Padding(
+                      padding: EdgeInsets.only(right: index == 2 ? 0 : spacing),
+                      child: GestureDetector(
+                        onTap: () => _showPhoto(context, photoUrl),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(11),
+                          child: SizedBox.square(
+                            dimension: size,
+                            child: Image.network(
+                              photoUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => Container(
+                                color: const Color(0xFFFFE0B2),
+                                child: Icon(
+                                  Icons.restaurant_rounded,
+                                  color: accentColor,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  }),
+                );
+              },
             ),
           ],
 
           const SizedBox(height: 16),
           const Divider(color: Color(0xFFEEEEEE), height: 1),
         ],
+      ),
+    );
+  }
+
+  void _showPhoto(BuildContext context, String photoUrl) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.88),
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(18),
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            InteractiveViewer(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(photoUrl, fit: BoxFit.contain),
+              ),
+            ),
+            IconButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              icon: const Icon(Icons.close_rounded, color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

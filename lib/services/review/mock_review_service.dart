@@ -66,17 +66,18 @@ class MockReviewService implements IReviewService {
     await _simulateDelay();
     final newReview = ReviewModel(
       id: DateTime.now().millisecondsSinceEpoch,
-      storeId: request.storeId,
+      storeId: 0,
+      orderId: request.orderId,
       reviewerName: 'Ben',
       rating: request.rating.toDouble(),
       comment: request.comment,
       date: DateTime.now(),
+      imageUrl1: request.imageUrl1,
+      imageUrl2: request.imageUrl2,
+      imageUrl3: request.imageUrl3,
       isOwn: true,
     );
     _myReviews.add(newReview);
-    final storeList = _storeReviews[request.storeId] ?? [];
-    storeList.insert(0, newReview);
-    _storeReviews[request.storeId] = storeList;
     return newReview;
   }
 

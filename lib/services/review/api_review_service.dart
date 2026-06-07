@@ -38,6 +38,7 @@ class ApiReviewService implements IReviewService {
         .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review POST Response] ${response.statusCode} ${response.body}');
     if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.body.trim().isEmpty) return <String, dynamic>{};
       return jsonDecode(response.body);
     }
     return null;
@@ -85,12 +86,17 @@ class ApiReviewService implements IReviewService {
   @override
   Future<ReviewModel?> createReview(CreateReviewRequest request) async {
     try {
-      final data = await _post(
-        ApiConstants.reviewsForStore(request.storeId),
-        request.toJson(),
-      );
+      final data = await _post(ApiConstants.reviews, request.toJson());
       if (data is Map<String, dynamic>) {
-        return ReviewModel.fromJson(data, isOwn: true);
+        return ReviewModel.fromJson({
+          ...data,
+          'order_id': data['order_id'] ?? request.orderId,
+          'rating': data['rating'] ?? request.rating,
+          'comment': data['comment'] ?? request.comment,
+          'image_url_1': data['image_url_1'] ?? request.imageUrl1,
+          'image_url_2': data['image_url_2'] ?? request.imageUrl2,
+          'image_url_3': data['image_url_3'] ?? request.imageUrl3,
+        }, isOwn: true);
       }
       return null;
     } catch (e) {
@@ -103,8 +109,13 @@ class ApiReviewService implements IReviewService {
   Future<List<ReviewModel>> getMyReviews() async {
     try {
       final data = await _get(ApiConstants.myReviews);
-      if (data is List) {
-        return data
+      final reviews = data is List
+          ? data
+          : data is Map
+          ? (data['data'] ?? data['reviews'])
+          : null;
+      if (reviews is List) {
+        return reviews
             .map((e) => ReviewModel.fromJson(e as Map<String, dynamic>, isOwn: true))
             .toList();
       }

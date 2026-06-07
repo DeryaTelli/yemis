@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import '../../models/food/order_model.dart';
+import '../../models/review/review_model.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_orders_history_viewmodel.dart';
+import 'food_pickup_qr_view.dart';
 
 class FoodOrdersHistoryView extends StatelessWidget {
   const FoodOrdersHistoryView({super.key});
@@ -141,12 +142,12 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
       separatorBuilder: (_, _) => const SizedBox(height: 14),
       itemBuilder: (context, index) {
         final order = vm.orders[index];
-        return _buildOrderCard(order);
+        return _buildOrderCard(order, vm.reviewForOrder(order.id));
       },
     );
   }
 
-  Widget _buildOrderCard(OrderModel order) {
+  Widget _buildOrderCard(OrderModel order, ReviewModel? review) {
     final bag = order.bag;
     final shopName = bag?.shopName ?? 'Bilinmeyen İşletme';
     final bagTitle = bag?.title ?? 'Sürpriz Kutu';
@@ -402,7 +403,7 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                             ),
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => _showQrDialog(order),
+                            onPressed: () => _openQrPage(order),
                           ),
                       ],
                     ),
@@ -410,86 +411,188 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                 ),
               ),
             ],
+            if (review != null) ...[
+              const Divider(height: 1, color: Color(0xFFF1F1F1)),
+              _OrderReviewCard(review: review),
+            ],
           ],
         ),
       ),
     );
   }
 
-  void _showQrDialog(OrderModel order) {
-    showDialog(
-      context: context,
-      builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+  void _openQrPage(OrderModel order) {
+    final token = order.pickupQrToken;
+    if (token == null || token.isEmpty) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            FoodPickupQrView(qrToken: token, pickupCode: order.pickupCode),
+      ),
+    );
+  }
+}
+
+class _OrderReviewCard extends StatelessWidget {
+  const _OrderReviewCard({required this.review});
+
+  final ReviewModel review;
+
+  @override
+  Widget build(BuildContext context) {
+    final rating = review.rating.round().clamp(0, 5);
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primaryColor.withValues(alpha: 0.09),
+            AppColors.primaryColor.withValues(alpha: 0.025),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: AppColors.primaryColor.withValues(alpha: 0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'QR Kod ile Teslim Al',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.primaryTextColor,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close_rounded),
-                    onPressed: () => Navigator.pop(ctx),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              if (order.pickupQrToken != null)
-                QrImageView(
-                  data: order.pickupQrToken!,
-                  version: QrVersions.auto,
-                  size: 200.0,
-                  eyeStyle: const QrEyeStyle(
-                    eyeShape: QrEyeShape.square,
-                    color: AppColors.primaryTextColor,
-                  ),
-                  dataModuleStyle: const QrDataModuleStyle(
-                    dataModuleShape: QrDataModuleShape.square,
-                    color: AppColors.primaryColor,
-                  ),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryColor.withValues(alpha: 0.14),
+                  shape: BoxShape.circle,
                 ),
-              const SizedBox(height: 16),
-              const Text(
-                'Bu QR kodu teslimat noktasında işletmeye okutarak siparişinizi teslim alabilirsiniz.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.hintTextColor,
-                  height: 1.5,
+                child: const Icon(
+                  Icons.rate_review_rounded,
+                  color: AppColors.primaryColor,
+                  size: 17,
                 ),
               ),
-              const SizedBox(height: 12),
-              if (order.pickupCode != null) ...[
-                const Text(
-                  'Alternatif Kod:',
+              const SizedBox(width: 9),
+              const Expanded(
+                child: Text(
+                  'Bu Sipariş İçin Yorumunuz',
                   style: TextStyle(
-                    fontSize: 11,
-                    color: AppColors.hintTextColor,
+                    color: AppColors.primaryTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  order.pickupCode!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.primaryColor,
-                    letterSpacing: 1.5,
-                  ),
+              ),
+              Text(
+                DateFormat('dd.MM.yyyy').format(review.date),
+                style: const TextStyle(
+                  color: AppColors.hintTextColor,
+                  fontSize: 10,
                 ),
-              ],
+              ),
             ],
           ),
+          const SizedBox(height: 10),
+          Row(
+            children: List.generate(
+              5,
+              (index) => Icon(
+                index < rating ? Icons.star_rounded : Icons.star_border_rounded,
+                size: 19,
+                color: AppColors.primaryColor,
+              ),
+            ),
+          ),
+          if (review.comment.trim().isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              review.comment,
+              style: const TextStyle(
+                color: AppColors.primaryTextColor,
+                fontSize: 12,
+                height: 1.45,
+              ),
+            ),
+          ],
+          if (review.imageUrls.isNotEmpty) ...[
+            const SizedBox(height: 11),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                const spacing = 8.0;
+                final imageSize = (constraints.maxWidth - spacing * 2) / 3;
+
+                return Row(
+                  children: List.generate(review.imageUrls.length, (index) {
+                    final imageUrl = review.imageUrls[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        right: index == review.imageUrls.length - 1
+                            ? 0
+                            : spacing,
+                      ),
+                      child: GestureDetector(
+                        onTap: () => _showReviewImage(context, imageUrl),
+                        child: Hero(
+                          tag: 'review-${review.id}-$index',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: SizedBox.square(
+                              dimension: imageSize,
+                              child: Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => Container(
+                                  color: AppColors.primaryColor.withValues(
+                                    alpha: 0.08,
+                                  ),
+                                  child: const Icon(
+                                    Icons.broken_image_outlined,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                );
+              },
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  void _showReviewImage(BuildContext context, String imageUrl) {
+    showDialog<void>(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.88),
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.all(18),
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            InteractiveViewer(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(imageUrl, fit: BoxFit.contain),
+              ),
+            ),
+            IconButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              icon: const Icon(Icons.close_rounded, color: Colors.white),
+            ),
+          ],
         ),
       ),
     );

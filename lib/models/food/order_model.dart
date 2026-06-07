@@ -8,6 +8,7 @@ class OrderModel {
   final String? pickupCode;
   final String? pickupQrToken;
   final OrderBagModel? bag;
+  final bool hasReview;
 
   OrderModel({
     required this.id,
@@ -19,6 +20,7 @@ class OrderModel {
     this.pickupCode,
     this.pickupQrToken,
     this.bag,
+    this.hasReview = false,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,10 @@ class OrderModel {
       bag: json['bag'] != null
           ? OrderBagModel.fromJson(json['bag'] as Map<String, dynamic>)
           : null,
+      hasReview:
+          json['review'] != null ||
+          json['review_id'] != null ||
+          json['has_review'] == true,
     );
   }
 }

@@ -139,7 +139,7 @@ class FoodReservePaymentRow extends StatelessWidget {
                 width: 14,
                 height: 14,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF79E1B).withOpacity(0.9),
+                  color: const Color(0xFFF79E1B).withValues(alpha: 0.9),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -177,7 +177,7 @@ class FoodReservePaymentRow extends StatelessWidget {
   // State 1: Unselected View (Image 4)
   Widget _buildUnselectedView(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -219,7 +219,7 @@ class FoodReservePaymentRow extends StatelessWidget {
   // State 2: Saved Card Selected View (Image 1)
   Widget _buildSavedCardSelectedView(BuildContext context, SavedCard card) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -303,7 +303,7 @@ class FoodReservePaymentRow extends StatelessWidget {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
