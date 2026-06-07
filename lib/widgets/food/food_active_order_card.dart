@@ -11,18 +11,49 @@ import '../../utils/theme/text_styles_custom.dart';
 import '../../views/food/food_pickup_qr_view.dart';
 import '../../views/location/navigation_view.dart';
 
-class FoodActiveOrderCard extends StatelessWidget {
+class FoodActiveOrderCard extends StatefulWidget {
   const FoodActiveOrderCard({
     super.key,
-    required this.order,
+    required this.orders,
     required this.onCancel,
+    required this.onRefresh,
   });
 
-  final OrderModel order;
-  final Future<bool> Function() onCancel;
+  final List<OrderModel> orders;
+  final Future<bool> Function(OrderModel order) onCancel;
+  final Future<void> Function() onRefresh;
+
+  @override
+  State<FoodActiveOrderCard> createState() => _FoodActiveOrderCardState();
+}
+
+class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
+  late final PageController _pageController;
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.94);
+  }
+
+  @override
+  void didUpdateWidget(covariant FoodActiveOrderCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_selectedIndex >= widget.orders.length) {
+      _selectedIndex = widget.orders.isEmpty ? 0 : widget.orders.length - 1;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final order = widget.orders[_selectedIndex.clamp(0, widget.orders.length - 1)];
     final bag = order.bag;
     final pickupTime = bag == null
         ? DateFormat('dd MMMM HH:mm', 'tr').format(order.orderTime)
@@ -48,36 +79,76 @@ class FoodActiveOrderCard extends StatelessWidget {
         children: [
           _Header(pickupTime: pickupTime),
           const SizedBox(height: 8),
-          _Product(order: order, onCancel: () => _confirmCancellation(context)),
-          const SizedBox(height: 8),
-          _DetailsRow(onTap: () => _openListingDetail(context)),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: _ActionButton(
-                  icon: Icons.near_me_outlined,
-                  label: 'Konuma Git',
-                  filled: true,
-                  onTap: () => _goToLocation(context, bag),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _ActionButton(
-                  icon: Icons.qr_code_2_rounded,
-                  label: 'QR Kodunu Göster',
-                  onTap: () => _showQr(context),
-                ),
-              ),
-            ],
+          SizedBox(
+            height: 210,
+            child: PageView.builder(
+              itemCount: widget.orders.length,
+              padEnds: false,
+              controller: _pageController,
+              onPageChanged: (index) => setState(() => _selectedIndex = index),
+              itemBuilder: (context, index) {
+                final itemOrder = widget.orders[index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 94,
+                        child: _Product(
+                          order: itemOrder,
+                          onCancel: () =>
+                              _confirmCancellation(context, itemOrder),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      _DetailsRow(
+                        onTap: () => _openListingDetail(context, itemOrder),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 9,
+                            child: _ActionButton(
+                              icon: Icons.near_me_outlined,
+                              label: 'Konuma Git',
+                              filled: true,
+                              onTap: () => _goToLocation(context, itemOrder),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            flex: 11,
+                            child: _ActionButton(
+                              icon: Icons.qr_code_2_rounded,
+                              label: 'QR Kodunu Göster',
+                              onTap: () => _showQr(context, itemOrder),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
+          if (widget.orders.length > 1) ...[
+            const SizedBox(height: 7),
+            _PageIndicator(
+              count: widget.orders.length,
+              selectedIndex: _selectedIndex,
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Future<void> _confirmCancellation(BuildContext context) async {
+  Future<void> _confirmCancellation(
+    BuildContext context,
+    OrderModel order,
+  ) async {
     final amount = (order.bag?.discountedPrice ?? 0) * order.quantityReserved;
     final confirmed = await showGeneralDialog<bool>(
       context: context,
@@ -182,7 +253,7 @@ class FoodActiveOrderCard extends StatelessWidget {
 
     if (confirmed != true || !context.mounted) return;
 
-    final success = await onCancel();
+    final success = await widget.onCancel(order);
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -197,14 +268,22 @@ class FoodActiveOrderCard extends StatelessWidget {
     );
   }
 
-  Future<void> _openListingDetail(BuildContext context) async {
+  Future<void> _openListingDetail(
+    BuildContext context,
+    OrderModel order,
+  ) async {
     try {
       final listing = await context.read<IFoodService>().getFoodDetail(
         order.bagId.toString(),
       );
       if (!context.mounted) return;
 
-      Navigator.pushNamed(context, AppRoutes.foodDetail, arguments: listing);
+      await Navigator.pushNamed(
+        context,
+        AppRoutes.foodDetail,
+        arguments: listing,
+      );
+      await widget.onRefresh();
     } catch (_) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(
@@ -213,7 +292,8 @@ class FoodActiveOrderCard extends StatelessWidget {
     }
   }
 
-  Future<void> _goToLocation(BuildContext context, OrderBagModel? bag) async {
+  Future<void> _goToLocation(BuildContext context, OrderModel order) async {
+    final bag = order.bag;
     FoodListing? listing;
 
     try {
@@ -236,7 +316,7 @@ class FoodActiveOrderCard extends StatelessWidget {
       return;
     }
 
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (_) => NavigationView(
@@ -248,9 +328,10 @@ class FoodActiveOrderCard extends StatelessWidget {
         ),
       ),
     );
+    await widget.onRefresh();
   }
 
-  void _showQr(BuildContext context) {
+  Future<void> _showQr(BuildContext context, OrderModel order) async {
     final token = order.pickupQrToken;
     if (token == null || token.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -265,11 +346,41 @@ class FoodActiveOrderCard extends StatelessWidget {
       return;
     }
 
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (_) =>
             FoodPickupQrView(qrToken: token, pickupCode: order.pickupCode),
+      ),
+    );
+    await widget.onRefresh();
+  }
+}
+
+class _PageIndicator extends StatelessWidget {
+  const _PageIndicator({required this.count, required this.selectedIndex});
+
+  final int count;
+  final int selectedIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        count,
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: index == selectedIndex ? 18 : 6,
+          height: 6,
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          decoration: BoxDecoration(
+            color: index == selectedIndex
+                ? AppColors.primaryColor
+                : const Color(0xFFFFD9AF),
+            borderRadius: BorderRadius.circular(99),
+          ),
+        ),
       ),
     );
   }
@@ -341,7 +452,7 @@ class _Product extends StatelessWidget {
     final bag = order.bag;
 
     return Container(
-      padding: const EdgeInsets.all(11),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
       decoration: BoxDecoration(
         color: const Color(0xFFFFFCF8),
         borderRadius: BorderRadius.circular(16),

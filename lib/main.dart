@@ -31,6 +31,8 @@ import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import 'package:yemis/services/volunteer/api_volunteer_service.dart';
 import 'package:yemis/services/common/assistant_service.dart';
 import 'package:yemis/services/notifications/api_notification_service.dart';
+import 'package:yemis/services/review/api_review_service.dart';
+import 'package:yemis/services/review/i_review_service.dart';
 import 'package:yemis/models/auth/address_model.dart';
 import 'package:yemis/models/auth/saved_card_model.dart';
 import 'package:yemis/models/app_module_type.dart';
@@ -207,6 +209,9 @@ class MyApp extends StatelessWidget {
         Provider<ApiVolunteerService>.value(value: volunteerService),
         Provider<IAssistantService>.value(value: assistantService),
         Provider<ApiNotificationService>.value(value: notificationService),
+        ProxyProvider<UserSession, IReviewService>(
+          update: (_, session, __) => ApiReviewService(token: session.token),
+        ),
         ChangeNotifierProvider(
           create: (_) => LoginViewModel(
             authService,
@@ -226,7 +231,10 @@ class MyApp extends StatelessWidget {
           create: (_) => FoodProfileViewModel(authService, userSession),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => FoodOrdersHistoryViewModel(ctx.read<IFoodService>()),
+          create: (ctx) => FoodOrdersHistoryViewModel(
+            ctx.read<IFoodService>(),
+            ctx.read<IReviewService>(),
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => VolunteerProfileViewModel(authService, userSession),
@@ -235,8 +243,11 @@ class MyApp extends StatelessWidget {
           create: (_) => BusinessProfileViewModel(authService, userSession),
         ),
         ChangeNotifierProvider(
-          create: (_) =>
-              FoodHomeViewModel(service: foodService, userSession: userSession),
+          create: (ctx) => FoodHomeViewModel(
+            service: foodService,
+            reviewService: ctx.read<IReviewService>(),
+            userSession: userSession,
+          ),
         ),
         ChangeNotifierProvider(
           create: (_) => FoodFavoritesViewModel(foodService),

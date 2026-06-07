@@ -9,14 +9,14 @@ import '../../services/review/i_review_service.dart';
 class ReviewDialogViewModel extends ChangeNotifier {
   ReviewDialogViewModel({
     required IReviewService reviewService,
-    required int storeId,
+    required int orderId,
     required String storeName,
   })  : _reviewService = reviewService,
-        _storeId = storeId,
+        _orderId = orderId,
         _storeName = storeName;
 
   final IReviewService _reviewService;
-  final int _storeId;
+  final int _orderId;
   final String _storeName;
 
   String get storeName => _storeName;
@@ -42,14 +42,19 @@ class ReviewDialogViewModel extends ChangeNotifier {
   }
 
   /// Yorum gönderir. Başarılıysa [isSubmitted] true olur.
-  Future<void> submit() async {
+  Future<void> submit({List<String> imageUrls = const []}) async {
     if (_rating == 0) {
       _errorMessage = 'Lütfen bir puan seçin.';
       notifyListeners();
       return;
     }
-    if (commentController.text.trim().isEmpty) {
-      _errorMessage = 'Lütfen bir yorum yazın.';
+    if (commentController.text.trim().length < 15) {
+      _errorMessage = 'Yorum en az 15 karakter olmalı.';
+      notifyListeners();
+      return;
+    }
+    if (imageUrls.isEmpty) {
+      _errorMessage = 'En az 1 fotoğraf eklemelisiniz.';
       notifyListeners();
       return;
     }
@@ -60,9 +65,12 @@ class ReviewDialogViewModel extends ChangeNotifier {
 
     final result = await _reviewService.createReview(
       CreateReviewRequest(
-        storeId: _storeId,
+        orderId: _orderId,
         rating: _rating,
         comment: commentController.text.trim(),
+        imageUrl1: imageUrls[0],
+        imageUrl2: imageUrls.length > 1 ? imageUrls[1] : null,
+        imageUrl3: imageUrls.length > 2 ? imageUrls[2] : null,
       ),
     );
 

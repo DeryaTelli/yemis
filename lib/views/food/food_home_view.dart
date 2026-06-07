@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,6 +19,9 @@ import '../../models/app_module_type.dart';
 import '../../widgets/common/home_app_bar.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
 import '../../widgets/common/loading_overlay.dart';
+import '../../services/review/i_review_service.dart';
+import '../../services/auth/i_auth_service.dart';
+import '../../widgets/review/mandatory_order_review_dialog.dart';
 
 /// Yemek ana sayfası — tam MVVM ile uygulanmıştır.
 class FoodHomeView extends StatelessWidget {
@@ -40,30 +45,68 @@ class _FoodHomeBody extends StatefulWidget {
   State<_FoodHomeBody> createState() => _FoodHomeBodyState();
 }
 
-class _FoodHomeBodyState extends State<_FoodHomeBody> {
+class _FoodHomeBodyState extends State<_FoodHomeBody>
+    with WidgetsBindingObserver {
   final TextEditingController _searchController = TextEditingController();
+  bool _isReviewDialogOpen = false;
+  bool _isCheckingOrderStatus = false;
+  Timer? _orderStatusTimer;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     // Sayfaya gelindiğinde verileri yükle/güncelle
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<FoodHomeViewModel>().init();
+        _startOrderStatusTracking();
       }
     });
   }
 
   @override
   void dispose() {
+    _orderStatusTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     _searchController.dispose();
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      _startOrderStatusTracking();
+      _checkOrderStatus();
+    } else {
+      _orderStatusTimer?.cancel();
+    }
+  }
+
+  void _startOrderStatusTracking() {
+    _orderStatusTimer?.cancel();
+    _orderStatusTimer = Timer.periodic(
+      const Duration(seconds: 3),
+      (_) => _checkOrderStatus(),
+    );
+  }
+
+  Future<void> _checkOrderStatus() async {
+    if (!mounted || _isReviewDialogOpen || _isCheckingOrderStatus) return;
+
+    _isCheckingOrderStatus = true;
+    try {
+      await context.read<FoodHomeViewModel>().refreshOrders();
+    } finally {
+      _isCheckingOrderStatus = false;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final vm = context.watch<FoodHomeViewModel>();
+    _showMandatoryReviewIfNeeded(vm);
 
     return LoadingOverlay(
       isLoading: vm.isLoading,
@@ -102,10 +145,11 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
               ),
               const SizedBox(height: 16),
 
-              if (vm.latestActiveOrder != null) ...[
+              if (vm.activeOrders.isNotEmpty) ...[
                 FoodActiveOrderCard(
-                  order: vm.latestActiveOrder!,
-                  onCancel: vm.cancelLatestOrder,
+                  orders: vm.activeOrders,
+                  onCancel: vm.cancelOrder,
+                  onRefresh: vm.refreshOrders,
                 ),
                 const SizedBox(height: 18),
               ],
@@ -172,6 +216,29 @@ class _FoodHomeBodyState extends State<_FoodHomeBody> {
         ),
       ),
     );
+  }
+
+  void _showMandatoryReviewIfNeeded(FoodHomeViewModel vm) {
+    final order = vm.pendingReviewOrder;
+    if (order == null || _isReviewDialogOpen) return;
+
+    _isReviewDialogOpen = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final submitted = await Navigator.of(context).push<bool>(
+        MaterialPageRoute<bool>(
+          fullscreenDialog: true,
+          builder: (_) => MandatoryOrderReviewDialog(
+            order: order,
+            reviewService: context.read<IReviewService>(),
+            authService: context.read<IAuthService>(),
+          ),
+        ),
+      );
+      if (!mounted) return;
+      _isReviewDialogOpen = false;
+      if (submitted == true) await vm.onReviewSubmitted(order.id);
+    });
   }
 }
 

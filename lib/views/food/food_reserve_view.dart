@@ -63,15 +63,15 @@ class _FoodReserveBody extends StatelessWidget {
                   ),
                   const SizedBox(height: 32),
 
-                  // Ödeme Yöntemi
-                  FoodReservePaymentRow(vm: vm),
-                  const SizedBox(height: 28),
+                  // Adet
+                  FoodReserveQuantityRow(vm: vm),
+                  const SizedBox(height: 20),
 
                   const Divider(color: Color(0xFFEEEEEE)),
                   const SizedBox(height: 20),
 
-                  // Adet
-                  FoodReserveQuantityRow(vm: vm),
+                  // Ödeme Yöntemi
+                  FoodReservePaymentRow(vm: vm),
                   const SizedBox(height: 20),
 
                   const Divider(color: Color(0xFFEEEEEE)),
