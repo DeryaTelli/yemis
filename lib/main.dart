@@ -235,14 +235,8 @@ class MyApp extends StatelessWidget {
           create: (_) => BusinessProfileViewModel(authService, userSession),
         ),
         ChangeNotifierProvider(
-          create: (_) {
-            final vm = FoodHomeViewModel(
-              service: foodService,
-              userSession: userSession,
-            );
-            WidgetsBinding.instance.addPostFrameCallback((_) => vm.init());
-            return vm;
-          },
+          create: (_) =>
+              FoodHomeViewModel(service: foodService, userSession: userSession),
         ),
         ChangeNotifierProvider(
           create: (_) => FoodFavoritesViewModel(foodService),

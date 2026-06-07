@@ -220,7 +220,9 @@ class VolunteerListingCard extends StatelessWidget {
                       const SizedBox(height: 12),
 
                       // Gönüllü Bilgisi (Eğer birisi gönüllü olmuşsa)
-                      if (listing.assignedVolunteerName != null)
+                      if (listing.assignedVolunteerName != null &&
+                          (listing.volunteerComment == null ||
+                              listing.volunteerComment!.isEmpty))
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
                           child: Container(
@@ -410,7 +412,16 @@ class VolunteerListingCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // ... (Existing review content) ...
+                              Text(
+                                LocaleKeys.volunteerListingCard_volunteered
+                                    .tr(),
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.volunteerColor,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
                               Row(
                                 children: [
                                   CircleAvatar(

@@ -34,25 +34,7 @@ class FoodReservationConfirmView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          LocaleKeys.foodReservationConfirm_title.tr(),
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          // Geri tuşu → ana sayfaya döner
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context,
-            AppRoutes.foodHome,
-            (route) => false,
-          ),
-        ),
-      ),
+      appBar: AppBar(title: Text(LocaleKeys.foodReservationConfirm_title.tr())),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/food/food_reserve_viewmodel.dart';
-import '../../views/food/food_reservation_confirm_view.dart';
+import '../../views/food/food_order_success_view.dart';
 import '../../widgets/food/food_reserve_info_card.dart';
 import '../../widgets/food/food_reserve_payment_row.dart';
 import '../../widgets/food/food_reserve_price_row.dart';
@@ -117,80 +117,15 @@ class _ReserveButton extends StatelessWidget {
       return;
     }
 
-    // Yeni kart girilmişse kayıt dialog'u göster
-    if (vm.lastReserveWasNewCard) {
-      final shouldSave = await showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: const Row(
-            children: [
-              Icon(
-                Icons.check_circle_rounded,
-                color: Color(0xFF4CAF50),
-                size: 24,
-              ),
-              SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  'Siparişiniz Rezerve Edildi!',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-              ),
-            ],
-          ),
-          content: const Text(
-            'Kartınızı kayıt etmek ister misiniz?\nBöylece bir sonraki siparişinizde kolayca kullanabilirsiniz.',
-            style: TextStyle(fontSize: 14, color: Color(0xFF666666)),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text(
-                'Hayır',
-                style: TextStyle(
-                  color: Color(0xFF888888),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFF58220),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 0,
-              ),
-              child: const Text(
-                'Kayıt Et',
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
-            ),
-          ],
-        ),
-      );
+    final authService = context.read<IAuthService>();
+    final pendingCardData = vm.shouldOfferCardSave ? vm.pendingCardData : null;
 
-      if (shouldSave == true && context.mounted) {
-        await vm.saveCardIfPending();
-      }
-    }
-
-    if (!context.mounted) return;
-
-    // Onay ekranına yönlendir
     Navigator.pushReplacement(
       context,
       MaterialPageRoute<void>(
-        builder: (_) => FoodReservationConfirmView(
-          listing: vm.listing,
-          quantity: vm.quantity,
-          totalPrice: vm.totalPrice,
+        builder: (_) => FoodOrderSuccessView(
+          authService: authService,
+          pendingCardData: pendingCardData,
         ),
       ),
     );

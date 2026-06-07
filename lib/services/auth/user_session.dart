@@ -11,7 +11,9 @@ class UserSession extends ChangeNotifier {
   String? _currentAddress;
   double? _currentLat;
   double? _currentLng;
-  bool _shouldPersist = true; // Varsayılan olarak true (geriye dönük uyumluluk için)
+  bool _shouldPersist =
+      true; // Varsayılan olarak true (geriye dönük uyumluluk için)
+  bool _notificationScheduled = false;
 
   UserModel? get currentUser => _user;
   String? get token => _token;
@@ -30,18 +32,26 @@ class UserSession extends ChangeNotifier {
 
   void _notifyListenersSafely() {
     if (!hasListeners) return;
+
+    final phase = SchedulerBinding.instance.schedulerPhase;
+    if (phase == SchedulerPhase.idle ||
+        phase == SchedulerPhase.postFrameCallbacks) {
+      notifyListeners();
+      return;
+    }
+
+    if (_notificationScheduled) return;
+    _notificationScheduled = true;
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      Future<void>.delayed(Duration.zero, () {
-        if (hasListeners) notifyListeners();
-      });
+      _notificationScheduled = false;
+      if (hasListeners) notifyListeners();
     });
-    SchedulerBinding.instance.scheduleFrame();
   }
 
   /// Kayıtlı oturumu yükler.
   Future<void> loadSession() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     final userJson = prefs.getString(_userKey);
     if (userJson != null) {
       try {
@@ -56,7 +66,7 @@ class UserSession extends ChangeNotifier {
     _currentLat = prefs.getDouble(_latKey);
     _currentLng = prefs.getDouble(_lngKey);
     _shouldPersist = prefs.getBool(_persistKey) ?? true;
-    
+
     _notifyListenersSafely();
   }
 
@@ -67,13 +77,13 @@ class UserSession extends ChangeNotifier {
     if (persist != null) {
       _shouldPersist = persist;
     }
-    // Sadece yeni bir token gelmişse mevcut olanı güncelle. 
+    // Sadece yeni bir token gelmişse mevcut olanı güncelle.
     // Profil güncellemelerinde token null gelirse mevcut olanı koruyoruz.
     if (token != null && token.isNotEmpty) {
       _token = token;
     }
     _notifyListenersSafely();
-    
+
     // Sadece persist true ise sakla
     if (_shouldPersist) {
       _persistUser(user, _token);
@@ -103,7 +113,11 @@ class UserSession extends ChangeNotifier {
     _persistLocation(address, lat, lng);
   }
 
-  Future<void> _persistLocation(String address, double? lat, double? lng) async {
+  Future<void> _persistLocation(
+    String address,
+    double? lat,
+    double? lng,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_addressKey, address);
     if (lat != null) await prefs.setDouble(_latKey, lat);

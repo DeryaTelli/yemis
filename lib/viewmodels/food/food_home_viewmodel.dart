@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../models/food/food_filter.dart';
 import '../../models/food/food_listing.dart';
+import '../../models/food/order_model.dart';
 import '../../services/auth/user_session.dart';
 import '../../services/food/i_food_service.dart';
 import '../../utils/routes/app_routes.dart';
@@ -21,6 +22,7 @@ class FoodHomeViewModel extends ChangeNotifier {
   final IFoodService _service;
   final UserSession _userSession;
   bool _isDisposed = false;
+  bool _isInitializing = false;
 
   void _safeNotify() {
     if (_isDisposed) return;
@@ -52,6 +54,8 @@ class FoodHomeViewModel extends ChangeNotifier {
   List<FoodListing> _allListings = [];
   List<FoodListing> _popularListings = [];
   List<FoodListing> _popularTodayListings = [];
+  OrderModel? _latestActiveOrder;
+  OrderModel? get latestActiveOrder => _latestActiveOrder;
 
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
@@ -100,6 +104,8 @@ class FoodHomeViewModel extends ChangeNotifier {
   // ─── Init ─────────────────────────────────────────────
 
   Future<void> init() async {
+    if (_isInitializing) return;
+    _isInitializing = true;
     debugPrint('🚀 [FoodHomeVM] Başlatılıyor...');
     _isLoading = true;
     _safeNotify();
@@ -112,6 +118,7 @@ class FoodHomeViewModel extends ChangeNotifier {
         _service.getPopularListings(), // Popülerleri de çek
         _service
             .getPopularTodayListings(), // Bugünün Popülerlerini (tükendiler dahil) çek
+        _fetchLatestActiveOrder(),
       ]);
 
       _locationName = results[0] as String;
@@ -150,9 +157,40 @@ class FoodHomeViewModel extends ChangeNotifier {
     } catch (e) {
       debugPrint('❌ [FoodHomeVM] Hata: $e');
     } finally {
+      _isInitializing = false;
       _isLoading = false;
       _safeNotify();
     }
+  }
+
+  Future<void> _fetchLatestActiveOrder() async {
+    try {
+      final orders = await _service.getMyOrders();
+      final activeOrders = orders.where((order) {
+        final status = order.orderStatus.toLowerCase();
+        return status != 'cancelled' &&
+            status != 'canceled' &&
+            status != 'picked_up' &&
+            status != 'completed';
+      }).toList()..sort((a, b) => b.orderTime.compareTo(a.orderTime));
+
+      _latestActiveOrder = activeOrders.isEmpty ? null : activeOrders.first;
+    } catch (e) {
+      _latestActiveOrder = null;
+      debugPrint('❌ [FoodHomeVM] Aktif sipariş hatası: $e');
+    }
+  }
+
+  Future<bool> cancelLatestOrder() async {
+    final order = _latestActiveOrder;
+    if (order == null) return false;
+
+    final success = await _service.cancelOrder(order.id);
+    if (success) {
+      _latestActiveOrder = null;
+      _safeNotify();
+    }
+    return success;
   }
 
   // ─── Arama ────────────────────────────────────────────

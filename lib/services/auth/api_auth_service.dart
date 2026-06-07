@@ -27,7 +27,6 @@ class ApiAuthService implements IAuthService {
       print('--- API REQUEST ---');
       print('URL: $url');
       print('Method: GET');
-      if (_authToken != null) print('Token: ${_authToken!.substring(0, 5)}...');
       print('-------------------');
     }
 
@@ -45,7 +44,6 @@ class ApiAuthService implements IAuthService {
       if (kDebugMode) {
         print('--- API RESPONSE ---');
         print('Status Code: ${response.statusCode}');
-        print('Body: ${response.body}');
         print('--------------------');
       }
 
@@ -70,8 +68,6 @@ class ApiAuthService implements IAuthService {
       print('--- API REQUEST ---');
       print('URL: $url');
       print('Method: POST');
-      if (body != null) print('Body: ${jsonEncode(body)}');
-      if (_authToken != null) print('Token: ${_authToken!.substring(0, 5)}...');
       print('-------------------');
     }
 
@@ -90,7 +86,6 @@ class ApiAuthService implements IAuthService {
       if (kDebugMode) {
         print('--- API RESPONSE ---');
         print('Status Code: ${response.statusCode}');
-        print('Body: ${response.body}');
         print('--------------------');
       }
 
@@ -110,7 +105,7 @@ class ApiAuthService implements IAuthService {
           // JSON değilse düz metin olarak hatayı al
           return AuthResponse(
             success: false,
-            message: 'Sunucu hatası: ${response.statusCode} - ${response.body}',
+            message: 'Sunucu hatası: ${response.statusCode}',
           );
         }
       }
@@ -194,7 +189,10 @@ class ApiAuthService implements IAuthService {
 
   @override
   Future<bool> updateAddress(int id, AddressModel address) async {
-    final response = await _put('/api/users/me/addresses/$id', address.toJson());
+    final response = await _put(
+      '/api/users/me/addresses/$id',
+      address.toJson(),
+    );
     return response.success;
   }
 
@@ -214,7 +212,10 @@ class ApiAuthService implements IAuthService {
   }
 
   @override
-  Future<AuthResponse> updateProfile(int userId, Map<String, dynamic> data) async {
+  Future<AuthResponse> updateProfile(
+    int userId,
+    Map<String, dynamic> data,
+  ) async {
     // API dökümanına göre PATCH /api/users/me kullanıyoruz
     return _patch('/api/users/me', data);
   }
@@ -257,32 +258,33 @@ class ApiAuthService implements IAuthService {
 
       if (_authToken != null) {
         request.headers['Authorization'] = 'Bearer $_authToken';
-        if (kDebugMode) {
-          print('--- [DEBUG] Upload Token: ${_authToken!.substring(0, 10)}... ---');
-        }
       }
 
       final extension = filePath.split('.').last.toLowerCase();
       String mimeType = 'image/jpeg';
-      if (extension == 'png') mimeType = 'image/png';
-      else if (extension == 'webp') mimeType = 'image/webp';
-      else if (extension == 'gif') mimeType = 'image/gif';
+      if (extension == 'png')
+        mimeType = 'image/png';
+      else if (extension == 'webp')
+        mimeType = 'image/webp';
+      else if (extension == 'gif')
+        mimeType = 'image/gif';
 
-      request.files.add(await http.MultipartFile.fromPath(
-        'file',
-        filePath,
-        contentType: MediaType.parse(mimeType),
-      ));
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'file',
+          filePath,
+          contentType: MediaType.parse(mimeType),
+        ),
+      );
 
-      final streamedResponse = await request
-          .send()
-          .timeout(ApiConstants.requestTimeout);
+      final streamedResponse = await request.send().timeout(
+        ApiConstants.requestTimeout,
+      );
       final response = await http.Response.fromStream(streamedResponse);
 
       if (kDebugMode) {
         print('--- [DEBUG] IMAGE UPLOAD RESPONSE ---');
         print('Status Code: ${response.statusCode}');
-        print('Body: ${response.body}');
         print('-----------------------------');
       }
 
@@ -292,12 +294,13 @@ class ApiAuthService implements IAuthService {
           final data = jsonDecode(response.body);
           if (data is Map<String, dynamic>) {
             // Yaygın anahtarları kontrol et
-            final urlResult = data['url'] ?? 
-                             data['image_url'] ?? 
-                             data['imageUrl'] ?? 
-                             data['path'] ?? 
-                             data['data']?['url'];
-            
+            final urlResult =
+                data['url'] ??
+                data['image_url'] ??
+                data['imageUrl'] ??
+                data['path'] ??
+                data['data']?['url'];
+
             if (urlResult != null) return urlResult.toString();
           } else if (data is String) {
             return data;
@@ -325,7 +328,6 @@ class ApiAuthService implements IAuthService {
     if (kDebugMode) {
       print('--- API REQUEST (PATCH) ---');
       print('URL: $url');
-      if (body != null) print('Body: ${jsonEncode(body)}');
       print('-------------------');
     }
 
@@ -348,17 +350,12 @@ class ApiAuthService implements IAuthService {
   }
 
   /// Ortak PUT isteği metodu.
-  Future<AuthResponse> _put(
-    String endpoint,
-    Map<String, dynamic>? body,
-  ) async {
+  Future<AuthResponse> _put(String endpoint, Map<String, dynamic>? body) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
 
     if (kDebugMode) {
       print('--- API REQUEST (PUT) ---');
       print('URL: $url');
-      if (body != null) print('Body: ${jsonEncode(body)}');
-      print('Token: ${_authToken?.substring(0, 5)}...');
       print('-------------------');
     }
 
@@ -411,7 +408,6 @@ class ApiAuthService implements IAuthService {
     if (kDebugMode) {
       print('--- API RESPONSE ---');
       print('Status Code: ${response.statusCode}');
-      print('Body: ${response.body}');
       print('--------------------');
     }
 
@@ -437,14 +433,15 @@ class ApiAuthService implements IAuthService {
           // API doğrudan nesne döndü (örn. user veya address objesi), 2xx ise başarılı say
           // Eğer bu bir kullanıcı objesi ise AuthResponse içine gömelim
           UserModel? user;
-          if (data.containsKey('id') && (data.containsKey('email') || data.containsKey('role'))) {
-             try {
-               user = UserModel.fromJson(data);
-             } catch (_) {}
+          if (data.containsKey('id') &&
+              (data.containsKey('email') || data.containsKey('role'))) {
+            try {
+              user = UserModel.fromJson(data);
+            } catch (_) {}
           }
 
           return AuthResponse(
-            success: true, 
+            success: true,
             message: 'İşlem başarılı.',
             user: user,
           );

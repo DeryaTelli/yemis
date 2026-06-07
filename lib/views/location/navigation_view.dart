@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/constants/app_colors.dart';
@@ -23,8 +22,10 @@ class NavigationView extends StatelessWidget {
   final double longitude;
   final String businessName;
   final String address;
+
   /// Buton ve vurgu gradientı — null ise primaryButtonGradient kullanılır.
   final LinearGradient? accentGradient;
+
   /// İkon ve badge rengi — null ise primaryColor kullanılır.
   final Color? accentColor;
 
@@ -50,10 +51,7 @@ class NavigationView extends StatelessWidget {
 }
 
 class _NavigationBody extends StatelessWidget {
-  const _NavigationBody({
-    this.accentGradient,
-    this.accentColor,
-  });
+  const _NavigationBody({this.accentGradient, this.accentColor});
 
   final LinearGradient? accentGradient;
   final Color? accentColor;
@@ -67,18 +65,28 @@ class _NavigationBody extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: AppColors.primaryTextColor,
-              ),
-              onPressed: () => Navigator.pop(context),
+        leading: IconButton(
+          icon: Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.92),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.primaryColor,
+              size: 18,
             ),
           ),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Stack(
@@ -124,7 +132,9 @@ class _NavigationBody extends StatelessWidget {
             polylines: [
               Polyline(
                 points: [vm.userLocation!, vm.destination],
-                color: (accentColor ?? AppColors.primaryColor).withValues(alpha: 0.7),
+                color: (accentColor ?? AppColors.primaryColor).withValues(
+                  alpha: 0.7,
+                ),
                 strokeWidth: 4,
               ),
             ],
@@ -170,7 +180,7 @@ class _NavigationBody extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -212,7 +222,7 @@ class _NavigationBody extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 5,
             offset: const Offset(0, 5),
@@ -256,7 +266,9 @@ class _NavigationBody extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: (accentColor ?? AppColors.primaryColor).withValues(alpha: 0.1),
+                  color: (accentColor ?? AppColors.primaryColor).withValues(
+                    alpha: 0.1,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

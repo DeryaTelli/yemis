@@ -78,6 +78,11 @@ class FoodReserveViewModel extends ChangeNotifier {
 
   /// True ise rezervasyon sonrası kart kaydetme dialogu gösterilmeli.
   bool get lastReserveWasNewCard => _lastReserveWasNewCard;
+  bool get shouldOfferCardSave =>
+      _lastReserveWasNewCard && _savedCards.isEmpty && _pendingCardData != null;
+  Map<String, dynamic>? get pendingCardData => _pendingCardData == null
+      ? null
+      : Map<String, dynamic>.from(_pendingCardData!);
 
   // ─── Computed ────────────────────────────────────────────
   double get totalPrice => listing.price * _quantity;
