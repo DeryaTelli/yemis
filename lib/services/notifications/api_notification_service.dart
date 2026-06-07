@@ -147,7 +147,7 @@ class ApiNotificationService {
           .post(
             Uri.parse(url),
             headers: _headers,
-            body: jsonEncode({'token': token, 'platform': platform}),
+            body: jsonEncode({'device_token': token, 'platform': platform}),
           )
           .timeout(ApiConstants.requestTimeout);
       return response.statusCode == 200 || response.statusCode == 201;

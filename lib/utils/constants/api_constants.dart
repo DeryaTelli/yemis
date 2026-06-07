@@ -19,6 +19,7 @@ class ApiConstants {
 
   // --- Reviews ---
   static String reviewsForStore(int storeId) => '/api/reviews/stores/$storeId';
+  static String reviewsForBag(int bagId) => '/api/reviews/bags/$bagId';
   static const String myReviews = '/api/reviews/my';
   static String reviewById(int id) => '/api/reviews/$id';
 
