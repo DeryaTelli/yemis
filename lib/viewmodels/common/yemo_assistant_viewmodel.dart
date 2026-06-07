@@ -1,13 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import '../../services/common/assistant_service.dart';
+
+import '../../services/location/location_service.dart';
 
 class ChatMessage {
   final String text;
   final bool isUser;
   final DateTime timestamp;
   final List<AssistantActionModel> actions;
+  final List<Map<String, dynamic>> nearbyListings;
   final String? topic;
 
   ChatMessage({
@@ -15,15 +19,19 @@ class ChatMessage {
     required this.isUser,
     DateTime? timestamp,
     this.actions = const [],
+    this.nearbyListings = const [],
     this.topic,
   }) : timestamp = timestamp ?? DateTime.now();
 }
 
 class YemoAssistantViewModel extends ChangeNotifier {
   final IAssistantService _service;
+  final AppModuleType moduleType;
 
-  YemoAssistantViewModel({required IAssistantService service})
-    : _service = service;
+  YemoAssistantViewModel({
+    required IAssistantService service,
+    required this.moduleType,
+  }) : _service = service;
 
   bool _isDisposed = false;
   final List<ChatMessage> _messages = [];
@@ -37,7 +45,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  Future<void> sendMessage(String text) async {
+  Future<void> sendMessage(String text, {double? latitude, double? longitude}) async {
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
 
@@ -48,7 +56,12 @@ class YemoAssistantViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final reply = await _service.askQuestion(trimmed);
+      final reply = await _service.askQuestion(
+        trimmed,
+        latitude: latitude,
+        longitude: longitude,
+        module: moduleType.name,
+      );
       if (_isDisposed) return;
 
       if (reply != null && reply.response.trim().isNotEmpty) {
@@ -58,6 +71,7 @@ class YemoAssistantViewModel extends ChangeNotifier {
             isUser: false,
             actions: reply.actions,
             topic: reply.intent,
+            nearbyListings: reply.nearbyListings,
           ),
         );
       } else {
@@ -72,6 +86,42 @@ class YemoAssistantViewModel extends ChangeNotifier {
       _messages.add(
         ChatMessage(
           text: LocaleKeys.yemoAssistant_errorNetwork.tr(),
+          isUser: false,
+        ),
+      );
+    } finally {
+      if (!_isDisposed) {
+        _isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> shareLocation() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final LocationService locationService = LocationService();
+      final position = await locationService.getCurrentPosition();
+      if (position != null) {
+        await sendMessage(
+          'Yakınımda yemek bulmak istiyorum.',
+          latitude: position.latitude,
+          longitude: position.longitude,
+        );
+      } else {
+        _messages.add(
+          ChatMessage(
+            text: 'Konumunuza erişilemedi. Lütfen konum servislerini açın veya elle seçeneğini kullanın.',
+            isUser: false,
+          ),
+        );
+      }
+    } catch (e) {
+      _messages.add(
+        ChatMessage(
+          text: 'Konum paylaşılırken bir hata oluştu.',
           isUser: false,
         ),
       );

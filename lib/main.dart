@@ -123,6 +123,38 @@ void main() async {
     assistantService.setToken(token);
     notificationService.setToken(token);
 
+    // Proactively sync/self-heal local location coordinates cache with DB default/active address
+    Future.microtask(() async {
+      try {
+        final addresses = await authService.getAddresses();
+        if (addresses.isNotEmpty) {
+          final activeAddr = addresses.firstWhere(
+            (a) => a.addressLine == userSession.currentAddress,
+            orElse: () => addresses.firstWhere(
+              (a) => a.isDefault,
+              orElse: () => addresses.first,
+            ),
+          );
+          if (userSession.currentLat != activeAddr.latitude ||
+              userSession.currentLng != activeAddr.longitude ||
+              userSession.currentAddress != activeAddr.addressLine) {
+            userSession.updateLocation(
+              activeAddr.addressLine,
+              lat: activeAddr.latitude,
+              lng: activeAddr.longitude,
+            );
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('current_location_address', activeAddr.addressLine);
+            await prefs.setDouble('current_lat', activeAddr.latitude);
+            await prefs.setDouble('current_lng', activeAddr.longitude);
+            debugPrint('Self-healed local location cache with database: ${activeAddr.addressLine} (${activeAddr.latitude}, ${activeAddr.longitude})');
+          }
+        }
+      } catch (e) {
+        debugPrint('Error self-healing/syncing location cache with DB: $e');
+      }
+    });
+
     // Uygulama açılışını FCM'e bağlama; servis geçici olarak kapalıysa
     // ekranların yüklenmesini etkilemesin.
     Future<void>.delayed(const Duration(seconds: 10), () async {
