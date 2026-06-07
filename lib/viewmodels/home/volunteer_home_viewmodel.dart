@@ -88,7 +88,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       final results = await _service.getFeaturedListings(
         lat: _userSession.currentLat,
         lng: _userSession.currentLng,
-        radius: 50,
+        radius: 120,
       );
 
       var sortedListings = List<VolunteerListing>.from(results);
@@ -197,7 +197,7 @@ class VolunteerHomeViewModel extends ChangeNotifier {
       _nearbyShelters = await _service.getNearbyShelters(
         lat: _userSession.currentLat!,
         lng: _userSession.currentLng!,
-        radiusKm: 50,
+        radiusKm: 120,
       );
     } catch (e) {
       debugPrint('Error fetching nearby shelters: $e');

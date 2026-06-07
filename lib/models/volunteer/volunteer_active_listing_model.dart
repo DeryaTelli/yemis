@@ -283,7 +283,7 @@ class VolunteerActiveListingModel {
       mealId: parsedMealId,
       addressId: json['address_id'] is int
           ? json['address_id']
-          : int.tryParse(json['address_id'].toString()),
+          : int.tryParse(json['address_id']?.toString() ?? ''),
       addressLine: listingLoc,
       latitude: (json['latitude'] as num? ?? mealData?['latitude'] as num?)
           ?.toDouble(),
@@ -291,7 +291,7 @@ class VolunteerActiveListingModel {
           ?.toDouble(),
       createdByUserId: json['created_by_user_id'] is int
           ? json['created_by_user_id']
-          : int.tryParse(json['created_by_user_id'].toString()),
+          : int.tryParse(json['created_by_user_id']?.toString() ?? ''),
       title: listingTitle ?? '',
       description: listingDesc,
       imageUrl: listingImg,

@@ -274,31 +274,67 @@ class FoodAddAddressViewModel extends ChangeNotifier {
   }
 
   Future<void> _geocodeAddress() async {
-    final query = formattedAddress;
-    if (query.isEmpty) return;
+    final queries = <String>[];
+    final cleanStreet = adresController.text.trim();
+    final cleanMahalle = selectedMahalle?.trim() ?? '';
+    final cleanIlce = selectedIlce?.trim() ?? '';
+    final cleanIl = selectedIl?.trim() ?? '';
 
-    try {
-      debugPrint('🔍 [FoodAddAddressVM] Adres geocode ediliyor: $query');
-      final uri = Uri.https('nominatim.openstreetmap.org', '/search', {
-        'q': query,
-        'format': 'json',
-        'limit': '1',
-        'accept-language': 'tr',
-      });
-      final res = await http
-          .get(uri, headers: {'User-Agent': 'YemisApp/1.0'})
-          .timeout(ApiConstants.requestTimeout);
-      if (res.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(res.body);
-        if (data.isNotEmpty) {
-          _latitude = double.parse(data[0]['lat']);
-          _longitude = double.parse(data[0]['lon']);
-          debugPrint('✅ [FoodAddAddressVM] Koordinatlar bulundu: $_latitude, $_longitude');
-        }
-      }
-    } catch (e) {
-      debugPrint('⚠️ [FoodAddAddressVM] Geocode hatası: $e');
+    // En detaylı sorgu (Açık adres + mahalle + ilçe + il + ülke)
+    if (cleanStreet.isNotEmpty && cleanMahalle.isNotEmpty && cleanIlce.isNotEmpty && cleanIl.isNotEmpty) {
+      queries.add('$cleanStreet, $cleanMahalle, $cleanIlce, $cleanIl, Türkiye');
     }
+    
+    // Mahalle bazlı sorgu (mahalle + ilçe + il + ülke)
+    if (cleanMahalle.isNotEmpty && cleanIlce.isNotEmpty && cleanIl.isNotEmpty) {
+      queries.add('$cleanMahalle, $cleanIlce, $cleanIl, Türkiye');
+    }
+    
+    // İlçe bazlı sorgu (ilçe + il + ülke)
+    if (cleanIlce.isNotEmpty && cleanIl.isNotEmpty) {
+      queries.add('$cleanIlce, $cleanIl, Türkiye');
+    }
+    
+    // İl bazlı sorgu (il + ülke)
+    if (cleanIl.isNotEmpty) {
+      queries.add('$cleanIl, Türkiye');
+    }
+
+    // fallback durumları için
+    if (queries.isEmpty && cleanStreet.isNotEmpty) {
+      queries.add(cleanStreet);
+    }
+
+    for (final q in queries) {
+      if (q.trim().isEmpty) continue;
+      try {
+        debugPrint('🔍 [FoodAddAddressVM] Geocode deneniyor: $q');
+        final uri = Uri.https('nominatim.openstreetmap.org', '/search', {
+          'q': q,
+          'format': 'json',
+          'limit': '1',
+          'accept-language': 'tr',
+        });
+        final res = await http
+            .get(uri, headers: {'User-Agent': 'YemisApp/1.0'})
+            .timeout(ApiConstants.requestTimeout);
+        if (res.statusCode == 200) {
+          final List<dynamic> data = jsonDecode(res.body);
+          if (data.isNotEmpty) {
+            _latitude = double.parse(data[0]['lat']);
+            _longitude = double.parse(data[0]['lon']);
+            debugPrint('✅ [FoodAddAddressVM] Koordinatlar bulundu: $_latitude, $_longitude (Sorgu: $q)');
+            return; // Başarılı bulduğumuzda aramayı bitir
+          }
+        }
+      } catch (e) {
+        debugPrint('⚠️ [FoodAddAddressVM] Geocode hatası ($q): $e');
+      }
+      
+      // Nominatim rate-limit engeli için kısa bir gecikme ekleyelim
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+    debugPrint('❌ [FoodAddAddressVM] Geocode başarısız oldu, koordinatlar bulunamadı.');
   }
 
   Future<bool> saveAddress() async {
@@ -314,6 +350,14 @@ class FoodAddAddressViewModel extends ChangeNotifier {
     // Eğer koordinat seçilmemişse geocode etmeye çalış
     if (!hasCoordinates) {
       await _geocodeAddress();
+    }
+
+    // Geocode sonrası koordinatlar hala 0 ise işleme izin verme
+    if (!hasCoordinates) {
+      _isLoading = false;
+      _errorMessage = 'Adresin koordinatları tespit edilemedi. Lütfen haritadan konum seçin.';
+      notifyListeners();
+      return false;
     }
 
     // Mükerrer adres kontrolü

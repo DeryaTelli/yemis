@@ -59,7 +59,7 @@ class BusinessListingModel {
                 : int.tryParse(json['id'].toString()) ?? 0),
       userId: json['user_id'] is int
           ? json['user_id']
-          : int.tryParse(json['user_id'].toString()) ?? 0,
+          : int.tryParse(json['user_id']?.toString() ?? '') ?? 0,
       businessName:
           json['business_name']?.toString() ??
           json['shop_name']?.toString() ??
@@ -78,7 +78,7 @@ class BusinessListingModel {
           json['description']?.toString() ?? json['content']?.toString(),
       addressId: json['address_id'] is int
           ? json['address_id']
-          : int.tryParse(json['address_id'].toString()),
+          : int.tryParse(json['address_id']?.toString() ?? ''),
       address:
           json['address']?.toString() ??
           json['full_address']?.toString() ??

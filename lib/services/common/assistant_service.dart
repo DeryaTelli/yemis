@@ -27,16 +27,19 @@ class AssistantReplyModel {
   final String source;
   final String? intent;
   final List<AssistantActionModel> actions;
+  final List<Map<String, dynamic>> nearbyListings;
 
   const AssistantReplyModel({
     required this.response,
     required this.source,
     this.intent,
     this.actions = const [],
+    this.nearbyListings = const [],
   });
 
   factory AssistantReplyModel.fromJson(Map<String, dynamic> json) {
     final rawActions = json['actions'];
+    final rawListings = json['nearby_listings'] ?? json['nearbyListings'];
     return AssistantReplyModel(
       response:
           json['response']?.toString() ?? json['message']?.toString() ?? '',
@@ -53,12 +56,22 @@ class AssistantReplyModel {
                 .where((e) => e.label.trim().isNotEmpty)
                 .toList()
           : const [],
+      nearbyListings: rawListings is List
+          ? rawListings
+                .whereType<Map>()
+                .map((e) => Map<String, dynamic>.from(e))
+                .toList()
+          : const [],
     );
   }
 }
 
 abstract class IAssistantService {
-  Future<AssistantReplyModel?> askQuestion(String message);
+  Future<AssistantReplyModel?> askQuestion(
+    String message, {
+    double? latitude,
+    double? longitude,
+  });
 }
 
 class ApiAssistantService implements IAssistantService {
@@ -72,19 +85,30 @@ class ApiAssistantService implements IAssistantService {
   };
 
   @override
-  Future<AssistantReplyModel?> askQuestion(String message) async {
+  Future<AssistantReplyModel?> askQuestion(
+    String message, {
+    double? latitude,
+    double? longitude,
+  }) async {
     final url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.assistantAsk}');
 
     print('--- AI ASSISTANT REQUEST ---');
     print('URL: $url');
     print('Message: $message');
+    print('Location: $latitude, $longitude');
 
     try {
+      final bodyMap = {
+        'message': message,
+        if (latitude != null) 'latitude': latitude,
+        if (longitude != null) 'longitude': longitude,
+      };
+
       final response = await http
           .post(
             url,
             headers: _headers,
-            body: jsonEncode({'message': message}),
+            body: jsonEncode(bodyMap),
           )
           .timeout(ApiConstants.requestTimeout);
 

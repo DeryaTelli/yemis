@@ -7,6 +7,9 @@ import 'package:yemis/utils/constants/app_colors.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
 import 'package:yemis/viewmodels/common/yemo_assistant_viewmodel.dart';
+import 'package:yemis/models/business/business_listing_model.dart';
+import 'package:yemis/models/food/food_listing.dart';
+import 'package:yemis/widgets/food/food_listing_card.dart';
 
 class YemoAssistantView extends StatelessWidget {
   final AppModuleType moduleType;
@@ -36,6 +39,7 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
   final ScrollController _scrollController = ScrollController();
   int _lastMessageCount = 0;
   bool _lastLoadingState = false;
+
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
@@ -199,7 +203,7 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                     if (vm.messages.isNotEmpty) ...[
                       const SizedBox(height: 16),
                       ...vm.messages.map(
-                        (msg) => _buildChatMessage(msg, themeColor),
+                        (msg) => _buildChatMessage(msg, themeColor, vm),
                       ),
                       if (vm.isLoading)
                         Padding(
@@ -397,7 +401,7 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
     );
   }
 
-  Widget _buildChatMessage(ChatMessage msg, Color themeColor) {
+  Widget _buildChatMessage(ChatMessage msg, Color themeColor, YemoAssistantViewModel vm) {
     final isUser = msg.isUser;
 
     return Padding(
@@ -469,26 +473,317 @@ class _YemoAssistantBodyState extends State<_YemoAssistantBody> {
                     ),
                   ),
                 ),
+                if (!isUser && msg.nearbyListings.isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.72,
+                    child: Column(
+                      children: msg.nearbyListings.map((rawItem) {
+                        try {
+                          final businessModel = BusinessListingModel.fromJson(rawItem);
+                          final listing = businessModel.toFoodListing();
+                          final distance = rawItem['distance'];
+                          final locationStr = distance != null 
+                              ? '${distance.toString()} km'
+                              : listing.location;
+                          final updatedListing = listing.copyWith(location: locationStr);
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: FoodListingCard(
+                              listing: updatedListing,
+                              width: double.infinity,
+                              onFavoriteTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.foodDetail,
+                                  arguments: updatedListing,
+                                );
+                              },
+                            ),
+                          );
+                        } catch (e) {
+                          debugPrint('Error mapping nearby listing card: $e');
+                          return const SizedBox();
+                        }
+                      }).toList(),
+                    ),
+                  ),
+                ],
+                if (!isUser && msg.topic == 'become_volunteer') ...[
+                  _buildVolunteerModeCard(themeColor),
+                ],
                 if (!isUser && msg.actions.isNotEmpty) ...[
                   const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: msg.actions
-                        .map(
-                          (action) => _buildActionChip(
-                            action: action,
-                            themeColor: themeColor,
-                          ),
-                        )
-                        .toList(),
-                  ),
+                  (() {
+                    final hasShareLocation = msg.actions.any((action) => action.topic == 'share_location');
+                    if (hasShareLocation) {
+                      return _buildLocationRequestButtons(msg.actions, themeColor, vm);
+                    }
+                    return Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: msg.actions
+                          .map(
+                            (action) => _buildActionChip(
+                              action: action,
+                              themeColor: themeColor,
+                            ),
+                          )
+                          .toList(),
+                    );
+                  })(),
                 ],
               ],
             ),
           ),
           if (isUser) const SizedBox(width: 12),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLocationRequestButtons(List<AssistantActionModel> actions, Color themeColor, YemoAssistantViewModel vm) {
+    final shareAction = actions.firstWhere((a) => a.topic == 'share_location', orElse: () => const AssistantActionModel(label: 'Konumumu paylaş'));
+    final selectAction = actions.firstWhere((a) => a.topic == 'select_region', orElse: () => const AssistantActionModel(label: 'Elle seç'));
+
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.72,
+      child: Column(
+        children: [
+          ElevatedButton.icon(
+            onPressed: () => vm.shareLocation(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: themeColor,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              minimumSize: const Size(double.infinity, 44),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            icon: const Icon(Icons.location_on, color: Colors.white, size: 18),
+            label: Text(
+              shareAction.label,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+            ),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton(
+            onPressed: () => _handleAssistantAction(selectAction),
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black87,
+              side: BorderSide(color: Colors.grey.shade300),
+              minimumSize: const Size(double.infinity, 44),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              selectAction.label,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVolunteerModeCard(Color themeColor) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.72,
+      margin: const EdgeInsets.only(top: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Icon(Icons.favorite, color: themeColor, size: 24),
+                const SizedBox(width: 8),
+                const Text(
+                  'GÖNÜLLÜLÜK MODU',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black87,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'Destek ol, birlikte daha az israf edelim. 🌱',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey.shade600,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            height: 120,
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                colors: [
+                  themeColor,
+                  themeColor.withValues(alpha: 0.7),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: const Stack(
+              children: [
+                Positioned(
+                  right: 12,
+                  bottom: -15,
+                  child: Icon(
+                    Icons.volunteer_activism,
+                    size: 80,
+                    color: Colors.white12,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Gönüllü olarak\nfark yaratabilirsin.',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          height: 1.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildVolunteerTile(
+            icon: Icons.restaurant,
+            title: 'Yemek paylaşımı yap',
+            subtitle: 'Fazla yemeklerini paylaş',
+            themeColor: themeColor,
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.volunteerAddListing);
+            },
+          ),
+          const Divider(height: 1, indent: 56, endIndent: 12),
+          _buildVolunteerTile(
+            icon: Icons.local_shipping,
+            title: 'Dağıtıma destek ol',
+            subtitle: 'Yemeklerin ihtiyaç sahiplerine ulaşmasına yardımcı ol',
+            themeColor: themeColor,
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.volunteerHome);
+            },
+          ),
+          const Divider(height: 1, indent: 56, endIndent: 12),
+          _buildVolunteerTile(
+            icon: Icons.groups,
+            title: 'Etkinliklere katıl',
+            subtitle: 'Gönüllü etkinlikleri keşfet',
+            themeColor: themeColor,
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.volunteerHome);
+            },
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Center(
+              child: Text(
+                'Birlikte daha az israf, daha çok iyilik! 💚',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: themeColor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVolunteerTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color themeColor,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: themeColor.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: themeColor, size: 16),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: Colors.grey.shade400, size: 16),
+          ],
+        ),
       ),
     );
   }
