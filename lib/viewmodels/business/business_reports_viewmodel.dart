@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/business/business_dashboard_model.dart';
+import '../../models/business/business_insight_model.dart';
 import '../../services/business/i_business_service.dart';
 
 class BusinessReportsViewModel extends ChangeNotifier {
@@ -12,6 +13,9 @@ class BusinessReportsViewModel extends ChangeNotifier {
   BusinessDashboardModel? _stats;
   BusinessDashboardModel? get stats => _stats;
 
+  BusinessInsightModel? _businessInsight;
+  BusinessInsightModel? get businessInsight => _businessInsight;
+
   BusinessReportsViewModel(this._businessService) {
     Future.microtask(() => fetchStats());
   }
@@ -22,6 +26,7 @@ class BusinessReportsViewModel extends ChangeNotifier {
 
     try {
       _stats = await _businessService.getDashboardStats();
+      _businessInsight = await _businessService.getBusinessInsights();
     } catch (e) {
       debugPrint('Error fetching business stats: $e');
     } finally {

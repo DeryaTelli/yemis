@@ -91,6 +91,7 @@ class ApiConstants {
 
   // --- Stats ---
   static const String businessDashboard = '/api/stats/business/dashboard';
+  static const String businessInsights = '/api/stats/business/insights';
 
   // --- Orders ---
   static const String orders = '/api/orders';

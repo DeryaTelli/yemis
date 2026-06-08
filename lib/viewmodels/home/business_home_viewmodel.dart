@@ -5,6 +5,7 @@ import '../../services/auth/user_session.dart';
 import '../../services/business/i_business_service.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../models/business/business_dashboard_model.dart';
+import '../../models/business/business_insight_model.dart';
 
 class BusinessHomeViewModel extends ChangeNotifier {
   BusinessHomeViewModel({
@@ -23,6 +24,7 @@ class BusinessHomeViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   BusinessDashboardModel? _dashboardStats;
+  BusinessInsightModel? _businessInsight;
 
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
@@ -43,11 +45,14 @@ class BusinessHomeViewModel extends ChangeNotifier {
   /// Satılan siparişler sayesinde önlenen CO₂ oranı (0.0 – 1.0)
   double get co2SavedPercent => (_dashboardStats?.co2Saved ?? 0.0) / 100.0;
 
+  BusinessInsightModel? get businessInsight => _businessInsight;
+
   Future<void> init() async {
     _isLoading = true;
     notifyListeners();
 
     _dashboardStats = await _businessService.getDashboardStats();
+    _businessInsight = await _businessService.getBusinessInsights();
 
     _isLoading = false;
     notifyListeners();

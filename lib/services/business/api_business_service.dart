@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../models/business/business_listing_model.dart';
 import '../../models/business/business_dashboard_model.dart';
+import '../../models/business/business_insight_model.dart';
 import '../../models/business/business_order_approval_model.dart';
 import '../../utils/constants/api_constants.dart';
 import 'i_business_service.dart';
@@ -208,6 +209,47 @@ class ApiBusinessService implements IBusinessService {
       }
     } catch (e) {
       if (kDebugMode) print('Error fetching dashboard stats: $e');
+    }
+    return null;
+  }
+
+  @override
+  Future<BusinessInsightModel?> getBusinessInsights() async {
+    final url = Uri.parse(
+      '${ApiConstants.baseUrl}${ApiConstants.businessInsights}',
+    );
+
+    if (kDebugMode) {
+      print('--- API REQUEST (GET BUSINESS INSIGHTS) ---');
+      print('URL: $url');
+      print('-------------------------------------------');
+    }
+
+    try {
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(ApiConstants.requestTimeout);
+
+      if (kDebugMode) {
+        print('--- API RESPONSE (BUSINESS INSIGHTS) ---');
+        print('Status Code: ${response.statusCode}');
+        print('Body: ${response.body}');
+        print('----------------------------------------');
+      }
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decoded = jsonDecode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          return BusinessInsightModel.fromJson(decoded);
+        }
+        if (decoded is Map) {
+          return BusinessInsightModel.fromJson(
+            Map<String, dynamic>.from(decoded),
+          );
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error fetching business insights: $e');
     }
     return null;
   }

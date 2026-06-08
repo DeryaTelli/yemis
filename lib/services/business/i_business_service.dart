@@ -1,5 +1,6 @@
 import '../../models/business/business_listing_model.dart';
 import '../../models/business/business_dashboard_model.dart';
+import '../../models/business/business_insight_model.dart';
 import '../../models/business/business_order_approval_model.dart';
 
 abstract class IBusinessService {
@@ -23,6 +24,8 @@ abstract class IBusinessService {
 
   /// İşletme dashboard istatistiklerini getirir.
   Future<BusinessDashboardModel?> getDashboardStats();
+
+  Future<BusinessInsightModel?> getBusinessInsights();
 
   /// Pending ve arrived durumundaki food siparişlerini getirir.
   Future<List<BusinessOrderApprovalModel>> getOrderApprovals();

@@ -101,7 +101,17 @@ class BusinessReportsView extends StatelessWidget {
 
                           // --- Operational Listings summary ---
                           _buildListingPerformanceSummary(stats),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 16),
+
+                          if (vm.businessInsight != null) ...[
+                            BusinessInsightCard(
+                              source: vm.businessInsight!.source,
+                              summary: vm.businessInsight!.summary,
+                              recommendations:
+                                  vm.businessInsight!.recommendations,
+                            ),
+                            const SizedBox(height: 24),
+                          ],
                         ],
                       ),
               ),
@@ -500,6 +510,195 @@ class BusinessReportsView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class BusinessInsightCard extends StatelessWidget {
+  final String source;
+  final String summary;
+  final List<String> recommendations;
+
+  const BusinessInsightCard({
+    super.key,
+    required this.source,
+    required this.summary,
+    required this.recommendations,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final sourceLabel = (source == 'groq' || source == 'gemini')
+        ? 'AI destekli analiz'
+        : 'Kural tabanli analiz';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFF7EA), Colors.white],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFFFE8800).withValues(alpha: 0.22),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFE8800).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.smart_toy_rounded,
+                  color: Color(0xFFFE8800),
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Yemo israf ozeti',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF2F2F2F),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      sourceLabel,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.72),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: const Color(0xFFFE8800).withValues(alpha: 0.12),
+              ),
+            ),
+            child: Text(
+              summary,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 14,
+                height: 1.45,
+                color: Color(0xFF444444),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          if (recommendations.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            const Text(
+              'Oncelikli oneriler',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF2F2F2F),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...recommendations.map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFE8800).withValues(alpha: 0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.remove_rounded,
+                        color: Color(0xFFFE8800),
+                        size: 10,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Builder(
+                        builder: (context) {
+                          final cleanItem = item.replaceAll('**', '');
+                          final colonIndex = cleanItem.indexOf(':');
+                          if (colonIndex != -1) {
+                            final title = cleanItem.substring(0, colonIndex + 1);
+                            final description = cleanItem.substring(colonIndex + 1);
+                            return Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      color: Color(0xFF2F2F2F),
+                                    ),
+                                  ),
+                                  TextSpan(text: description),
+                                ],
+                              ),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                height: 1.45,
+                                color: Color(0xFF4A4A4A),
+                              ),
+                            );
+                          }
+                          return Text(
+                            cleanItem,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              height: 1.45,
+                              color: Color(0xFF4A4A4A),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
