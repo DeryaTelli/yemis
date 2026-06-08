@@ -92,8 +92,8 @@ class _BodyState extends State<_Body> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Hesap güvenliğiniz için mevcut şifrenizi doğrulamanız gerekmektedir.',
+              Text(
+                'changePassword.description'.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.primaryTextColor,
@@ -157,7 +157,7 @@ class _BodyState extends State<_Body> {
                     if (success && context.mounted) {
                       SuccessDialogCustom.show(
                         context,
-                        message: 'Şifreniz başarıyla değiştirildi.',
+                        message: 'changePassword.success'.tr(),
                         onConfirm: () => Navigator.pop(context),
                       );
                     } else if (vm.errorMessage != null && context.mounted) {
@@ -175,9 +175,12 @@ class _BodyState extends State<_Body> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Şifreyi Güncelle',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Text(
+                    'changePassword.updateButton'.tr(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

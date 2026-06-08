@@ -44,7 +44,7 @@ class VolunteerCancelDialog extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 30,
             offset: const Offset(0, 15),
           ),
@@ -89,7 +89,10 @@ class VolunteerCancelDialog extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('Vazgeç', style: CustomTextStyles.semiBold16Grey),
+                child: Text(
+                  LocaleKeys.common_cancel.tr(),
+                  style: CustomTextStyles.semiBold16Grey,
+                ),
               ),
               const SizedBox(width: 8),
               TextButton(
@@ -98,7 +101,7 @@ class VolunteerCancelDialog extends StatelessWidget {
                   onConfirm();
                 },
                 child: Text(
-                  'Evet',
+                  LocaleKeys.common_yes.tr(),
                   style: CustomTextStyles.semiBold16Primary.copyWith(
                     color: Colors.redAccent,
                   ),

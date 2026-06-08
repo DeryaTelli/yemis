@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../models/food/order_model.dart';
 import '../../services/auth/i_auth_service.dart';
@@ -31,7 +32,7 @@ class MandatoryOrderReviewDialog extends StatelessWidget {
       create: (_) => ReviewDialogViewModel(
         reviewService: reviewService,
         orderId: order.id,
-        storeName: order.bag?.shopName ?? 'İşletme',
+        storeName: order.bag?.shopName ?? 'review.business'.tr(),
       ),
       child: _MandatoryOrderReviewPage(
         order: order,
@@ -94,7 +95,7 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
                 Icons.camera_alt_outlined,
                 color: AppColors.primaryColor,
               ),
-              title: const Text('Kameradan Çek'),
+              title: Text('common.pickFromCamera'.tr()),
               onTap: () {
                 Navigator.pop(sheetContext);
                 _pickImage(ImageSource.camera);
@@ -105,7 +106,7 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
                 Icons.photo_library_outlined,
                 color: AppColors.primaryColor,
               ),
-              title: const Text('Galeriden Seç'),
+              title: Text('common.pickFromGallery'.tr()),
               onTap: () {
                 Navigator.pop(sheetContext);
                 _pickImage(ImageSource.gallery);
@@ -120,15 +121,15 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
 
   Future<void> _submit(ReviewDialogViewModel vm) async {
     if (vm.rating == 0) {
-      setState(() => _localError = 'Lütfen bir puan seçin.');
+      setState(() => _localError = 'review.validation.rating'.tr());
       return;
     }
     if (vm.commentController.text.trim().length < 15) {
-      setState(() => _localError = 'Yorum en az 15 karakter olmalı.');
+      setState(() => _localError = 'review.validation.comment'.tr());
       return;
     }
     if (_selectedImages.isEmpty) {
-      setState(() => _localError = 'En az 1 fotoğraf eklemelisiniz.');
+      setState(() => _localError = 'review.validation.photo'.tr());
       return;
     }
 
@@ -144,7 +145,7 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
         if (!mounted) return;
         setState(() {
           _isUploading = false;
-          _localError = 'Fotoğraf yüklenemedi. Lütfen tekrar deneyin.';
+          _localError = 'review.photoUploadError'.tr();
         });
         return;
       }
@@ -173,7 +174,7 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text('Yorum Yap'),
+          title: Text('review.title'.tr()),
         ),
         body: AbsorbPointer(
           absorbing: isLoading,
@@ -184,8 +185,8 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
                 children: [
                   _OrderHeader(order: widget.order),
                   const SizedBox(height: 18),
-                  const Text(
-                    'Deneyiminizi değerlendirin',
+                  Text(
+                    'review.rateExperience'.tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
@@ -202,7 +203,7 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
                   const SizedBox(height: 16),
                   const Divider(color: Color(0x55FE8800)),
                   const SizedBox(height: 8),
-                  const _FieldLabel('Fotoğraf Ekle'),
+                  _FieldLabel('review.addPhoto'.tr()),
                   Row(
                     children: List.generate(3, (index) {
                       return Expanded(
@@ -222,7 +223,9 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '${_selectedImages.length}/3 fotoğraf seçildi. En az 1 fotoğraf zorunludur.',
+                    'review.photoCount'.tr(
+                      namedArgs: {'count': _selectedImages.length.toString()},
+                    ),
                     style: TextStyle(
                       fontSize: 12,
                       color: _selectedImages.isEmpty
@@ -239,7 +242,7 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
                     maxLines: 6,
                     maxLength: 500,
                     onChanged: (_) => setState(() => _localError = null),
-                    hintText: 'Sipariş deneyiminizi paylaşın',
+                    hintText: 'review.orderHint'.tr(),
                     fillColor: const Color(0xFFFFF8F0),
                     borderColor: AppColors.primaryColor.withValues(alpha: 0.55),
                     borderRadius: 18,
@@ -256,7 +259,7 @@ class _MandatoryOrderReviewPageState extends State<_MandatoryOrderReviewPage> {
                   ],
                   const SizedBox(height: 20),
                   CustomButton(
-                    text: 'Gönder',
+                    text: 'review.submit'.tr(),
                     width: double.infinity,
                     height: 54,
                     borderRadius: 14,
@@ -322,7 +325,7 @@ class _OrderHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  bag?.title ?? 'Sürpriz Kutu',
+                  bag?.title ?? 'home.surpriseBox'.tr(),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -332,7 +335,7 @@ class _OrderHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  bag?.shopName ?? 'İşletme',
+                  bag?.shopName ?? 'review.business'.tr(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(color: AppColors.hintTextColor),
@@ -395,7 +398,7 @@ class _AddPhotoSlot extends StatelessWidget {
         ),
         child: SizedBox(
           width: double.infinity,
-        height: 92,
+          height: 92,
           child: const Center(
             child: Icon(
               Icons.add_photo_alternate_outlined,

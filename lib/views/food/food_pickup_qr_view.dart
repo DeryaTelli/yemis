@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../utils/constants/app_colors.dart';
 
@@ -15,7 +16,7 @@ class FoodPickupQrView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text('QR Kod')),
+      appBar: AppBar(title: Text('pickupQr.title'.tr())),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 16, 24, 28),
@@ -70,8 +71,8 @@ class FoodPickupQrView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
-              const Text(
-                'QR Kodunuz',
+              Text(
+                'pickupQr.yourQr'.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.primaryColor,
@@ -80,8 +81,8 @@ class FoodPickupQrView extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'QR kodunu işletme sahibine göstererek\npaketinizi teslim alabilirsiniz.',
+              Text(
+                'pickupQr.description'.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.hintTextColor,
@@ -103,8 +104,8 @@ class FoodPickupQrView extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      const Text(
-                        'Alternatif Teslim Alım Kodu',
+                      Text(
+                        'pickupQr.alternativeCode'.tr(),
                         style: TextStyle(
                           color: AppColors.hintTextColor,
                           fontSize: 12,

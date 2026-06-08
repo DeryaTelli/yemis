@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../utils/theme/text_styles_custom.dart';
 
@@ -8,21 +9,21 @@ class DeleteConfirmationDialog extends StatelessWidget {
     super.key,
     required this.title,
     required this.message,
-    this.cancelText = 'Hayır',
-    this.confirmText = 'Evet',
+    this.cancelText,
+    this.confirmText,
   });
 
   final String title;
   final String message;
-  final String cancelText;
-  final String confirmText;
+  final String? cancelText;
+  final String? confirmText;
 
   static Future<bool> show(
     BuildContext context, {
     required String title,
     required String message,
-    String cancelText = 'Hayır',
-    String confirmText = 'Evet',
+    String? cancelText,
+    String? confirmText,
   }) async {
     final result = await showDialog<bool>(
       context: context,
@@ -68,13 +69,16 @@ class DeleteConfirmationDialog extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: Text(cancelText, style: CustomTextStyles.semiBold16Grey),
+                child: Text(
+                  cancelText ?? 'common.no'.tr(),
+                  style: CustomTextStyles.semiBold16Grey,
+                ),
               ),
               const SizedBox(width: 12),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
                 child: Text(
-                  confirmText,
+                  confirmText ?? 'common.yes'.tr(),
                   style: const TextStyle(
                     color: Colors.redAccent,
                     fontWeight: FontWeight.w700,

@@ -27,7 +27,8 @@
                                       "codeSent":  "A verification code has been sent to your email.",
                                       "resend":  "Resend",
                                       "button":  "Verify",
-                                      "successMessage":  "Account verified! Please log in."
+                                      "successMessage":  "Account verified! Please log in.",
+                                      "passwordResetDescription": "Enter the verification code to reset your password"
                                   },
                  "fields":  {
                                 "email":  "Email",
@@ -62,7 +63,8 @@
                                 "loginSuccess":  "Login successful."
                             },
                  "resetPassword":  {
-                                       "title":  "Password Reset"
+                                       "title":  "Password Reset",
+                                       "description": "Set a new password for your account."
                                    },
                  "changePassword":  {
                                         "title":  "Change Password"
@@ -251,6 +253,7 @@
                             "totalOrders":  "Total Orders",
                             "environmentalImpact":  "Environmental Impact Summary",
                             "performanceSummary":  "Listing Performance Summary",
+                            "soldTotal": "Sold / Total",
                             "noData":  "No data available."
                         },
     "businessAddOrder":  {
@@ -609,7 +612,10 @@
                      },
     "changePassword":  {
                            "currentPassword":  "Current Password",
-                           "newPassword":  "New Password"
+                           "newPassword":  "New Password",
+                           "description": "For your account security, you must verify your current password.",
+                           "success": "Your password has been changed successfully.",
+                           "updateButton": "Update Password"
                        },
     "notifications":  {
                           "pushTitle":  "Push Notifications",
@@ -668,6 +674,126 @@
                               "packagingText":  "To deliver the volunteer meal to a shelter or street animals, please remember to bring a bag or carrying package with you.",
                               "noShelterNearby":  "No shelters found nearby"
                           },
+    "review": {
+        "title": "Leave a Review",
+        "business": "Business",
+        "rateExperience": "Rate your experience",
+        "addPhoto": "Add Photo",
+        "photoCount": "{count}/3 photos selected. At least 1 photo is required.",
+        "orderHint": "Share your order experience",
+        "volunteerHint": "Share your volunteering experience",
+        "submit": "Submit",
+        "submitError": "Review could not be submitted. Please try again.",
+        "photoUploadError": "Photo could not be uploaded. Please try again.",
+        "validation": {
+            "rating": "Please select a rating.",
+            "comment": "The review must be at least 15 characters.",
+            "photo": "You must add at least 1 photo."
+        }
+    },
+    "foodSearch": {
+        "results": "Search Results ({count})",
+        "empty": "No listings matched your search."
+    },
+    "payment": {
+        "payWithAnotherCard": "Pay with Another Card",
+        "selectCard": "Select Card"
+    },
+    "activeOrder": {
+        "showQr": "Show QR Code",
+        "cancelReservation": "Cancel Reservation",
+        "cancelConfirm": "Are you sure you want to cancel the reservation?",
+        "refundAmount": "The {amount} TL paid for the reservation will be refunded to your account after cancellation.",
+        "refund": "The amount paid for the reservation will be refunded to your account after cancellation.",
+        "cancelSuccess": "Reservation cancelled. Your refund has been initiated.",
+        "cancelError": "Reservation could not be cancelled. Please try again.",
+        "detailError": "Listing details could not be loaded.",
+        "locationError": "The listing location could not be found.",
+        "qrPreparing": "Your QR code is still being prepared.",
+        "pickupCode": "Your pickup code: {code}",
+        "reserved": "Reservation Placed",
+        "preparingDescription": "Your reservation was received and is being prepared by the business.",
+        "quantity": "{quantity} Items",
+        "detailTitle": "Reservation Details",
+        "detailDescription": "View your order details."
+    },
+    "orderSuccess": {
+        "title": "Your Order Was Reserved Successfully!",
+        "saveCardDescription": "Would you like to save your card? You can use it easily for your next order.",
+        "description": "You can track your reservation details from the home page.",
+        "saveCard": "Save Card",
+        "goHome": "Go to Home"
+    },
+    "cards": {
+        "title": "Saved Cards",
+        "addCard": "Add New Card",
+        "myCards": "My Credit / Debit Cards",
+        "cardName": "Card Name",
+        "cardNumber": "Card Number",
+        "expiryDate": "Expiry Date",
+        "month": "Month",
+        "year": "Year",
+        "selectMonth": "Select Month",
+        "selectYear": "Select Year",
+        "cvv": "CVV",
+        "cardType": "Card Type",
+        "defaultCard": "Default Card",
+        "setDefault": "Set as my default card.",
+        "saveCard": "Save Card",
+        "detailTitle": "Card Details",
+        "deleteCard": "Delete Card",
+        "deleteConfirm": "The card named {name} will be permanently deleted.",
+        "saveError": "Card could not be saved.",
+        "deleteError": "Card could not be deleted.",
+        "empty": "You do not have any saved cards yet.",
+        "securityInfo": "Your card information is stored securely and only the masked card number is sent.",
+        "validation": {
+            "cardName": "Enter a card name.",
+            "cardNumber": "Enter a 16-digit card number.",
+            "cvv": "Enter 3 digits.",
+            "expiryDate": "Select the expiry date."
+        }
+    },
+    "ordersHistory": {
+        "title": "My Reservations",
+        "error": "An error occurred:\n{message}",
+        "retry": "Try Again",
+        "emptyTitle": "No Reservations Yet",
+        "emptyDescription": "Your surprise boxes and reservations will be listed here.",
+        "unknownBusiness": "Unknown Business",
+        "quantity": "Quantity: {quantity}",
+        "pickupCode": "Pickup Code:",
+        "preparing": "Preparing",
+        "yourReview": "Your Review for This Order",
+        "status": {
+            "pending": "Waiting for Approval",
+            "arrived": "Arrived",
+            "pickedUp": "Picked Up",
+            "cancelled": "Cancelled"
+        }
+    },
+    "pickupQr": {
+        "title": "QR Code",
+        "yourQr": "Your QR Code",
+        "description": "Show the QR code to the business owner to pick up your package.",
+        "alternativeCode": "Alternative Pickup Code"
+    },
+    "businessQr": {
+        "title": "QR Code Verification",
+        "pickupConfirmed": "The order was marked as delivered.",
+        "confirmError": "Pickup could not be confirmed.",
+        "introTitle": "Verify QR for Listing Pickup",
+        "introDescription": "Scan the customer's QR code to confirm the pickup.",
+        "verified": "QR code verified.",
+        "alignCode": "Align the QR code within the scanning area.",
+        "ready": "Ready to Scan QR Code",
+        "noPending": "There are currently no orders waiting for pickup.",
+        "pendingCount": "{count} orders are waiting for pickup confirmation.",
+        "verifiedTitle": "QR Code Verified",
+        "quantity": "{quantity} Items",
+        "confirmPickup": "Confirm Pickup",
+        "scanAnother": "Scan Another QR"
+    },
     "volunteerListing":  {
                              "volunteerFailed":  "Volunteering action failed."
                          }

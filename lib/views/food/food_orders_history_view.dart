@@ -38,7 +38,7 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppBar(title: const Text('Rezervasyonlarım')),
+      appBar: AppBar(title: Text('ordersHistory.title'.tr())),
       body: RefreshIndicator(
         onRefresh: () => vm.fetchOrders(),
         color: AppColors.primaryColor,
@@ -70,7 +70,9 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Bir hata oluştu:\n${vm.errorMessage}',
+                'ordersHistory.error'.tr(
+                  namedArgs: {'message': vm.errorMessage ?? ''},
+                ),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.grey),
               ),
@@ -83,9 +85,9 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Tekrar Dene',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  'ordersHistory.retry'.tr(),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],
@@ -113,8 +115,8 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Henüz Rezervasyonunuz Yok',
+            Text(
+              'ordersHistory.emptyTitle'.tr(),
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
@@ -122,8 +124,8 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Aldığınız sürpriz kutular ve rezervasyonlar\nburada listelenecektir.',
+            Text(
+              'ordersHistory.emptyDescription'.tr(),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -149,8 +151,8 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
 
   Widget _buildOrderCard(OrderModel order, ReviewModel? review) {
     final bag = order.bag;
-    final shopName = bag?.shopName ?? 'Bilinmeyen İşletme';
-    final bagTitle = bag?.title ?? 'Sürpriz Kutu';
+    final shopName = bag?.shopName ?? 'ordersHistory.unknownBusiness'.tr();
+    final bagTitle = bag?.title ?? 'home.surpriseBox'.tr();
     final formattedDate = DateFormat(
       'dd.MM.yyyy, HH:mm',
     ).format(order.orderTime);
@@ -162,20 +164,20 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
     switch (status) {
       case 'pending':
         statusColor = const Color(0xFFFF9800); // Turuncu
-        statusText = 'Onay Bekliyor';
+        statusText = 'ordersHistory.status.pending'.tr();
         break;
       case 'arrived':
         statusColor = const Color(0xFF2196F3); // Mavi
-        statusText = 'Hedefte';
+        statusText = 'ordersHistory.status.arrived'.tr();
         break;
       case 'picked_up':
         statusColor = const Color(0xFF4CAF50); // Yeşil
-        statusText = 'Teslim Alındı';
+        statusText = 'ordersHistory.status.pickedUp'.tr();
         break;
       case 'cancelled':
       case 'canceled':
         statusColor = Colors.red;
-        statusText = 'İptal Edildi';
+        statusText = 'ordersHistory.status.cancelled'.tr();
         break;
       default:
         statusColor = Colors.grey;
@@ -317,7 +319,11 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Adet: ${order.quantityReserved}',
+                          'ordersHistory.quantity'.tr(
+                            namedArgs: {
+                              'quantity': order.quantityReserved.toString(),
+                            },
+                          ),
                           style: const TextStyle(
                             fontSize: 12,
                             color: AppColors.hintTextColor,
@@ -365,8 +371,8 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Teslim Alım Kodu:',
+                    Text(
+                      'ordersHistory.pickupCode'.tr(),
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -386,8 +392,8 @@ class _FoodOrdersHistoryBodyState extends State<_FoodOrdersHistoryBody> {
                             ),
                           )
                         else
-                          const Text(
-                            'Hazırlanıyor',
+                          Text(
+                            'ordersHistory.preparing'.tr(),
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -479,10 +485,10 @@ class _OrderReviewCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 9),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Bu Sipariş İçin Yorumunuz',
-                  style: TextStyle(
+                  'ordersHistory.yourReview'.tr(),
+                  style: const TextStyle(
                     color: AppColors.primaryTextColor,
                     fontSize: 13,
                     fontWeight: FontWeight.w800,

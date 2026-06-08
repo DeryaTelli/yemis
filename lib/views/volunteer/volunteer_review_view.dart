@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../models/volunteer/volunteer_listing.dart';
 import '../../utils/constants/app_colors.dart';
@@ -81,7 +82,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
               ),
               _ImageSourceTile(
                 icon: Icons.camera_alt_outlined,
-                label: 'Kameradan Çek',
+                label: 'common.pickFromCamera'.tr(),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _pickImage(ImageSource.camera);
@@ -90,7 +91,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
               const Divider(height: 1, indent: 16, endIndent: 16),
               _ImageSourceTile(
                 icon: Icons.photo_library_outlined,
-                label: 'Galeriden Seç',
+                label: 'common.pickFromGallery'.tr(),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _pickImage(ImageSource.gallery);
@@ -107,15 +108,15 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
   Future<void> _submit() async {
     final comment = _commentController.text.trim();
     if (_rating == 0) {
-      setState(() => _errorText = 'Lütfen bir puan seçin.');
+      setState(() => _errorText = 'review.validation.rating'.tr());
       return;
     }
     if (comment.length < 15) {
-      setState(() => _errorText = 'Yorum en az 15 karakter olmalı.');
+      setState(() => _errorText = 'review.validation.comment'.tr());
       return;
     }
     if (_selectedImages.isEmpty) {
-      setState(() => _errorText = 'En az 1 fotoğraf eklemelisiniz.');
+      setState(() => _errorText = 'review.validation.photo'.tr());
       return;
     }
 
@@ -136,7 +137,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
     }
     setState(() {
       _isSubmitting = false;
-      _errorText = 'Yorum gönderilemedi. Lütfen tekrar deneyin.';
+      _errorText = 'review.submitError'.tr();
     });
   }
 
@@ -149,7 +150,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            title: const Text('Yorum Yap'),
+            title: Text('review.title'.tr()),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_rounded),
               onPressed: () => Navigator.pop(context),
@@ -161,7 +162,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
               _TaskHeader(task: widget.task),
               const SizedBox(height: 12),
               Text(
-                'Deneyiminizi değerlendirin',
+                'review.rateExperience'.tr(),
                 style: CustomTextStyles.semiBold16DarkGreyCompact,
                 textAlign: TextAlign.center,
               ),
@@ -181,7 +182,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
                 thickness: 1,
               ),
               // const SizedBox(height: 4),
-              const _FieldLabel('Fotoğraf Ekle'),
+              _FieldLabel('review.addPhoto'.tr()),
               Row(
                 children: List.generate(3, (index) {
                   return Expanded(
@@ -201,7 +202,9 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
               ),
               const SizedBox(height: 10),
               Text(
-                '${_selectedImages.length}/3 fotoğraf seçildi. En az 1 fotoğraf zorunludur.',
+                'review.photoCount'.tr(
+                  namedArgs: {'count': _selectedImages.length.toString()},
+                ),
                 style: TextStyle(
                   fontSize: 12,
                   color: _selectedImages.isEmpty
@@ -217,7 +220,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
               const SizedBox(height: 12),
               CustomTextField(
                 controller: _commentController,
-                hintText: 'Gönüllülük deneyiminizi paylaşın',
+                hintText: 'review.volunteerHint'.tr(),
                 minLines: 4,
                 maxLines: 6,
                 maxLength: 500,
@@ -250,7 +253,7 @@ class _VolunteerReviewViewState extends State<VolunteerReviewView> {
               ),
               const SizedBox(height: 24),
               CustomButton(
-                text: 'Gönder',
+                text: 'review.submit'.tr(),
                 width: double.infinity,
                 height: 54,
                 borderRadius: 14,

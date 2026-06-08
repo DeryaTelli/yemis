@@ -1,11 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:yemis/utils/locale_keys.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
-import '../../utils/constants/app_colors.dart';
-import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/auth/verification_viewmodel.dart';
@@ -62,7 +59,10 @@ class _VerificationViewState extends State<VerificationView> {
                         (route) => false,
                       );
                     } else {
-                      Navigator.pushReplacementNamed(context, AppRoutes.register);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AppRoutes.register,
+                      );
                     }
                   },
                 ),
@@ -86,7 +86,7 @@ class _VerificationViewState extends State<VerificationView> {
 
                     Text(
                       vm.isPasswordReset
-                          ? 'Şifrenizi yenilemek için doğrulama kodunu girin'
+                          ? 'auth.verification.passwordResetDescription'.tr()
                           : LocaleKeys.auth_verification_description.tr(),
                       style: CustomTextStyles.semiBold16Grey,
                       textAlign: TextAlign.center,
@@ -101,8 +101,10 @@ class _VerificationViewState extends State<VerificationView> {
                           child: OtpBox(
                             controller: vm.codeControllers[index],
                             focusNode: vm.focusNodes[index],
-                            onChanged: (v) => vm.onCodeChanged(index, v, context),
-                            onBackspace: () => vm.onCodeBackspace(index, context),
+                            onChanged: (v) =>
+                                vm.onCodeChanged(index, v, context),
+                            onBackspace: () =>
+                                vm.onCodeBackspace(index, context),
                           ),
                         );
                       }),
@@ -122,10 +124,11 @@ class _VerificationViewState extends State<VerificationView> {
                             onTap: vm.isLoading
                                 ? null
                                 : () => vm.resendCode(
-                                      onError: (msg) => ErrorDialogCustom.show(
-                                          context,
-                                          message: msg),
+                                    onError: (msg) => ErrorDialogCustom.show(
+                                      context,
+                                      message: msg,
                                     ),
+                                  ),
                             child: Text(
                               LocaleKeys.auth_verification_resend.tr(),
                               style: CustomTextStyles.extraBold16Primary,
@@ -145,14 +148,16 @@ class _VerificationViewState extends State<VerificationView> {
                               AppRoutes.resetPassword,
                               arguments: {
                                 'email': vm.email,
-                                'otp': token ?? vm.otp
+                                'otp': token ?? vm.otp,
                               },
                             );
                           } else {
                             vm.clearFields();
                             SuccessDialogCustom.show(
                               context,
-                              message: LocaleKeys.auth_verification_successMessage.tr(),
+                              message: LocaleKeys
+                                  .auth_verification_successMessage
+                                  .tr(),
                               onConfirm: () {
                                 Navigator.pushNamedAndRemoveUntil(
                                   context,

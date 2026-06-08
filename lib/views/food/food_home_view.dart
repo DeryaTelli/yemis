@@ -255,7 +255,9 @@ class _FoodSearchResults extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Arama Sonuçları (${results.length})',
+          'foodSearch.results'.tr(
+            namedArgs: {'count': results.length.toString()},
+          ),
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -274,10 +276,13 @@ class _FoodSearchResults extends StatelessWidget {
                 color: AppColors.primaryColor.withValues(alpha: 0.25),
               ),
             ),
-            child: const Text(
-              'Aramanızla eşleşen ilan bulunamadı.',
+            child: Text(
+              'foodSearch.empty'.tr(),
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.hintTextColor, fontSize: 14),
+              style: const TextStyle(
+                color: AppColors.hintTextColor,
+                fontSize: 14,
+              ),
             ),
           )
         else

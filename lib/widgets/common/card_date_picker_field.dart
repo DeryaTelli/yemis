@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../utils/constants/app_colors.dart';
 
@@ -32,7 +33,9 @@ class CardDatePickerField extends StatelessWidget {
         backgroundColor: Colors.transparent,
         barrierColor: Colors.black.withValues(alpha: 0.35),
         builder: (sheetContext) => _CardDatePickerSheet(
-          title: hint == 'Ay' ? 'Ay Seçin' : 'Yıl Seçin',
+          title: hint == 'cards.month'.tr()
+              ? 'cards.selectMonth'.tr()
+              : 'cards.selectYear'.tr(),
           items: items.where((item) => item != hint).toList(),
           selectedValue: hasValue ? value : null,
           onSelect: (selected) {

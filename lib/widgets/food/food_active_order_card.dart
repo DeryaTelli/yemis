@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../models/food/food_listing.dart';
 import '../../models/food/order_model.dart';
@@ -53,11 +53,15 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
 
   @override
   Widget build(BuildContext context) {
-    final order = widget.orders[_selectedIndex.clamp(0, widget.orders.length - 1)];
+    final order =
+        widget.orders[_selectedIndex.clamp(0, widget.orders.length - 1)];
     final bag = order.bag;
     final pickupTime = bag == null
-        ? DateFormat('dd MMMM HH:mm', 'tr').format(order.orderTime)
-        : '${DateFormat('dd MMMM', 'tr').format(bag.pickupStartTime)} '
+        ? DateFormat(
+            'dd MMMM HH:mm',
+            context.locale.languageCode,
+          ).format(order.orderTime)
+        : '${DateFormat('dd MMMM', context.locale.languageCode).format(bag.pickupStartTime)} '
               '${DateFormat('HH:mm').format(bag.pickupStartTime)}';
 
     return Container(
@@ -111,7 +115,7 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
                             flex: 9,
                             child: _ActionButton(
                               icon: Icons.near_me_outlined,
-                              label: 'Konuma Git',
+                              label: 'foodDetail.goToLocation'.tr(),
                               filled: true,
                               onTap: () => _goToLocation(context, itemOrder),
                             ),
@@ -121,7 +125,7 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
                             flex: 11,
                             child: _ActionButton(
                               icon: Icons.qr_code_2_rounded,
-                              label: 'QR Kodunu Göster',
+                              label: 'activeOrder.showQr'.tr(),
                               onTap: () => _showQr(context, itemOrder),
                             ),
                           ),
@@ -153,7 +157,7 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
     final confirmed = await showGeneralDialog<bool>(
       context: context,
       barrierDismissible: true,
-      barrierLabel: 'Rezervasyonu iptal et',
+      barrierLabel: 'activeOrder.cancelReservation'.tr(),
       transitionDuration: const Duration(milliseconds: 300),
       pageBuilder: (dialogContext, _, _) => Dialog(
         elevation: 0,
@@ -194,7 +198,7 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
-                      'Rezervasyonu İptal Et',
+                      'activeOrder.cancelReservation'.tr(),
                       style: CustomTextStyles.orelegaOne28DarkGrey,
                     ),
                   ),
@@ -207,14 +211,16 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Rezervasyonu iptal etmek istediğinize emin misiniz?',
+                      'activeOrder.cancelConfirm'.tr(),
                       style: CustomTextStyles.regular14GreyHeight,
                     ),
 
                     Text(
                       amount > 0
-                          ? 'İptal edilmesi durumunda rezervasyon işlemi için ödediğiniz ${amount.toStringAsFixed(0)} TL hesabınıza iade edilecektir.'
-                          : 'İptal edilmesi durumunda rezervasyon işlemi için ödediğiniz tutar hesabınıza iade edilecektir.',
+                          ? 'activeOrder.refundAmount'.tr(
+                              namedArgs: {'amount': amount.toStringAsFixed(0)},
+                            )
+                          : 'activeOrder.refund'.tr(),
                       style: CustomTextStyles.regular14GreyHeight,
                     ),
                   ],
@@ -226,17 +232,17 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogContext, false),
-                    child: const Text(
-                      'Vazgeç',
-                      style: TextStyle(color: AppColors.primaryTextColor),
+                    child: Text(
+                      'common.cancel'.tr(),
+                      style: const TextStyle(color: AppColors.primaryTextColor),
                     ),
                   ),
                   const SizedBox(width: 8),
                   TextButton(
                     onPressed: () => Navigator.pop(dialogContext, true),
-                    child: const Text(
-                      'Evet',
-                      style: TextStyle(color: Colors.redAccent),
+                    child: Text(
+                      'common.yes'.tr(),
+                      style: const TextStyle(color: Colors.redAccent),
                     ),
                   ),
                 ],
@@ -260,8 +266,8 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
       SnackBar(
         content: Text(
           success
-              ? 'Rezervasyon iptal edildi. İade işleminiz başlatıldı.'
-              : 'Rezervasyon iptal edilemedi. Lütfen tekrar deneyin.',
+              ? 'activeOrder.cancelSuccess'.tr()
+              : 'activeOrder.cancelError'.tr(),
         ),
         backgroundColor: success ? Colors.green : Colors.red,
       ),
@@ -288,7 +294,7 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('İlan detayı yüklenemedi.')));
+      ).showSnackBar(SnackBar(content: Text('activeOrder.detailError'.tr())));
     }
   }
 
@@ -310,9 +316,9 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
     final longitude = listing?.longitude ?? bag?.longitude;
 
     if (latitude == null || longitude == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('İlanın konumu bulunamadı.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('activeOrder.locationError'.tr())));
       return;
     }
 
@@ -338,8 +344,10 @@ class _FoodActiveOrderCardState extends State<FoodActiveOrderCard> {
         SnackBar(
           content: Text(
             order.pickupCode == null
-                ? 'QR kodunuz henüz hazırlanıyor.'
-                : 'Teslim alım kodunuz: ${order.pickupCode}',
+                ? 'activeOrder.qrPreparing'.tr()
+                : 'activeOrder.pickupCode'.tr(
+                    namedArgs: {'code': order.pickupCode ?? ''},
+                  ),
           ),
         ),
       );
@@ -411,22 +419,22 @@ class _Header extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Rezervasyon Yapıldı',
-                style: TextStyle(
+                'activeOrder.reserved'.tr(),
+                style: const TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              SizedBox(height: 3),
+              const SizedBox(height: 3),
               Text(
-                'Rezervasyonunuz alındı ve işletme tarafından hazırlanıyor.',
-                style: TextStyle(
+                'activeOrder.preparingDescription'.tr(),
+                style: const TextStyle(
                   color: AppColors.hintTextColor,
                   fontSize: 12,
                   height: 1.35,
@@ -480,7 +488,7 @@ class _Product extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  bag?.title ?? 'Sürpriz Kutu',
+                  bag?.title ?? 'home.surpriseBox'.tr(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -491,7 +499,7 @@ class _Product extends StatelessWidget {
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  bag?.shopName ?? 'İşletme',
+                  bag?.shopName ?? 'review.business'.tr(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -504,7 +512,11 @@ class _Product extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${order.quantityReserved} Adet',
+                      'activeOrder.quantity'.tr(
+                        namedArgs: {
+                          'quantity': order.quantityReserved.toString(),
+                        },
+                      ),
                       style: const TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: 12,
@@ -530,7 +542,7 @@ class _Product extends StatelessWidget {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      child: const Text('İptal Et'),
+                      child: Text('common.cancel'.tr()),
                     ),
                   ],
                 ),
@@ -578,30 +590,30 @@ class _DetailsRow extends StatelessWidget {
             color: const Color(0xFFFFF8EF),
             borderRadius: BorderRadius.circular(14),
           ),
-          child: const Row(
+          child: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.receipt_long_outlined,
                 color: AppColors.primaryColor,
                 size: 22,
               ),
-              SizedBox(width: 9),
+              const SizedBox(width: 9),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Rezervasyon Detayı',
-                      style: TextStyle(
+                      'activeOrder.detailTitle'.tr(),
+                      style: const TextStyle(
                         color: AppColors.primaryTextColor,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
-                      'Sipariş detayınızı görüntüleyin.',
-                      style: TextStyle(
+                      'activeOrder.detailDescription'.tr(),
+                      style: const TextStyle(
                         color: AppColors.hintTextColor,
                         fontSize: 12,
                       ),
@@ -609,7 +621,10 @@ class _DetailsRow extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded, color: AppColors.primaryColor),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.primaryColor,
+              ),
             ],
           ),
         ),

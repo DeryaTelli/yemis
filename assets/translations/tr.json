@@ -27,7 +27,8 @@
         "codeSent": "E-postanıza bir doğrulama kodu gönderildi.",
         "resend": "Tekrar gönder",
         "button": "Onayla",
-        "successMessage": "Hesap doğrulandı! Lütfen giriş yapın."
+        "successMessage": "Hesap doğrulandı! Lütfen giriş yapın.",
+        "passwordResetDescription": "Şifrenizi yenilemek için doğrulama kodunu girin"
         },
         "fields": {
         "email": "E-posta",
@@ -62,7 +63,8 @@
         "loginSuccess": "Giriş başarılı."
         },
         "resetPassword": {
-        "title": "Şifre Yenileme"
+        "title": "Şifre Yenileme",
+        "description": "Hesabınız için yeni bir şifre belirleyin."
         },
         "changePassword": {
         "title": "Şifre Değiştir"
@@ -251,6 +253,7 @@
         "totalOrders": "Toplam Sipariş",
         "environmentalImpact": "Çevresel Etki Özeti",
         "performanceSummary": "İlan Performans Özeti",
+        "soldTotal": "Satılan / Toplam",
         "noData": "Veri bulunamadı."
     },
     "businessAddOrder": {
@@ -609,7 +612,10 @@
     },
     "changePassword": {
         "currentPassword": "Mevcut Şifre",
-        "newPassword": "Yeni Şifre"
+        "newPassword": "Yeni Şifre",
+        "description": "Hesap güvenliğiniz için mevcut şifrenizi doğrulamanız gerekmektedir.",
+        "success": "Şifreniz başarıyla değiştirildi.",
+        "updateButton": "Şifreyi Güncelle"
     },
     "notifications": {
         "pushTitle": "Push Bildirimleri",
@@ -667,6 +673,126 @@
         "ingredientsText": "Ürünlerin içerik veya alerjen bilgilerinde tutarsızlıklar olabilir. Bu nedenle içerik ve alerjen konularında sokak hayvanlarının tüketimine uygunluğu açısından detaylı bilgi almak isterseniz lütfen doğrudan mekâna danışınız.",
         "packagingText": "Gönüllü yemeği barınağa veya sokak hayvanlarına ulaştırabilmek için, lütfen yanınıza poşet veya taşıma paketi almayı unutmayınız.",
         "noShelterNearby": "Yakında barınak bulunamadı"
+    },
+    "review": {
+        "title": "Yorum Yap",
+        "business": "İşletme",
+        "rateExperience": "Deneyiminizi değerlendirin",
+        "addPhoto": "Fotoğraf Ekle",
+        "photoCount": "{count}/3 fotoğraf seçildi. En az 1 fotoğraf zorunludur.",
+        "orderHint": "Sipariş deneyiminizi paylaşın",
+        "volunteerHint": "Gönüllülük deneyiminizi paylaşın",
+        "submit": "Gönder",
+        "submitError": "Yorum gönderilemedi. Lütfen tekrar deneyin.",
+        "photoUploadError": "Fotoğraf yüklenemedi. Lütfen tekrar deneyin.",
+        "validation": {
+            "rating": "Lütfen bir puan seçin.",
+            "comment": "Yorum en az 15 karakter olmalı.",
+            "photo": "En az 1 fotoğraf eklemelisiniz."
+        }
+    },
+    "foodSearch": {
+        "results": "Arama Sonuçları ({count})",
+        "empty": "Aramanızla eşleşen ilan bulunamadı."
+    },
+    "payment": {
+        "payWithAnotherCard": "Başka Kartla Öde",
+        "selectCard": "Kartı Seç"
+    },
+    "activeOrder": {
+        "showQr": "QR Kodunu Göster",
+        "cancelReservation": "Rezervasyonu İptal Et",
+        "cancelConfirm": "Rezervasyonu iptal etmek istediğinize emin misiniz?",
+        "refundAmount": "İptal edilmesi durumunda rezervasyon işlemi için ödediğiniz {amount} TL hesabınıza iade edilecektir.",
+        "refund": "İptal edilmesi durumunda rezervasyon işlemi için ödediğiniz tutar hesabınıza iade edilecektir.",
+        "cancelSuccess": "Rezervasyon iptal edildi. İade işleminiz başlatıldı.",
+        "cancelError": "Rezervasyon iptal edilemedi. Lütfen tekrar deneyin.",
+        "detailError": "İlan detayı yüklenemedi.",
+        "locationError": "İlanın konumu bulunamadı.",
+        "qrPreparing": "QR kodunuz henüz hazırlanıyor.",
+        "pickupCode": "Teslim alım kodunuz: {code}",
+        "reserved": "Rezervasyon Yapıldı",
+        "preparingDescription": "Rezervasyonunuz alındı ve işletme tarafından hazırlanıyor.",
+        "quantity": "{quantity} Adet",
+        "detailTitle": "Rezervasyon Detayı",
+        "detailDescription": "Sipariş detayınızı görüntüleyin."
+    },
+    "orderSuccess": {
+        "title": "Siparişiniz Başarıyla Rezerve Edildi!",
+        "saveCardDescription": "Kartınızı kaydetmek istiyor musunuz? Böylece sonraki siparişinizde kolayca kullanabilirsiniz.",
+        "description": "Rezervasyon detaylarınızı ana sayfadan takip edebilirsiniz.",
+        "saveCard": "Kartı Kaydet",
+        "goHome": "Ana Sayfaya Dön"
+    },
+    "cards": {
+        "title": "Kayıtlı Kartlarım",
+        "addCard": "Yeni Kart Ekle",
+        "myCards": "Kredi / Banka Kartlarım",
+        "cardName": "Kart İsmi",
+        "cardNumber": "Kart Numarası",
+        "expiryDate": "Son Kullanma Tarihi",
+        "month": "Ay",
+        "year": "Yıl",
+        "selectMonth": "Ay Seçin",
+        "selectYear": "Yıl Seçin",
+        "cvv": "CVV",
+        "cardType": "Kart Tipi",
+        "defaultCard": "Varsayılan Kart",
+        "setDefault": "Varsayılan kartım olarak belirle.",
+        "saveCard": "Kartımı Kaydet",
+        "detailTitle": "Kart Detayı",
+        "deleteCard": "Kartı Sil",
+        "deleteConfirm": "{name} adlı kart kalıcı olarak silinecek.",
+        "saveError": "Kart kaydedilemedi.",
+        "deleteError": "Kart silinemedi.",
+        "empty": "Henüz kayıtlı kartınız bulunmuyor.",
+        "securityInfo": "Kart bilgileriniz güvenli şekilde kaydedilir ve yalnızca maskeli kart numarası gönderilir.",
+        "validation": {
+            "cardName": "Kart ismini girin.",
+            "cardNumber": "16 haneli kart numarasını girin.",
+            "cvv": "3 hane girin.",
+            "expiryDate": "Son kullanma tarihini seçin."
+        }
+    },
+    "ordersHistory": {
+        "title": "Rezervasyonlarım",
+        "error": "Bir hata oluştu:\n{message}",
+        "retry": "Tekrar Dene",
+        "emptyTitle": "Henüz Rezervasyonunuz Yok",
+        "emptyDescription": "Aldığınız sürpriz kutular ve rezervasyonlar burada listelenecektir.",
+        "unknownBusiness": "Bilinmeyen İşletme",
+        "quantity": "Adet: {quantity}",
+        "pickupCode": "Teslim Alım Kodu:",
+        "preparing": "Hazırlanıyor",
+        "yourReview": "Bu Sipariş İçin Yorumunuz",
+        "status": {
+            "pending": "Onay Bekliyor",
+            "arrived": "Hedefte",
+            "pickedUp": "Teslim Alındı",
+            "cancelled": "İptal Edildi"
+        }
+    },
+    "pickupQr": {
+        "title": "QR Kod",
+        "yourQr": "QR Kodunuz",
+        "description": "QR kodunu işletme sahibine göstererek paketinizi teslim alabilirsiniz.",
+        "alternativeCode": "Alternatif Teslim Alım Kodu"
+    },
+    "businessQr": {
+        "title": "QR Kod Doğrulama",
+        "pickupConfirmed": "Sipariş teslim edildi olarak işaretlendi.",
+        "confirmError": "Teslim onaylanamadı.",
+        "introTitle": "İlan Teslimi İçin QR Onayla",
+        "introDescription": "Teslimatı onaylamak için müşterinin QR kodunu tarayın.",
+        "verified": "QR kod doğrulandı.",
+        "alignCode": "QR kodu tarama alanına hizalayın.",
+        "ready": "QR Kod Okunmaya Hazır",
+        "noPending": "Şu anda teslim bekleyen sipariş bulunmuyor.",
+        "pendingCount": "{count} sipariş teslim onayı bekliyor.",
+        "verifiedTitle": "QR Kod Doğrulandı",
+        "quantity": "{quantity} Adet",
+        "confirmPickup": "Teslimi Onayla",
+        "scanAnother": "Başka QR Tara"
     },
     "volunteerListing": {
         "volunteerFailed": "Gönüllü olma işlemi başarısız oldu."

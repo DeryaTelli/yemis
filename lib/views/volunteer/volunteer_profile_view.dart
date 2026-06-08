@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:yemis/viewmodels/volunteer/volunteer_listings_viewmodel.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/constants/app_colors.dart';
-import '../../utils/locale_keys.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../utils/theme/text_styles_custom.dart';
@@ -242,12 +241,13 @@ class _VolunteerProfileBodyState extends State<_VolunteerProfileBody> {
                     icon: Icons.public,
                     title: LocaleKeys.volunteerProfile_changeLanguage.tr(),
                     iconColor: AppColors.volunteerColor,
-                    onTap: () {
-                      Navigator.pushNamed(
+                    onTap: () async {
+                      final changed = await Navigator.pushNamed<Object?>(
                         context,
                         AppRoutes.languageSelect,
                         arguments: AppSection.volunteer,
                       );
+                      if (changed == true && mounted) setState(() {});
                     },
                   ),
                   ProfileMenuTile(

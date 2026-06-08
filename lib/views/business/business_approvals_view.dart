@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../models/app_module_type.dart';
 import '../../models/business/business_order_approval_model.dart';
@@ -72,8 +73,8 @@ class _BusinessQrApprovalScreenState extends State<_BusinessQrApprovalScreen> {
       SnackBar(
         content: Text(
           success
-              ? 'Sipariş teslim edildi olarak işaretlendi.'
-              : vm.error ?? 'Teslim onaylanamadı.',
+              ? 'businessQr.pickupConfirmed'.tr()
+              : vm.error ?? 'businessQr.confirmError'.tr(),
         ),
         backgroundColor: success ? const Color(0xFF27AE60) : Colors.red,
       ),
@@ -89,7 +90,7 @@ class _BusinessQrApprovalScreenState extends State<_BusinessQrApprovalScreen> {
           backgroundColor: const Color(0xFFFFFBF7),
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: const Text('QR Kod Doğrulama'),
+            title: Text('businessQr.title'.tr()),
           ),
           body: RefreshIndicator(
             color: AppColors.primaryColor,
@@ -159,9 +160,9 @@ class _IntroCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: const Color(0xFFFFD8AD)),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 27,
             backgroundColor: Color(0xFFFFE8CE),
             child: Icon(
@@ -170,19 +171,25 @@ class _IntroCard extends StatelessWidget {
               size: 30,
             ),
           ),
-          SizedBox(width: 14),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'İlan Teslimi İçin QR Onayla',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  'businessQr.introTitle'.tr(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
-                  'Teslimatı onaylamak için müşterinin QR kodunu tarayın.',
-                  style: TextStyle(color: Color(0xFF666666), height: 1.35),
+                  'businessQr.introDescription'.tr(),
+                  style: const TextStyle(
+                    color: Color(0xFF666666),
+                    height: 1.35,
+                  ),
                 ),
               ],
             ),
@@ -209,9 +216,7 @@ class _ScannerArea extends StatelessWidget {
     return Column(
       children: [
         Text(
-          isMatched
-              ? 'QR kod doğrulandı.'
-              : 'QR kodu tarama alanına hizalayın.',
+          isMatched ? 'businessQr.verified'.tr() : 'businessQr.alignCode'.tr(),
           style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
@@ -330,8 +335,8 @@ class _ReadyPanel extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'QR Kod Okunmaya Hazır',
+          Text(
+            'businessQr.ready'.tr(),
             style: TextStyle(
               color: AppColors.primaryColor,
               fontSize: 19,
@@ -341,8 +346,10 @@ class _ReadyPanel extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             pendingCount == 0
-                ? 'Şu anda teslim bekleyen sipariş bulunmuyor.'
-                : '$pendingCount sipariş teslim onayı bekliyor.',
+                ? 'businessQr.noPending'.tr()
+                : 'businessQr.pendingCount'.tr(
+                    namedArgs: {'count': pendingCount.toString()},
+                  ),
             textAlign: TextAlign.center,
             style: const TextStyle(color: Color(0xFF666666)),
           ),
@@ -390,16 +397,19 @@ class _MatchedOrderPanel extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundColor: Color(0xFFE8F8EE),
                 child: Icon(Icons.check_rounded, color: Color(0xFF27AE60)),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
-                'QR Kod Doğrulandı',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                'businessQr.verifiedTitle'.tr(),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),
@@ -438,7 +448,9 @@ class _MatchedOrderPanel extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        '${order.quantity} Adet',
+                        'businessQr.quantity'.tr(
+                          namedArgs: {'quantity': order.quantity.toString()},
+                        ),
                         style: const TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.w600,
@@ -470,9 +482,9 @@ class _MatchedOrderPanel extends StatelessWidget {
                           strokeWidth: 2,
                         ),
                       )
-                    : const Text(
-                        'Teslimi Onayla',
-                        style: TextStyle(
+                    : Text(
+                        'businessQr.confirmPickup'.tr(),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
                         ),
@@ -482,9 +494,9 @@ class _MatchedOrderPanel extends StatelessWidget {
           ),
           TextButton(
             onPressed: isConfirming ? null : onScanAgain,
-            child: const Text(
-              'Başka QR Tara',
-              style: TextStyle(color: AppColors.primaryColor),
+            child: Text(
+              'businessQr.scanAnother'.tr(),
+              style: const TextStyle(color: AppColors.primaryColor),
             ),
           ),
         ],

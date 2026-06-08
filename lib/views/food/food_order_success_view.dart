@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../services/auth/i_auth_service.dart';
 import '../../utils/constants/app_colors.dart';
@@ -92,8 +93,8 @@ class _FoodOrderSuccessViewState extends State<FoodOrderSuccessView> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Siparişiniz Başarıyla Rezerve Edildi!',
+                Text(
+                  'orderSuccess.title'.tr(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.primaryTextColor,
@@ -104,8 +105,8 @@ class _FoodOrderSuccessViewState extends State<FoodOrderSuccessView> {
                 const SizedBox(height: 12),
                 Text(
                   _shouldOfferCardSave
-                      ? 'Kartınızı kaydetmek istiyor musunuz? Böylece sonraki siparişinizde kolayca kullanabilirsiniz.'
-                      : 'Rezervasyon detaylarınızı ana sayfadan takip edebilirsiniz.',
+                      ? 'orderSuccess.saveCardDescription'.tr()
+                      : 'orderSuccess.description'.tr(),
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: AppColors.hintTextColor,
@@ -119,7 +120,7 @@ class _FoodOrderSuccessViewState extends State<FoodOrderSuccessView> {
                     children: [
                       Expanded(
                         child: _LinearButton(
-                          label: 'Hayır',
+                          label: 'common.no'.tr(),
                           onPressed: _isSaving ? null : _goHome,
                           gradient: LinearGradient(
                             colors: [
@@ -133,7 +134,7 @@ class _FoodOrderSuccessViewState extends State<FoodOrderSuccessView> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: _LinearButton(
-                          label: 'Kartı Kaydet',
+                          label: 'orderSuccess.saveCard'.tr(),
                           onPressed: _isSaving ? null : _saveCardAndGoHome,
                           gradient: AppColors.primaryButtonGradient,
                           isLoading: _isSaving,
@@ -143,7 +144,7 @@ class _FoodOrderSuccessViewState extends State<FoodOrderSuccessView> {
                   ),
                 ] else
                   _LinearButton(
-                    label: 'Ana Sayfaya Dön',
+                    label: 'orderSuccess.goHome'.tr(),
                     onPressed: _goHome,
                     gradient: AppColors.primaryButtonGradient,
                   ),

@@ -172,9 +172,9 @@ class _FoodReserveBottomSheetState extends State<FoodReserveBottomSheet> {
             ),
             const SizedBox(height: 16),
             // Title
-            const Text(
-              'Kayıtlı Kartlarım',
-              style: TextStyle(
+            Text(
+              'cards.title'.tr(),
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primaryTextColor,
@@ -324,9 +324,9 @@ class _FoodReserveBottomSheetState extends State<FoodReserveBottomSheet> {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            const Text(
-                              'Başka Kartla Öde',
-                              style: TextStyle(
+                            Text(
+                              'payment.payWithAnotherCard'.tr(),
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.primaryTextColor,
@@ -365,9 +365,12 @@ class _FoodReserveBottomSheetState extends State<FoodReserveBottomSheet> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Kartı Seç',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                  child: Text(
+                    'payment.selectCard'.tr(),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),

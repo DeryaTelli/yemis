@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 
@@ -41,7 +42,7 @@ class _CardsBody extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Kayıtlı Kartlarım'),
+          title: Text('cards.title'.tr()),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () => Navigator.pop(context),
@@ -54,7 +55,7 @@ class _CardsBody extends StatelessWidget {
             children: [
               _ActionTile(
                 icon: Icons.add,
-                title: 'Yeni Kart Ekle',
+                title: 'cards.addCard'.tr(),
                 onTap: () async {
                   final added = await Navigator.pushNamed(
                     context,
@@ -68,7 +69,7 @@ class _CardsBody extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Kredi / Banka Kartlarım',
+                'cards.myCards'.tr(),
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -151,7 +152,7 @@ class _AddCardViewState extends State<AddCardView> {
           child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: const Text('Yeni Kart Ekle'),
+              title: Text('cards.addCard'.tr()),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),
                 onPressed: () => Navigator.pop(context),
@@ -165,16 +166,16 @@ class _AddCardViewState extends State<AddCardView> {
                   const _InfoBanner(),
                   const SizedBox(height: 24),
                   _LabelledField(
-                    label: 'Kart İsmi',
+                    label: 'cards.cardName'.tr(),
                     controller: _nameController,
                     hint: 'Kart İsmi',
                     validator: (value) => (value ?? '').trim().isEmpty
-                        ? 'Kart ismini girin.'
+                        ? 'cards.validation.cardName'.tr()
                         : null,
                   ),
                   const SizedBox(height: 20),
                   _LabelledField(
-                    label: 'Kart No',
+                    label: 'cards.cardNumber'.tr(),
                     controller: _numberController,
                     hint: '0000 1111 2222 3333',
                     keyboardType: TextInputType.number,
@@ -186,7 +187,7 @@ class _AddCardViewState extends State<AddCardView> {
                     validator: (value) =>
                         (value ?? '').replaceAll(' ', '').length == 16
                         ? null
-                        : '16 haneli kart numarasını girin.',
+                        : 'cards.validation.cardNumber'.tr(),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -197,16 +198,13 @@ class _AddCardViewState extends State<AddCardView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Son Kullanma Tarihi',
-                              style: _labelStyle,
-                            ),
+                            Text('cards.expiryDate'.tr(), style: _labelStyle),
                             const SizedBox(height: 8),
                             Row(
                               children: [
                                 Expanded(
                                   child: CardDatePickerField(
-                                    hint: 'Ay',
+                                    hint: 'cards.month'.tr(),
                                     value: _month,
                                     items: List.generate(
                                       12,
@@ -219,7 +217,7 @@ class _AddCardViewState extends State<AddCardView> {
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: CardDatePickerField(
-                                    hint: 'Yıl',
+                                    hint: 'cards.year'.tr(),
                                     value: _year,
                                     items: years,
                                     onChanged: (value) =>
@@ -235,7 +233,7 @@ class _AddCardViewState extends State<AddCardView> {
                       Expanded(
                         flex: 2,
                         child: _LabelledField(
-                          label: 'CVV',
+                          label: 'cards.cvv'.tr(),
                           controller: _cvvController,
                           hint: '111',
                           keyboardType: TextInputType.number,
@@ -246,7 +244,7 @@ class _AddCardViewState extends State<AddCardView> {
                           ],
                           validator: (value) => (value ?? '').length == 3
                               ? null
-                              : '3 hane girin.',
+                              : 'cards.validation.cvv'.tr(),
                         ),
                       ),
                     ],
@@ -260,7 +258,7 @@ class _AddCardViewState extends State<AddCardView> {
                     value: _isDefault,
                     activeColor: AppColors.primaryColor,
                     title: Text(
-                      'Varsayılan kartım olarak belirle.',
+                      'cards.setDefault'.tr(),
                       style: CustomTextStyles.semiBold15DarkGrey,
                     ),
                     onChanged: (value) =>
@@ -268,7 +266,7 @@ class _AddCardViewState extends State<AddCardView> {
                   ),
                   const SizedBox(height: 28),
                   CustomButton(
-                    text: 'Kartımı Kaydet',
+                    text: 'cards.saveCard'.tr(),
                     width: double.infinity,
                     height: 54,
                     borderRadius: 14,
@@ -287,7 +285,7 @@ class _AddCardViewState extends State<AddCardView> {
   Future<void> _save(BuildContext context, CardsViewModel vm) async {
     if (!_formKey.currentState!.validate() || _month == null || _year == null) {
       if (_month == null || _year == null) {
-        _showMessage(context, 'Son kullanma tarihini seçin.');
+        _showMessage(context, 'cards.validation.expiryDate'.tr());
       }
       return;
     }
@@ -302,7 +300,7 @@ class _AddCardViewState extends State<AddCardView> {
     if (saved) {
       Navigator.pop(context, true);
     } else {
-      _showMessage(context, vm.errorMessage ?? 'Kart kaydedilemedi.');
+      _showMessage(context, vm.errorMessage ?? 'cards.saveError'.tr());
     }
   }
 }
@@ -327,7 +325,7 @@ class CardDetailView extends StatelessWidget {
           child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
-              title: const Text('Kart Detayı'),
+              title: Text('cards.detailTitle'.tr()),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),
                 onPressed: () => Navigator.pop(context),
@@ -344,21 +342,26 @@ class CardDetailView extends StatelessWidget {
                   child: Column(
                     children: [
                       _DetailRow(
-                        label: 'Kart İsmi',
+                        label: 'cards.cardName'.tr(),
                         value: card.cardHolderName,
                       ),
                       _DetailRow(
-                        label: 'Kart Numarası',
+                        label: 'cards.cardNumber'.tr(),
                         value: card.cardNumberMasked,
                       ),
                       _DetailRow(
-                        label: 'Son Kullanma Tarihi',
+                        label: 'cards.expiryDate'.tr(),
                         value: card.expiryDate,
                       ),
-                      _DetailRow(label: 'Kart Tipi', value: card.cardType),
                       _DetailRow(
-                        label: 'Varsayılan Kart',
-                        value: card.isDefault ? 'Evet' : 'Hayır',
+                        label: 'cards.cardType'.tr(),
+                        value: card.cardType,
+                      ),
+                      _DetailRow(
+                        label: 'cards.defaultCard'.tr(),
+                        value: card.isDefault
+                            ? 'common.yes'.tr()
+                            : 'common.no'.tr(),
                         showDivider: false,
                       ),
                     ],
@@ -366,7 +369,7 @@ class CardDetailView extends StatelessWidget {
                 ),
                 const SizedBox(height: 28),
                 CustomButton(
-                  text: 'Kartı Sil',
+                  text: 'cards.deleteCard'.tr(),
                   isOutlined: true,
                   backgroundColor: Colors.redAccent,
                   width: double.infinity,
@@ -385,8 +388,10 @@ class CardDetailView extends StatelessWidget {
   Future<void> _confirmDelete(BuildContext context, CardsViewModel vm) async {
     final confirmed = await DeleteConfirmationDialog.show(
       context,
-      title: 'Kartı Sil',
-      message: '${card.cardHolderName} adlı kart kalıcı olarak silinecek.',
+      title: 'cards.deleteCard'.tr(),
+      message: 'cards.deleteConfirm'.tr(
+        namedArgs: {'name': card.cardHolderName},
+      ),
     );
     if (!confirmed || !context.mounted) return;
     final deleted = await vm.deleteCard(card.id);
@@ -394,7 +399,7 @@ class CardDetailView extends StatelessWidget {
     if (deleted) {
       Navigator.pop(context, true);
     } else {
-      _showMessage(context, vm.errorMessage ?? 'Kart silinemedi.');
+      _showMessage(context, vm.errorMessage ?? 'cards.deleteError'.tr());
     }
   }
 }
@@ -572,19 +577,19 @@ class _EmptyCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(top: 76),
+    return Padding(
+      padding: const EdgeInsets.only(top: 76),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.credit_card_off_outlined,
             size: 58,
             color: Color(0xFFB0B0B0),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(
-            'Henüz kayıtlı kartınız bulunmuyor.',
-            style: TextStyle(
+            'cards.empty'.tr(),
+            style: const TextStyle(
               color: Color(0xFF777777),
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -610,14 +615,14 @@ class _InfoBanner extends StatelessWidget {
           color: AppColors.primaryColor.withValues(alpha: 0.18),
         ),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.info_outline, color: AppColors.primaryColor),
-          SizedBox(width: 12),
+          const Icon(Icons.info_outline, color: AppColors.primaryColor),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Kart bilgileriniz güvenli şekilde kaydedilir ve yalnızca maskeli kart numarası gönderilir.',
-              style: TextStyle(color: Color(0xFFC96A00), height: 1.35),
+              'cards.securityInfo'.tr(),
+              style: const TextStyle(color: Color(0xFFC96A00), height: 1.35),
             ),
           ),
         ],

@@ -103,20 +103,24 @@ class _LanguageSelectViewState extends State<LanguageSelectView> {
     setState(() => _isSaving = true);
 
     try {
-      // 1. Uygulama dilini yerel olarak değiştir
+      final authService = context.read<IAuthService>();
+      final userSession = context.read<UserSession>();
+
+      // Apply locally first so the UI changes without waiting for the backend.
       await context.setLocale(Locale(_selectedLocale));
+      if (!mounted) return;
+      setState(() {});
+      Navigator.of(context).pop(true);
 
       if (kDebugMode) {
         print('Local language set to: ${context.locale.languageCode}');
       }
 
-      // 2. Eğer kullanıcı giriş yapmışsa, tercihi backend'e gönder
-      final authService = context.read<IAuthService>();
-      final userSession = context.read<UserSession>();
-
+      // Persist the preference after the local UI has already changed.
       if (userSession.isLoggedIn) {
-        if (kDebugMode)
+        if (kDebugMode) {
           print('User is logged in, syncing language to backend...');
+        }
 
         final response = await authService.updateProfile(
           int.tryParse(userSession.currentUser!.id) ?? 0,
@@ -132,15 +136,14 @@ class _LanguageSelectViewState extends State<LanguageSelectView> {
           print(
             'Backend sync result: ${response.success ? 'SUCCESS' : 'FAILED'}',
           );
-          if (!response.success) print('Error: ${response.message}');
+          if (!response.success) {
+            print('Error: ${response.message}');
+          }
         }
       } else {
-        if (kDebugMode)
+        if (kDebugMode) {
           print('User is not logged in, only local change applied.');
-      }
-
-      if (mounted) {
-        Navigator.of(context).pop();
+        }
       }
     } catch (e) {
       if (kDebugMode) print('Error during language change: $e');

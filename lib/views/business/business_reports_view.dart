@@ -243,9 +243,12 @@ class BusinessReportsView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
-                        "Satılan / Toplam",
-                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      Text(
+                        'businessReports.soldTotal'.tr(),
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),

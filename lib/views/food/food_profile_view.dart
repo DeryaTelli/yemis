@@ -208,12 +208,13 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.public,
                     title: LocaleKeys.foodProfile_changeLanguage.tr(),
-                    onTap: () {
-                      Navigator.pushNamed(
+                    onTap: () async {
+                      final changed = await Navigator.pushNamed<Object?>(
                         context,
                         AppRoutes.languageSelect,
                         arguments: AppSection.food,
                       );
+                      if (changed == true && mounted) setState(() {});
                     },
                   ),
                   ProfileMenuTile(

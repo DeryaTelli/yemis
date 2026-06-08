@@ -229,12 +229,13 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                         ProfileMenuTile(
                           icon: Icons.public,
                           title: LocaleKeys.businessProfile_changeLanguage.tr(),
-                          onTap: () {
-                            Navigator.pushNamed(
+                          onTap: () async {
+                            final changed = await Navigator.pushNamed<Object?>(
                               context,
                               AppRoutes.languageSelect,
                               arguments: AppSection.food,
                             );
+                            if (changed == true && mounted) setState(() {});
                           },
                         ),
                         ProfileMenuTile(

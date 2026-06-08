@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
+import 'package:yemis/utils/locale_keys.dart';
 import '../../models/food/food_listing.dart';
 import '../../utils/constants/app_colors.dart';
 
@@ -24,7 +26,9 @@ class FoodListingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isSoldOut = listing.isSoldOut;
-    final bool isExpired = listing.deliveryEndTime != null && DateTime.now().isAfter(listing.deliveryEndTime!);
+    final bool isExpired =
+        listing.deliveryEndTime != null &&
+        DateTime.now().isAfter(listing.deliveryEndTime!);
     final bool isUnavailable = isSoldOut || isExpired;
 
     Widget cardContent = Padding(
@@ -198,10 +202,7 @@ class FoodListingCard extends StatelessWidget {
                 const SizedBox(height: 1),
 
                 // Zaman
-                Text(
-                  listing.timeRange,
-                  style: CustomTextStyles.regular14Grey,
-                ),
+                Text(listing.timeRange, style: CustomTextStyles.regular14Grey),
                 const SizedBox(height: 8),
 
                 // Ayırıcı çizgi (kesikli)
@@ -258,9 +259,7 @@ class FoodListingCard extends StatelessWidget {
           children: [
             cardContent,
             Positioned.fill(
-              child: Container(
-                color: Colors.white.withValues(alpha: 0.35),
-              ),
+              child: Container(color: Colors.white.withValues(alpha: 0.35)),
             ),
             Positioned.fill(
               child: BackdropFilter(
@@ -269,15 +268,20 @@ class FoodListingCard extends StatelessWidget {
                   color: Colors.black.withValues(alpha: 0.02),
                   alignment: Alignment.center,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
-                      color: isSoldOut 
-                          ? Colors.red.withValues(alpha: 0.85) 
+                      color: isSoldOut
+                          ? Colors.red.withValues(alpha: 0.85)
                           : Colors.grey.shade800.withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      isSoldOut ? 'Tükendi' : 'Süresi Doldu',
+                      isSoldOut
+                          ? LocaleKeys.businessListings_soldOut.tr()
+                          : LocaleKeys.businessListings_expired.tr(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,

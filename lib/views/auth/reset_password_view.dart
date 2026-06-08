@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import '../../utils/locale_keys.dart';
 import '../../utils/theme/text_styles_custom.dart';
 import '../../viewmodels/auth/reset_password_viewmodel.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
-import '../../widgets/common/otp_box.dart';
-
 import '../../widgets/common/success_dialog_custom.dart';
 import '../../widgets/common/error_dialog_custom.dart';
 import '../../widgets/common/loading_overlay.dart';
@@ -69,7 +66,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Hesabınız için yeni bir şifre belirleyin.',
+                        'auth.resetPassword.description'.tr(),
                         style: CustomTextStyles.regular16Grey,
                         textAlign: TextAlign.center,
                       ),
