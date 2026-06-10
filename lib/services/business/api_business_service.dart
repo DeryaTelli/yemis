@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../common/intercepted_client.dart';
 import '../../models/business/business_listing_model.dart';
 import '../../models/business/business_dashboard_model.dart';
 import '../../models/business/business_insight_model.dart';
@@ -9,7 +10,7 @@ import '../../utils/constants/api_constants.dart';
 import 'i_business_service.dart';
 
 class ApiBusinessService implements IBusinessService {
-  final http.Client _client = http.Client();
+  final http.Client _client = InterceptedClient();
   String? _authToken;
 
   void setToken(String? token) => _authToken = token;

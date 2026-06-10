@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../common/intercepted_client.dart';
 import 'package:yemis/models/notification/notification_model.dart';
 import 'package:yemis/utils/constants/api_constants.dart';
 
 class ApiNotificationService {
-  final http.Client _client = http.Client();
+  final http.Client _client = InterceptedClient();
   String? _authToken;
 
   void setToken(String? token) => _authToken = token;

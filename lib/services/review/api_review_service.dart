@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../common/intercepted_client.dart';
+import '../auth/user_session.dart';
 import '../../models/review/review_model.dart';
 import '../../models/review/review_request_models.dart';
 import '../../utils/constants/api_constants.dart';
@@ -8,9 +10,12 @@ import 'i_review_service.dart';
 
 /// Gerçek API ile konuşan review servisi.
 class ApiReviewService implements IReviewService {
-  ApiReviewService({required String? token}) : _token = token;
+  ApiReviewService({required String? token}) : _explicitToken = token;
 
-  final String? _token;
+  final String? _explicitToken;
+  final http.Client _client = InterceptedClient();
+
+  String? get _token => UserSession.instance?.token ?? _explicitToken;
 
   Map<String, String> get _headers => {
         'Content-Type': 'application/json',
@@ -19,8 +24,11 @@ class ApiReviewService implements IReviewService {
 
   Future<dynamic> _get(String endpoint) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
-    if (kDebugMode) print('[Review GET] $url');
-    final response = await http
+    if (kDebugMode) {
+      print('[Review GET] $url');
+      print('[Review GET] Headers: $_headers');
+    }
+    final response = await _client
         .get(url, headers: _headers)
         .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review GET Response] ${response.statusCode} ${response.body}');
@@ -32,8 +40,11 @@ class ApiReviewService implements IReviewService {
 
   Future<dynamic> _post(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
-    if (kDebugMode) print('[Review POST] $url body: $body');
-    final response = await http
+    if (kDebugMode) {
+      print('[Review POST] $url body: $body');
+      print('[Review POST] Headers: $_headers');
+    }
+    final response = await _client
         .post(url, headers: _headers, body: jsonEncode(body))
         .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review POST Response] ${response.statusCode} ${response.body}');
@@ -46,8 +57,11 @@ class ApiReviewService implements IReviewService {
 
   Future<dynamic> _put(String endpoint, Map<String, dynamic> body) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
-    if (kDebugMode) print('[Review PUT] $url body: $body');
-    final response = await http
+    if (kDebugMode) {
+      print('[Review PUT] $url body: $body');
+      print('[Review PUT] Headers: $_headers');
+    }
+    final response = await _client
         .put(url, headers: _headers, body: jsonEncode(body))
         .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review PUT Response] ${response.statusCode} ${response.body}');
@@ -59,8 +73,11 @@ class ApiReviewService implements IReviewService {
 
   Future<bool> _delete(String endpoint) async {
     final url = Uri.parse('${ApiConstants.baseUrl}$endpoint');
-    if (kDebugMode) print('[Review DELETE] $url');
-    final response = await http
+    if (kDebugMode) {
+      print('[Review DELETE] $url');
+      print('[Review DELETE] Headers: $_headers');
+    }
+    final response = await _client
         .delete(url, headers: _headers)
         .timeout(ApiConstants.requestTimeout);
     if (kDebugMode) print('[Review DELETE Response] ${response.statusCode}');
