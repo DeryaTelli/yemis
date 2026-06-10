@@ -188,7 +188,11 @@ class _FoodProfileBodyState extends State<_FoodProfileBody> {
                   ProfileMenuTile(
                     icon: Icons.credit_card_rounded,
                     title: LocaleKeys.foodProfile_cards.tr(),
-                    onTap: () => Navigator.pushNamed(context, AppRoutes.cards),
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.cards,
+                      arguments: AppModuleType.food,
+                    ),
                   ),
                   ProfileMenuTile(
                     icon: Icons.person_outline_rounded,

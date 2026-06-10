@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -150,7 +149,10 @@ class _BusinessProfileEditBodyState extends State<_BusinessProfileEditBody> {
                         ? const SizedBox(
                             width: 24,
                             height: 24,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
                           )
                         : Text(
                             LocaleKeys.businessProfileEdit_updateButton.tr(),
@@ -178,7 +180,9 @@ class _BusinessProfileEditBodyState extends State<_BusinessProfileEditBody> {
                   child: Text(
                     LocaleKeys.businessProfileEdit_deleteAccountButton.tr(),
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w700),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -206,10 +210,10 @@ class _BusinessProfileEditBodyState extends State<_BusinessProfileEditBody> {
         height: 80,
         fit: BoxFit.cover,
         errorBuilder: (context, error, stackTrace) =>
-            Icon(Icons.store_rounded, size: 32, color: primaryColor),
+            Icon(Icons.storefront_rounded, size: 32, color: primaryColor),
       );
     }
-    return Icon(Icons.store_rounded, size: 32, color: primaryColor);
+    return Icon(Icons.storefront_rounded, size: 32, color: primaryColor);
   }
 
   void _showPhotoSelectBS(BuildContext context, BusinessProfileViewModel vm) {

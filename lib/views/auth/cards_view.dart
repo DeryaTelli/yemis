@@ -4,38 +4,55 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:yemis/utils/theme/text_styles_custom.dart';
 
+import '../../models/app_module_type.dart';
 import '../../models/auth/saved_card_model.dart';
 import '../../services/auth/i_auth_service.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../utils/routes/app_routes.dart';
+import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/auth/cards_viewmodel.dart';
 import '../../widgets/common/card_date_picker_field.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/delete_confirmation_dialog.dart';
+import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/loading_overlay.dart';
 
 class CardsView extends StatelessWidget {
-  const CardsView({super.key});
+  const CardsView({super.key, this.moduleType = AppModuleType.food});
+
+  final AppModuleType moduleType;
 
   @override
   Widget build(BuildContext context) {
+    final section = moduleType == AppModuleType.volunteer
+        ? AppSection.volunteer
+        : AppSection.food;
+
     return ChangeNotifierProvider(
       create: (_) {
         final vm = CardsViewModel(authService: context.read<IAuthService>());
         Future.microtask(vm.fetchCards);
         return vm;
       },
-      child: const _CardsBody(),
+      child: Theme(
+        data: AppTheme.themeFor(section),
+        child: _CardsBody(moduleType: moduleType),
+      ),
     );
   }
 }
 
 class _CardsBody extends StatelessWidget {
-  const _CardsBody();
+  const _CardsBody({required this.moduleType});
+
+  final AppModuleType moduleType;
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<CardsViewModel>();
+    final themeColor = moduleType == AppModuleType.volunteer
+        ? AppColors.volunteerColor
+        : AppColors.primaryColor;
 
     return LoadingOverlay(
       isLoading: vm.isLoading && vm.cards.isNotEmpty,
@@ -56,6 +73,7 @@ class _CardsBody extends StatelessWidget {
               _ActionTile(
                 icon: Icons.add,
                 title: 'cards.addCard'.tr(),
+                color: themeColor,
                 onTap: () async {
                   final added = await Navigator.pushNamed(
                     context,
@@ -83,7 +101,7 @@ class _CardsBody extends StatelessWidget {
                   child: Center(child: CircularProgressIndicator()),
                 )
               else if (vm.cards.isEmpty)
-                const _EmptyCards()
+                _EmptyCards(color: themeColor)
               else
                 ...vm.cards.map(
                   (card) => Padding(
@@ -420,11 +438,13 @@ class _ActionTile extends StatelessWidget {
   const _ActionTile({
     required this.icon,
     required this.title,
+    required this.color,
     required this.onTap,
   });
 
   final IconData icon;
   final String title;
+  final Color color;
   final VoidCallback onTap;
 
   @override
@@ -439,9 +459,7 @@ class _ActionTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: AppColors.primaryColor.withValues(alpha: 0.3),
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.02),
@@ -455,17 +473,17 @@ class _ActionTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withValues(alpha: 0.1),
+                  color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: AppColors.primaryColor, size: 24),
+                child: Icon(icon, color: color, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
+                  style: TextStyle(
+                    color: color,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
@@ -573,29 +591,19 @@ class _CardTypeBadge extends StatelessWidget {
 }
 
 class _EmptyCards extends StatelessWidget {
-  const _EmptyCards();
+  const _EmptyCards({required this.color});
+
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 76),
-      child: Column(
-        children: [
-          const Icon(
-            Icons.credit_card_off_outlined,
-            size: 58,
-            color: Color(0xFFB0B0B0),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'cards.empty'.tr(),
-            style: const TextStyle(
-              color: Color(0xFF777777),
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+      child: EmptyState(
+        icon: Icons.credit_card_outlined,
+        title: 'cards.emptyTitle'.tr(),
+        description: 'cards.emptyDescription'.tr(),
+        color: color,
       ),
     );
   }

@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import '../../services/business/i_business_service.dart';
 import '../../viewmodels/business/business_listings_viewmodel.dart';
 import '../../widgets/business/business_listing_card.dart';
+import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
+import '../../utils/constants/app_colors.dart';
 import 'package:lottie/lottie.dart';
 import '../../utils/theme/text_styles_custom.dart';
 
@@ -35,9 +37,15 @@ class _BusinessListingsBody extends StatelessWidget {
     final vm = context.watch<BusinessListingsViewModel>();
 
     String title = LocaleKeys.businessListings_allTitle.tr();
-    if (type == ListingType.sold) title = LocaleKeys.businessListings_soldTitle.tr();
-    if (type == ListingType.active) title = LocaleKeys.businessListings_activeTitle.tr();
-    if (type == ListingType.expired) title = LocaleKeys.businessListings_expiredTitle.tr();
+    if (type == ListingType.sold) {
+      title = LocaleKeys.businessListings_soldTitle.tr();
+    }
+    if (type == ListingType.active) {
+      title = LocaleKeys.businessListings_activeTitle.tr();
+    }
+    if (type == ListingType.expired) {
+      title = LocaleKeys.businessListings_expiredTitle.tr();
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
@@ -58,7 +66,7 @@ class _BusinessListingsBody extends StatelessWidget {
                 child: ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: vm.listings.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  separatorBuilder: (_, _) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final item = vm.listings[index];
                     return Dismissible(
@@ -68,12 +76,18 @@ class _BusinessListingsBody extends StatelessWidget {
                         debugPrint('Listing ${item.id} dismissed from UI');
                       },
                       confirmDismiss: (direction) async {
-                        final confirmed = await _showDeleteConfirmation(context);
+                        final confirmed = await _showDeleteConfirmation(
+                          context,
+                        );
                         if (confirmed == true) {
                           final success = await vm.deleteListing(item.id);
                           if (!success && context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(LocaleKeys.businessListings_deleteError.tr())),
+                              SnackBar(
+                                content: Text(
+                                  LocaleKeys.businessListings_deleteError.tr(),
+                                ),
+                              ),
                             );
                           }
                           return success;
@@ -87,8 +101,11 @@ class _BusinessListingsBody extends StatelessWidget {
                           color: Colors.red[400],
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Icon(Icons.delete_outline_rounded,
-                            color: Colors.white, size: 28),
+                        child: const Icon(
+                          Icons.delete_outline_rounded,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                       ),
                       child: BusinessListingCard(
                         listing: item,
@@ -104,23 +121,38 @@ class _BusinessListingsBody extends StatelessWidget {
   }
 
   Widget _buildEmptyState(ListingType type) {
-    String message = LocaleKeys.businessListings_emptyAll.tr();
-    if (type == ListingType.sold) message = LocaleKeys.businessListings_emptySold.tr();
-    if (type == ListingType.active) message = LocaleKeys.businessListings_emptyActive.tr();
-    if (type == ListingType.expired) message = LocaleKeys.businessListings_emptyExpired.tr();
+    final (icon, title, description) = switch (type) {
+      ListingType.sold => (
+        Icons.check_circle_outline_rounded,
+        LocaleKeys.businessListings_emptySold.tr(),
+        LocaleKeys.businessListings_emptySoldDescription.tr(),
+      ),
+      ListingType.active => (
+        Icons.playlist_add_rounded,
+        LocaleKeys.businessListings_emptyActive.tr(),
+        LocaleKeys.businessListings_emptyActiveDescription.tr(),
+      ),
+      ListingType.expired => (
+        Icons.timer_off_outlined,
+        LocaleKeys.businessListings_emptyExpired.tr(),
+        LocaleKeys.businessListings_emptyExpiredDescription.tr(),
+      ),
+      ListingType.all => (
+        Icons.list_alt_rounded,
+        LocaleKeys.businessListings_emptyAll.tr(),
+        LocaleKeys.businessListings_emptyAllDescription.tr(),
+      ),
+    };
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.list_alt_rounded, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          Text(
-            message,
-            style: const TextStyle(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: EmptyState(
+          icon: icon,
+          title: title,
+          description: description,
+          color: AppColors.primaryColor,
+        ),
       ),
     );
   }
@@ -129,9 +161,7 @@ class _BusinessListingsBody extends StatelessWidget {
     return showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         backgroundColor: const Color(0xFFFDF5F2),
         content: Column(
           mainAxisSize: MainAxisSize.min,

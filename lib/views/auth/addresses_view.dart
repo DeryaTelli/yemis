@@ -9,6 +9,7 @@ import '../../services/auth/user_session.dart';
 import '../../utils/routes/app_routes.dart';
 import '../../widgets/common/loading_overlay.dart';
 import '../../widgets/common/delete_confirmation_dialog.dart';
+import '../../widgets/common/empty_state.dart';
 import '../../models/app_module_type.dart';
 import '../../utils/theme/app_theme.dart';
 
@@ -62,25 +63,13 @@ class AddressesView extends StatelessWidget {
                     const SizedBox(height: 16),
                     if (vm.addresses.isEmpty && !vm.isLoading)
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        padding: const EdgeInsets.only(top: 56),
                         child: Center(
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.location_off_outlined,
-                                size: 48,
-                                color: Colors.grey[300],
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                LocaleKeys.addresses_notFound.tr(),
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          child: EmptyState(
+                            icon: Icons.location_on_outlined,
+                            title: 'addresses.emptyTitle'.tr(),
+                            description: 'addresses.emptyDescription'.tr(),
+                            color: themeColor,
                           ),
                         ),
                       )

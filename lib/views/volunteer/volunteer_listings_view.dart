@@ -9,6 +9,7 @@ import '../../utils/routes/app_routes.dart';
 import '../../utils/theme/app_theme.dart';
 import '../../viewmodels/volunteer/volunteer_listings_viewmodel.dart';
 import '../../widgets/common/app_bottom_nav_bar.dart';
+import '../../widgets/common/empty_state.dart';
 import '../../widgets/volunteer/volunteer_listing_card.dart';
 import '../../widgets/volunteer/volunteer_my_listing_card.dart';
 import 'package:lottie/lottie.dart';
@@ -72,20 +73,11 @@ class _VolunteerListingsBody extends StatelessWidget {
               ),
             )
           : vm.listings.isEmpty
-          ? Center(
-              child: Text(
-                LocaleKeys.volunteerListings_emptyMessage.tr(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.hintTextColor,
-                ),
-              ),
-            )
+          ? _VolunteerListingsEmptyState(type: vm.type)
           : ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
               itemCount: vm.listings.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              separatorBuilder: (_, _) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final listing = vm.listings[index];
                 final isPast = vm.type == VolunteerListingType.past;
@@ -125,7 +117,9 @@ class _VolunteerListingsBody extends StatelessWidget {
                         if (!success && context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(LocaleKeys.volunteerListings_deleteError.tr()),
+                              content: Text(
+                                LocaleKeys.volunteerListings_deleteError.tr(),
+                              ),
                             ),
                           );
                         }
@@ -260,6 +254,45 @@ class _VolunteerListingsBody extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _VolunteerListingsEmptyState extends StatelessWidget {
+  const _VolunteerListingsEmptyState({required this.type});
+
+  final VolunteerListingType type;
+
+  @override
+  Widget build(BuildContext context) {
+    final (icon, title, description) = switch (type) {
+      VolunteerListingType.past => (
+        Icons.history_rounded,
+        LocaleKeys.volunteerListings_emptyPastTitle.tr(),
+        LocaleKeys.volunteerListings_emptyPastDescription.tr(),
+      ),
+      VolunteerListingType.attended => (
+        Icons.volunteer_activism_outlined,
+        LocaleKeys.volunteerListings_emptyAttendedTitle.tr(),
+        LocaleKeys.volunteerListings_emptyAttendedDescription.tr(),
+      ),
+      VolunteerListingType.active => (
+        Icons.event_available_outlined,
+        LocaleKeys.volunteerListings_emptyActiveTitle.tr(),
+        LocaleKeys.volunteerListings_emptyActiveDescription.tr(),
+      ),
+    };
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: EmptyState(
+          icon: icon,
+          title: title,
+          description: description,
+          color: AppColors.volunteerColor,
         ),
       ),
     );

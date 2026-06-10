@@ -6,10 +6,10 @@ import 'package:yemis/models/notification/notification_model.dart';
 import 'package:yemis/utils/constants/app_colors.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/utils/theme/app_theme.dart';
-import 'package:yemis/utils/theme/text_styles_custom.dart';
 import 'package:yemis/viewmodels/notification/notification_viewmodel.dart';
 import 'package:yemis/services/notifications/api_notification_service.dart';
 import 'package:yemis/services/auth/user_session.dart';
+import 'package:yemis/widgets/common/empty_state.dart';
 
 class NotificationView extends StatelessWidget {
   final AppModuleType moduleType;
@@ -197,7 +197,7 @@ class _NotificationsTab extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       itemCount: vm.notifications.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
         final notification = vm.notifications[index];
         return _NotificationCard(
@@ -213,25 +213,14 @@ class _NotificationsTab extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.notifications_none_rounded,
-            size: 80,
-            color: Colors.grey.shade300,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            LocaleKeys.notifications_emptyTitle.tr(),
-            style: CustomTextStyles.semiBold16Grey,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            LocaleKeys.notifications_emptySubtitle.tr(),
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: EmptyState(
+          icon: Icons.notifications_none_rounded,
+          title: LocaleKeys.notifications_emptyTitle.tr(),
+          description: LocaleKeys.notifications_emptySubtitle.tr(),
+          color: primaryColor,
+        ),
       ),
     );
   }

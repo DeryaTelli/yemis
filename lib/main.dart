@@ -551,8 +551,10 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case AppRoutes.cards:
+              final moduleType =
+                  settings.arguments as AppModuleType? ?? AppModuleType.food;
               return MaterialPageRoute(
-                builder: (_) => const CardsView(),
+                builder: (_) => CardsView(moduleType: moduleType),
                 settings: settings,
               );
             case AppRoutes.addCard:

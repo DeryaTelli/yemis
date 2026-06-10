@@ -198,6 +198,12 @@
                               "pastTitle":  "Past Listings",
                               "attendedTitle":  "My Volunteer Tasks",
                               "emptyMessage":  "You don\u0027t have any listings in this category yet.",
+                              "emptyPastTitle":  "No Past Listings Yet",
+                              "emptyPastDescription":  "Your expired or completed listings will be listed here.",
+                              "emptyAttendedTitle":  "No Volunteer Tasks Yet",
+                              "emptyAttendedDescription":  "Listings you volunteer for will be listed here.",
+                              "emptyActiveTitle":  "No Active Listings Yet",
+                              "emptyActiveDescription":  "Your active listings will be listed here.",
                               "deleteError":  "An error occurred while deleting the listing.",
                               "deleteConfirm":  "Are you sure you want to delete this listing?",
                               "deleteTitle":  "Delete Listing"
@@ -254,7 +260,9 @@
                             "environmentalImpact":  "Environmental Impact Summary",
                             "performanceSummary":  "Listing Performance Summary",
                             "soldTotal": "Sold / Total",
-                            "noData":  "No data available."
+                            "noData":  "No data available.",
+                            "emptyTitle":  "No Report Data Yet",
+                            "emptyDescription":  "Your reports will appear here when sales and listing data is available."
                         },
     "businessAddOrder":  {
                              "title":  "Add Order",
@@ -324,6 +332,8 @@
                       "selectFromLocation":  "Select from Location",
                       "enterAddress":  "Enter Address",
                       "notFound":  "No saved addresses found.",
+                      "emptyTitle":  "No Saved Addresses Yet",
+                      "emptyDescription":  "Your saved addresses will be listed here.",
                       "editTitle":  "Edit Address",
                       "addTitle":  "Add Address",
                       "ilLabel":  "Province",
@@ -398,6 +408,10 @@
                              "emptySold":  "You have no sold orders yet.",
                              "emptyActive":  "You have no added listings yet.",
                              "emptyExpired":  "You have no expired listings yet.",
+                             "emptyAllDescription":  "All listings you add will be listed here.",
+                             "emptySoldDescription":  "Your sold orders will be listed here.",
+                             "emptyActiveDescription":  "Your active listings will be listed here.",
+                             "emptyExpiredDescription":  "Your expired listings will be listed here.",
                              "deleteDialogTitle":  "Delete Listing",
                              "deleteDialogMessage":  "Are you sure you want to delete this listing?",
                              "soldOut":  "Sold Out",
@@ -746,6 +760,8 @@
         "saveError": "Card could not be saved.",
         "deleteError": "Card could not be deleted.",
         "empty": "You do not have any saved cards yet.",
+        "emptyTitle": "No Saved Cards Yet",
+        "emptyDescription": "Your saved cards will be listed here.",
         "securityInfo": "Your card information is stored securely and only the masked card number is sent.",
         "validation": {
             "cardName": "Enter a card name.",

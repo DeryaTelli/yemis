@@ -195,8 +195,11 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
                         ProfileMenuTile(
                           icon: Icons.credit_card_rounded,
                           title: LocaleKeys.businessProfile_savedCards.tr(),
-                          onTap: () =>
-                              Navigator.pushNamed(context, AppRoutes.cards),
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            AppRoutes.cards,
+                            arguments: AppModuleType.business,
+                          ),
                         ),
                         ProfileMenuTile(
                           icon: Icons.location_on_outlined,
@@ -299,7 +302,11 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
           width: 60,
           height: 60,
           color: fallbackBg,
-          child: const Icon(Icons.store_rounded, size: 30, color: fallbackIcon),
+          child: const Icon(
+            Icons.storefront_rounded,
+            size: 30,
+            color: fallbackIcon,
+          ),
         ),
       );
     }
@@ -307,7 +314,11 @@ class _BusinessProfileViewState extends State<BusinessProfileView> {
       width: 60,
       height: 60,
       color: fallbackBg,
-      child: const Icon(Icons.store_rounded, size: 30, color: fallbackIcon),
+      child: const Icon(
+        Icons.storefront_rounded,
+        size: 30,
+        color: fallbackIcon,
+      ),
     );
   }
 }

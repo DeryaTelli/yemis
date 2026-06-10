@@ -276,6 +276,18 @@ abstract class LocaleKeys {
       'volunteerListings.attendedTitle';
   static const volunteerListings_emptyMessage =
       'volunteerListings.emptyMessage';
+  static const volunteerListings_emptyPastTitle =
+      'volunteerListings.emptyPastTitle';
+  static const volunteerListings_emptyPastDescription =
+      'volunteerListings.emptyPastDescription';
+  static const volunteerListings_emptyAttendedTitle =
+      'volunteerListings.emptyAttendedTitle';
+  static const volunteerListings_emptyAttendedDescription =
+      'volunteerListings.emptyAttendedDescription';
+  static const volunteerListings_emptyActiveTitle =
+      'volunteerListings.emptyActiveTitle';
+  static const volunteerListings_emptyActiveDescription =
+      'volunteerListings.emptyActiveDescription';
   static const volunteerListings_deleteError = 'volunteerListings.deleteError';
   static const volunteerListings_deleteConfirm =
       'volunteerListings.deleteConfirm';
@@ -658,6 +670,14 @@ abstract class LocaleKeys {
   static const businessListings_emptySold = 'businessListings.emptySold';
   static const businessListings_emptyActive = 'businessListings.emptyActive';
   static const businessListings_emptyExpired = 'businessListings.emptyExpired';
+  static const businessListings_emptyAllDescription =
+      'businessListings.emptyAllDescription';
+  static const businessListings_emptySoldDescription =
+      'businessListings.emptySoldDescription';
+  static const businessListings_emptyActiveDescription =
+      'businessListings.emptyActiveDescription';
+  static const businessListings_emptyExpiredDescription =
+      'businessListings.emptyExpiredDescription';
   static const businessListings_deleteDialogTitle =
       'businessListings.deleteDialogTitle';
   static const businessListings_deleteDialogMessage =
@@ -844,4 +864,7 @@ abstract class LocaleKeys {
   static const businessReports_environmentalImpact = 'businessReports.environmentalImpact';
   static const businessReports_performanceSummary = 'businessReports.performanceSummary';
   static const businessReports_noData = 'businessReports.noData';
+  static const businessReports_emptyTitle = 'businessReports.emptyTitle';
+  static const businessReports_emptyDescription =
+      'businessReports.emptyDescription';
 }

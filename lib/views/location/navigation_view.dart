@@ -80,9 +80,9 @@ class _NavigationBody extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Icon(
+            child: Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: AppColors.primaryColor,
+              color: accentColor ?? AppColors.primaryColor,
               size: 18,
             ),
           ),

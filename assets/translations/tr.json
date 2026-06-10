@@ -198,6 +198,12 @@
         "pastTitle": "Geçmiş İlanlarım",
         "attendedTitle": "Gönüllü İlanlarım",
         "emptyMessage": "Henüz bu kategoride ilanınız bulunmuyor.",
+        "emptyPastTitle": "Henüz Geçmiş İlanınız Yok",
+        "emptyPastDescription": "Süresi dolan veya tamamlanan ilanlarınız burada listelenecek.",
+        "emptyAttendedTitle": "Henüz Gönüllü Göreviniz Yok",
+        "emptyAttendedDescription": "Gönüllü olduğunuz ilanlar burada listelenecek.",
+        "emptyActiveTitle": "Henüz Aktif İlanınız Yok",
+        "emptyActiveDescription": "Yayınladığınız aktif ilanlar burada listelenecek.",
         "deleteError": "İlan silinirken bir hata oluştu.",
         "deleteConfirm": "Bu ilanı silmek istediğinizden emin misiniz?",
         "deleteTitle": "İlanı Sil"
@@ -254,7 +260,9 @@
         "environmentalImpact": "Çevresel Etki Özeti",
         "performanceSummary": "İlan Performans Özeti",
         "soldTotal": "Satılan / Toplam",
-        "noData": "Veri bulunamadı."
+        "noData": "Veri bulunamadı.",
+        "emptyTitle": "Henüz Rapor Verisi Yok",
+        "emptyDescription": "Satış ve ilan verileriniz oluştuğunda raporlarınız burada gösterilecek."
     },
     "businessAddOrder": {
         "title": "Sipariş Ekle",
@@ -324,6 +332,8 @@
         "selectFromLocation": "Konumdan Seç",
         "enterAddress": "Adres Gir",
         "notFound": "Henüz kayıtlı bir adresiniz bulunmuyor.",
+        "emptyTitle": "Henüz Kayıtlı Adresiniz Yok",
+        "emptyDescription": "Eklediğiniz adresler burada listelenecek.",
         "editTitle": "Adresi Düzenle",
         "addTitle": "Adres Ekle",
         "ilLabel": "İl",
@@ -398,6 +408,10 @@
         "emptySold": "Henüz satılmış bir siparişiniz bulunmuyor.",
         "emptyActive": "Henüz eklenmiş bir ilanınız bulunmuyor.",
         "emptyExpired": "Henüz süresi dolmuş bir ilanınız bulunmuyor.",
+        "emptyAllDescription": "Eklediğiniz tüm ilanlar burada listelenecek.",
+        "emptySoldDescription": "Satılan siparişleriniz burada listelenecek.",
+        "emptyActiveDescription": "Yayınladığınız aktif ilanlar burada listelenecek.",
+        "emptyExpiredDescription": "Süresi dolan ilanlarınız burada listelenecek.",
         "deleteDialogTitle": "İlanı Sil",
         "deleteDialogMessage": "Bu ilanı silmek istediğinizden emin misiniz?",
         "soldOut": "Tükendi",
@@ -746,6 +760,8 @@
         "saveError": "Kart kaydedilemedi.",
         "deleteError": "Kart silinemedi.",
         "empty": "Henüz kayıtlı kartınız bulunmuyor.",
+        "emptyTitle": "Henüz Kayıtlı Kartınız Yok",
+        "emptyDescription": "Eklediğiniz kartlar burada listelenecek.",
         "securityInfo": "Kart bilgileriniz güvenli şekilde kaydedilir ve yalnızca maskeli kart numarası gönderilir.",
         "validation": {
             "cardName": "Kart ismini girin.",

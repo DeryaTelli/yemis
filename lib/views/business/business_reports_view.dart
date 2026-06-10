@@ -5,6 +5,7 @@ import 'package:yemis/utils/constants/app_colors.dart';
 import 'package:yemis/utils/locale_keys.dart';
 import 'package:yemis/viewmodels/business/business_reports_viewmodel.dart';
 import 'package:yemis/widgets/business/weekly_sales_card.dart';
+import 'package:yemis/widgets/common/empty_state.dart';
 import 'package:yemis/widgets/common/loading_overlay.dart';
 import '../../models/app_module_type.dart';
 import '../../services/auth/user_session.dart';
@@ -41,12 +42,13 @@ class BusinessReportsView extends StatelessWidget {
                     ? SizedBox(
                         height: MediaQuery.of(context).size.height * 0.6,
                         child: Center(
-                          child: Text(
-                            LocaleKeys.businessReports_noData.tr(),
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 16,
-                            ),
+                          child: EmptyState(
+                            icon: Icons.bar_chart_rounded,
+                            title: LocaleKeys.businessReports_emptyTitle.tr(),
+                            description: LocaleKeys
+                                .businessReports_emptyDescription
+                                .tr(),
+                            color: AppColors.primaryColor,
                           ),
                         ),
                       )
@@ -659,8 +661,13 @@ class BusinessInsightCard extends StatelessWidget {
                           final cleanItem = item.replaceAll('**', '');
                           final colonIndex = cleanItem.indexOf(':');
                           if (colonIndex != -1) {
-                            final title = cleanItem.substring(0, colonIndex + 1);
-                            final description = cleanItem.substring(colonIndex + 1);
+                            final title = cleanItem.substring(
+                              0,
+                              colonIndex + 1,
+                            );
+                            final description = cleanItem.substring(
+                              colonIndex + 1,
+                            );
                             return Text.rich(
                               TextSpan(
                                 children: [

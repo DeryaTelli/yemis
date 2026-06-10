@@ -67,7 +67,7 @@ class WeeklySalesCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(
-                                Icons.store_rounded,
+                                Icons.storefront_rounded,
                                 color: AppColors.primaryColor,
                                 size: 24,
                               ),
