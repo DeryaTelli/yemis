@@ -38,6 +38,7 @@ import 'package:yemis/models/auth/saved_card_model.dart';
 import 'package:yemis/models/app_module_type.dart';
 import 'package:yemis/models/food/food_listing.dart';
 import 'package:yemis/utils/routes/app_routes.dart';
+import 'package:yemis/utils/routes/navigation_service.dart';
 import 'package:yemis/utils/theme/app_theme.dart';
 import 'package:yemis/viewmodels/auth/forgot_password_viewmodel.dart';
 import 'package:yemis/viewmodels/auth/login_viewmodel.dart';
@@ -289,6 +290,7 @@ class MyApp extends StatelessWidget {
         // VerificationViewModel route-level'da inject edilir (email argümanı gerektirir)
       ],
       child: MaterialApp(
+        navigatorKey: NavigationService.navigatorKey,
         title: 'yemis',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,

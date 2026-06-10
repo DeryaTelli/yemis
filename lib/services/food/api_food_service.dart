@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../common/intercepted_client.dart';
 import '../../models/business/business_listing_model.dart';
 import '../../models/food/food_listing.dart';
 import '../../models/food/food_review.dart';
@@ -11,7 +12,7 @@ import '../../utils/constants/api_constants.dart';
 import 'i_food_service.dart';
 
 class ApiFoodService implements IFoodService {
-  final http.Client _client = http.Client();
+  final http.Client _client = InterceptedClient();
   String? _token;
 
   void setToken(String token) {

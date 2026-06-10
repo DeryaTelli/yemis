@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../common/intercepted_client.dart';
 import 'package:yemis/models/volunteer/volunteer_listing.dart';
 import 'package:yemis/models/volunteer/volunteer_active_listing_model.dart';
 import 'package:yemis/models/volunteer/shelter_model.dart';
@@ -9,7 +10,7 @@ import 'package:yemis/services/volunteer/i_volunteer_service.dart';
 import '../../models/food/food_review.dart';
 
 class ApiVolunteerService implements IVolunteerService {
-  final http.Client _client = http.Client();
+  final http.Client _client = InterceptedClient();
   String? _authToken;
 
   void setToken(String? token) => _authToken = token;

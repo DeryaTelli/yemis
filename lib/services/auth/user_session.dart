@@ -6,6 +6,13 @@ import '../../models/auth/user_model.dart';
 
 /// Oturum açmış kullanıcının bilgilerini ve mevcut konum bilgisini tutan provider.
 class UserSession extends ChangeNotifier {
+  static UserSession? _instance;
+  static UserSession? get instance => _instance;
+
+  UserSession() {
+    _instance = this;
+  }
+
   UserModel? _user;
   String? _token;
   String? _currentAddress;

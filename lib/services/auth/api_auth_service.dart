@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../common/intercepted_client.dart';
 import 'package:yemis/models/auth/user_model.dart';
 
 import '../../models/auth/address_model.dart';
@@ -13,7 +14,7 @@ import '../../utils/constants/api_constants.dart';
 import 'i_auth_service.dart';
 
 class ApiAuthService implements IAuthService {
-  final http.Client _client = http.Client();
+  final http.Client _client = InterceptedClient();
   String? _authToken;
 
   /// Token'ı günceller (Login sonrası veya Session'dan).

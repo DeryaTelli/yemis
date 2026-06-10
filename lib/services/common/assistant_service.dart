@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'intercepted_client.dart';
 import '../../utils/constants/api_constants.dart';
 
 class AssistantActionModel {
@@ -77,6 +78,7 @@ abstract class IAssistantService {
 
 class ApiAssistantService implements IAssistantService {
   String? _authToken;
+  final http.Client _client = InterceptedClient();
 
   void setToken(String? token) => _authToken = token;
 
@@ -108,7 +110,7 @@ class ApiAssistantService implements IAssistantService {
         if (module != null) 'module': module,
       };
 
-      final response = await http
+      final response = await _client
           .post(
             url,
             headers: _headers,
