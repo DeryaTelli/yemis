@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../utils/locale_keys.dart';
 import '../../utils/constants/app_colors.dart';
 import '../../viewmodels/location/navigation_viewmodel.dart';
+import '../../services/location/map_navigation_service.dart';
 import '../../widgets/common/app_tile_layer.dart';
 
 class NavigationView extends StatelessWidget {
@@ -67,11 +68,11 @@ class _NavigationBody extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Container(
-            width: 38,
-            height: 38,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.92),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.08),
@@ -126,16 +127,20 @@ class _NavigationBody extends StatelessWidget {
         initialZoom: 14.0,
       ),
       children: [
-        const AppTileLayer(),
-        if (vm.userLocation != null)
+        const AppTileLayer(vivid: true),
+        if (vm.hasRoute)
           PolylineLayer(
             polylines: [
               Polyline(
-                points: [vm.userLocation!, vm.destination],
-                color: (accentColor ?? AppColors.primaryColor).withValues(
-                  alpha: 0.7,
-                ),
-                strokeWidth: 4,
+                points: vm.routePoints,
+                color: Colors.white.withValues(alpha: 0.95),
+                strokeWidth: 10,
+              ),
+              Polyline(
+                points: vm.routePoints,
+                color: accentColor ?? AppColors.primaryColor,
+                strokeWidth: 6,
+                pattern: StrokePattern.dashed(segments: const [14, 10]),
               ),
             ],
           ),
@@ -147,10 +152,29 @@ class _NavigationBody extends StatelessWidget {
                 point: vm.userLocation!,
                 width: 40,
                 height: 40,
-                child: const Icon(
-                  Icons.person_pin_circle_rounded,
-                  color: Colors.blue,
-                  size: 40,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.25),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Transform.rotate(
+                    angle: vm.isNavigating && vm.currentPosition != null
+                        ? vm.currentPosition!.heading * 3.1415926535 / 180
+                        : 0,
+                    child: Icon(
+                      vm.isNavigating
+                          ? Icons.navigation_rounded
+                          : Icons.person_pin_circle_rounded,
+                      color: accentColor ?? AppColors.primaryColor,
+                      size: 40,
+                    ),
+                  ),
                 ),
               ),
             // Business Marker
@@ -158,10 +182,22 @@ class _NavigationBody extends StatelessWidget {
               point: vm.destination,
               width: 40,
               height: 40,
-              child: Icon(
-                Icons.location_on_rounded,
-                color: accentColor ?? AppColors.primaryColor,
-                size: 40,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.22),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.location_on_rounded,
+                  color: accentColor ?? AppColors.primaryColor,
+                  size: 40,
+                ),
               ),
             ),
           ],
@@ -271,20 +307,37 @@ class _NavigationBody extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
-                  vm.distanceText,
-                  style: TextStyle(
-                    color: accentColor ?? AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      vm.distanceText,
+                      style: TextStyle(
+                        color: accentColor ?? AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (vm.hasRoute)
+                      Text(
+                        vm.durationText,
+                        style: TextStyle(
+                          color: accentColor ?? AppColors.primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          _buildTravelModeSelector(vm),
           const SizedBox(height: 20),
           _buildActionButton(
-            title: LocaleKeys.navigation_goToLocation.tr(),
-            onTap: vm.moveToDestination,
+            title: vm.isRouteLoading
+                ? LocaleKeys.navigation_calculatingRoute.tr()
+                : LocaleKeys.navigation_goToLocation.tr(),
+            onTap: vm.isRouteLoading ? () {} : vm.startGuidance,
             isGradient: true,
           ),
           const SizedBox(height: 12),
@@ -294,6 +347,65 @@ class _NavigationBody extends StatelessWidget {
             isGradient: true,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTravelModeSelector(NavigationViewModel vm) {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildTravelModeButton(
+            icon: Icons.directions_car_filled_rounded,
+            label: LocaleKeys.navigation_driving.tr(),
+            selected: vm.travelMode == NavigationTravelMode.driving,
+            onTap: () => vm.selectTravelMode(NavigationTravelMode.driving),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildTravelModeButton(
+            icon: Icons.directions_walk_rounded,
+            label: LocaleKeys.navigation_walking.tr(),
+            selected: vm.travelMode == NavigationTravelMode.walking,
+            onTap: () => vm.selectTravelMode(NavigationTravelMode.walking),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTravelModeButton({
+    required IconData icon,
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    final color = accentColor ?? AppColors.primaryColor;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: selected ? color.withValues(alpha: 0.12) : Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: selected ? color : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: selected ? color : Colors.grey[600], size: 20),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: selected ? color : Colors.grey[700],
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -349,7 +461,7 @@ class _NavigationBody extends StatelessWidget {
               title: LocaleKeys.navigation_openGoogleMaps.tr(),
               onTap: () {
                 Navigator.pop(context);
-                vm.launchGoogleMaps();
+                vm.startNavigation(vm.travelMode);
               },
             ),
             _buildMapOption(

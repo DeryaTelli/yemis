@@ -20,7 +20,8 @@ class VolunteerExpandedMapView extends StatefulWidget {
   });
 
   @override
-  State<VolunteerExpandedMapView> createState() => _VolunteerExpandedMapViewState();
+  State<VolunteerExpandedMapView> createState() =>
+      _VolunteerExpandedMapViewState();
 }
 
 class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
@@ -34,20 +35,26 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
       child: Scaffold(
         body: Stack(
           children: [
-          // ── Harita Alanı ────────────────────────────
-          FlutterMap(
-            options: MapOptions(
-              initialCenter: widget.listings.isNotEmpty && widget.listings.first.latitude != null
-                  ? LatLng(widget.listings.first.latitude!, widget.listings.first.longitude!)
-                  : const LatLng(41.1993, 32.6247),
-              initialZoom: 16.5,
-            ),
-            children: [
-              const AppTileLayer(),
-              MarkerLayer(
-                markers: [
-                  ...widget.listings.where((l) => l.latitude != null).map(
-                    (listing) {
+            // ── Harita Alanı ────────────────────────────
+            FlutterMap(
+              options: MapOptions(
+                initialCenter:
+                    widget.listings.isNotEmpty &&
+                        widget.listings.first.latitude != null
+                    ? LatLng(
+                        widget.listings.first.latitude!,
+                        widget.listings.first.longitude!,
+                      )
+                    : const LatLng(41.1993, 32.6247),
+                initialZoom: 16.5,
+              ),
+              children: [
+                const AppTileLayer(vivid: true),
+                MarkerLayer(
+                  markers: [
+                    ...widget.listings.where((l) => l.latitude != null).map((
+                      listing,
+                    ) {
                       final isSelected = _selectedListing?.id == listing.id;
                       return Marker(
                         point: LatLng(listing.latitude!, listing.longitude!),
@@ -63,7 +70,7 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 250),
                             decoration: BoxDecoration(
-                              color: isSelected ? Colors.red : AppColors.volunteerColor,
+                              color: AppColors.volunteerColor,
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: Colors.white,
@@ -79,7 +86,9 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
                             ),
                             child: Center(
                               child: Icon(
-                                isSelected ? Icons.location_on : Icons.volunteer_activism,
+                                isSelected
+                                    ? Icons.location_on
+                                    : Icons.volunteer_activism,
                                 color: Colors.white,
                                 size: isSelected ? 20 : 14,
                               ),
@@ -87,10 +96,8 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
                           ),
                         ),
                       );
-                    },
-                  ),
-                  ...widget.shelters.map(
-                    (shelter) {
+                    }),
+                    ...widget.shelters.map((shelter) {
                       final isSelected = _selectedShelter?.id == shelter.id;
                       return Marker(
                         point: LatLng(shelter.latitude, shelter.longitude),
@@ -106,7 +113,9 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 250),
                             decoration: BoxDecoration(
-                              color: isSelected ? Colors.orange.shade800 : Colors.orange,
+                              color: isSelected
+                                  ? Colors.orange.shade800
+                                  : Colors.orange,
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: Colors.white,
@@ -130,136 +139,137 @@ class _VolunteerExpandedMapViewState extends State<VolunteerExpandedMapView> {
                           ),
                         ),
                       );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-
-          // ── Üst Bar (Geri Butonu) ────────────────────
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
-            left: 16,
-            child: FloatingActionButton.small(
-              backgroundColor: Colors.white,
-              onPressed: () => Navigator.pop(context),
-              child: const Icon(Icons.arrow_back, color: Colors.black),
+                    }),
+                  ],
+                ),
+              ],
             ),
-          ),
 
-          // ── Seçili İlan Kartı (Alt Panel) ──────────────
-          if (_selectedListing != null)
+            // ── Üst Bar (Geri Butonu) ────────────────────
             Positioned(
-              bottom: 24,
+              top: MediaQuery.of(context).padding.top + 16,
               left: 16,
-              right: 16,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Kapat butonu
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.cancel, color: Colors.grey),
-                      onPressed: () => setState(() => _selectedListing = null),
-                    ),
-                  ),
-                  // Kart
-                  VolunteerListingCard(
-                    listing: _selectedListing!,
-                    width: double.infinity,
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      AppRoutes.volunteerDetail,
-                      arguments: _selectedListing,
-                    ),
-                  ),
-                ],
+              child: FloatingActionButton.small(
+                backgroundColor: Colors.white,
+                onPressed: () => Navigator.pop(context),
+                child: const Icon(Icons.arrow_back, color: Colors.black),
               ),
             ),
 
-          // ── Seçili Barınak Kartı (Alt Panel) ──────────────
-          if (_selectedShelter != null)
-            Positioned(
-              bottom: 24,
-              left: 16,
-              right: 16,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Kapat butonu
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.cancel, color: Colors.grey),
-                      onPressed: () => setState(() => _selectedShelter = null),
+            // ── Seçili İlan Kartı (Alt Panel) ──────────────
+            if (_selectedListing != null)
+              Positioned(
+                bottom: 24,
+                left: 16,
+                right: 16,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Kapat butonu
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: const Icon(Icons.cancel, color: Colors.grey),
+                        onPressed: () =>
+                            setState(() => _selectedListing = null),
+                      ),
                     ),
-                  ),
-                  // Barınak Bilgi Kartı
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
+                    // Kart
+                    VolunteerListingCard(
+                      listing: _selectedListing!,
+                      width: double.infinity,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        AppRoutes.volunteerDetail,
+                        arguments: _selectedListing,
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withAlpha(25),
-                            shape: BoxShape.circle,
+                  ],
+                ),
+              ),
+
+            // ── Seçili Barınak Kartı (Alt Panel) ──────────────
+            if (_selectedShelter != null)
+              Positioned(
+                bottom: 24,
+                left: 16,
+                right: 16,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Kapat butonu
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        icon: const Icon(Icons.cancel, color: Colors.grey),
+                        onPressed: () =>
+                            setState(() => _selectedShelter = null),
+                      ),
+                    ),
+                    // Barınak Bilgi Kartı
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
                           ),
-                          child: const Icon(Icons.pets, color: Colors.orange),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _selectedShelter!.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${_selectedShelter!.district}, ${_selectedShelter!.city}',
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              if (_selectedShelter!.phoneNumber != null)
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withAlpha(25),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.pets, color: Colors.orange),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
                                 Text(
-                                  _selectedShelter!.phoneNumber!,
-                                  style: TextStyle(
-                                    color: Colors.blue.shade700,
-                                    fontSize: 13,
+                                  _selectedShelter!.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
                                 ),
-                            ],
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${_selectedShelter!.district}, ${_selectedShelter!.city}',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                if (_selectedShelter!.phoneNumber != null)
+                                  Text(
+                                    _selectedShelter!.phoneNumber!,
+                                    style: TextStyle(
+                                      color: Colors.blue.shade700,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

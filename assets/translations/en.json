@@ -393,7 +393,11 @@
                        "getDirections":  "Get Directions",
                        "openGoogleMaps":  "Open with Google Maps",
                        "openYandexMaps":  "Open with Yandex Maps",
-                       "openAppleMaps":  "Open with Apple Maps"
+                          "openAppleMaps":  "Open with Apple Maps",
+                          "selectTravelMode":  "How would you like to travel?",
+                          "driving":  "Drive",
+                          "walking":  "Walk",
+                          "calculatingRoute":  "Calculating Route..."
                    },
     "foodFavorites":  {
                           "title":  "Favorite"

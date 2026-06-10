@@ -431,6 +431,10 @@ abstract class LocaleKeys {
   static const navigation_openGoogleMaps = 'navigation.openGoogleMaps';
   static const navigation_openYandexMaps = 'navigation.openYandexMaps';
   static const navigation_openAppleMaps = 'navigation.openAppleMaps';
+  static const navigation_selectTravelMode = 'navigation.selectTravelMode';
+  static const navigation_driving = 'navigation.driving';
+  static const navigation_walking = 'navigation.walking';
+  static const navigation_calculatingRoute = 'navigation.calculatingRoute';
   static const common_searchHint = 'common.searchHint';
   static const common_list = 'common.list';
   static const common_map = 'common.map';

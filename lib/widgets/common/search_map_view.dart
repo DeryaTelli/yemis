@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import '../../utils/constants/app_colors.dart';
 import 'app_tile_layer.dart';
 
 /// Harita üzerinde ilanları gösteren bileşen.
@@ -44,53 +43,47 @@ class _SearchMapViewState extends State<SearchMapView> {
   @override
   Widget build(BuildContext context) {
     // Tüm ilanların ortalamasını alarak haritayı konumlandır (veya default bi yer seç)
-    final LatLng center = widget.initialCenter ?? const LatLng(41.2048, 32.6218);
+    final LatLng center =
+        widget.initialCenter ?? const LatLng(41.2048, 32.6218);
 
     return FlutterMap(
       mapController: _mapController,
-      options: MapOptions(
-        initialCenter: center,
-        initialZoom: 13,
-      ),
+      options: MapOptions(initialCenter: center, initialZoom: 13),
       children: [
-        const AppTileLayer(),
+        const AppTileLayer(vivid: true),
         MarkerLayer(
-          markers:
-              widget.listings
-                  .where((l) => l.latitude != null && l.longitude != null)
-                  .map((listing) {
-                    return Marker(
-                      point: LatLng(listing.latitude!, listing.longitude!),
-                      width: 40,
-                      height: 40,
-                      child: GestureDetector(
-                        onTap: () => widget.onMarkerTap(listing),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: widget.accentColor,
-                              width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.2),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+          markers: widget.listings
+              .where((l) => l.latitude != null && l.longitude != null)
+              .map((listing) {
+                return Marker(
+                  point: LatLng(listing.latitude!, listing.longitude!),
+                  width: 40,
+                  height: 40,
+                  child: GestureDetector(
+                    onTap: () => widget.onMarkerTap(listing),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: widget.accentColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
                           ),
-                          child: Icon(
-                            Icons.location_on_rounded,
-                            color: widget.accentColor,
-                            size: 24,
-                          ),
-                        ),
+                        ],
                       ),
-                    );
-                  })
-                  .toList(),
+                      child: Icon(
+                        Icons.location_on_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                );
+              })
+              .toList(),
         ),
       ],
     );

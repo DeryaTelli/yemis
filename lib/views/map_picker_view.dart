@@ -21,7 +21,9 @@ class MapPickerView extends StatelessWidget {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final accentColor = args?['accentColor'] as Color?;
     final accentGradient = args?['accentGradient'] as LinearGradient?;
-    final section = accentColor == AppColors.volunteerColor ? AppSection.volunteer : AppSection.food;
+    final section = accentColor == AppColors.volunteerColor
+        ? AppSection.volunteer
+        : AppSection.food;
 
     return ChangeNotifierProvider(
       create: (_) {
@@ -101,9 +103,7 @@ class _MapPickerBodyState extends State<_MapPickerBody> {
                 context.read<MapPickerViewModel>().updateCenter(camera.center);
               },
             ),
-            children: [
-              const AppTileLayer(),
-            ],
+            children: [const AppTileLayer(vivid: true)],
           ),
 
           // ── Sabit merkez marker ──

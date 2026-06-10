@@ -393,7 +393,11 @@
         "getDirections": "Yol Tarifi Al",
         "openGoogleMaps": "Google Maps ile Aç",
         "openYandexMaps": "Yandex Navigasyon ile Aç",
-        "openAppleMaps": "Apple Maps ile Aç"
+        "openAppleMaps": "Apple Maps ile Aç",
+        "selectTravelMode": "Nasıl gitmek istiyorsunuz?",
+        "driving": "Araba",
+        "walking": "Yürüme",
+        "calculatingRoute": "Rota Hesaplanıyor..."
     },
     "foodFavorites": {
         "title": "Favoriler"

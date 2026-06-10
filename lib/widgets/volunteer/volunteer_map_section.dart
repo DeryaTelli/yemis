@@ -83,22 +83,23 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
               FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  initialCenter: widget.listings.isNotEmpty &&
+                  initialCenter:
+                      widget.listings.isNotEmpty &&
                           widget.listings.first.latitude != null
                       ? LatLng(
                           widget.listings.first.latitude!,
                           widget.listings.first.longitude!,
                         )
                       : (widget.userLat != null && widget.userLng != null)
-                          ? LatLng(widget.userLat!, widget.userLng!)
-                          : const LatLng(41.1993, 32.6247),
+                      ? LatLng(widget.userLat!, widget.userLng!)
+                      : const LatLng(41.1993, 32.6247),
                   initialZoom: 15.0,
                   interactionOptions: const InteractionOptions(
                     flags: InteractiveFlag.none,
                   ),
                 ),
                 children: [
-                  const AppTileLayer(),
+                  const AppTileLayer(vivid: true),
                   MarkerLayer(
                     markers: [
                       ...widget.listings
@@ -118,7 +119,9 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.2),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.2,
+                                      ),
                                       blurRadius: 8,
                                       offset: const Offset(0, 4),
                                     ),
@@ -143,10 +146,7 @@ class _VolunteerMapSectionState extends State<VolunteerMapSection> {
                             decoration: BoxDecoration(
                               color: Colors.orange,
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.white, width: 2),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withValues(alpha: 0.2),

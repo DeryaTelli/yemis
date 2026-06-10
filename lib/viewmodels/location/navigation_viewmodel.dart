@@ -1,13 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import '../../services/location/location_service.dart';
 import '../../services/location/map_navigation_service.dart';
+import '../../services/location/routing_service.dart';
 
 class NavigationViewModel extends ChangeNotifier {
   final LocationService _locationService = LocationService();
   final MapNavigationService _mapNavigationService = MapNavigationService();
+  final RoutingService _routingService = RoutingService();
 
   final double destinationLat;
   final double destinationLng;
@@ -23,6 +27,7 @@ class NavigationViewModel extends ChangeNotifier {
 
   Position? _currentPosition;
   Position? get currentPosition => _currentPosition;
+  LatLng? _origin;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
@@ -33,19 +38,42 @@ class NavigationViewModel extends ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
+  NavigationTravelMode _travelMode = NavigationTravelMode.driving;
+  NavigationTravelMode get travelMode => _travelMode;
+
+  bool _isRouteLoading = false;
+  bool get isRouteLoading => _isRouteLoading;
+
+  RouteResult? _route;
+  List<LatLng> get routePoints => _route?.points ?? const [];
+  bool get hasRoute => routePoints.isNotEmpty;
+
+  bool _isNavigating = false;
+  bool get isNavigating => _isNavigating;
+  StreamSubscription<Position>? _positionSubscription;
+  LatLng? _lastRouteOrigin;
+  bool _isRerouting = false;
+
   LatLng get destination => LatLng(destinationLat, destinationLng);
-  LatLng? get userLocation => _currentPosition != null 
-      ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude) 
-      : null;
+  LatLng? get userLocation => _origin;
 
   double? _distanceInMeters;
   String get distanceText {
-    if (_distanceInMeters == null) return "...";
-    if (_distanceInMeters! < 1000) {
-      return "${_distanceInMeters!.toStringAsFixed(0)} m";
+    final distance = _route?.distanceMeters ?? _distanceInMeters;
+    if (distance == null) return "...";
+    if (distance < 1000) {
+      return "${distance.toStringAsFixed(0)} m";
     } else {
-      return "${(_distanceInMeters! / 1000).toStringAsFixed(1)} km";
+      return "${(distance / 1000).toStringAsFixed(1)} km";
     }
+  }
+
+  String get durationText {
+    final seconds = _route?.durationSeconds;
+    if (seconds == null) return '-- dk';
+    final minutes = (seconds / 60).ceil();
+    if (minutes < 60) return '$minutes dk';
+    return '${minutes ~/ 60}s ${minutes % 60}dk';
   }
 
   Future<void> init() async {
@@ -54,7 +82,7 @@ class NavigationViewModel extends ChangeNotifier {
 
     // Check permission
     _hasPermission = await _locationService.checkAndRequestPermission();
-    
+
     if (_hasPermission) {
       await _fetchLocation();
     } else {
@@ -68,7 +96,12 @@ class NavigationViewModel extends ChangeNotifier {
     try {
       _currentPosition = await _locationService.getCurrentPosition();
       if (_currentPosition != null) {
+        _origin = LatLng(
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+        );
         _calculateDistance();
+        _startPositionTracking();
       }
     } catch (e) {
       _errorMessage = "Konum alınamadı.";
@@ -79,10 +112,10 @@ class NavigationViewModel extends ChangeNotifier {
   }
 
   void _calculateDistance() {
-    if (_currentPosition != null) {
+    if (_origin != null) {
       _distanceInMeters = Geolocator.distanceBetween(
-        _currentPosition!.latitude,
-        _currentPosition!.longitude,
+        _origin!.latitude,
+        _origin!.longitude,
         destinationLat,
         destinationLng,
       );
@@ -99,7 +132,126 @@ class NavigationViewModel extends ChangeNotifier {
     await _mapNavigationService.openGoogleMaps(
       destinationLat: destinationLat,
       destinationLng: destinationLng,
+      originLat: userLocation?.latitude,
+      originLng: userLocation?.longitude,
     );
+  }
+
+  Future<void> startNavigation(NavigationTravelMode travelMode) async {
+    await _mapNavigationService.openGoogleMaps(
+      destinationLat: destinationLat,
+      destinationLng: destinationLng,
+      originLat: userLocation?.latitude,
+      originLng: userLocation?.longitude,
+      travelMode: travelMode,
+    );
+  }
+
+  Future<void> showRoute([
+    NavigationTravelMode? travelMode,
+    bool startGuidance = false,
+  ]) async {
+    if (userLocation == null) return;
+    _travelMode = travelMode ?? _travelMode;
+    _isRouteLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _route = await _routingService.getRoute(
+        origin: userLocation!,
+        destination: destination,
+        travelMode: _travelMode,
+      );
+      _lastRouteOrigin = userLocation;
+      if (routePoints.isNotEmpty) {
+        if (startGuidance) {
+          _isNavigating = true;
+          mapController.move(userLocation!, 17.5);
+          _startPositionTracking();
+        } else if (!_isNavigating) {
+          mapController.fitCamera(
+            CameraFit.bounds(
+              bounds: LatLngBounds.fromPoints(routePoints),
+              padding: const EdgeInsets.fromLTRB(40, 100, 40, 300),
+            ),
+          );
+        }
+      }
+    } catch (_) {
+      _errorMessage = 'Rota oluşturulamadı.';
+    } finally {
+      _isRouteLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> selectTravelMode(NavigationTravelMode travelMode) async {
+    _travelMode = travelMode;
+    if (hasRoute) {
+      await showRoute(travelMode, _isNavigating);
+    } else {
+      notifyListeners();
+    }
+  }
+
+  Future<void> startGuidance() => showRoute(_travelMode, true);
+
+  void _startPositionTracking() {
+    _positionSubscription?.cancel();
+    _positionSubscription = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 10,
+      ),
+    ).listen(_handlePositionUpdate);
+  }
+
+  Future<void> _handlePositionUpdate(Position position) async {
+    if (userLocation == null) return;
+
+    final liveLocation = LatLng(position.latitude, position.longitude);
+    if (_lastRouteOrigin != null) {
+      final distanceFromRoute = Geolocator.distanceBetween(
+        _lastRouteOrigin!.latitude,
+        _lastRouteOrigin!.longitude,
+        liveLocation.latitude,
+        liveLocation.longitude,
+      );
+      if (distanceFromRoute > 20000) return;
+    }
+
+    _currentPosition = position;
+    _origin = liveLocation;
+    _calculateDistance();
+    if (_isNavigating) {
+      mapController.move(liveLocation, 17.5);
+    }
+    notifyListeners();
+
+    if (!_isNavigating || _isRerouting || _lastRouteOrigin == null) return;
+    final distanceSinceLastRoute = Geolocator.distanceBetween(
+      _lastRouteOrigin!.latitude,
+      _lastRouteOrigin!.longitude,
+      liveLocation.latitude,
+      liveLocation.longitude,
+    );
+    if (distanceSinceLastRoute < 40) return;
+
+    _isRerouting = true;
+    try {
+      _route = await _routingService.getRoute(
+        origin: liveLocation,
+        destination: destination,
+        travelMode: _travelMode,
+      );
+      _lastRouteOrigin = liveLocation;
+      notifyListeners();
+    } catch (_) {
+      // Keep the last valid route while waiting for the next GPS update.
+    } finally {
+      _isRerouting = false;
+    }
   }
 
   Future<void> launchAppleMaps() async {
@@ -118,12 +270,9 @@ class NavigationViewModel extends ChangeNotifier {
 
   final MapController mapController = MapController();
 
-  void moveToDestination() {
-    mapController.move(destination, 15.0);
-  }
-
   @override
   void dispose() {
+    _positionSubscription?.cancel();
     mapController.dispose();
     super.dispose();
   }
